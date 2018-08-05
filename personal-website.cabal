@@ -1,4 +1,4 @@
-name:                personal-page
+name:                personal-website
 version:             0.2.0.0
 -- synopsis:
 -- description:
@@ -13,7 +13,7 @@ build-type:          Simple
 extra-source-files:  README.md
 cabal-version:       >=1.10
 
-executable personal-page
+executable personal-website
   hs-source-dirs:      src
   main-is:             site.hs
   default-language:    Haskell2010
