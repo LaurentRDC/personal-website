@@ -20,6 +20,9 @@ cabal.sandbox.config
 _cache/
 _site/
 
+### Python ###
+__pycache__/
+
 # Misc
 WinSCP.exe
 WinSCP.ini
