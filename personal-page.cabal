@@ -1,0 +1,30 @@
+name:                personal-page
+version:             0.1.0.0
+-- synopsis:
+-- description:
+homepage:            https://github.com/LaurentRDC/personal-page#readme
+license:             BSD3
+license-file:        LICENSE
+author:              Laurent P. René de Cotret
+maintainer:          laurent.decotret@outlook.com
+copyright:           2018 Laurent P. René de Cotret
+category:            Web
+build-type:          Simple
+extra-source-files:  README.md
+cabal-version:       >=1.10
+
+executable personal-page
+  hs-source-dirs:      src
+  main-is:             site.hs
+  default-language:    Haskell2010
+  ghc-options:         -threaded
+  build-depends:       base >= 4.7 && < 5,
+                       hakyll,
+                       pandoc,
+                       skylighting,
+                       containers,
+                       blaze-html,
+                       bytestring
+-- For stylistic purposes
+  other-modules:       Monokai, Templates
+
