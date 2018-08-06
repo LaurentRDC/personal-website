@@ -15,6 +15,9 @@ import qualified Data.ByteString.Lazy as B -- Must use lazy bytestrings because 
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
 import Templates (mkDefaultTemplate)
 
+import Data.Time.Clock (getCurrentTime, utctDay)
+import Data.Time.Calendar (toGregorian, showGregorian)
+
 -- TODO: RSS feed
 -- TODO: generating CSS with Cassius?
 
@@ -31,7 +34,9 @@ main = do
     writeFile "css/syntax.css" css
 
     -- Next, we generate the default template
-    let template = renderHtml mkDefaultTemplate
+    -- The template has a marking showing on what date was the page generated
+    today <- getCurrentTime >>= return . showGregorian . utctDay
+    let template = renderHtml $ mkDefaultTemplate ("Page generated on " <> today)
     B.writeFile "templates/default.html" template
 
     hakyll $ do

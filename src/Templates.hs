@@ -42,24 +42,27 @@ defaultMain = H.main $ do
     H.h1 "$title$"
     "$body$"
 
-defaultFooter :: H.Html
-defaultFooter = H.footer $ do
-    mconcat $ intersperse " | " $
+-- | Generate a footer markup with a message @s@.
+defaultFooter :: String -> H.Html
+defaultFooter s = H.footer $ do
+    H.p $ mconcat $ intersperse " | " $
         fmap mkLink [ ("fas fa-envelope",     "mailto:laurent.decotret@outlook.com",                              " e-mail")
                     , ("fab fa-github",       "https://github.com/LaurentRDC",                                    " GitHub")
                     , ("fab fa-linkedin",     "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  " LinkedIn")
                     , ("fab fa-researchgate", "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",      " ResearchGate")]
+    H.p $ H.toHtml s
     where
         -- Generate an icon + anchor 
         mkLink (icon, link, name) = do
             H.i ! class_ icon $ mempty
             H.a ! href link $ name
 
--- Full default template
-mkDefaultTemplate :: H.Html
-mkDefaultTemplate = H.docTypeHtml $ do
+-- | Full default template
+-- The footer will be adorned with the message @s@
+mkDefaultTemplate :: String -> H.Html
+mkDefaultTemplate s = H.docTypeHtml $ do
     defaultHead
     H.body $ do
         defaultHeader
         defaultMain
-        defaultFooter
+        defaultFooter s

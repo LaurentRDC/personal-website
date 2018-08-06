@@ -24,7 +24,8 @@ executable personal-website
                        skylighting,
                        containers,
                        blaze-html,
-                       bytestring
+                       bytestring,
+                       time
 -- For stylistic purposes
   other-modules:       Monokai, Templates
 
