@@ -20,7 +20,7 @@ about our team on our [group website](http://www.physics.mcgill.ca/siwicklab/ind
 
 * 2016-now | __McGill University__ PhD Physics (supervisor: Bradley J. Siwick)
 
-* 2014-2016 | __McGill University__ M.Sc. Physics (supervisors: Bradley J. Siwick and Jay L. Nadeau). My thesis was titled _New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_. It is freely available [here](.\files\MScThesis_FINAL.pdf)
+* 2014-2016 | __McGill University__ M.Sc. Physics (supervisors: Bradley J. Siwick and Jay L. Nadeau). My thesis was titled _New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_. [It is freely available here](http://digitool.library.mcgill.ca/thesisfile145488.pdf)
 
 * 2011-2014 | __McGill University__ B.Sc. Joint Honours in Mathematics and Physics. My undergraduate thesis was titled _High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_.
 
@@ -60,4 +60,4 @@ This site was built using open-source tools.
 * Icons provided by [Font Awesome](https://fontawesome.com/)
 * Math display by [MathJax](https://www.mathjax.org/)
 
-You can learn more in this post: [How this website is generated](/posts/2018-08-02-making-this-website.html)
+You can learn more in this post: [How this website is generated](/posts/2018-08-02-making-this-website.html). The source code is available online on my [GitHub](https://github.com/LaurentRDC/personal-website).

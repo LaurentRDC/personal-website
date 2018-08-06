@@ -24,5 +24,6 @@ _site/
 __pycache__/
 
 # Misc
+.vscode/
 WinSCP.exe
 WinSCP.ini
