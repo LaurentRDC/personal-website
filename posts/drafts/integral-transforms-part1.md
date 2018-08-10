@@ -1,5 +1,6 @@
 ---
 title: The Beauty of Integral Transforms Part 1 - Prerequisites
+date: 2018-08-10
 ---
 
 This is the first part of a series concerning one of my favourite mathematical tools, integral transforms. The Fourier transform ubiquitous in many areas of science, engineering, and mathematics, is a poster child for integral transforms, but it is far from the only one. 

@@ -1,5 +1,7 @@
 ---
 title: How this website is generated
+date: 2018-08-02
+updated: 2018-08-05
 ---
 
 In the hope that this page is useful to someone, I would like to explain how I generate this website.

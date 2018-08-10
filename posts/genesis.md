@@ -1,5 +1,6 @@
 ---
 title: Genesis
+date: 2018-08-01
 ---
 
 This is the first post of my blog, where I can test new features.

@@ -30,14 +30,16 @@ main :: IO ()
 main = do
     
     -- First step is to generate the CSS required to to syntax highlighting
-    let css = styleToCss syntaxHighlightingStyle
-    writeFile "css/syntax.css" css
-
     -- Next, we generate the default template
     -- The template has a marking showing on what date was the page generated
+    putStrLn "File generation"
+
+    let css = styleToCss syntaxHighlightingStyle
+    writeFile "css/syntax.css" css >> putStrLn "  Generated css\\syntax.css"
+
     today <- getCurrentTime >>= return . showGregorian . utctDay
     let template = renderHtml $ mkDefaultTemplate ("Page generated on " <> today)
-    B.writeFile "templates/default.html" template
+    B.writeFile "templates/default.html" template >> putStrLn "  Generated templates\\default.html"
 
     hakyll $ do
 
@@ -96,7 +98,8 @@ main = do
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
-postCtx = dateField "date" "%B %e, %Y" <> defaultContext
+postCtx = mconcat [ dateField "date" "%B %e, %Y"
+                  , defaultContext ]
 
 -- Allow math display and code highlighting
 -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
@@ -117,12 +120,12 @@ pandocCompiler_ =
     markdownExtensions = 
         [ Ext_implicit_header_references    -- We also allow implicit header references (instead of inserting <a> tags)
         , Ext_definition_lists              -- Definition lists based on PHP Markdown
-        , Ext_yamel_metadata_block          -- Allow metadata to be speficied by YAML syntax
+        , Ext_yaml_metadata_block           -- Allow metadata to be speficied by YAML syntax
         , Ext_superscript                   -- Superscripts (2^10^ is 1024) 
         , Ext_subscript                     -- Subscripts (H~2~O is water)
         , Ext_footnotes                     -- Footnotes ([^1]: Here is a footnote)
         ]
-    newExtensions = foldr enableExtension defaultExtensions (mathExtensions <> codeExtensions)
+    newExtensions = foldr enableExtension defaultExtensions (mconcat [mathExtensions, codeExtensions, markdownExtensions])
     defaultExtensions = writerExtensions defaultHakyllWriterOptions
     writerOptions =
         defaultHakyllWriterOptions
