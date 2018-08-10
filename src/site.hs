@@ -99,7 +99,7 @@ postCtx :: Context String
 postCtx = dateField "date" "%B %e, %Y" <> defaultContext
 
 -- Allow math display and code highlighting
--- https://github.com/jdreaver/jdreaver.com/blob/master/hakyll.hs
+-- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
 pandocCompiler_ :: Compiler (Item String)
 pandocCompiler_ =
     let
@@ -112,6 +112,15 @@ pandocCompiler_ =
         [ Ext_fenced_code_blocks
         , Ext_backtick_code_blocks
         , Ext_fenced_code_attributes
+        , Ext_inline_code_attributes        -- Inline code attributes (e.g. `<$>`{.haskell})
+        ]
+    markdownExtensions = 
+        [ Ext_implicit_header_references    -- We also allow implicit header references (instead of inserting <a> tags)
+        , Ext_definition_lists              -- Definition lists based on PHP Markdown
+        , Ext_yamel_metadata_block          -- Allow metadata to be speficied by YAML syntax
+        , Ext_superscript                   -- Superscripts (2^10^ is 1024) 
+        , Ext_subscript                     -- Subscripts (H~2~O is water)
+        , Ext_footnotes                     -- Footnotes ([^1]: Here is a footnote)
         ]
     newExtensions = foldr enableExtension defaultExtensions (mathExtensions <> codeExtensions)
     defaultExtensions = writerExtensions defaultHakyllWriterOptions

@@ -45,17 +45,23 @@ defaultMain = H.main $ do
 -- | Generate a footer markup with a message @s@.
 defaultFooter :: String -> H.Html
 defaultFooter s = H.footer $ do
-    H.p $ mconcat $ intersperse " | " $
-        fmap mkLink [ ("fas fa-envelope",     "mailto:laurent.decotret@outlook.com",                              " e-mail")
-                    , ("fab fa-github",       "https://github.com/LaurentRDC",                                    " GitHub")
-                    , ("fab fa-linkedin",     "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  " LinkedIn")
-                    , ("fab fa-researchgate", "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",      " ResearchGate")]
+    -- Lists of icons with links
+    H.p $ mconcat $ intersperse " | " $ links <> [orcid]
     H.p $ H.toHtml s
     where
         -- Generate an icon + anchor 
         mkLink (icon, link, name) = do
             H.i ! class_ icon $ mempty
             H.a ! href link $ name
+        -- Links with icons from font Awesome
+        links = fmap mkLink [ ("fas fa-envelope",     "mailto:laurent.decotret@outlook.com",                              " e-mail")
+                            , ("fab fa-github",       "https://github.com/LaurentRDC",                                    " GitHub")
+                            , ("fab fa-linkedin",     "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  " LinkedIn")
+                            , ("fab fa-researchgate", "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",      " ResearchGate")]
+        -- Note that ORCiD doesn't have a FontAwesome icon, so we use a separate function
+        orcid = do
+            H.a ! href "https://orcid.org/0000-0002-1464-2739" ! target "orcid.widget" ! A.style "vertical-align:top;" $ do
+                H.img ! src "https://orcid.org/sites/default/files/images/orcid_16x16.png" ! A.style "width:1em;margin-right:.5em;" <> "ORCiD"
 
 -- | Full default template
 -- The footer will be adorned with the message @s@
