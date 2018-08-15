@@ -35,12 +35,16 @@ defaultHeader = H.header $ do
                   , ("Media list",  "/media_list.html")
                   , ("Software",    "/software.html")
                   , ("About",       "/about.html")
-                  , ("Archive",     "/archive.html") ] (\(title, link) -> H.a ! href link $ title)
+                  , ("Archive",     "/archive.html") ] renderLink
+    where
+        renderLink (title, link) = H.a ! href link $ title
 
 defaultMain :: H.Html
 defaultMain = H.main $ do
     H.h1 "$title$"
     "$body$"
+    -- Add a line break at the end of the body because of footer height
+    H.br
 
 -- | Generate a footer markup with a message @s@.
 defaultFooter :: String -> H.Html

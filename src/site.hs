@@ -3,6 +3,10 @@
 import           Data.Monoid ((<>))
 import           Hakyll
 
+-- Hakyll can trip on characters like apostrophes
+-- https://github.com/jaspervdj/hakyll/issues/109
+import qualified GHC.IO.Encoding as E
+
 import Text.Pandoc.Options
 import Text.Pandoc.Extensions
 import Text.Pandoc.Highlighting 
@@ -23,11 +27,14 @@ import Data.Time.Calendar (toGregorian, showGregorian)
 
 -- | syntax highlighting style to use throughout
 syntaxHighlightingStyle :: Style
-syntaxHighlightingStyle = tango
+syntaxHighlightingStyle = kate
 
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
+    -- Hakyll can trip on characters like apostrophes
+    -- https://github.com/jaspervdj/hakyll/issues/109
+    E.setLocaleEncoding E.utf8
     
     -- First step is to generate the CSS required to to syntax highlighting
     -- Next, we generate the default template

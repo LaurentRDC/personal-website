@@ -60,4 +60,4 @@ This site was built using open-source tools.
 * Icons provided by [Font Awesome](https://fontawesome.com/)
 * Math display by [MathJax](https://www.mathjax.org/)
 
-You can learn more in this post: [How this website is generated](/posts/2018-08-02-making-this-website.html). The source code is available online on my [GitHub](https://github.com/LaurentRDC/personal-website).
+You can learn more in this post: [How this website is generated](/posts/making-this-website.html). The source code is available online on my [GitHub](https://github.com/LaurentRDC/personal-website).
