@@ -1,7 +1,8 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE OverloadedStrings #-}
-import           Data.Monoid ((<>))
-import           Hakyll
+{-# LANGUAGE OverloadedStrings          #-}
+
+import Data.Monoid ((<>))
+import Hakyll
 
 -- Hakyll can trip on characters like apostrophes
 -- https://github.com/jaspervdj/hakyll/issues/109
@@ -21,6 +22,8 @@ import Templates (mkDefaultTemplate)
 
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Data.Time.Calendar (toGregorian, showGregorian)
+
+import CompressJpg (compressJpgCompiler)
 
 -- TODO: RSS feed
 -- TODO: generating CSS with Cassius?
@@ -50,7 +53,17 @@ main = do
 
     hakyll $ do
 
-        match ("images/*" .||. "files/*") $ do
+        match "files/*" $ do
+            route   idRoute
+            compile copyFileCompiler
+        
+        -- JPG images are special: they can be compressed
+        match "images/*.jpg" $ do
+            route   idRoute
+            compile compressJpgCompiler
+
+        -- All other images are copied directly
+        match ("images/*" .&&. complement "images/*.jpg") $ do
             route   idRoute
             compile copyFileCompiler
         

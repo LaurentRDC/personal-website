@@ -158,8 +158,6 @@ if __name__ == "__main__":
 But what is this `CondaGUI` class we instantiated? This is the heart of our project, and is defined in `gui.py`:
 
 ```python
-# -*- coding: utf-8 -*-
-
 from PyQt5 import QtWidgets
 
 class CondaGUI(QtWidgets.QMainWindow):
