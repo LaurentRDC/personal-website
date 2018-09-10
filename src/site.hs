@@ -65,7 +65,7 @@ main = do
         -- JPG images are special: they can be compressed
         match jpgImages $ do
             route   idRoute
-            compile compressJpgCompiler
+            compile (compressJpgCompiler 25)
 
         -- All other images are copied directly
         match nonJpgImages $ do

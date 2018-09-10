@@ -1,40 +1,42 @@
-{-# LANGUAGE DeriveDataTypeable         #-}
-{-# LANGUAGE FlexibleInstances          #-}
-{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+--------------------------------------------------------------------------------
+-- | Module used for JPG compression. 
+module CompressJpg 
+    ( JpgQuality
+    , compressJpgCompiler
+    , compressJpg
+    ) where
 
-module CompressJpg (compressJpgCompiler) where
+--------------------------------------------------------------------------------
+import Data.ByteString.Lazy             (ByteString, toStrict)
 
-import Hakyll
+--------------------------------------------------------------------------------
+-- From JuicyPixels
+import Codec.Picture.Jpg                (decodeJpeg)
+import Codec.Picture.Saving             (imageToJpg)
 
--- To compress Jpg files
-import Hakyll.Core.Compiler.Internal (compilerProvider, compilerAsk)
-import Hakyll.Core.Provider          (resourceFilePath)
-import Data.Typeable                 (Typeable)
-import Data.Binary                   (Binary(..))
+--------------------------------------------------------------------------------
+import Hakyll.Core.Item                 (Item)
+import Hakyll.Core.Compiler             (Compiler, getResourceLBS)
 
-import Codec.Picture                 (readJpeg, saveJpgImage)
-
--- Compressing Jpg Files
-newtype JpgFile = JpgFile FilePath
-    deriving (Binary)
-
+--------------------------------------------------------------------------------
+-- | Jpeg encoding quality, from 0 (lower quality) to 100 (best quality).
 type JpgQuality = Int
 
-instance Writable JpgFile where
-    write dst (Item _ (JpgFile src)) = compressJpg src dst 25
+--------------------------------------------------------------------------------
+-- | Compress a JPG bytestring to a certain quality setting.
+-- The quality should be between 0 (lowest quality) and 100 (best quality).
+-- An error is raised if the image cannot be decoded.
+compressJpg :: JpgQuality -> ByteString -> ByteString
+compressJpg quality src = case im of
+        Right dynImage -> imageToJpg quality dynImage
+        Left _         -> error $ "Loading the image failed."
+    -- The function `decodeJpeg` requires strict ByteString
+    -- However, `imageToJpg` requires Lazy Bytestrings
+    where im = (decodeJpeg . toStrict) src
 
--- | Copy a JPG, but compress to a certain quality setting
--- The quality should be between 0 and 100
-compressJpg :: FilePath -> FilePath -> JpgQuality -> IO ()
-compressJpg src dst quality = do
-    im <- readJpeg src
-    case im of
-        Right im -> saveJpgImage quality dst im
-        Left _ -> error $
-            "Loading the image " <> show src <> " failed."
-
-compressJpgCompiler :: Compiler (Item JpgFile)
-compressJpgCompiler = do
-    identifier <- getUnderlying
-    provider   <- compilerProvider <$> compilerAsk
-    makeItem $ JpgFile $ resourceFilePath provider identifier
+--------------------------------------------------------------------------------
+-- | Compiler that compresses a JPG image to a certain quality setting.
+-- The quality should be between 0 (lowest quality) and 100 (best quality).
+-- An error is raised if the image cannot be decoded.
+compressJpgCompiler :: JpgQuality -> Compiler (Item ByteString)
+compressJpgCompiler quality = fmap (compressJpg quality) <$> getResourceLBS
