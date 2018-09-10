@@ -32,6 +32,11 @@ import CompressJpg (compressJpgCompiler)
 syntaxHighlightingStyle :: Style
 syntaxHighlightingStyle = kate
 
+-- We match images down to two levels
+-- Images/* and images/*/**
+jpgImages = "images/*.jpg" .||. "images/*/**.jpg"
+nonJpgImages = ("images/*/**" .||. "images/*") .&&. complement jpgImages
+
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
@@ -58,12 +63,12 @@ main = do
             compile copyFileCompiler
         
         -- JPG images are special: they can be compressed
-        match "images/*.jpg" $ do
+        match jpgImages $ do
             route   idRoute
             compile compressJpgCompiler
 
         -- All other images are copied directly
-        match ("images/*" .&&. complement "images/*.jpg") $ do
+        match nonJpgImages $ do
             route   idRoute
             compile copyFileCompiler
         
