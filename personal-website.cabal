@@ -25,9 +25,8 @@ executable personal-website
                        containers,
                        blaze-html,
                        bytestring,
-                       binary,
                        time,
                        JuicyPixels
 -- For stylistic purposes
-  other-modules:       Monokai, Templates, CompressJpg
+  other-modules:       Monokai, Templates, CompressJpg, BulmaTemplate
 

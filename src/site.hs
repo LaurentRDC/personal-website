@@ -18,7 +18,7 @@ import Monokai   (monokai)
 
 import qualified Data.ByteString.Lazy as B -- Must use lazy bytestrings because of renderHTML
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
-import Templates (mkDefaultTemplate)
+import BulmaTemplate (mkDefaultTemplate)
 
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Data.Time.Calendar (toGregorian, showGregorian)
@@ -76,6 +76,10 @@ main = do
             route   idRoute
             compile compressCssCompiler
         
+        match "js/*" $ do
+            route   idRoute
+            compile copyFileCompiler
+            
         match "static/*.md" $ do
             route $ (setExtension "html") `composeRoutes` staticRoute
             compile $ pandocCompiler_
