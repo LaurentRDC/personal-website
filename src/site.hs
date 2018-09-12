@@ -91,8 +91,9 @@ main = do
             compile $ pandocCompiler_
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
-
-        match "posts/*" $ do
+        
+        -- Explicitly do not match the drafts
+        match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
             compile $ pandocCompiler_
                 >>= loadAndApplyTemplate "templates/post.html"    postCtx
