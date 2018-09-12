@@ -1,5 +1,5 @@
 name:                personal-website
-version:             0.2.0.0
+version:             1.0.0.0
 -- synopsis:
 -- description:
 homepage:            https://github.com/LaurentRDC/personal-website#readme
@@ -21,12 +21,14 @@ executable personal-website
   build-depends:       base >= 4.7 && < 5,
                        hakyll,
                        pandoc,
+                       pandoc-types,
                        skylighting,
                        containers,
                        blaze-html,
+                       blaze-markup,
                        bytestring,
                        time,
                        JuicyPixels
 -- For stylistic purposes
-  other-modules:       Monokai, Templates, CompressJpg, BulmaTemplate
+  other-modules:       Monokai, CompressJpg, BulmaTemplate, BulmaFilter
 

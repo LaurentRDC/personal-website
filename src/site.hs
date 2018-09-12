@@ -18,7 +18,9 @@ import Monokai   (monokai)
 
 import qualified Data.ByteString.Lazy as B -- Must use lazy bytestrings because of renderHTML
 import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
+
 import BulmaTemplate (mkDefaultTemplate)
+import BulmaFilter (bulmaTransform)
 
 import Data.Time.Clock (getCurrentTime, utctDay)
 import Data.Time.Calendar (toGregorian, showGregorian)
@@ -65,7 +67,7 @@ main = do
         -- JPG images are special: they can be compressed
         match jpgImages $ do
             route   idRoute
-            compile (compressJpgCompiler 25)
+            compile (compressJpgCompiler 50)
 
         -- All other images are copied directly
         match nonJpgImages $ do
@@ -77,6 +79,10 @@ main = do
             compile compressCssCompiler
         
         match "js/*" $ do
+            route   idRoute
+            compile copyFileCompiler
+
+        match "fonts/*" $ do
             route   idRoute
             compile copyFileCompiler
             
@@ -114,7 +120,7 @@ main = do
                 posts <- recentFirst =<< loadAll "posts/*"
                 let indexCtx =
                         listField "posts" postCtx (return posts) <>
-                        constField "title" "Home"                <>
+                        constField "title" "Welcome to my homepage" <>
                         defaultContext
 
                 getResourceBody
@@ -162,7 +168,7 @@ pandocCompiler_ =
         , writerHTMLMathMethod = MathJax ""
         , writerHighlightStyle = Just syntaxHighlightingStyle
         }
-    in pandocCompilerWith defaultHakyllReaderOptions writerOptions
+    in pandocCompilerWithTransform defaultHakyllReaderOptions writerOptions bulmaTransform
 
 -- Move content from static/ folder to base folder
 staticRoute :: Routes
