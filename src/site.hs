@@ -14,18 +14,17 @@ import Text.Pandoc.Highlighting
 
 import System.IO
 
-import Monokai   (monokai)
+import qualified Data.ByteString.Lazy   as B -- Must use lazy bytestrings because of renderHTML
+import Text.Blaze.Html.Renderer.Utf8    (renderHtml)
 
-import qualified Data.ByteString.Lazy as B -- Must use lazy bytestrings because of renderHTML
-import Text.Blaze.Html.Renderer.Utf8 (renderHtml)
+import BulmaTemplate                    (mkDefaultTemplate)
+import BulmaFilter                      (bulmaTransform)
 
-import BulmaTemplate (mkDefaultTemplate)
-import BulmaFilter (bulmaTransform)
+import Data.Time.Clock                  (getCurrentTime, utctDay)
+import Data.Time.Calendar               (toGregorian, showGregorian)
 
-import Data.Time.Clock (getCurrentTime, utctDay)
-import Data.Time.Calendar (toGregorian, showGregorian)
-
-import CompressJpg (compressJpgCompiler)
+import CompressJpg                      (compressJpgCompiler)
+import Feed                             (feedConfiguration)
 
 -- TODO: RSS feed
 -- TODO: generating CSS with Cassius?
@@ -55,7 +54,7 @@ main = do
     writeFile "css/syntax.css" css >> putStrLn "  Generated css\\syntax.css"
 
     today <- getCurrentTime >>= return . showGregorian . utctDay
-    let template = renderHtml $ mkDefaultTemplate ("Page generated on " <> today)
+    let template = renderHtml $ mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
     B.writeFile "templates/default.html" template >> putStrLn "  Generated templates\\default.html"
 
     hakyll $ do
@@ -92,21 +91,34 @@ main = do
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
         
+        --------------------------------------------------------------------------------
         -- Explicitly do not match the drafts
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
             compile $ pandocCompiler_
                 >>= loadAndApplyTemplate "templates/post.html"    postCtx
+                >>= saveSnapshot "content"  -- Saved content for RSS feed
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
                 >>= relativizeUrls
-
+        
+        --------------------------------------------------------------------------------
+        -- Create RSS feed
+        create ["feed.xml"] $ do
+            route idRoute
+            compile $ do
+                let feedCtx = postCtx <> bodyField "description"
+                posts <- fmap (take 10) . recentFirst =<< 
+                    loadAllSnapshots "posts/*" "content"
+                renderRss feedConfiguration feedCtx posts
+        
+        --------------------------------------------------------------------------------
         create ["archive.html"] $ do
             route idRoute
             compile $ do
                 posts <- recentFirst =<< loadAll "posts/*"
                 let archiveCtx =
                         listField "posts" postCtx (return posts) <>
-                        constField "title" "Archives"            <>
+                        constField "title" "Blog posts"          <>
                         defaultContext
 
                 makeItem ""
@@ -114,7 +126,7 @@ main = do
                     >>= loadAndApplyTemplate "templates/default.html" archiveCtx
                     >>= relativizeUrls
 
-
+        --------------------------------------------------------------------------------
         match "static/index.html" $ do
             route staticRoute
             compile $ do

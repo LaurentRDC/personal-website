@@ -25,6 +25,7 @@ socialLinks = [
     , ("fab fa-linkedin",     "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  "LinkedIn")
     , ("ai ai-researchgate",  "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",      "ResearchGate")
     , ("ai ai-orcid",         "https://orcid.org/0000-0002-1464-2739",                            "OrcID")
+    , ("fas fa-rss",          "/feed.xml",                                                        "RSS feed")
     ]
 
 type NavigationLink = (Link, String)
@@ -35,7 +36,7 @@ navigationLinks = [
     , ("/media_list.html",  "Media list")
     , ("/software.html",    "Software")
     , ("/about.html",       "About me")
-    , ("/archive.html",     "Archive")
+    , ("/archive.html",     "Blog posts")
     ]
 
 defaultHead :: H.Html
@@ -94,6 +95,26 @@ navigationBar = H.section ! class_ "hero is-warning is-bold" $ do
             H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon) $ mempty
             toMarkup $ name
 
+defaultFooter :: String -> H.Html
+defaultFooter s = H.footer ! class_ "footer" $
+    H.div ! class_ "content has-text-centered" $ do
+        -- List all socials links
+        -- This is important because on mobile, the hero-foot disappears
+        H.p $ (mconcat . intersperse " | ") $ renderSocialLink <$> socialLinks
+
+        -- Message and disclaimer
+        H.p ! class_ "is-small" $ mconcat 
+                    [ H.toHtml s 
+                    , "This website was created using free and open-source technologies. "
+                    , "You can learn more about how this website is generated "
+                    , (H.a ! href "/about.html#about-this-site" $ "here")
+                    , "." 
+                    ]
+    where
+        renderSocialLink (icon, link, name) = do 
+            H.span ! class_ "icon" $ H.i ! class_ (toValue icon) $ mempty
+            H.a ! href (toValue link) $ toMarkup name
+
 -- | Full default template
 -- The templateFooter will be adorned with the message @s@
 mkDefaultTemplate :: String -> H.Html
@@ -108,12 +129,5 @@ mkDefaultTemplate s = H.docTypeHtml $ do
             --      https://bulma.io/documentation/elements/content/
                 H.div ! class_ "content" $ 
                     "$body$"
-            
-        H.footer ! class_ "footer" $
-            H.div ! class_ "content has-text-centered" $ do
-                H.p ! class_ "is-small" $ H.toHtml s
-                H.p $ mconcat [ "This website was created using free and open-source technologies. "
-                              , "You can learn more about how this website is generated "
-                              , (H.a ! href "/about.html#about-this-site" $ "here")
-                              , "." 
-                              ]
+
+        defaultFooter s
