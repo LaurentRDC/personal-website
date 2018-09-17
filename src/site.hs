@@ -12,6 +12,8 @@ import Text.Pandoc.Options
 import Text.Pandoc.Extensions
 import Text.Pandoc.Highlighting 
 
+import Text.Pandoc.Definition           (Pandoc)
+
 import System.IO
 
 import qualified Data.ByteString.Lazy   as B -- Must use lazy bytestrings because of renderHTML
@@ -19,6 +21,8 @@ import Text.Blaze.Html.Renderer.Utf8    (renderHtml)
 
 import BulmaTemplate                    (mkDefaultTemplate)
 import BulmaFilter                      (bulmaTransform)
+
+import ReadingTimeFilter                (readingTimeTransform)
 
 import Data.Time.Clock                  (getCurrentTime, utctDay)
 import Data.Time.Calendar               (toGregorian, showGregorian)
@@ -90,7 +94,9 @@ main = do
         -- Note that /static/index.html is a special case and is handled below
         match "static/*.md" $ do
             route $ (setExtension "html") `composeRoutes` staticRoute
-            compile $ pandocCompiler_
+            -- No Pandoc filters beyond the built-in bulmaTransform
+            -- hence the use of 'id'
+            compile $ pandocCompiler_ id
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
         
@@ -99,7 +105,9 @@ main = do
         -- Explicitly do not match the drafts
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
-            compile $ pandocCompiler_
+            -- In addition to the usual bulmaTransform,
+            -- we add estimated reading time
+            compile $ pandocCompiler_ readingTimeTransform
                 >>= loadAndApplyTemplate "templates/post.html"    postCtx
                 >>= saveSnapshot "content"  -- Saved content for RSS feed
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
@@ -168,14 +176,15 @@ postCtx :: Context String
 postCtx = mconcat [ dateField "date" "%B %e, %Y"
                   , defaultContext ]
 
--- Allow math display, code highlighting, and Pandoc filters
--- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
-pandocCompiler_ :: Compiler (Item String)
-pandocCompiler_ =
+-- | Allow math display, code highlighting, and Pandoc filters
+-- Note that the Bulma pandoc filter is always applied last
+pandocCompiler_ :: (Pandoc -> Pandoc) -> Compiler (Item String)
+pandocCompiler_ transform =
     let 
+    -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
     extensions = [ 
         -- Math extensions
-            Ext_tex_math_dollars
+          Ext_tex_math_dollars
         , Ext_tex_math_double_backslash
         , Ext_latex_macros
             -- Code extensions
@@ -198,11 +207,8 @@ pandocCompiler_ =
         , writerHTMLMathMethod = MathJax ""
         , writerHighlightStyle = Just syntaxHighlightingStyle
         }
-    -- Note the use of the bulmaTransform function
-    -- This is because Bulma uses special CSS classes for formatting
-    -- Example here: 
-    --      http://www.physics.mcgill.ca/~decotret/posts/bulma-pandoc-filter.html
-    in pandocCompilerWithTransform defaultHakyllReaderOptions writerOptions bulmaTransform
+    -- Pandoc filters are composed in the 'transform' function
+    in pandocCompilerWithTransform defaultHakyllReaderOptions writerOptions (bulmaTransform . transform)
 
 -- Move content from static/ folder to base folder
 staticRoute :: Routes

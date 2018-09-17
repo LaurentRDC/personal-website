@@ -30,5 +30,5 @@ executable personal-website
                        time,
                        JuicyPixels
 -- For stylistic purposes
-  other-modules:       CompressJpg, BulmaTemplate, BulmaFilter, Feed
+  other-modules:       CompressJpg, BulmaTemplate, BulmaFilter, ReadingTimeFilter, Feed
 
