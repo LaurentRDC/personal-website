@@ -3,25 +3,7 @@ title: Example of a Pandoc filter to abstract away CSS framework quirks
 date: 2018-09-12
 ---
 
-To make this static website render correctly on both desktop and mobile, I've decided to 'upgrade' my setup to use the [Bulma CSS framework](https://bulma.io).
-
-## CSS Frameworks
-
-If you're not familiar with web technologies, you should know that rendering a static web page usually involves the following two components:
-
-* Hyper Text Markup Language (HTML) code describes the structure of the page;
-
-* Cascading Style Sheets (CSS) are documents describing what the HTML elements should look like;
-
-CSS allows to easily style the website. I can keep the structure (i.e. HTML code) roughly the same, while experimenting with different styles by changing the CSS code. A CSS __framework__ is a collection of CSS bits I can use to style my website more easily.
-
-There are many CSS frameworks. The most popular is probably [Bootstrap](https://getbootstrap.com/), which I used to create our research group [website](http://www.physics.mcgill.ca/siwicklab). However, for my personal page, I was looking for something lighter, and I saw a post on [Hacker News](https://news.ycombinator.com/item?id=16279935) about Bulma, so I wanted to try it.
-
-Above, I said:
-
-> I can keep the structure (i.e. HTML code) roughly the same, while experimenting with different styles by changing the CSS code.
-
-Emphasis on _roughly_. It's is not always true (in my case) that I can modify my CSS code and leave the HTML completely unchanged. There is a little bit of interdependency.
+To make this static website render correctly on both desktop and mobile, I've decided to 'upgrade' my setup to use the [Bulma CSS framework](https://bulma.io). This introduced a problem I did not anticipate.
 
 For example, consider the following "raw" HTML tag to create a level 1 title:
 
@@ -46,13 +28,9 @@ Problem is, a lot of headings included on my website are generated from Markdown
 
 __This is a textbook example of a problem that can be solved with a Pandoc filter.__
 
-## Pandoc filters to the rescue
-
 During the conversion from Markdown to HTML, Pandoc constructs an [abstract syntax tree](https://en.wikipedia.org/wiki/Abstract_syntax_tree) representing the document. A Pandoc filter is used to include transformations to this abstract syntax tree. This is precisely what we want : we want to transform headings into a slightly different type of headings that will play nicely with Bulma.
 
 There are some examples in the [Pandoc documentation on filters](http://pandoc.org/filters.html), but I would like to document the process I used to create this filter.
-
-## Writing the filter
 
 We'll be writing the filter in Haskell, because I can then include in directly in the website code generation ([more info here](/posts/making-this-website.html)).
 
@@ -152,7 +130,7 @@ bulmaHeadingTransform :: Pandoc -> Pandoc
 bulmaHeadingTransform = walk toBulmaHeading
 ```
 
-## Hooking into Hakyll
+### Hooking into Hakyll
 
 To include this filter in my Hakyll pipeline, I only need to provide this filter to the `pandocCompilerWithTransform`{.haskell} function. Hakyll will then apply the Pandoc filter after the AST has been generated from Markdown, but before HTML rendering happens.
 
@@ -168,4 +146,4 @@ You can take a look at the [source code](https://github.com/LaurentRDC/personal-
 
 [^1]: I'm sure there is a way to abstract those details away, but the objective today is to play with Pandoc.
 
-[^2]: I'm using the `mappend`{.haskell} operation `<>`{.haskell} to concatenate lists and strings. I could have used `++`{.haskell}, `<>`{.haskell} just looks so slick.
+[^2]: I'm using the `mappend`{.haskell} operation `<>`{.haskell} to concatenate lists and strings. I could have used `++`{.haskell}, but `<>`{.haskell} just looks so slick.

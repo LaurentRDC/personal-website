@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE OverloadedStrings          #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 import Data.Monoid ((<>))
 import Hakyll
@@ -25,9 +25,6 @@ import Data.Time.Calendar               (toGregorian, showGregorian)
 
 import CompressJpg                      (compressJpgCompiler)
 import Feed                             (feedConfiguration)
-
--- TODO: RSS feed
--- TODO: generating CSS with Cassius?
 
 -- | syntax highlighting style to use throughout
 syntaxHighlightingStyle :: Style
@@ -118,6 +115,17 @@ main = do
                 posts <- fmap (take 10) . recentFirst =<< 
                     loadAllSnapshots "posts/*" "content"
                 renderRss feedConfiguration feedCtx posts
+
+        --------------------------------------------------------------------------------
+        -- Create Atom feed
+        -- See https://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html
+        create ["atom.xml"] $ do
+            route idRoute
+            compile $ do
+                let feedCtx = postCtx <> bodyField "description"
+                posts <- fmap (take 10) . recentFirst =<< 
+                    loadAllSnapshots "posts/*" "content"
+                renderAtom feedConfiguration feedCtx posts
         
         --------------------------------------------------------------------------------
         -- Create a page containing all posts

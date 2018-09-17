@@ -25,7 +25,12 @@ socialLinks = [
     , ("fab fa-linkedin",     "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  "LinkedIn")
     , ("ai ai-researchgate",  "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",      "ResearchGate")
     , ("ai ai-orcid",         "https://orcid.org/0000-0002-1464-2739",                            "OrcID")
-    , ("fas fa-rss",          "/feed.xml",                                                        "RSS feed")
+    ]
+
+feedLinks :: [SocialLink]
+feedLinks = [
+      ("fas fa-rss",  "/feed.xml", "RSS feed")
+    , ("fas fa-atom", "/atom.xml", "Atom feed")
     ]
 
 type NavigationLink = (Link, String)
@@ -100,7 +105,9 @@ defaultFooter s = H.footer ! class_ "footer" $
     H.div ! class_ "content has-text-centered" $ do
         -- List all socials links
         -- This is important because on mobile, the hero-foot disappears
-        H.p $ (mconcat . intersperse " | ") $ renderSocialLink <$> socialLinks
+        H.p $ (mconcat . intersperse " | ") $ renderLink <$> socialLinks
+
+        H.p $ (mconcat . intersperse " | ") $ renderLink <$> feedLinks
 
         -- Message and disclaimer
         H.p ! class_ "is-small" $ mconcat 
@@ -111,7 +118,7 @@ defaultFooter s = H.footer ! class_ "footer" $
                     , "." 
                     ]
     where
-        renderSocialLink (icon, link, name) = do 
+        renderLink (icon, link, name) = do 
             H.span ! class_ "icon" $ H.i ! class_ (toValue icon) $ mempty
             H.a ! href (toValue link) $ toMarkup name
 
