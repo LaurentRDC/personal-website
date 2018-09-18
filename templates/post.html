@@ -1,15 +1,17 @@
 <div class="info">
-    Posted on $date$
-    $if(author)$
-        by $author$
-    $endif$
-    
-    <!-- This template works with the post context modificationTimeField in site.hs -->
-    $if(updated)$
-    <br>
-    Last updated on $updated$
-    <br>
-    $endif$
+    <em>
+        Posted on $date$
+        $if(author)$
+            by $author$
+        $endif$
+
+        <!-- This template works with the post context modificationTimeField in site.hs -->
+        $if(updated)$
+        <br>
+        Last updated on $updated$
+        <br>
+        $endif$
+    </em>
 </div>
 <br>
 $body$
