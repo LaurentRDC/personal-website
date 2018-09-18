@@ -96,7 +96,7 @@ main = do
             route $ (setExtension "html") `composeRoutes` staticRoute
             -- No Pandoc filters beyond the built-in bulmaTransform
             -- hence the use of 'id'
-            compile $ pandocCompiler_ id
+            compile $ pandocCompiler_
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
         
@@ -107,7 +107,7 @@ main = do
             route $ setExtension "html"
             -- In addition to the usual bulmaTransform,
             -- we add estimated reading time
-            compile $ pandocCompiler_ readingTimeTransform
+            compile $ pandocCompiler_
                 >>= loadAndApplyTemplate "templates/post.html"    postCtx
                 >>= saveSnapshot "content"  -- Saved content for RSS feed
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
@@ -178,8 +178,8 @@ postCtx = mconcat [ dateField "date" "%B %e, %Y"
 
 -- | Allow math display, code highlighting, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
-pandocCompiler_ :: (Pandoc -> Pandoc) -> Compiler (Item String)
-pandocCompiler_ transform =
+pandocCompiler_ :: Compiler (Item String)
+pandocCompiler_ =
     let 
     -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
     extensions = [ 
@@ -208,7 +208,7 @@ pandocCompiler_ transform =
         , writerHighlightStyle = Just syntaxHighlightingStyle
         }
     -- Pandoc filters are composed in the 'transform' function
-    in pandocCompilerWithTransform defaultHakyllReaderOptions writerOptions (bulmaTransform . transform)
+    in pandocCompilerWithTransform defaultHakyllReaderOptions writerOptions bulmaTransform
 
 -- Move content from static/ folder to base folder
 staticRoute :: Routes
