@@ -1,9 +1,11 @@
 module ReadingTimeFilter (
-    readingTimeTransform
+      readingTimeTransform
+    , readingTimeTransformMeta
 ) where
 
-import Text.Pandoc.Definition   (Pandoc(..), Block(..), Inline(..), Attr, Meta(..), MetaValue(..))
-import Text.Pandoc.Walk         (walk, query)
+import Text.Pandoc
+import Text.Pandoc.Definition   (Pandoc(..), Inline(..), Block(..), Meta(..), MetaValue(..))
+import Text.Pandoc.Walk         (query)
 
 import Data.Monoid              (Sum(..))
 import Data.Map                 (insert)
@@ -48,3 +50,11 @@ readingTimeTransform (Pandoc meta blocks) = Pandoc meta ([newBlock] <> blocks)
                               , " minutes."]
                 ]
             ]
+
+-- | Insert the 'reading-time' metadata key
+readingTimeTransformMeta :: Pandoc -> Pandoc
+readingTimeTransformMeta (Pandoc meta blocks) = Pandoc newMeta blocks
+    where
+        nwords = getSum $ wordCount (Pandoc meta blocks)
+        readingTime = show $ nwords `div` 100
+        newMeta = Meta $ insert "reading-time" (MetaInlines [Str readingTime]) (unMeta meta)
