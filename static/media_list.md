@@ -44,6 +44,10 @@ University-level introductory class to data structures and algorithms in the con
 
 Very technical discussions regarding Haskell.
 
+<i class="fas fa-bookmark"></i> | [Software Disenchantment](http://tonsky.me/blog/disenchantment/)
+
+An essay on the paradox that faster hardware doesn't seem to translate to faster software.
+
 ## General science <a name="science"></a>
 
 <i class="fab fa-youtube"></i> | [Mechanical Fourier Analysis](https://www.youtube.com/watch?v=NAsM30MAHLg&list=PL0INsTTU1k2UYO9Mck-i5HNqGNW5AeEwq)
