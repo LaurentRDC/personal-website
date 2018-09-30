@@ -11,7 +11,8 @@ import qualified GHC.IO.Encoding as E
 import Text.Pandoc.Options
 import Text.Pandoc.Extensions
 import Text.Pandoc.Highlighting 
-
+import Text.Pandoc.Filter.Pyplot        (makePlot)
+import Text.Pandoc.Walk                 (walkM)
 import Text.Pandoc.Definition           (Pandoc)
 
 import System.IO
@@ -25,7 +26,7 @@ import BulmaFilter                      (bulmaTransform)
 import ReadingTimeFilter                (readingTimeTransform)
 
 import Data.Time.Clock                  (getCurrentTime, utctDay)
-import Data.Time.Calendar               (toGregorian, showGregorian)
+import Data.Time.Calendar               (showGregorian)
 
 import CompressJpg                      (compressJpgCompiler)
 import Feed                             (feedConfiguration)
@@ -36,8 +37,11 @@ syntaxHighlightingStyle = kate
 
 -- We match images down to two levels
 -- Images/* and images/*/**
-jpgImages = "images/*.jpg" .||. "images/*/**.jpg"
-nonJpgImages = ("images/*/**" .||. "images/*") .&&. complement jpgImages
+jpgImages = "images/*.jpg" .||. "images/*/**.jpg" 
+nonJpgImages = (     "images/*/**" 
+                .||. "images/*"
+                ) .&&. complement jpgImages
+generatedContent = "generated/*"
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -76,6 +80,10 @@ main = do
             route   idRoute
             compile copyFileCompiler
         
+        match generatedContent $ do
+            route   generatedRoute
+            compile copyFileCompiler
+        
         match "css/*" $ do
             route   idRoute
             compile compressCssCompiler
@@ -105,8 +113,6 @@ main = do
         -- Explicitly do not match the drafts
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
-            -- In addition to the usual bulmaTransform,
-            -- we add estimated reading time
             compile $ pandocCompiler_
                 >>= loadAndApplyTemplate "templates/post.html"    postCtx
                 >>= saveSnapshot "content"  -- Saved content for RSS feed
@@ -176,6 +182,14 @@ postCtx :: Context String
 postCtx = mconcat [ dateField "date" "%B %e, %Y"
                   , defaultContext ]
 
+plotTransform :: Pandoc -> IO Pandoc
+plotTransform = walkM makePlot
+
+-- Overall document transform, i.e. the combination
+-- of all Pandoc filters
+transforms :: Pandoc -> IO Pandoc
+transforms doc = bulmaTransform <$> plotTransform doc
+
 -- | Allow math display, code highlighting, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
 pandocCompiler_ :: Compiler (Item String)
@@ -208,8 +222,15 @@ pandocCompiler_ =
         , writerHighlightStyle = Just syntaxHighlightingStyle
         }
     -- Pandoc filters are composed in the 'transform' function
-    in pandocCompilerWithTransform defaultHakyllReaderOptions writerOptions bulmaTransform
+    in pandocCompilerWithTransformM 
+        defaultHakyllReaderOptions 
+        writerOptions 
+        (unsafeCompiler . transforms)
 
 -- Move content from static/ folder to base folder
 staticRoute :: Routes
 staticRoute = (gsubRoute "static/" (const ""))
+
+-- Move generated posts from posts/generated to generated/
+generatedRoute :: Routes
+generatedRoute = gsubRoute "generated/" (const "posts/generated/")

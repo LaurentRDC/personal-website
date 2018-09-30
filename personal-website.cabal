@@ -1,5 +1,5 @@
 name:                personal-website
-version:             1.0.0.0
+version:             1.0.0.1
 -- synopsis:
 -- description:
 homepage:            https://github.com/LaurentRDC/personal-website#readme
@@ -22,6 +22,7 @@ executable personal-website
                        hakyll,
                        pandoc,
                        pandoc-types,
+                       pandoc-pyplot,
                        skylighting,
                        containers,
                        blaze-html,
