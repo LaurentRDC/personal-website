@@ -43,7 +43,7 @@ For Anaconda users, `iris-ued` is also available on the `conda-forge` channel:
     <img src="https://img.shields.io/conda/vn/conda-forge/scikit-ued.svg">
 </a>
 
-Scikit-ued is a fully-tested Python package containing routines and algorithms related to (ultrafast) electron diffraction. The package aims to provide software to deal with simulation, structure manipulation, image-analysis, baseline-determination, and more.
+`scikit-ued` is a fully-tested Python package containing routines and algorithms related to (ultrafast) electron diffraction. The package aims to provide software to deal with simulation, structure manipulation, image-analysis, baseline-determination, and more.
 
 To install from PyPI:
 
@@ -62,9 +62,9 @@ For Anaconda users, `scikit-ued` is also available on the `conda-forge` channel:
     <img src="https://img.shields.io/conda/vn/conda-forge/npstreams.svg">
 </a>
 
-npstreams is an open-source Python package for streaming NumPy array operations. The goal is to provide tested routines that operate on streams of arrays instead of dense arrays.
+`npstreams` is an open-source Python package for streaming NumPy array operations. The goal is to provide tested routines that operate on streams of arrays instead of dense arrays.
 
-Streaming reduction operations (sums, averages, etc.) can be implemented in constant memory, which in turns allows for easy parallelization. Some routines in npstreams are parallelized in this way. In our experience, this approach has resulted in huge speedups when working with images; the images are read one-by-one from disk and combined/processed in a streaming fashion, in parallel.
+Streaming reduction operations (sums, averages, etc.) can be implemented in constant memory, which in turns allows for easy parallelization. Some routines in `npstreams` are parallelized in this way. In our experience, this approach has resulted in huge speedups when working with images; the images are read one-by-one from disk and combined/processed in a streaming fashion, in parallel.
 
 To install from PyPI:
 
@@ -73,3 +73,11 @@ To install from PyPI:
 For Anaconda users, `npstreams` is also available on the `conda-forge` channel:
 
         > conda install -c conda-forge npstreams
+
+## pandoc-pyplot
+
+<a href="http://hackage.haskell.org/package/pandoc-pyplot" target="_blank">
+    <img src="https://img.shields.io/hackage/v/pandoc-pyplot.svg">
+</a>
+
+`pandoc-pyplot` is a Pandoc filter in the spirit of sphinx's [`plot_directive`](https://matplotlib.org/devel/plot_directive.html). Write Python code to make a Matplotlib figure in your document, and `pandoc-pyplot` will generate the figure for you and embed it in the document. This way, your documents are figures are always up-to-date with each other.

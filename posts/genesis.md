@@ -59,7 +59,7 @@ def fib(n):
 
 - _NumPy documentation for bincount_
 
-### Update 2018-09-29 : Python plots
+### Update 2018-09-30 : Python plots
 
 Using this space to test the use of my first published Haskell package, [`pandoc-pyplot`](http://hackage.haskell.org/package/pandoc-pyplot)
 
