@@ -27,3 +27,6 @@ __pycache__/
 .vscode/
 WinSCP.exe
 WinSCP.ini
+
+# Files automatically generated
+templates/default.html
