@@ -6,7 +6,7 @@ Steps are:
 1. Build the website using hakyll
 2. Then, simply run:
 
-    >>> python deploy.py [-h] [--all] [--images]
+    >>> python deploy.py 
 
 This script requires:
     - Python 3.3+
@@ -14,18 +14,19 @@ This script requires:
     - tqdm
 """
 import argparse
+import sys
+import webbrowser
 from contextlib import suppress
 from getpass import getpass
 from os import listdir, walk
 from os.path import getsize, isfile, join
-import sys
 
 try:
     from paramiko import SSHClient, AutoAddPolicy, AuthenticationException
     from tqdm import tqdm
 except ImportError:
     print('paramiko and tqdm are required for this script to run.')
-    sys.exit()
+    sys.exit(1)
 
 LOCAL_DIR = '_site'
 REMOTE_DIR = '/WWW/decotret/'
@@ -35,6 +36,8 @@ DESCRIPTION = """Update the personal website rendered by Hakyll. """
 
 parser = argparse.ArgumentParser(description = DESCRIPTION, 
                                  formatter_class = argparse.RawTextHelpFormatter)
+parser.add_argument('-s', '--show', action = 'store_true', 
+                    help='Navigate to website with default web browser after deployment')
 
 def put_dir(client, source, target, exclude_exts = None):
     """ 
@@ -73,7 +76,7 @@ def put_dir(client, source, target, exclude_exts = None):
 
 if __name__ == '__main__':
 
-    parser.parse_args()
+    arguments = parser.parse_args()
 
     password = getpass('CPM server password: ')
 
@@ -87,7 +90,7 @@ if __name__ == '__main__':
             print('Connected to CPM server.')
         except AuthenticationException as e:
             print(str(e))
-            sys.exit()
+            sys.exit(1)
 
         # Step 0: Calculate the transfer size 
         with client.open_sftp() as sftp_client:
@@ -107,4 +110,8 @@ if __name__ == '__main__':
                     pbar.update(bytes_transferred)
                     pbar.write('\r {}'.format(fname))
     
-    print('Done!')
+    print('Upload done!')
+
+    if arguments.show:
+        print('Opening web page externally...')
+        webbrowser.open('http://www.physics.mcgill.ca/~decotret')
