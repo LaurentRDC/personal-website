@@ -18,17 +18,17 @@ about our team on our [group website](http://www.physics.mcgill.ca/siwicklab/ind
 
 ## Publications
 
-Open-access publications are highlighted with a <i class="fas fa-lock-open"></i>
+Open-access publications are highlighted with a <i class="ai ai-open-access"></i>.
 
 * M. R. Otto, __L. P. René de Cotret__, D. A. Valverde-Chavez, K. L. Tiwari, N. Émond, M. Chaker, D. G. Cooke, and B. J. Siwick, _How optical excitation controls the structure and properties of vanadium dioxide_ (2018) [preprint](https://arxiv.org/abs/1805.01430)
 
-* __L. P. René de Cotret__, M. R. Otto, M. J. Stern, and B. J. Siwick, _An open-source software ecosystem for the interactive exploration of ultrafast electron scattering data_, Advanced Structural and Chemical Imaging __4__:11 (2018) [DOI:10.1186/s40679-018-0060-y](https://ascimaging.springeropen.com/articles/10.1186/s40679-018-0060-y) <i class="fas fa-lock-open"></i>
+* <i class="ai ai-open-access"></i> __L. P. René de Cotret__, M. R. Otto, M. J. Stern, and B. J. Siwick, _An open-source software ecosystem for the interactive exploration of ultrafast electron scattering data_, Advanced Structural and Chemical Imaging __4__:11 (2018) [DOI:10.1186/s40679-018-0060-y](https://ascimaging.springeropen.com/articles/10.1186/s40679-018-0060-y)
 
 * __L. P. René de Cotret__, M. J. Stern, M. R. Otto, R. P. Chatelain, J.-P. Boisvert, M. Sutton, and B. J. Siwick, _Mapping momentum-dependent electron-phonon coupling and non-equilibrium phonon dynamics with ultrafast electron diffuse scattering_, Phys.Rev.B __97__ (2018) [DOI:10.1103/PhysRevB.97.165416](https://link.aps.org/doi/10.1103/PhysRevB.97.165416)
 
-* M. R. Otto, __L. P. René de Cotret__, M. J. Stern, and B. J. Siwick, _Solving the Jitter Problem in Microwave Compressed Ultrafast Electron Diffraction Instruments: Robust Sub-50 fs Cavity-Laser Phase Stabilization_, Struct. Dyn. __5__ (2017) [DOI: 10.1063/1.4989960](http://dx.doi.org/10.1063/1.4989960) <i class="fas fa-lock-open"></i>
+* <i class="ai ai-open-access"></i> M. R. Otto, __L. P. René de Cotret__, M. J. Stern, and B. J. Siwick, _Solving the Jitter Problem in Microwave Compressed Ultrafast Electron Diffraction Instruments: Robust Sub-50 fs Cavity-Laser Phase Stabilization_, Struct. Dyn. __5__ (2017) [DOI: 10.1063/1.4989960](http://dx.doi.org/10.1063/1.4989960)
 
-* __L. P. René de Cotret__ and B. J. Siwick, _A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform_, Struct. Dyn. __4__ (2017) [DOI:10.1063/1.4972518](http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518) <i class="fas fa-lock-open"></i>
+* <i class="ai ai-open-access"></i> __L. P. René de Cotret__ and B. J. Siwick, _A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform_, Struct. Dyn. __4__ (2017) [DOI:10.1063/1.4972518](http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518)
 
 ## Presentations
 

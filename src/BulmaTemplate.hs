@@ -25,6 +25,7 @@ socialLinks = [
     , ("fab fa-linkedin",     "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  "LinkedIn")
     , ("ai ai-researchgate",  "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",      "ResearchGate")
     , ("ai ai-orcid",         "https://orcid.org/0000-0002-1464-2739",                            "OrcID")
+    , ("ai ai-google-scholar","https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en",      "Google Scholar")
     ]
 
 feedLinks :: [SocialLink]
@@ -96,7 +97,7 @@ navigationBar = H.section ! class_ "hero is-warning is-bold" $ do
         renderLink (link, title) = H.a ! class_ "navbar-item" ! href (toValue link) $ toMarkup title
 
         -- Generate an icon + anchor 
-        mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item" ! href (toValue link) $ do 
+        mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item" ! target "_blank" ! href (toValue link) $ do 
             H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon) $ mempty
             toMarkup $ name
 
@@ -120,7 +121,7 @@ defaultFooter s = H.footer ! class_ "footer" $
     where
         renderLink (icon, link, name) = do 
             H.span ! class_ "icon" $ H.i ! class_ (toValue icon) $ mempty
-            H.a ! href (toValue link) $ toMarkup name
+            H.a ! target "_blank" ! href (toValue link) $ toMarkup name
 
 -- | Full default template
 -- The templateFooter will be adorned with the message @s@
