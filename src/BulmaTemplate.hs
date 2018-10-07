@@ -47,7 +47,7 @@ navigationLinks = [
 
 defaultHead :: H.Html
 defaultHead = H.head $ do
-    H.meta ! httpEquiv "Content-Type" ! content "text/html; charset=UTF-8"
+    H.meta ! charset "utf-8"
     H.meta ! name "viewport" ! content "width=device-width, initial-scale=1"
     H.title "Laurent P. René de Cotret - $title$"
     -- Style sheets
