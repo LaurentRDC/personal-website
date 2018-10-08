@@ -17,6 +17,7 @@ type Icon = String
 type Link = String
 
 type SocialLink = (Icon, Link, String)
+type NavigationLink = (Link, String)
 
 socialLinks :: [SocialLink]
 socialLinks = [ 
@@ -34,8 +35,6 @@ feedLinks = [
     , ("fas fa-atom", "/atom.xml", "Atom feed")
     ]
 
-type NavigationLink = (Link, String)
-
 navigationLinks :: [NavigationLink]
 navigationLinks = [
       ("/index.html",       "Home")
@@ -43,6 +42,14 @@ navigationLinks = [
     , ("/software.html",    "Software")
     , ("/about.html",       "About me")
     , ("/archive.html",     "Blog posts")
+    ]
+
+styleSheets :: [AttributeValue]
+styleSheets = 
+    [ "/css/bulma.css"
+    , "/css/syntax.css"
+    , fontAwesomeUrl
+    , "/css/academicons.css"
     ]
 
 defaultHead :: H.Html
@@ -54,12 +61,9 @@ defaultHead = H.head $ do
     -- Note : won't show up for Edge while on localhost
     H.link ! rel "icon" ! type_ "image/x-icon" ! href "images/atom-solid.png"
     -- Style sheets
-    H.link ! rel "stylesheet" ! type_ "text/css" ! href "/css/bulma.css"
-    H.link ! rel "stylesheet" ! type_ "text/css" ! href "/css/syntax.css"
-    H.link ! rel "stylesheet" ! type_ "font"     ! href fontUrl
-    -- Font awesome and Academicons
-    H.link ! rel "stylesheet" ! type_ "text/css" ! href fontAwesomeUrl
-    H.link ! rel "stylesheet" ! type_ "text/css" ! href "/css/academicons.css"
+    forM_ styleSheets (\link -> H.link ! rel "stylesheet" ! type_ "text/css" ! href link)
+    -- Font
+    H.link ! rel "stylesheet" ! type_ "font" ! href fontUrl
     -- Math display
     H.script ! type_ "text/javascript" ! async "" ! src mathjaxUrl $ mempty
     -- Bulma helpers
