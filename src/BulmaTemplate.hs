@@ -49,7 +49,10 @@ defaultHead :: H.Html
 defaultHead = H.head $ do
     H.meta ! charset "utf-8"
     H.meta ! name "viewport" ! content "width=device-width, initial-scale=1"
-    H.title "Laurent P. René de Cotret - $title$"
+    H.title "$title$ - Laurent P. René de Cotret"
+    -- Tab icon
+    -- Note : won't show up for Edge while on localhost
+    H.link ! rel "icon" ! type_ "image/x-icon" ! href "images/atom-solid.png"
     -- Style sheets
     H.link ! rel "stylesheet" ! type_ "text/css" ! href "/css/bulma.css"
     H.link ! rel "stylesheet" ! type_ "text/css" ! href "/css/syntax.css"
