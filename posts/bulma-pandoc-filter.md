@@ -1,6 +1,7 @@
 ---
 title: Example of a Pandoc filter to abstract away CSS framework quirks
 date: 2018-09-12
+summary: A blog post on using a Pandoc filter to help integrate the Bulma CSS framework into this website.  
 ---
 
 To make this static website render correctly on both desktop and mobile, I've decided to 'upgrade' my setup to use the [Bulma CSS framework](https://bulma.io). This introduced a problem I did not anticipate.

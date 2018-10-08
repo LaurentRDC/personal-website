@@ -1,13 +1,14 @@
 ---
 title: On the significance of chirped pulse amplification and the Nobel Prize in Physics 2018
 date: 2018-10-05
+summary: Some thoughts on petawatt lasers enabled by Donna Strickland and Gérard Mourou, recently awarded the Nobel Prize in Physics.
 ---
 
 This week, the Nobel Prize in Physics 2018 was announced : half of it goes to Donna Strickland and Gérard Mourou for the invention of a _"(...) method of generating high-intensity, ultra-short optical pulses"_.
 
-This method, called chirped-pulse amplification (CPA), dates back to 1985 [^1]. At the time, it could produce pulses of 2 picoseconds duration (2 picoseconds = $2^{-12}$ seconds = 0.000 000 000 002 seconds), with each pulse carrying about 1 milliJoules (mJ).
+This method, called chirped-pulse amplification (CPA), dates back to 1985 [^1]. At the time, it could produce pulses of 2 picoseconds duration (2 picoseconds = $2 \times 10^{-12}$ seconds = 0.000 000 000 002 seconds), with each pulse carrying about 1 milliJoules (mJ).
 
-Practically, in 2018, commercial laser systems can produce pulses of ~30 femtoseconds ($30^{-15}$ seconds), with each pulse carrying > 3 mJ. You can buy one for yourself, [for example here](https://www.spectra-physics.com/products/ultrafast-lasers/), for a few hundred thousands $CA. That might sound like a lot to you, but not in terms of cutting-edge research.
+Practically, in 2018, commercial laser systems can produce pulses of ~30 femtoseconds ($30 \times 10^{-15}$ seconds), with each pulse carrying > 3 mJ. You can buy one for yourself, [for example here](https://www.spectra-physics.com/products/ultrafast-lasers/), for a few hundred thousands $CA. That might sound like a lot to you, but not in terms of cutting-edge research.
 
 These laser systems are becoming ubiquitous. [I use one everyday](http://www.physics.mcgill.ca/siwicklab). So do many of my colleagues in the Physics department ([here](http://www.physics.mcgill.ca/~cooke) and [here](http://physics.mcgill.ca/~grutter)) and Chemistry department ([this guy has two](http://kambhampati-group.mcgill.ca/)) at McGill University alone. The technology is transformative, and hence the Nobel Prize is well-deserved.
 

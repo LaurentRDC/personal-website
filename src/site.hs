@@ -179,7 +179,7 @@ main = do
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
-postCtx = mconcat [ dateField "date" "%B %e, %Y"
+postCtx = mconcat [ dateField "date" "%Y-%m-%d"
                   , defaultContext ]
 
 plotTransform :: Pandoc -> IO Pandoc

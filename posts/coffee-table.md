@@ -1,6 +1,7 @@
 ---
 title: Making a concrete coffee table
 date: 2018-09-10
+summary: I've been wanting to build my own furniture for a while now. This posts details how I built an asymmetric coffee table using concrete, for less than 100$.
 ---
 
 This post will go through the process of making a concrete coffee table. I had never worked with concrete before. This was a relatively simple introduction to concrete furniture.
