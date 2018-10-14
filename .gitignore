@@ -30,3 +30,4 @@ WinSCP.ini
 
 # Files automatically generated
 templates/default.html
+generated/*
