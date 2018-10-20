@@ -9,9 +9,11 @@ import Text.Blaze.Html5.Attributes  as A
 
 import Text.Blaze                    (toValue, toMarkup)
 
-fontAwesomeUrl = "https://use.fontawesome.com/releases/v5.2.0/css/all.css" 
-mathjaxUrl = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"
-fontUrl = "https://fonts.googleapis.com/css?family=Titillium+Web"
+fontAwesomeURL = "https://use.fontawesome.com/releases/v5.2.0/css/all.css" 
+academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
+bulmaURL = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
+mathjaxURL = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"
+fontURL = "https://fonts.googleapis.com/css?family=Titillium+Web"
 
 type Icon = String
 type Link = String
@@ -46,10 +48,10 @@ navigationLinks = [
 
 styleSheets :: [AttributeValue]
 styleSheets = 
-    [ "/css/bulma.css"
-    , "/css/syntax.css"
-    , fontAwesomeUrl
-    , "/css/academicons.css"
+    [ "/css/syntax.css"
+    , bulmaURL
+    , fontAwesomeURL
+    , academiconsURL
     ]
 
 defaultHead :: H.Html
@@ -63,9 +65,9 @@ defaultHead = H.head $ do
     -- Style sheets
     forM_ styleSheets (\link -> H.link ! rel "stylesheet" ! type_ "text/css" ! href link)
     -- Font
-    H.link ! rel "stylesheet" ! type_ "font" ! href fontUrl
+    H.link ! rel "stylesheet" ! type_ "font" ! href fontURL
     -- Math display
-    H.script ! type_ "text/javascript" ! async "" ! src mathjaxUrl $ mempty
+    H.script ! type_ "text/javascript" ! async "" ! src mathjaxURL $ mempty
     -- Bulma helpers
     H.script ! type_ "text/javascript" ! src "/js/navbar-onclick.js" $ mempty
 
