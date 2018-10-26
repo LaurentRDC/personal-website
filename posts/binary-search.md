@@ -1,12 +1,13 @@
 ---
-title: Angel & Demons as an illustration of search algorithms.
+title: Angels & Demons as an illustration of search algorithms.
 date: 2018-10-18
+updated: 2018-10-25
 summary: This post is about what the story of Angel & Demons can teach us about linear vs. binary search, by optimizing how much time is spent looking for a bomb in Vatican City.
 ---
 
-I was watching the movie [Angel & Demons](https://en.wikipedia.org/wiki/Angels_%26_Demons_(film)) recently, and it got me thinking about binary search trees.
+I was watching the movie [Angels & Demons](https://en.wikipedia.org/wiki/Angels_%26_Demons_(film)) recently, and it got me thinking about binary search trees.
 
-## Quick summary of Angel & Demons
+## Quick summary of Angels & Demons
 
 In the movie, an explosive device (based on antimatter!) is placed somewhere inside Vatican City. The bomb is set to explode around midnight, leaving about 4-5h of search time. However, to taunt our protagonists, the bomb maker has placed a wireless camera continously showing the bomb:
 
