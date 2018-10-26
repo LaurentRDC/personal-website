@@ -9,17 +9,17 @@ $for(posts)$
         <div class="card-content">
             <div class="content">
             <p>
-            $if(summary)$
-                $summary$
-            $else$
-                No summary available.
-            $endif$
-            <a href="$url$">Click here to read the rest.</a>
+                $if(summary)$
+                    $summary$
+                $else$
+                    No summary available.
+                $endif$
+                <a href="$url$">Click here to read the rest.</a>
             </p>
             <p>
                 <em>Posted on $date$</em>.
                 $if(updated)$
-                <em>Last updated on $updated$</em>
+                <em>Last updated on $updated$</em>.
                 $endif$
             </p>
             </div>
