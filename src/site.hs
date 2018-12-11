@@ -109,6 +109,29 @@ main = do
                 >>= relativizeUrls
         
         --------------------------------------------------------------------------------
+        -- Compile projects page
+        -- We need to compile each project individuallycfirst
+        -- If this is not done, we cannot use the metadata in HTML templates
+        match ("projects/**") $ compile $ pandocCompiler_ >>= relativizeUrls
+
+        create ["software.html"] $ do
+            route idRoute
+            compile $ do
+                projects <- loadAll (fromGlob "projects/*.md")
+
+                let projectsCtx = mconcat [
+                          listField "projects" defaultContext (return projects)
+                        , constField "title" "Software projects"
+                        , defaultContext
+                        ]
+                
+                makeItem "" 
+                    >>= loadAndApplyTemplate "templates/projects.html" projectsCtx
+                    >>= loadAndApplyTemplate "templates/default.html" projectsCtx
+                    >>= relativizeUrls
+
+        
+        --------------------------------------------------------------------------------
         -- Compile blog posts
         -- Explicitly do not match the drafts
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
@@ -172,6 +195,24 @@ main = do
                     >>= applyAsTemplate indexCtx
                     >>= loadAndApplyTemplate "templates/default.html" indexCtx
                     >>= relativizeUrls
+
+        --------------------------------------------------------------------------------
+        -- Create a sitemap for easier search engine integration
+        -- Courtesy of Robert Pearce <https://robertwpearce.com/hakyll-pt-2-generating-a-sitemap-xml-file.html>
+        create ["sitemap.xml"] $ do
+            route   idRoute
+            compile $ do
+                -- Gather all announcements
+                posts <- recentFirst =<< loadAll "posts/*"
+                -- Gather all other pages
+                pages <- loadAll (fromGlob "static/**")
+                let allPages = pages <> posts
+                    sitemapCtx = 
+                        constField "root" "http://www.physics.mcgill.ca/~decotret" <>
+                        listField "pages" postCtx (return allPages)
+
+                makeItem ""
+                    >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
         
         --------------------------------------------------------------------------------
         match "templates/*" $ compile templateCompiler
@@ -179,7 +220,8 @@ main = do
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
-postCtx = mconcat [ dateField "date" "%Y-%m-%d"
+postCtx = mconcat [ constField "root" "http://www.physics.mcgill.ca/~decotret/"
+                  , dateField "date" "%Y-%m-%d"
                   , defaultContext ]
 
 plotTransform :: Pandoc -> IO Pandoc

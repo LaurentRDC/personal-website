@@ -1,0 +1,24 @@
+<div class="card">
+    <div class="card-header">
+        <div class="card-header-title">
+            <p>$name$</p>
+        </div>
+    </div>
+    <div class="card-content">
+        <p>
+            $body$
+        </p>
+    </div>
+    <!-- 
+        Repository is optional
+    -->
+    $if(repository)$
+    <div class="card-footer">
+        <div class="card-footer-item">
+            <p class="has-text-center">
+                <i class="fab fa-github"></i> Read the source <a href="$repository$">here</a>
+            </p>
+        </div>
+    </div>
+    $endif$
+</div>
