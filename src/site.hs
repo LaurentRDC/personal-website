@@ -117,10 +117,12 @@ main = do
         create ["software.html"] $ do
             route idRoute
             compile $ do
-                projects <- loadAll (fromGlob "projects/*.md")
+                scientific <- loadAll (fromGlob "projects/scientific/*.md")
+                general <- loadAll (fromGlob "projects/*.md")
 
                 let projectsCtx = mconcat [
-                          listField "projects" defaultContext (return projects)
+                          listField "scientific" defaultContext (return scientific)
+                        , listField "general" defaultContext (return general)
                         , constField "title" "Software projects"
                         , defaultContext
                         ]
