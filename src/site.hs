@@ -3,6 +3,7 @@
 
 import Data.Monoid ((<>))
 import Hakyll
+import Hakyll.Images                    (compressJpgCompiler)
 
 -- Hakyll can trip on characters like apostrophes
 -- https://github.com/jaspervdj/hakyll/issues/109
@@ -28,7 +29,6 @@ import ReadingTimeFilter                (readingTimeTransform)
 import Data.Time.Clock                  (getCurrentTime, utctDay)
 import Data.Time.Calendar               (showGregorian)
 
-import CompressJpg                      (compressJpgCompiler)
 import Feed                             (feedConfiguration)
 
 -- | syntax highlighting style to use throughout
