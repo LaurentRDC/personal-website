@@ -23,6 +23,9 @@ _site/
 ### Python ###
 __pycache__/
 
+### Sass ###
+sass/
+
 # Misc
 .vscode/
 WinSCP.exe

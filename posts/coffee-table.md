@@ -126,7 +126,7 @@ After 24h, I polished the surface and sides again, with a smaller grit (400-grit
 
 Finally, to protect the surface and make the marbling more visible, I coated the table with some wood varnish I found lying around at my parents'. I only have a picture of coating the underside of the table:
 
-![](/images/coffee-table/coating-underside.jpg)
+![](/images/coffee-table/underside-coating.jpg)
 
 Transport from my parents' garage to my apartment:
 

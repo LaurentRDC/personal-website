@@ -10,7 +10,7 @@ This method, called chirped-pulse amplification (CPA), dates back to 1985 [^1]. 
 
 Practically, in 2018, commercial laser systems can produce pulses of ~30 femtoseconds ($30 \times 10^{-15}$ seconds), with each pulse carrying > 3 mJ. You can buy one for yourself, [for example here](https://www.spectra-physics.com/products/ultrafast-lasers/), for a few hundred thousands $CA. That might sound like a lot to you, but not in terms of cutting-edge research.
 
-These laser systems are becoming ubiquitous. [I use one everyday](http://www.physics.mcgill.ca/siwicklab). So do many of my colleagues in the Physics department ([here](http://www.physics.mcgill.ca/~cooke) and [here](http://physics.mcgill.ca/~grutter)) and Chemistry department ([this guy has two](http://kambhampati-group.mcgill.ca/)) at McGill University alone. The technology is transformative, and hence the Nobel Prize is well-deserved.
+These laser systems are becoming ubiquitous. [I use one everyday](http://www.physics.mcgill.ca/siwicklab). So do many of my colleagues in the Physics department ([here](http://www.physics.mcgill.ca/~cooke) and [here](http://www.physics.mcgill.ca/~peter)) and Chemistry department ([this guy has two](http://kambhampati-group.mcgill.ca/)) at McGill University alone. The technology is transformative, and hence the Nobel Prize is well-deserved.
 
 In the media, chirped pulse amplification is touted as a way of creating petawatts-laser system. This is misleading, and misses the point on what chirped pulse amplification has helped achieve in the past 30 years.
 

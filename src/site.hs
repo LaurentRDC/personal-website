@@ -3,7 +3,8 @@
 
 import Data.Monoid ((<>))
 import Hakyll
-import Hakyll.Images                    (compressJpgCompiler)
+import Hakyll.Images                    ( compressJpgCompiler )
+import Hakyll.Images.Resize             ( scaleImageCompiler )
 
 -- Hakyll can trip on characters like apostrophes
 -- https://github.com/jaspervdj/hakyll/issues/109
