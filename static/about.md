@@ -1,5 +1,6 @@
 ---
 title: About me
+withtoc: yes
 ---
 
 ## Currently
@@ -20,7 +21,7 @@ about our team on our [group website](http://www.physics.mcgill.ca/siwicklab/ind
 
 Open-access publications are highlighted with a <i class="ai ai-open-access"></i>.
 
-* M. R. Otto, __L. P. René de Cotret__, D. A. Valverde-Chavez, K. L. Tiwari, N. Émond, M. Chaker, D. G. Cooke, and B. J. Siwick, _How optical excitation controls the structure and properties of vanadium dioxide_ (2018) [preprint](https://arxiv.org/abs/1805.01430)
+* M. R. Otto, __L. P. René de Cotret__, D. A. Valverde-Chavez, K. L. Tiwari, N. Émond, M. Chaker, D. G. Cooke, and B. J. Siwick, _How optical excitation controls the structure and properties of vanadium dioxide_ (2018) [DOI: 10.1073/pnas.1808414115](https://doi.org/10.1073/pnas.1808414115). An earlier version is publicly available as a [preprint](https://arxiv.org/abs/1805.01430)<i class="ai ai-open-access"></i>
 
 * <i class="ai ai-open-access"></i> __L. P. René de Cotret__, M. R. Otto, M. J. Stern, and B. J. Siwick, _An open-source software ecosystem for the interactive exploration of ultrafast electron scattering data_, Advanced Structural and Chemical Imaging __4__:11 (2018) [DOI:10.1186/s40679-018-0060-y](https://ascimaging.springeropen.com/articles/10.1186/s40679-018-0060-y)
 

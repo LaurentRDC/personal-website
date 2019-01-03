@@ -154,11 +154,9 @@ mkDefaultTemplate s = H.docTypeHtml $ do
 -- Wrap the content of a page with a table of content
 tocTemplate :: H.Html
 tocTemplate = do 
-    H.div ! class_ "message is-link" $ do
-        H.div ! class_ "message-header" $
-            H.p $ "On this page:"
-        
-        H.div ! class_ "message-body" $
+    H.div ! class_ "message is-link" $       
+        H.div ! class_ "message-body" $ do
+            H.h2 $ "On this page"
             H.p $ "$toc$"
 
     "$body$"

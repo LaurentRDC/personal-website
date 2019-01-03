@@ -14,7 +14,7 @@ import qualified GHC.IO.Encoding        as E
 import Text.Pandoc.Options
 import Text.Pandoc.Extensions
 import Text.Pandoc.Highlighting 
-import Text.Pandoc.Filter.Pyplot        (makePlot)
+import Text.Pandoc.Filter.Pyplot        (plotTransform)
 import Text.Pandoc.Walk                 (walkM)
 import Text.Pandoc.Definition           (Pandoc)
 
@@ -227,10 +227,8 @@ main = do
 postCtx :: Context String
 postCtx = mconcat [ constField "root" "http://www.physics.mcgill.ca/~decotret/"
                   , dateField "date" "%Y-%m-%d"
-                  , defaultContext ]
-
-plotTransform :: Pandoc -> IO Pandoc
-plotTransform = walkM makePlot
+                  , defaultContext 
+                  ]
 
 -- Overall document transform, i.e. the combination
 -- of all Pandoc filters

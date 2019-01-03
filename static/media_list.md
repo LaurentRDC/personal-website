@@ -1,5 +1,6 @@
 ---
 title: Media list
+withtoc: yes
 ---
 
 Generalization of a reading list to all kinds of media.
@@ -13,14 +14,6 @@ Generalization of a reading list to all kinds of media.
 <i class="fas fa-book"></i> = physical/digital books
 |
 <i class="fas fa-film"></i> = movies
-
-## Table of contents
-
-
-1. [Computer Science and Software Engineering](#software)
-2. [Science](#science)
-3. [Video games](#vidya)
-4. [Society](#society)
 
 ## Computer Science and Software Engineering <a name="software"></a>
 
