@@ -1,14 +1,15 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
-import Data.Monoid ((<>))
+import Data.Maybe                       (fromMaybe)
+import Data.Monoid                      ((<>))
 import Hakyll
 import Hakyll.Images                    ( compressJpgCompiler )
 import Hakyll.Images.Resize             ( scaleImageCompiler )
 
 -- Hakyll can trip on characters like apostrophes
 -- https://github.com/jaspervdj/hakyll/issues/109
-import qualified GHC.IO.Encoding as E
+import qualified GHC.IO.Encoding        as E
 
 import Text.Pandoc.Options
 import Text.Pandoc.Extensions
@@ -19,10 +20,11 @@ import Text.Pandoc.Definition           (Pandoc)
 
 import System.IO
 
-import qualified Data.ByteString.Lazy   as B -- Must use lazy bytestrings because of renderHTML
-import Text.Blaze.Html.Renderer.Utf8    (renderHtml)
+import qualified Data.ByteString        as B -- Must use lazy bytestrings because of renderHTML
+import Text.Blaze.Html.Renderer.Utf8    (renderHtmlToByteStringIO)
+import qualified Text.Blaze.Html.Renderer.String as St
 
-import BulmaTemplate                    (mkDefaultTemplate)
+import BulmaTemplate                    (mkDefaultTemplate, tocTemplate)
 import BulmaFilter                      (bulmaTransform)
 
 import ReadingTimeFilter                (readingTimeTransform)
@@ -61,8 +63,8 @@ main = do
     -- We generate the default template
     -- The template has a marking showing on what date was the page generated
     today <- getCurrentTime >>= return . showGregorian . utctDay
-    let template = renderHtml $ mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
-    B.writeFile "templates/default.html" template >> putStrLn "  Generated templates\\default.html"
+    let template = mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
+    renderHtmlToByteStringIO (B.writeFile "templates/default.html") template >> putStrLn "  Generated templates\\default.html"
 
     hakyll $ do
         
@@ -238,39 +240,56 @@ transforms doc = bulmaTransform <$> plotTransform doc
 -- | Allow math display, code highlighting, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
 pandocCompiler_ :: Compiler (Item String)
-pandocCompiler_ =
-    let 
-    -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
-    extensions = [ 
-        -- Math extensions
-          Ext_tex_math_dollars
-        , Ext_tex_math_double_backslash
-        , Ext_latex_macros
-            -- Code extensions
-        , Ext_fenced_code_blocks
-        , Ext_backtick_code_blocks
-        , Ext_fenced_code_attributes        
-        , Ext_inline_code_attributes        -- Inline code attributes (e.g. `<$>`{.haskell})
-            -- Markdown extensions
-        , Ext_implicit_header_references    -- We also allow implicit header references (instead of inserting <a> tags)
-        , Ext_definition_lists              -- Definition lists based on PHP Markdown
-        , Ext_yaml_metadata_block           -- Allow metadata to be speficied by YAML syntax
-        , Ext_superscript                   -- Superscripts (2^10^ is 1024) 
-        , Ext_subscript                     -- Subscripts (H~2~O is water)
-        , Ext_footnotes                     -- Footnotes ([^1]: Here is a footnote)
-        ]
-    newExtensions = foldr enableExtension defaultExtensions extensions
-    defaultExtensions = writerExtensions defaultHakyllWriterOptions
-    writerOptions = defaultHakyllWriterOptions
-        { writerExtensions = newExtensions
-        , writerHTMLMathMethod = MathJax ""
-        , writerHighlightStyle = Just syntaxHighlightingStyle
-        }
+pandocCompiler_ = do
+    ident <- getUnderlying
+    toc <- getMetadataField ident "withtoc"
+    tocDepth <- getMetadataField ident "tocdepth"
+    let extensions = defaultPandocExtensions
+        writerOptions = case toc of
+            Just _ -> defaultHakyllWriterOptions
+                { writerExtensions = extensions
+                , writerHTMLMathMethod = MathJax ""
+                , writerHighlightStyle = Just syntaxHighlightingStyle
+                , writerTableOfContents = True 
+                , writerTOCDepth = read (fromMaybe "3" tocDepth) :: Int
+                , writerTemplate = Just $ St.renderHtml tocTemplate
+                }
+            Nothing -> defaultHakyllWriterOptions
+                { writerExtensions = extensions
+                , writerHTMLMathMethod = MathJax ""
+                , writerHighlightStyle = Just syntaxHighlightingStyle
+                }
     -- Pandoc filters are composed in the 'transform' function
-    in pandocCompilerWithTransformM 
+    pandocCompilerWithTransformM 
         defaultHakyllReaderOptions 
         writerOptions 
         (unsafeCompiler . transforms)
+
+-- Pandoc extensions used by the compiler
+defaultPandocExtensions :: Extensions
+defaultPandocExtensions = 
+    let extensions = [ 
+    -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
+        -- Math extensions
+              Ext_tex_math_dollars
+            , Ext_tex_math_double_backslash
+            , Ext_latex_macros
+                -- Code extensions
+            , Ext_fenced_code_blocks
+            , Ext_backtick_code_blocks
+            , Ext_fenced_code_attributes        
+            , Ext_inline_code_attributes        -- Inline code attributes (e.g. `<$>`{.haskell})
+                -- Markdown extensions
+            , Ext_implicit_header_references    -- We also allow implicit header references (instead of inserting <a> tags)
+            , Ext_definition_lists              -- Definition lists based on PHP Markdown
+            , Ext_yaml_metadata_block           -- Allow metadata to be speficied by YAML syntax
+            , Ext_superscript                   -- Superscripts (2^10^ is 1024) 
+            , Ext_subscript                     -- Subscripts (H~2~O is water)
+            , Ext_footnotes                     -- Footnotes ([^1]: Here is a footnote)
+            ]
+        defaultExtensions = writerExtensions defaultHakyllWriterOptions
+    
+    in foldr enableExtension defaultExtensions extensions
 
 -- Move content from static/ folder to base folder
 staticRoute :: Routes

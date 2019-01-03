@@ -1,6 +1,8 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module BulmaTemplate (mkDefaultTemplate) where
+module BulmaTemplate ( mkDefaultTemplate
+                     , tocTemplate
+                     ) where
 
 import Data.List (intersperse)
 import Control.Monad                (forM_)
@@ -148,3 +150,15 @@ mkDefaultTemplate s = H.docTypeHtml $ do
                     "$body$"
 
         defaultFooter s
+
+-- Wrap the content of a page with a table of content
+tocTemplate :: H.Html
+tocTemplate = do 
+    H.div ! class_ "message is-link" $ do
+        H.div ! class_ "message-header" $
+            H.p $ "On this page:"
+        
+        H.div ! class_ "message-body" $
+            H.p $ "$toc$"
+
+    "$body$"

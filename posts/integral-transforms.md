@@ -2,6 +2,7 @@
 title: The intuition and beauty behind integral transforms
 date: 2019-01-23
 summary: Integral transforms (such as the Fourier transform) are fundamental tools of science and engineering. However, I find that many lack any intuition about it. Let's change this.
+withtoc: yes
 ---
 
 The Fourier transform is a ubiquitous tool in Physics and related fields of science. Using it, we can represent physical systems in a complementary way -- often in a simpler way as well! Throughout the years, I've noticed that while most students have mastered the technicals required to _compute_ the Fourier transform, many lack the intuition of what's going on behind the scenes.
