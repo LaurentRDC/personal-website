@@ -1,6 +1,6 @@
 ---
 title: The intuition and beauty behind integral transforms
-date: 2018-10-29
+date: 2019-01-23
 summary: Integral transforms (such as the Fourier transform) are fundamental tools of science and engineering. However, I find that many lack any intuition about it. Let's change this.
 ---
 
@@ -117,7 +117,7 @@ Like in the example above, sets of _basis functions_ are not unique. Different s
 
 The Fourier transform is a tool to decompose well-behaved functions into a set of basis functions that oscillate like a wave. Here are a few basis functions used in the Fourier transform:
 
-```{plot_target=generated/fourier_basis_ex.png plot_alt="Example of basis functions employed by the Fourier transform. The full set of basis functions is actually infinite, but all functions follow this template."}
+```{plot_target=generated/fourier_basis_ex.png plot_include=images/plot_style.py  plot_alt="Example of basis functions employed by the Fourier transform. The full set of basis functions is actually infinite, but all functions follow this template."}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -138,7 +138,7 @@ $$
 $$
 There are an infinite number of basis vectors in this basis, but each basis vector can be labeled with one number: its frequency. To get a feel for what frequency does, let's take a look at a few basis functions:
 
-```{plot_target=generated/fourier_basis_freq.png plot_alt="Effect of frequency on basis functions. Higher frequency effectively compresses the wave into faster oscillations."}
+```{plot_target=generated/fourier_basis_freq.png plot_include=images/plot_style.py plot_alt="Effect of frequency on basis functions. Higher frequency effectively compresses the wave into faster oscillations."}
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -181,15 +181,7 @@ $$
     f(x) = \int_{-\infty}^{\infty} dk ~ \hat{f}(k) e^{2\pi i x k}
 $$
 
-Therefore, the Fourier transform basis is a set of oscillating functions that can be compressed or elongated (varying frequency $k$). The "amount" of $f$ at any given frequency $k$, $\hat{f}(k)$, is a projection $(\cdot)$, just like in our arrow example. In this case, it looks like:
-$$
-    \begin{align}
-        f(x) &= \int_{-\infty}^{\infty} dk ~\hat{f}(k) ~ e^{2\pi i x k} \\
-             &= \int_{-\infty}^{\infty} dk ~ (f ~ \cdot ~ e^{2 \pi i x k}) e^{2\pi i x k} \\
-             &= \int_{-\infty}^{\infty} dk ~ \left( \int_{-\infty}^{\infty} dx ~ f(x) ~ e^{- 2 \pi i x k} \right) ~ e^{2\pi i x k}  
-    \end{align}
-$$
-Therefore, we see that the projection operator, $f ~ \cdot ~ e^{2 \pi i x k}$, is the operation that is formally known as the Fourier transform:
+but conceptually, it is the same as the addition of arrows. Therefore, the Fourier transform basis is a set of oscillating functions that can be compressed or elongated (varying frequency $k$). The "amount" of $f$ at any given frequency $k$, $\hat{f}(k)$, is a projection $(\cdot)$, again just like in our arrow example. The projection operator, $f ~ \cdot ~ e^{2 \pi i x k}$, gives rise to the operation that is formally known as the Fourier transform:
 $$
     \hat{f}(k) = \int_{-\infty}^{\infty} dx ~ f(x) ~ e^{- 2 \pi i x k}
 $$
