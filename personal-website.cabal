@@ -20,7 +20,7 @@ executable personal-website
   ghc-options:         -threaded -O2
   build-depends:       base >= 4.8 && < 5,
                        hakyll,
-                       hakyll-images >= 0.4,
+                       hakyll-images >= 0.4.1,
                        pandoc > 2.2,
                        pandoc-types,
                        pandoc-pyplot >= 1.1.0.0,
