@@ -1,11 +1,13 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
+import Control.Monad                    ((>=>))
 import Data.Maybe                       (fromMaybe)
 import Data.Monoid                      ((<>))
 import Hakyll
-import Hakyll.Images                    ( compressJpgCompiler )
-import Hakyll.Images.Resize             ( scaleImageCompiler )
+import Hakyll.Images                    ( loadImage
+                                        , compressJpgCompiler
+                                        , scaleImageCompiler )
 
 -- Hakyll can trip on characters like apostrophes
 -- https://github.com/jaspervdj/hakyll/issues/109
@@ -76,7 +78,8 @@ main = do
         -- JPG images are special: they can be compressed
         match jpgImages $ do
             route   idRoute
-            compile (compressJpgCompiler 50)
+            compile $ loadImage
+                >>= compressJpgCompiler 50
 
         -- All other images are copied directly
         match nonJpgImages $ do

@@ -1,5 +1,5 @@
 name:                personal-website
-version:             1.0.3.0
+version:             1.0.4.0
 -- synopsis:
 -- description:
 homepage:            https://github.com/LaurentRDC/personal-website#readme
@@ -20,7 +20,7 @@ executable personal-website
   ghc-options:         -threaded -O2
   build-depends:       base >= 4.8 && < 5,
                        hakyll,
-                       hakyll-images,
+                       hakyll-images >= 0.4,
                        pandoc > 2.2,
                        pandoc-types,
                        pandoc-pyplot >= 1.1.0.0,
