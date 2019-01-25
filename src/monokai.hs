@@ -1,9 +1,9 @@
 module Monokai (monokai) where
 
-import Skylighting.Types
-import Skylighting.Styles
+import           Skylighting.Styles
+import           Skylighting.Types
 
-import qualified Data.Map as Map
+import qualified Data.Map           as Map
 
 color :: Int -> Maybe Color
 color = toColor

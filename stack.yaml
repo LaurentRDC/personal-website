@@ -18,7 +18,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-12.19
+resolver: lts-12.26
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -40,7 +40,7 @@ packages:
 # (e.g., acme-missiles-0.3)
 extra-deps: 
 - 'pandoc-pyplot-1.1.0.0'
-- 'hakyll-images-0.4.1'
+- 'hakyll-images-0.4.2'
 
 # Override default flag values for local packages and extra-deps
 # flags: {}

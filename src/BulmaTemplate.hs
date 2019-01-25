@@ -4,14 +4,14 @@ module BulmaTemplate ( mkDefaultTemplate
                      , tocTemplate
                      ) where
 
-import Data.List (intersperse)
-import Control.Monad                (forM_)
-import Text.Blaze.Html5             as H
-import Text.Blaze.Html5.Attributes  as A
+import           Control.Monad               (forM_)
+import           Data.List                   (intersperse)
+import           Text.Blaze.Html5            as H
+import           Text.Blaze.Html5.Attributes as A
 
-import Text.Blaze                    (toValue, toMarkup)
+import           Text.Blaze                  (toMarkup, toValue)
 
-fontAwesomeURL = "https://use.fontawesome.com/releases/v5.2.0/css/all.css" 
+fontAwesomeURL = "https://use.fontawesome.com/releases/v5.2.0/css/all.css"
 academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
 bulmaURL = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
 mathjaxURL = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"
@@ -24,7 +24,7 @@ type SocialLink = (Icon, Link, String)
 type NavigationLink = (Link, String)
 
 socialLinks :: [SocialLink]
-socialLinks = [ 
+socialLinks = [
       ("fas fa-envelope",     "mailto:laurent.decotret@outlook.com",                              "e-mail")
     , ("fab fa-github",       "https://github.com/LaurentRDC",                                    "GitHub")
     , ("fab fa-linkedin",     "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  "LinkedIn")
@@ -49,7 +49,7 @@ navigationLinks = [
     ]
 
 styleSheets :: [AttributeValue]
-styleSheets = 
+styleSheets =
     [ "/css/syntax.css"
     , bulmaURL
     , fontAwesomeURL
@@ -81,14 +81,14 @@ navigationBar = H.section ! class_ "hero is-warning is-bold" $ do
             H.div ! class_ "container" $ do
                 H.div ! class_ "navbar-brand" $ do
                     H.a ! class_ "navbar-item" ! href "/index.html" $ H.strong $ "Laurent P. René de Cotret"
-                    
+
                     -- toggleBurger function defined in navbar-onclick.js
                     H.span ! class_ "navbar-burger burger" ! A.id "burger" ! A.onclick "toggleBurger()"$ do
                         H.span $ mempty
                         H.span $ mempty
                         H.span $ mempty
-                
-                H.div ! class_ "navbar-menu" ! A.id "navbarMenu" $ 
+
+                H.div ! class_ "navbar-menu" ! A.id "navbarMenu" $
                     H.div ! class_ "navbar-end" $
                         forM_ navigationLinks renderLink
     --------------------------------------------------------------------------
@@ -97,7 +97,7 @@ navigationBar = H.section ! class_ "hero is-warning is-bold" $ do
             H.h1 ! class_ "title" $
                 "$title$"
     --------------------------------------------------------------------------
-    H.div ! class_ "hero-foot" $ 
+    H.div ! class_ "hero-foot" $
         H.div ! class_ "navbar is-transparent" $
             H.div ! class_ "container" $
                 H.div ! class_ "navbar-menu" $
@@ -107,8 +107,8 @@ navigationBar = H.section ! class_ "hero is-warning is-bold" $ do
     where
         renderLink (link, title) = H.a ! class_ "navbar-item" ! href (toValue link) $ toMarkup title
 
-        -- Generate an icon + anchor 
-        mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item" ! target "_blank" ! href (toValue link) $ do 
+        -- Generate an icon + anchor
+        mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item" ! target "_blank" ! href (toValue link) $ do
             H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon) $ mempty
             toMarkup $ name
 
@@ -122,15 +122,15 @@ defaultFooter s = H.footer ! class_ "footer" $
         H.p $ (mconcat . intersperse " | ") $ renderLink <$> feedLinks
 
         -- Message and disclaimer
-        H.p ! class_ "is-small" $ mconcat 
-                    [ H.toHtml s 
+        H.p ! class_ "is-small" $ mconcat
+                    [ H.toHtml s
                     , "This website was created using free and open-source technologies. "
                     , "You can learn more about how this website is generated "
                     , (H.a ! href "/about.html#about-this-site" $ "here")
-                    , "." 
+                    , "."
                     ]
     where
-        renderLink (icon, link, name) = do 
+        renderLink (icon, link, name) = do
             H.span ! class_ "icon" $ H.i ! class_ (toValue icon) $ mempty
             H.a ! target "_blank" ! href (toValue link) $ toMarkup name
 
@@ -146,15 +146,15 @@ mkDefaultTemplate s = H.docTypeHtml $ do
             -- Note : the "content" class handles all barebones HTML tags
             -- See here:
             --      https://bulma.io/documentation/elements/content/
-                H.div ! class_ "content" $ 
+                H.div ! class_ "content" $
                     "$body$"
 
         defaultFooter s
 
 -- Wrap the content of a page with a table of content
 tocTemplate :: H.Html
-tocTemplate = do 
-    H.div ! class_ "message is-link" $       
+tocTemplate = do
+    H.div ! class_ "message is-link" $
         H.div ! class_ "message-body" $ do
             H.h2 $ "On this page"
             H.p $ "$toc$"

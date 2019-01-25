@@ -3,8 +3,8 @@ module BulmaFilter (
     bulmaTransform
 ) where
 
-import Text.Pandoc.Definition   (Pandoc, Block(..), Inline(..), Attr)
-import Text.Pandoc.Walk         (walk)
+import           Text.Pandoc.Definition (Attr, Block (..), Inline (..), Pandoc)
+import           Text.Pandoc.Walk       (walk)
 
 toBulmaHeading :: Block -> Block
 toBulmaHeading (Header level attrs xs) = Header level newAttrs xs
@@ -19,7 +19,7 @@ toBulmaImage (Image attrs xs target) = Image newAttrs xs target
         (identifier, classes, keyvals) = attrs
         newAttrs = (identifier, classes <> ["image"], keyvals)
 toBulmaImage x = x
-        
+
 
 -- ! Transform (or filter) to format heading to Bulma's heading classes.
 -- Markdown: ## Title

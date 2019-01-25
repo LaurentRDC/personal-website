@@ -1,40 +1,40 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
-import Control.Monad                    ((>=>))
-import Data.Maybe                       (fromMaybe)
-import Data.Monoid                      ((<>))
-import Hakyll
-import Hakyll.Images                    ( loadImage
-                                        , compressJpgCompiler
-                                        , scaleImageCompiler )
+import           Control.Monad                   ((>=>))
+import           Data.Maybe                      (fromMaybe)
+import           Data.Monoid                     ((<>))
+import           Hakyll
+import           Hakyll.Images                   (compressJpgCompiler,
+                                                  loadImage, scaleImageCompiler)
 
 -- Hakyll can trip on characters like apostrophes
 -- https://github.com/jaspervdj/hakyll/issues/109
-import qualified GHC.IO.Encoding        as E
+import qualified GHC.IO.Encoding                 as E
 
-import Text.Pandoc.Options
-import Text.Pandoc.Extensions
-import Text.Pandoc.Highlighting 
-import Text.Pandoc.Filter.Pyplot        (plotTransform)
-import Text.Pandoc.Walk                 (walkM)
-import Text.Pandoc.Definition           (Pandoc)
+import           Text.Pandoc.Definition          (Pandoc)
+import           Text.Pandoc.Extensions
+import           Text.Pandoc.Filter.Pyplot       (plotTransform)
+import           Text.Pandoc.Highlighting
+import           Text.Pandoc.Options
+import           Text.Pandoc.Walk                (walkM)
 
-import System.IO
+import           System.IO
 
-import qualified Data.ByteString        as B -- Must use lazy bytestrings because of renderHTML
-import Text.Blaze.Html.Renderer.Utf8    (renderHtmlToByteStringIO)
+import qualified Data.ByteString                 as B
 import qualified Text.Blaze.Html.Renderer.String as St
+import           Text.Blaze.Html.Renderer.Utf8   (renderHtmlToByteStringIO)
 
-import BulmaTemplate                    (mkDefaultTemplate, tocTemplate)
-import BulmaFilter                      (bulmaTransform)
+import           BulmaFilter                     (bulmaTransform)
+import           BulmaTemplate                   (mkDefaultTemplate,
+                                                  tocTemplate)
 
-import ReadingTimeFilter                (readingTimeTransform)
+import           ReadingTimeFilter               (readingTimeTransform)
 
-import Data.Time.Clock                  (getCurrentTime, utctDay)
-import Data.Time.Calendar               (showGregorian)
+import           Data.Time.Calendar              (showGregorian)
+import           Data.Time.Clock                 (getCurrentTime, utctDay)
 
-import Feed                             (feedConfiguration)
+import           Feed                            (feedConfiguration)
 
 -- | syntax highlighting style to use throughout
 syntaxHighlightingStyle :: Style
@@ -42,8 +42,8 @@ syntaxHighlightingStyle = kate
 
 -- We match images down to two levels
 -- Images/* and images/*/**
-jpgImages = "images/*.jpg" .||. "images/*/**.jpg" 
-nonJpgImages = (     "images/*/**" 
+jpgImages = "images/*.jpg" .||. "images/*/**.jpg"
+nonJpgImages = (     "images/*/**"
                 .||. "images/*"
                 ) .&&. complement jpgImages
 generatedContent = "generated/*"
@@ -54,7 +54,7 @@ main = do
     -- Hakyll can trip on characters like apostrophes
     -- https://github.com/jaspervdj/hakyll/issues/109
     E.setLocaleEncoding E.utf8
-    
+
 
     putStrLn "File generation"
 
@@ -69,12 +69,12 @@ main = do
     renderHtmlToByteStringIO (B.writeFile "templates/default.html") template >> putStrLn "  Generated templates\\default.html"
 
     hakyll $ do
-        
+
         -- These are general files like theses, preprints
         match "files/*" $ do
             route   idRoute
             compile copyFileCompiler
-        
+
         -- JPG images are special: they can be compressed
         match jpgImages $ do
             route   idRoute
@@ -85,25 +85,25 @@ main = do
         match nonJpgImages $ do
             route   idRoute
             compile copyFileCompiler
-        
+
         match generatedContent $ do
             route   generatedRoute
             compile copyFileCompiler
-        
+
         match "css/*" $ do
             route   idRoute
             compile compressCssCompiler
-        
+
         match "js/*" $ do
             route   idRoute
             compile copyFileCompiler
-        
+
         -- The fonts/ folder is required by academicons
         -- see academicons.css
         match "fonts/*" $ do
             route   idRoute
             compile copyFileCompiler
-        
+
         -- These are static pages, like the "about" page
         -- Note that /static/index.html is a special case and is handled below
         match "static/*.md" $ do
@@ -113,7 +113,7 @@ main = do
             compile $ pandocCompiler_
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
-        
+
         --------------------------------------------------------------------------------
         -- Compile projects page
         -- We need to compile each project individuallycfirst
@@ -132,13 +132,13 @@ main = do
                         , constField "title" "Software projects"
                         , defaultContext
                         ]
-                
-                makeItem "" 
+
+                makeItem ""
                     >>= loadAndApplyTemplate "templates/projects.html" projectsCtx
                     >>= loadAndApplyTemplate "templates/default.html" projectsCtx
                     >>= relativizeUrls
 
-        
+
         --------------------------------------------------------------------------------
         -- Compile blog posts
         -- Explicitly do not match the drafts
@@ -149,7 +149,7 @@ main = do
                 >>= saveSnapshot "content"  -- Saved content for RSS feed
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
                 >>= relativizeUrls
-        
+
         --------------------------------------------------------------------------------
         -- Create RSS feed
         -- See https://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html
@@ -157,7 +157,7 @@ main = do
             route idRoute
             compile $ do
                 let feedCtx = postCtx <> bodyField "description"
-                posts <- fmap (take 10) . recentFirst =<< 
+                posts <- fmap (take 10) . recentFirst =<<
                     loadAllSnapshots "posts/*" "content"
                 renderRss feedConfiguration feedCtx posts
 
@@ -168,10 +168,10 @@ main = do
             route idRoute
             compile $ do
                 let feedCtx = postCtx <> bodyField "description"
-                posts <- fmap (take 10) . recentFirst =<< 
+                posts <- fmap (take 10) . recentFirst =<<
                     loadAllSnapshots "posts/*" "content"
                 renderAtom feedConfiguration feedCtx posts
-        
+
         --------------------------------------------------------------------------------
         -- Create a page containing all posts
         create ["archive.html"] $ do
@@ -215,13 +215,13 @@ main = do
                 -- Gather all other pages
                 pages <- loadAll (fromGlob "static/**")
                 let allPages = pages <> posts
-                    sitemapCtx = 
+                    sitemapCtx =
                         constField "root" "http://www.physics.mcgill.ca/~decotret" <>
                         listField "pages" postCtx (return allPages)
 
                 makeItem ""
                     >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
-        
+
         --------------------------------------------------------------------------------
         match "templates/*" $ compile templateCompiler
 
@@ -230,7 +230,7 @@ main = do
 postCtx :: Context String
 postCtx = mconcat [ constField "root" "http://www.physics.mcgill.ca/~decotret/"
                   , dateField "date" "%Y-%m-%d"
-                  , defaultContext 
+                  , defaultContext
                   ]
 
 -- Overall document transform, i.e. the combination
@@ -251,7 +251,7 @@ pandocCompiler_ = do
                 { writerExtensions = extensions
                 , writerHTMLMathMethod = MathJax ""
                 , writerHighlightStyle = Just syntaxHighlightingStyle
-                , writerTableOfContents = True 
+                , writerTableOfContents = True
                 , writerTOCDepth = read (fromMaybe "3" tocDepth) :: Int
                 , writerTemplate = Just $ St.renderHtml tocTemplate
                 }
@@ -261,15 +261,15 @@ pandocCompiler_ = do
                 , writerHighlightStyle = Just syntaxHighlightingStyle
                 }
     -- Pandoc filters are composed in the 'transform' function
-    pandocCompilerWithTransformM 
-        defaultHakyllReaderOptions 
-        writerOptions 
+    pandocCompilerWithTransformM
+        defaultHakyllReaderOptions
+        writerOptions
         (unsafeCompiler . transforms)
 
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions
-defaultPandocExtensions = 
-    let extensions = [ 
+defaultPandocExtensions =
+    let extensions = [
     -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
         -- Math extensions
               Ext_tex_math_dollars
@@ -278,18 +278,18 @@ defaultPandocExtensions =
                 -- Code extensions
             , Ext_fenced_code_blocks
             , Ext_backtick_code_blocks
-            , Ext_fenced_code_attributes        
+            , Ext_fenced_code_attributes
             , Ext_inline_code_attributes        -- Inline code attributes (e.g. `<$>`{.haskell})
                 -- Markdown extensions
             , Ext_implicit_header_references    -- We also allow implicit header references (instead of inserting <a> tags)
             , Ext_definition_lists              -- Definition lists based on PHP Markdown
             , Ext_yaml_metadata_block           -- Allow metadata to be speficied by YAML syntax
-            , Ext_superscript                   -- Superscripts (2^10^ is 1024) 
+            , Ext_superscript                   -- Superscripts (2^10^ is 1024)
             , Ext_subscript                     -- Subscripts (H~2~O is water)
             , Ext_footnotes                     -- Footnotes ([^1]: Here is a footnote)
             ]
         defaultExtensions = writerExtensions defaultHakyllWriterOptions
-    
+
     in foldr enableExtension defaultExtensions extensions
 
 -- Move content from static/ folder to base folder

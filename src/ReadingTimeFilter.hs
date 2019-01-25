@@ -3,12 +3,13 @@ module ReadingTimeFilter (
     , readingTimeTransformMeta
 ) where
 
-import Text.Pandoc
-import Text.Pandoc.Definition   (Pandoc(..), Inline(..), Block(..), Meta(..), MetaValue(..))
-import Text.Pandoc.Walk         (query)
+import           Text.Pandoc
+import           Text.Pandoc.Definition (Block (..), Inline (..), Meta (..),
+                                         MetaValue (..), Pandoc (..))
+import           Text.Pandoc.Walk       (query)
 
-import Data.Monoid              (Sum(..))
-import Data.Map                 (insert)
+import           Data.Map               (insert)
+import           Data.Monoid            (Sum (..))
 
 -- | Page reading time in minutes
 type ReadingTime = Int
@@ -17,19 +18,19 @@ type ReadingTime = Int
 type WordCount = Sum Int
 
 _wordCount :: Inline -> WordCount
-_wordCount (Str s)              = Sum $ length $ words s
-_wordCount (Emph xs)            = mconcat $ _wordCount <$> xs
-_wordCount (Strong xs)          = mconcat $ _wordCount <$> xs
-_wordCount (Strikeout xs)       = mconcat $ _wordCount <$> xs
-_wordCount (Superscript xs)     = mconcat $ _wordCount <$> xs
-_wordCount (Subscript xs)       = mconcat $ _wordCount <$> xs
-_wordCount (SmallCaps xs)       = mconcat $ _wordCount <$> xs
-_wordCount (Quoted qtype xs)    = mconcat $ _wordCount <$> xs
-_wordCount (Cite citations xs)  = mconcat $ _wordCount <$> xs
-_wordCount (Span attrs xs)      = mconcat $ _wordCount <$> xs
-_wordCount (Code attrs s)       = Sum $ length $ words s
-_wordCount (RawInline f s)      = Sum $ length $ words s
-_wordCount _                    = 0
+_wordCount (Str s)             = Sum $ length $ words s
+_wordCount (Emph xs)           = mconcat $ _wordCount <$> xs
+_wordCount (Strong xs)         = mconcat $ _wordCount <$> xs
+_wordCount (Strikeout xs)      = mconcat $ _wordCount <$> xs
+_wordCount (Superscript xs)    = mconcat $ _wordCount <$> xs
+_wordCount (Subscript xs)      = mconcat $ _wordCount <$> xs
+_wordCount (SmallCaps xs)      = mconcat $ _wordCount <$> xs
+_wordCount (Quoted qtype xs)   = mconcat $ _wordCount <$> xs
+_wordCount (Cite citations xs) = mconcat $ _wordCount <$> xs
+_wordCount (Span attrs xs)     = mconcat $ _wordCount <$> xs
+_wordCount (Code attrs s)      = Sum $ length $ words s
+_wordCount (RawInline f s)     = Sum $ length $ words s
+_wordCount _                   = 0
 
 wordCount :: Pandoc -> WordCount
 wordCount = query _wordCount
@@ -44,7 +45,7 @@ readingTimeTransform (Pandoc meta blocks) = Pandoc meta ([newBlock] <> blocks)
         newBlock = Para [
             Emph [
                 Str $ mconcat [ "This posts contains "
-                              , show nwords 
+                              , show nwords
                               , " words. Estimated reading time of "
                               , readingTime
                               , " minutes."]
