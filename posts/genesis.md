@@ -66,7 +66,7 @@ Using this space to test the use of my first published Haskell package, [`pandoc
 
 You can click on the image to see the source Python code used to generate the figure.
 
-```{plot_target=generated/genesis.jpg}
+```{.pyplot caption=""}
 import matplotlib.pyplot as plt
 
 plt.figure()
