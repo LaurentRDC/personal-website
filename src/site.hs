@@ -56,20 +56,18 @@ main = do
     -- https://github.com/jaspervdj/hakyll/issues/109
     E.setLocaleEncoding E.utf8
 
-
-    putStrLn "File generation"
-
-    -- generate the CSS required to to syntax highlighting
-    let css = styleToCss syntaxHighlightingStyle
-    writeFile "css/syntax.css" css >> putStrLn "  Generated css\\syntax.css"
-
-    -- We generate the default template
-    -- The template has a marking showing on what date was the page generated
-    today <- getCurrentTime >>= return . showGregorian . utctDay
-    let template = mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
-    renderHtmlToByteStringIO (B.writeFile "templates/default.html") template >> putStrLn "  Generated templates\\default.html"
-
     hakyll $ do
+            
+        preprocess $ do
+            -- generate the CSS required to to syntax highlighting
+            let css = styleToCss syntaxHighlightingStyle
+            writeFile "css/syntax.css" css >> putStrLn "  Generated css\\syntax.css"
+
+            -- We generate the default template
+            -- The template has a marking showing on what date was the page generated
+            today <- getCurrentTime >>= return . showGregorian . utctDay
+            let template = mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
+            renderHtmlToByteStringIO (B.writeFile "templates/default.html") template >> putStrLn "  Generated templates\\default.html"
         
         --------------------------------------------------------------------------------
         -- A lot of things can be compied directly
@@ -144,8 +142,8 @@ main = do
         -- Create RSS feed and Atom feeds
         -- See https://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html
         forM_ [ ("feed.xml", renderRss)
-             , ("atom.xml", renderAtom)
-             ] $
+              , ("atom.xml", renderAtom)
+              ] $
             \(name, renderFunc) -> create [name] $ do
                 route idRoute
                 compile $ do
@@ -238,7 +236,7 @@ pandocCompiler_ = do
                 , writerHTMLMathMethod = MathJax ""
                 , writerHighlightStyle = Just syntaxHighlightingStyle
                 }
-    -- Pandoc filters are composed in the 'transform' function
+
     pandocCompilerWithTransformM
         defaultHakyllReaderOptions
         writerOptions
