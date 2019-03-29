@@ -35,6 +35,8 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ### Talks
 
+* 2019-02-11 | __6<sup>th</sup> Banff Meeting on Ultrafast Structural Dynamics__ Contributed talk titled _Ultrafast electron diffuse scattering as a window into e-ph and ph-ph dynamics of two-dimensional materials​_ [(Link to program)](https://www.banffdynamics.com/program/).
+
 * 2018-09-28 | __SLAC National Accelerator Center__ Invited talk titled _Mapping momentum-dependent electron-phonon coupling and phonon dynamics in two-dimensional materials using ultrafast electron diffuse scattering_ [(Link to abstract)](https://conf.slac.stanford.edu/ssrl-lcls-2018/sites/ssrl-lcls-2018/files/webform/LPRDC_abstract.pdf). This talk was presented during the [LCLS/SSRL Users' meeting 2018](https://conf.slac.stanford.edu/ssrl-lcls-2018/program/).
 
 * 2018-07-23 | __Fritz-Haber Institute__ Seminar titled _Mapping momentum-dependent electron-phonon coupling and phonon dynamics in two-dimensional materials using  ultrafast electron diffuse scattering_. [(Link to abstract)](http://www.fhi-berlin.mpg.de/pc/SEMINAR-ABS/PCseminarabstr_180723.pdf)

@@ -46,7 +46,7 @@ jpgImages = "images/*.jpg" .||. "images/*/**.jpg"
 nonJpgImages = (     "images/*/**"
                 .||. "images/*"
                 ) .&&. complement jpgImages
-generatedContent = "generated/*"
+generatedContent = "generated/**"
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -85,9 +85,9 @@ main = do
         match nonJpgImages $ do
             route   idRoute
             compile copyFileCompiler
-
+        
         match generatedContent $ do
-            route   generatedRoute
+            route generatedRoute
             compile copyFileCompiler
 
         match "css/*" $ do
