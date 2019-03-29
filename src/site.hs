@@ -70,21 +70,19 @@ main = do
 
     hakyll $ do
         
-        -- These are general files like theses, preprints
-        match "files/*" $ do
-            route   idRoute
-            compile copyFileCompiler
-        
+        --------------------------------------------------------------------------------
+        -- A lot of things can be compied directly
+        forM_ ["files/*", "fonts/*", "js/*", nonJpgImages] $ 
+            \pattern ->
+                match pattern $ do
+                    route idRoute
+                    compile copyFileCompiler
+
         -- JPG images are special: they can be compressed
         match jpgImages $ do
             route   idRoute
             compile $ loadImage
                 >>= compressJpgCompiler 50
-
-        -- All other images are copied directly
-        match nonJpgImages $ do
-            route   idRoute
-            compile copyFileCompiler
         
         match generatedContent $ do
             route   generatedRoute
@@ -94,16 +92,7 @@ main = do
             route   idRoute
             compile compressCssCompiler
         
-        match "js/*" $ do
-            route   idRoute
-            compile copyFileCompiler
-        
-        -- The fonts/ folder is required by academicons
-        -- see academicons.css
-        match "fonts/*" $ do
-            route   idRoute
-            compile copyFileCompiler
-        
+        --------------------------------------------------------------------------------
         -- These are static pages, like the "about" page
         -- Note that /static/index.html is a special case and is handled below
         match "static/*.md" $ do
@@ -225,12 +214,8 @@ postCtx = mconcat [ constField "root" "http://www.physics.mcgill.ca/~decotret/"
                   , defaultContext 
                   ]
 
--- Overall document transform, i.e. the combination
--- of all Pandoc filters
-transforms :: Pandoc -> IO Pandoc
-transforms doc = bulmaTransform <$> plotTransform doc
 
--- | Allow math display, code highlighting, and Pandoc filters
+-- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
 pandocCompiler_ :: Compiler (Item String)
 pandocCompiler_ = do
@@ -257,13 +242,18 @@ pandocCompiler_ = do
         defaultHakyllReaderOptions 
         writerOptions 
         (unsafeCompiler . transforms)
+    
+    where
+        -- Overall document transform, i.e. the combination
+        -- of all Pandoc filters
+        transforms doc = bulmaTransform <$> plotTransform doc
 
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions
 defaultPandocExtensions = 
     let extensions = [ 
-    -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
-        -- Math extensions
+            -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
+            -- Math extensions
               Ext_tex_math_dollars
             , Ext_tex_math_double_backslash
             , Ext_latex_macros
