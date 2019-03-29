@@ -1,7 +1,7 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
-import Control.Monad                    ((>=>))
+import Control.Monad                    ((>=>), forM_)
 import Data.Maybe                       (fromMaybe)
 import Data.Monoid                      ((<>))
 import Hakyll
@@ -151,26 +151,18 @@ main = do
                 >>= relativizeUrls
         
         --------------------------------------------------------------------------------
-        -- Create RSS feed
+        -- Create RSS feed and Atom feeds
         -- See https://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html
-        create ["feed.xml"] $ do
-            route idRoute
-            compile $ do
-                let feedCtx = postCtx <> bodyField "description"
-                posts <- fmap (take 10) . recentFirst =<< 
-                    loadAllSnapshots "posts/*" "content"
-                renderRss feedConfiguration feedCtx posts
-
-        --------------------------------------------------------------------------------
-        -- Create Atom feed
-        -- See https://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html
-        create ["atom.xml"] $ do
-            route idRoute
-            compile $ do
-                let feedCtx = postCtx <> bodyField "description"
-                posts <- fmap (take 10) . recentFirst =<< 
-                    loadAllSnapshots "posts/*" "content"
-                renderAtom feedConfiguration feedCtx posts
+        forM_ [ ("feed.xml", renderRss)
+             , ("atom.xml", renderAtom)
+             ] $
+            \(name, renderFunc) -> create [name] $ do
+                route idRoute
+                compile $ do
+                    let feedCtx = postCtx <> bodyField "description"
+                    posts <- fmap (take 10) . recentFirst =<< 
+                        loadAllSnapshots "posts/*" "content"
+                    renderFunc feedConfiguration feedCtx posts
         
         --------------------------------------------------------------------------------
         -- Create a page containing all posts
