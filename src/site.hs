@@ -50,13 +50,24 @@ nonJpgImages = (     "images/*/**"
 generatedContent = "generated/**"
 
 --------------------------------------------------------------------------------
+-- | Site configuration
+-- The remote folder is WWW/decotret. The destination folder 
+-- (where the website is rendered) must also be called "decotret/"
+-- because of the way scp works.
+conf :: Configuration
+conf = defaultConfiguration
+        { destinationDirectory = "decotret"
+        , deployCommand = "scp -Cr ./decotret decotret@gollum.physics.mcgill.ca:/common/WWW/"
+        }
+
+--------------------------------------------------------------------------------
 main :: IO ()
 main = do
     -- Hakyll can trip on characters like apostrophes
     -- https://github.com/jaspervdj/hakyll/issues/109
     E.setLocaleEncoding E.utf8
 
-    hakyll $ do
+    hakyllWith conf $ do
             
         preprocess $ do
             -- generate the CSS required to to syntax highlighting

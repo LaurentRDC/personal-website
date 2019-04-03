@@ -18,7 +18,7 @@ cabal.sandbox.config
 *.hp
 .stack-work/
 _cache/
-_site/
+decotret/
 
 ### Python ###
 __pycache__/
