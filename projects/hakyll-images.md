@@ -1,5 +1,5 @@
 ---
-name: hakyll-images
+name: hakyll-images - Hakyll utilities to deal with images
 repository: https://github.com/LaurentRDC/hakyll-images
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: npstreams
+name: npstreams - streaming operations on NumPy arrays
 repository: https://github.com/LaurentRDC/npstreams
 ---
 

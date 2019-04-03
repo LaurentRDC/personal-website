@@ -1,5 +1,5 @@
 ---
-name: scikit-ued
+name: scikit-ued - algorithms and data structures related to ultrafast electron scattering
 repository: https://github.com/LaurentRDC/scikit-ued
 ---
 
