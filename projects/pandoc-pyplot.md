@@ -35,9 +35,6 @@ For example, the following code block:
 will be directly rendered in the document:
 
 ```{.pyplot directory="images/pandoc-pyplot-gallery/" caption="This example was taken from Matplotlib's [example gallery](https://matplotlib.org/examples/pie_and_polar_charts/polar_scatter_demo.html)"}
-import numpy as np
-import matplotlib.pyplot as plt
-
 N = 150
 r = 2 * np.random.rand(N)
 theta = 2 * np.pi * np.random.rand(N)

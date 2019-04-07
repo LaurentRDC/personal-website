@@ -15,7 +15,8 @@ import qualified GHC.IO.Encoding                 as E
 
 import           Text.Pandoc.Definition          (Pandoc)
 import           Text.Pandoc.Extensions
-import           Text.Pandoc.Filter.Pyplot       (plotTransform)
+import           Text.Pandoc.Filter.Pyplot       (plotTransformWithConfig, configuration)
+import qualified Text.Pandoc.Filter.Pyplot       as P
 import           Text.Pandoc.Highlighting
 import           Text.Pandoc.Options
 import           Text.Pandoc.Walk                (walkM)
@@ -67,6 +68,8 @@ main = do
     -- https://github.com/jaspervdj/hakyll/issues/109
     E.setLocaleEncoding E.utf8
 
+    pyplotConfig <- configuration ".pandoc-pyplot.yml"
+
     hakyllWith conf $ do
             
         preprocess $ do
@@ -107,9 +110,7 @@ main = do
         -- Note that /static/index.html is a special case and is handled below
         match "static/*.md" $ do
             route $ (setExtension "html") `composeRoutes` staticRoute
-            -- No Pandoc filters beyond the built-in bulmaTransform
-            -- hence the use of 'id'
-            compile $ pandocCompiler_
+            compile $ pandocCompiler_ pyplotConfig
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
@@ -117,7 +118,7 @@ main = do
         -- Compile projects page
         -- We need to compile each project individually first
         -- If this is not done, we cannot use the metadata in HTML templates
-        match ("projects/**.md") $ compile $ pandocCompiler_ >>= relativizeUrls
+        match ("projects/**.md") $ compile $ pandocCompiler_ pyplotConfig >>= relativizeUrls
 
         create ["software.html"] $ do
             route idRoute
@@ -150,7 +151,7 @@ main = do
         -- Explicitly do not match the drafts
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
-            compile $ pandocCompiler_
+            compile $ pandocCompiler_ pyplotConfig
                 >>= loadAndApplyTemplate "templates/post.html"    postCtx
                 >>= saveSnapshot "content"  -- Saved content for RSS feed
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
@@ -234,8 +235,8 @@ postCtx = mconcat [ constField "root" "http://www.physics.mcgill.ca/~decotret/"
 
 -- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
-pandocCompiler_ :: Compiler (Item String)
-pandocCompiler_ = do
+pandocCompiler_ :: P.Configuration -> Compiler (Item String)
+pandocCompiler_ config = do
     ident <- getUnderlying
     toc <- getMetadataField ident "withtoc"
     tocDepth <- getMetadataField ident "tocdepth"
@@ -263,7 +264,7 @@ pandocCompiler_ = do
     where
         -- Overall document transform, i.e. the combination
         -- of all Pandoc filters
-        transforms doc = bulmaTransform <$> plotTransform doc
+        transforms doc = bulmaTransform <$> plotTransformWithConfig config doc
 
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions
