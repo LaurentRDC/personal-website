@@ -44,15 +44,18 @@ readingTimeTransform (Pandoc meta blocks) = Pandoc meta ([newBlock] <> blocks)
         readingTime = show $ nwords `div` 100
         newBlock = Para [
             Emph [
-                Str $ mconcat [ "This posts contains "
-                              , show nwords
-                              , " words. Estimated reading time of "
+                Str $ mconcat [ "Estimated reading time of "
                               , readingTime
-                              , " minutes."]
+                              , " minutes ("
+                              , show nwords
+                              ," words)."]
                 ]
             ]
 
 -- | Insert the 'reading-time' metadata key
+-- This key can then be used in Hakyll templates via $reading-time$
+--
+--
 readingTimeTransformMeta :: Pandoc -> Pandoc
 readingTimeTransformMeta (Pandoc meta blocks) = Pandoc newMeta blocks
     where

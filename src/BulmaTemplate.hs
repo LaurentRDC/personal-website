@@ -93,9 +93,11 @@ navigationBar = H.section ! class_ "hero is-warning is-bold" $ do
                         forM_ navigationLinks renderLink
     --------------------------------------------------------------------------
     H.div ! class_ "hero-body" $
-        H.div ! class_ "container has-text-centered" $
+        H.div ! class_ "container has-text-centered" $ do
             H.h1 ! class_ "title" $
                 "$title$"
+            H.h3 $ "$if(date)$Posted on $date$.$endif$ $if(updated)$Last updated on $updated$.$endif$"
+            H.h3 $ "$if(reading-time)$$reading-time$$endif$"
     --------------------------------------------------------------------------
     H.div ! class_ "hero-foot" $
         H.div ! class_ "navbar is-transparent" $

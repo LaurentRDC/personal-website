@@ -110,7 +110,7 @@ main = do
         -- Note that /static/index.html is a special case and is handled below
         match "static/*.md" $ do
             route $ (setExtension "html") `composeRoutes` staticRoute
-            compile $ pandocCompiler_ pyplotConfig
+            compile $ defaultPandocCompiler pyplotConfig
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
@@ -118,7 +118,7 @@ main = do
         -- Compile projects page
         -- We need to compile each project individually first
         -- If this is not done, we cannot use the metadata in HTML templates
-        match ("projects/**.md") $ compile $ pandocCompiler_ pyplotConfig >>= relativizeUrls
+        match ("projects/**.md") $ compile $ defaultPandocCompiler pyplotConfig >>= relativizeUrls
 
         create ["software.html"] $ do
             route idRoute
@@ -151,8 +151,10 @@ main = do
         -- Explicitly do not match the drafts
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
-            compile $ pandocCompiler_ pyplotConfig
-                >>= loadAndApplyTemplate "templates/post.html"    postCtx
+            compile $ postPandocCompiler pyplotConfig
+                -- Post template is obsolete
+                -- It is now built in the default template
+                -- >>= loadAndApplyTemplate "templates/post.html"    postCtx
                 >>= saveSnapshot "content"  -- Saved content for RSS feed
                 >>= loadAndApplyTemplate "templates/default.html" postCtx
                 >>= relativizeUrls
@@ -232,11 +234,12 @@ postCtx = mconcat [ constField "root" "http://www.physics.mcgill.ca/~decotret/"
                   , defaultContext
                   ]
 
-
 -- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
-pandocCompiler_ :: P.Configuration -> Compiler (Item String)
-pandocCompiler_ config = do
+pandocCompiler_ :: (Pandoc -> IO Pandoc)  -- ^ Transform functions to pre-process Pandoc documents
+                -> P.Configuration        -- ^ Pandoc-pyplot configuration
+                -> Compiler (Item String)
+pandocCompiler_ transforms config = do
     ident <- getUnderlying
     toc <- getMetadataField ident "withtoc"
     tocDepth <- getMetadataField ident "tocdepth"
@@ -260,11 +263,23 @@ pandocCompiler_ config = do
         defaultHakyllReaderOptions
         writerOptions
         (unsafeCompiler . transforms)
-    
+
+-- Default Hakyll pandoc compiler
+defaultPandocCompiler :: P.Configuration -> Compiler (Item String)
+defaultPandocCompiler config = pandocCompiler_ defaultTransforms config
     where
         -- Overall document transform, i.e. the combination
         -- of all Pandoc filters
-        transforms doc = bulmaTransform <$> plotTransformWithConfig config doc
+        defaultTransforms doc = bulmaTransform <$> plotTransformWithConfig config doc
+
+-- Hakyll pandoc compiler specifically for blog posts
+-- Most importantly, it includes the readingTimeTransform
+postPandocCompiler :: P.Configuration -> Compiler (Item String)
+postPandocCompiler config = pandocCompiler_ transforms config
+    where
+        -- Overall document transform, i.e. the combination
+        -- of all Pandoc filters
+        transforms doc = bulmaTransform <$> readingTimeTransform <$> plotTransformWithConfig config doc
 
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions
