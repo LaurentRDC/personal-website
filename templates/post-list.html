@@ -8,20 +8,23 @@ $for(posts)$
         </header>
         <div class="card-content">
             <div class="content">
-            <p>
-                $if(summary)$
-                    $summary$
-                $else$
-                    No summary available.
-                $endif$
-                <a href="$url$">Click here to read the rest.</a>
-            </p>
-            <p>
-                <em>Posted on $date$</em>.
-                $if(updated)$
-                <em>Last updated on $updated$</em>.
-                $endif$
-            </p>
+                <p>
+                    $if(summary)$
+                        $summary$
+                    $else$
+                        No summary available.
+                    $endif$
+                    <a href="$url$">Click here to read the rest.</a>
+                </p>
+                <p>
+                    <em>Posted on $date$</em>.
+                    $if(updated)$
+                        <em>Last updated on $updated$</em>.
+                    $endif$
+                    $if(reading-time)$
+                        <em>$reading-time$</em>
+                    $endif$
+                </p>
             </div>
         </div>
     </div>

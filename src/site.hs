@@ -13,7 +13,7 @@ import Hakyll.Images                    ( loadImage
 -- https://github.com/jaspervdj/hakyll/issues/109
 import qualified GHC.IO.Encoding                 as E
 
-import           Text.Pandoc.Definition          (Pandoc)
+import           Text.Pandoc.Definition          (Pandoc(..))
 import           Text.Pandoc.Extensions
 import           Text.Pandoc.Filter.Pyplot       (plotTransformWithConfig, configuration)
 import qualified Text.Pandoc.Filter.Pyplot       as P
@@ -31,7 +31,7 @@ import           BulmaFilter                     (bulmaTransform)
 import           BulmaTemplate                   (mkDefaultTemplate,
                                                   tocTemplate)
 
-import           ReadingTimeFilter               (readingTimeTransform)
+import           ReadingTimeFilter               (readingTimeTransformMeta)
 
 import           Data.Time.Calendar              (showGregorian)
 import           Data.Time.Clock                 (getCurrentTime, utctDay)
@@ -229,10 +229,15 @@ main = do
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
-postCtx = mconcat [ constField "root" "http://www.physics.mcgill.ca/~decotret/"
+postCtx = mconcat [ defaultContext
+                  , constField "root" "http://www.physics.mcgill.ca/~decotret/"
                   , dateField "date" "%Y-%m-%d"
-                  , defaultContext
-                  ]
+                  , readingTimeContext
+                  ] 
+
+readingTimeContext :: Context String
+readingTimeContext = field "reading-time" $ \item -> 
+    getMetadataField' (itemIdentifier item) "reading-time"
 
 -- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
@@ -279,7 +284,7 @@ postPandocCompiler config = pandocCompiler_ transforms config
     where
         -- Overall document transform, i.e. the combination
         -- of all Pandoc filters
-        transforms doc = bulmaTransform <$> readingTimeTransform <$> plotTransformWithConfig config doc
+        transforms doc = bulmaTransform <$> readingTimeTransformMeta <$> plotTransformWithConfig config doc
 
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions
