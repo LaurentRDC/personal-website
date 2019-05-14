@@ -13,7 +13,7 @@ import Hakyll.Images                    ( loadImage
 -- https://github.com/jaspervdj/hakyll/issues/109
 import qualified GHC.IO.Encoding                 as E
 
-import           Text.Pandoc.Definition          (Pandoc(..))
+import           Text.Pandoc.Definition          (Pandoc(..), Meta(..), Inline(..), MetaValue(..))
 import           Text.Pandoc.Extensions
 import           Text.Pandoc.Filter.Pyplot       (plotTransformWithConfig, configuration)
 import qualified Text.Pandoc.Filter.Pyplot       as P
@@ -24,6 +24,7 @@ import           Text.Pandoc.Walk                (walkM)
 import           System.IO
 
 import qualified Data.ByteString                 as B
+import           Data.Map                        (foldMapWithKey)
 import qualified Text.Blaze.Html.Renderer.String as St
 import           Text.Blaze.Html.Renderer.Utf8   (renderHtmlToByteStringIO)
 
@@ -149,15 +150,19 @@ main = do
         --------------------------------------------------------------------------------
         -- Compile blog posts
         -- Explicitly do not match the drafts
+        --
+        -- TODO: include Pandoc metainformation to implement reading-time filter
+        --       See for example here:
+        --            https://github.com/jaspervdj/hakyll/issues/643
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
             compile $ postPandocCompiler pyplotConfig
-                -- Post template is obsolete
-                -- It is now built in the default template
-                -- >>= loadAndApplyTemplate "templates/post.html"    postCtx
-                >>= saveSnapshot "content"  -- Saved content for RSS feed
-                >>= loadAndApplyTemplate "templates/default.html" postCtx
-                >>= relativizeUrls
+                    -- Post template is obsolete
+                    -- It is now built in the default template
+                    -- >>= loadAndApplyTemplate "templates/post.html"    postCtx
+                    >>= saveSnapshot "content"  -- Saved content for RSS feed
+                    >>= loadAndApplyTemplate "templates/default.html" postCtx
+                    >>= relativizeUrls
 
         --------------------------------------------------------------------------------
         -- Create RSS feed and Atom feeds
@@ -232,12 +237,7 @@ postCtx :: Context String
 postCtx = mconcat [ defaultContext
                   , constField "root" "http://www.physics.mcgill.ca/~decotret/"
                   , dateField "date" "%Y-%m-%d"
-                  , readingTimeContext
                   ] 
-
-readingTimeContext :: Context String
-readingTimeContext = field "reading-time" $ \item -> 
-    getMetadataField' (itemIdentifier item) "reading-time"
 
 -- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
