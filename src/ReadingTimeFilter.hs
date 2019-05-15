@@ -1,6 +1,5 @@
 module ReadingTimeFilter (
-      readingTimeTransform
-    , readingTimeTransformMeta
+      readingTimeTransformMeta
 ) where
 
 import           Text.Pandoc
@@ -35,25 +34,7 @@ _wordCount _                   = 0
 wordCount :: Pandoc -> WordCount
 wordCount = query _wordCount
 
--- | Insert a paragraph at the beginning of the document
--- estimating the reading time in minutes.
-readingTimeTransform :: Pandoc -> Pandoc
-readingTimeTransform (Pandoc meta blocks) = Pandoc meta ([newBlock] <> blocks)
-    where
-        nwords = getSum $ wordCount (Pandoc meta blocks)
-        readingTime = show $ nwords `div` 100
-        newBlock = Para [
-            Emph [
-                Str $ mconcat [ "Estimated reading time of "
-                              , readingTime
-                              , " minutes ("
-                              , show nwords
-                              ," words)."]
-                ]
-            ]
-
 -- | Insert the 'reading-time' metadata key
--- This key can then be used in Hakyll templates via $readingtime$
 readingTimeTransformMeta :: Pandoc -> Pandoc
 readingTimeTransformMeta (Pandoc meta blocks) = Pandoc newMeta blocks
     where
@@ -61,9 +42,5 @@ readingTimeTransformMeta (Pandoc meta blocks) = Pandoc newMeta blocks
         readingTime = show $ nwords `div` 100
         newMeta = Meta $ insert "reading-time" (MetaString readTimeText) (unMeta meta)
         readTimeText = mconcat [ 
-            "Estimated reading time of "
-            , readingTime
-            , " minutes ("
-            , show nwords
-            ," words)."
+            "Estimated reading time of ", readingTime, " minutes (", show nwords," words)."
             ]
