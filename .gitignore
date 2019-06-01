@@ -36,3 +36,4 @@ WinSCP.ini
 templates/default.html
 images/pandoc-pyplot-gallery/
 generated/*
+stack.yaml.lock
