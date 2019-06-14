@@ -1,29 +1,32 @@
 
-$for(posts)$
-    <div class="card">
-        <header class="card-header has-background-light">
-            <p class="card-header-title">
-                $title$
-            </p>
-        </header>
-        <div class="card-content">
-            <div class="content">
-                <p>
-                    $if(summary)$
-                        $summary$
-                    $else$
-                        No summary available.
-                    $endif$
-                    <a href="$url$">Click here to read the rest.</a>
-                </p>
-                <p>
-                    <em>Posted on $date$</em>.
-                    $if(updated)$
-                        <em>Last updated on $updated$</em>.
-                    $endif$
-                </p>
+<div class="columns is-multiline">
+    $for(posts)$
+        <div class="column is-half">
+            <div class="card">
+                <header class="card-header has-background-light">
+                    <p class="card-header-title">
+                        $title$
+                    </p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <p>
+                            $if(summary)$
+                                $summary$
+                            $else$
+                                No summary available.
+                            $endif$
+                            <a href="$url$">Click here to read the rest.</a>
+                        </p>
+                        <p>
+                            <em>Posted on $date$</em>.
+                            $if(updated)$
+                                <em>Last updated on $updated$</em>.
+                            $endif$
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <br>    
-$endfor$
+    $endfor$
+</div>
