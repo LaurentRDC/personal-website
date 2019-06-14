@@ -1,5 +1,6 @@
 ---
-name: iris - interactive exploration of ultrafast electron scattering data
+name: iris-ued
+description: Interactive exploration of ultrafast electron scattering data
 repository: https://github.com/LaurentRDC/iris-ued
 ---
 

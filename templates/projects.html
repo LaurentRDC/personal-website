@@ -1,3 +1,22 @@
+<h2 class="title is-2">Overview</h2>
+<p>
+    Below are some of my software projects. You can click on cards to 
+    go directly to the GitHub repository.
+</p>
+<div class="columns is-multiline">
+    $for(general)$
+        <div class="column is-half">
+            $partial("templates/github-card.html")$
+        </div>
+    $endfor$
+    $for(scientific)$
+        <div class="column is-half">
+            $partial("templates/github-card.html")$
+        </div>
+    $endfor$
+</div>
+<p class="has-text-centered">GitHub cards provided by <a href="https://gh-card.dev/">gh-card</a>.</p>
+
 
 <h2 class="title is-2">General purpose software</h2>
 $for(general)$

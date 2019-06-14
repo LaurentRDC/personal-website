@@ -1,5 +1,6 @@
 ---
-name: pandoc-pyplot - A Pandoc filter to generate Matplotlib figures directly in documents
+name: pandoc-pyplot
+description: A Pandoc filter to generate Matplotlib figures directly in documents
 repository: https://github.com/LaurentRDC/pandoc-pyplot
 ---
 
