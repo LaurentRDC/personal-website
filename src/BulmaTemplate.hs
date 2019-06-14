@@ -13,9 +13,9 @@ import           Text.Blaze                  (toMarkup, toValue)
 
 fontAwesomeURL = "https://use.fontawesome.com/releases/v5.2.0/css/all.css"
 academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
-bulmaURL = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css"
-mathjaxURL = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"
-fontURL = "https://fonts.googleapis.com/css?family=Titillium+Web"
+bulmaURL       = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"
+mathjaxURL     = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"
+fontURL        = "https://fonts.googleapis.com/css?family=Titillium+Web"
 
 type Icon = String
 type Link = String
@@ -25,12 +25,12 @@ type NavigationLink = (Link, String)
 
 socialLinks :: [SocialLink]
 socialLinks = [
-      ("fas fa-envelope",     "mailto:laurent.decotret@outlook.com",                              "e-mail")
-    , ("fab fa-github",       "https://github.com/LaurentRDC",                                    "GitHub")
-    , ("fab fa-linkedin",     "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  "LinkedIn")
-    , ("ai ai-researchgate",  "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",      "ResearchGate")
-    , ("ai ai-orcid",         "https://orcid.org/0000-0002-1464-2739",                            "OrcID")
-    , ("ai ai-google-scholar","https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en",      "Google Scholar")
+      ("fas fa-envelope",      "mailto:laurent.decotret@outlook.com",                              "e-mail")
+    , ("fab fa-github",        "https://github.com/LaurentRDC",                                    "GitHub")
+    , ("fab fa-linkedin",      "https://www.linkedin.com/in/laurent-p-rené-de-cotret-296b38152/",  "LinkedIn")
+    , ("ai ai-researchgate",   "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",      "ResearchGate")
+    , ("ai ai-orcid",          "https://orcid.org/0000-0002-1464-2739",                            "OrcID")
+    , ("ai ai-google-scholar", "https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en",      "Google Scholar")
     ]
 
 feedLinks :: [SocialLink]
@@ -41,11 +41,11 @@ feedLinks = [
 
 navigationLinks :: [NavigationLink]
 navigationLinks = [
-      ("/index.html",       "Home")
-    , ("/media_list.html",  "Media list")
-    , ("/software.html",    "Software")
-    , ("/about.html",       "About me")
-    , ("/archive.html",     "Blog posts")
+      ("/index.html",      "Home")
+    , ("/media_list.html", "Media list")
+    , ("/software.html",   "Software")
+    , ("/about.html",      "About me")
+    , ("/archive.html",    "Blog posts")
     ]
 
 styleSheets :: [AttributeValue]
