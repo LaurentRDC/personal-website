@@ -42,7 +42,6 @@ feedLinks = [
 navigationLinks :: [NavigationLink]
 navigationLinks = [
       ("/index.html",       "Home")
-    , ("/media_list.html",  "Media list")
     , ("/software.html",    "Software")
     , ("/about.html",       "About me")
     , ("/archive.html",     "Blog posts")
