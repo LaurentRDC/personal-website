@@ -32,8 +32,6 @@ import           BulmaFilter                     (bulmaTransform)
 import           BulmaTemplate                   (mkDefaultTemplate,
                                                   tocTemplate)
 
-import           ReadingTimeFilter               (readingTimeTransformMeta)
-
 import           Data.Time.Calendar              (showGregorian)
 import           Data.Time.Clock                 (getCurrentTime, utctDay)
 
