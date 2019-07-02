@@ -30,6 +30,7 @@ executable personal-website
                        blaze-markup,
                        bytestring,
                        time,
+                       text,
                        JuicyPixels
 -- For stylistic purposes
   other-modules:       BulmaTemplate, BulmaFilter, ReadingTimeFilter, Feed

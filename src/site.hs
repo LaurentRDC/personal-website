@@ -25,7 +25,12 @@ import           System.IO
 
 import qualified Data.ByteString                 as B
 import           Data.Map                        (foldMapWithKey)
-import qualified Text.Blaze.Html.Renderer.String as St
+
+import qualified Data.Text                       as T
+import qualified Data.Text.Encoding              as T
+
+import           Text.Blaze.Html.Renderer.String (renderHtml)
+import qualified Text.Blaze.Html.Renderer.Pretty as P
 import           Text.Blaze.Html.Renderer.Utf8   (renderHtmlToByteStringIO)
 
 import           BulmaFilter                     (bulmaTransform)
@@ -62,6 +67,14 @@ conf = defaultConfiguration
         , deployCommand = "scp -Cr ./decotret decotret@gollum.physics.mcgill.ca:/common/WWW/"
         }
 
+renderTemplate :: IO B.ByteString
+renderTemplate = do
+    today <- getCurrentTime >>= return . showGregorian . utctDay
+    let template = mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
+    return template
+        -- We need to go through Text because of utf8-encoding
+        >>= return . T.encodeUtf8 . T.pack . P.renderHtml
+        
 --------------------------------------------------------------------------------
 main :: IO ()
 main = do
@@ -80,10 +93,10 @@ main = do
 
             -- We generate the default template
             -- The template has a marking showing on what date was the page generated
-            today <- getCurrentTime >>= return . showGregorian . utctDay
-            let template = mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
-            renderHtmlToByteStringIO (B.writeFile "templates/default.html") template >> putStrLn "  Generated templates\\default.html"
-        
+            renderTemplate 
+                >>= (B.writeFile "templates/default.html") 
+                >> putStrLn "  Generated templates\\default.html"
+
         --------------------------------------------------------------------------------
         -- A lot of things can be compied directly
         forM_ ["files/*", "fonts/*", "js/*", nonJpgImages] $ 
@@ -255,7 +268,7 @@ pandocCompiler_ config = do
                 , writerHighlightStyle = Just syntaxHighlightingStyle
                 , writerTableOfContents = True
                 , writerTOCDepth = read (fromMaybe "3" tocDepth) :: Int
-                , writerTemplate = Just $ St.renderHtml tocTemplate
+                , writerTemplate = Just $ renderHtml tocTemplate
                 }
             Nothing -> defaultHakyllWriterOptions
                 { writerExtensions = extensions
