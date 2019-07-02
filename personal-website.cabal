@@ -29,7 +29,8 @@ executable personal-website
                        blaze-html,
                        blaze-markup,
                        bytestring,
-                       time
+                       time,
+                       text
 -- For stylistic purposes
   other-modules:       BulmaTemplate, BulmaFilter, Feed
 
