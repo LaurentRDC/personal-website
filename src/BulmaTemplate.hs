@@ -129,6 +129,10 @@ defaultFooter s = H.footer ! class_ "footer" $
                     , (H.a ! href "/about.html#about-this-site" $ "here")
                     , "."
                     ]
+        H.a ! rel "license" ! href "http://creativecommons.org/licenses/by-sa/4.0/" $ 
+            H.img ! alt "Creative Commons License" 
+                  ! A.style "border-width:0" 
+                  ! src "https://i.creativecommons.org/l/by-sa/4.0/88x31.png"
     where
         renderLink (icon, link, name) = do
             H.span ! class_ "icon" $ H.i ! class_ (toValue icon) $ mempty
