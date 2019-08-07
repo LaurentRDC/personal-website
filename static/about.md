@@ -23,6 +23,8 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ### Letters and articles
 
+* __L.P. René de Cotret__, J.-H. Pöhls, M. J. Stern, M. R. Otto, M. Sutton, and B. J. Siwick, _Time- and momentum-resolved phonon spectroscopy with ultrafast electron diffuse scattering_ (2019) Submitted. [Preprint is available here](/files/phonon_spectroscopy.pdf). Arxiv link soon.
+
 * M. R. Otto, __L. P. René de Cotret__, D. A. Valverde-Chavez, K. L. Tiwari, N. Émond, M. Chaker, D. G. Cooke, and B. J. Siwick, _How optical excitation controls the structure and properties of vanadium dioxide_ (2018) [DOI: 10.1073/pnas.1808414115](https://doi.org/10.1073/pnas.1808414115). An earlier version is publicly available as a [preprint](https://arxiv.org/abs/1805.01430)<i class="ai ai-open-access"></i>
 
 * <i class="ai ai-open-access"></i> __L. P. René de Cotret__, M. R. Otto, M. J. Stern, and B. J. Siwick, _An open-source software ecosystem for the interactive exploration of ultrafast electron scattering data_, Advanced Structural and Chemical Imaging __4__:11 (2018) [DOI:10.1186/s40679-018-0060-y](https://ascimaging.springeropen.com/articles/10.1186/s40679-018-0060-y)
