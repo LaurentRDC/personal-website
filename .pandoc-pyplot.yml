@@ -2,3 +2,5 @@ dpi: 100
 directory: generated/
 interpreter: python
 include: images/plot_style.py
+transparent: false
+tight_bbox: true
