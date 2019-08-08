@@ -5,12 +5,12 @@
 
 packages:
 - completed:
-    hackage: pandoc-pyplot-2.1.5.0@sha256:7147aa65c031844dac279fce9a3e81b5b2d16f6ad0152ce1828d76f0e18780c6,3142
+    hackage: pandoc-pyplot-2.1.5.1@sha256:e65783843999bbb75b2b413441a333024bce21a5703e4893dbf212c8d341873b,3142
     pantry-tree:
       size: 1041
-      sha256: de8cce7ec2bed563606245fe57ab85ba7eeb919138f6f5606c16d98aabc6a749
+      sha256: 4ac42cf2089866b21ed9dbc70895723550cb81f2f35266c62274c07f702252f8
   original:
-    hackage: pandoc-pyplot-2.1.5.0
+    hackage: pandoc-pyplot-2.1.5.1
 - completed:
     hackage: hakyll-images-0.4.4@sha256:fc0c726ec324c019265d14ea45ac760752bca42e68630aff11b510812f846f24,2273
     pantry-tree:
