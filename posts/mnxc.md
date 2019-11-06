@@ -1,6 +1,7 @@
 ---
 title: The masked normalized cross-correlation and its application to image registration
 date: 2019-04-30
+updated: 2019-11-06
 summary: "For my first contribution to open-source library scikit-image, I implemented the masked normalized cross-correlation. This post details the why and how this happened."
 ---
 
