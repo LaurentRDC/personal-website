@@ -2,6 +2,7 @@
 title: Simulating a PID controller with Python
 date: 2019-08-02
 summary: We are testing the implementation of a new proportional-integral-derivative (PID) controller in our lab. How can we simulate its effects first?
+updated: 2019-12-11
 withtoc: true
 ---
 
@@ -67,14 +68,9 @@ $e(t)$ is the deviation of the system from the set-point $r(t)$.
 
 ## Modeling with Python
 
-I can think of two ways to model the behavior of the our clock + PID controller.
+To model the behavior of the our clock + PID controller, we will numerically evaluate $u(t)$ based on a simulated $y(t)$ by solving the above equation.
 
-1. Numerically evaluate $u(t)$ based on a simulated $y(t)$ by solving the above equation.
-2. Implement an object-oriented interface and iterate
-
-You might think that approach 2 is redundant, but it is much closer to a real-time software implementation where a computer can act as a PID.
-
-### Method 1: Numerical evaluation
+## Numerical evaluation
 
 I find it easiest to think about numerical evaluation by imagining that the universe is perfectly deterministic. Therefore, the slow jitter $j(t)$ in the clock frequency $y(t) = r + j(t)$ can be simulated in advance. That's how we start:
 ```python
@@ -91,7 +87,7 @@ error_signal = np.cumsum(
     )
 ```
 
-#### Proportional response
+### Proportional response
 
 We'll have a function that evaluates the correction signal $u(t)$ only with a proportional constant:
 ```python
@@ -161,7 +157,7 @@ plt.ylabel('Response [Hz]')
 plt.legend(loc='center', ncol=2, bbox_to_anchor=(0.5, 1.05))
 ```
 
-#### Proportional-integral response
+### Proportional-integral response
 
 Let's implement the integral term $K_i \int_0^t e(\tau)d\tau$. The cumulative integral is best approximated by the [`scipy.integrate.cumtrapz`](https://docs.scipy.org/doc/scipy/reference/generated/scipy.integrate.cumtrapz.html#scipy-integrate-cumtrapz) function:
 ```python
@@ -232,5 +228,3 @@ ax.set_ylabel('Signal [Hz]')
 
 plt.subplots_adjust(hspace=0)
 ```
-
-### Method 2: Real-time system
