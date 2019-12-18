@@ -4,10 +4,7 @@ withtoc: yes
 ---
 
 ## Currently
-I am a PhD candidate in the [Physics department](http://www.physics.mcgill.ca) at McGill University. I work in a 
-small team led by Bradley J. Siwick at the forefront of ultrafast condensed matter physics. 
-Our main tool is a RF-compressed ultrafast electron diffractometer. You can learn more
-about our team on our [group website](http://www.physics.mcgill.ca/siwicklab/index.html).  
+I am a PhD candidate in the [Physics department](http://www.physics.mcgill.ca) at McGill University. I work in a small team led by Bradley J. Siwick at the forefront of ultrafast condensed matter physics. Our main tool is a RF-compressed ultrafast electron diffractometer. You can learn more about our team on our [group website](http://www.physics.mcgill.ca/siwicklab/index.html).  
 
 ## Education
 
