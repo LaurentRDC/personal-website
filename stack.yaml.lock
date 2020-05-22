@@ -5,13 +5,6 @@
 
 packages:
 - completed:
-    hackage: pandoc-pyplot-2.2.0.0@sha256:e0c26dd4e65b589a80352806a92c8e0a55a9b4c30ad22ee956a4c8b7c6cc6733,3299
-    pantry-tree:
-      size: 1041
-      sha256: c149dbe02a730c0a0fef223db974d0ee5994d257720fcdaf50d6cb65e498a877
-  original:
-    hackage: pandoc-pyplot-2.2.0.0
-- completed:
     hackage: hakyll-images-0.4.4@sha256:fc0c726ec324c019265d14ea45ac760752bca42e68630aff11b510812f846f24,2273
     pantry-tree:
       size: 1162
@@ -20,7 +13,7 @@ packages:
     hackage: hakyll-images-0.4.4
 snapshots:
 - completed:
-    size: 509471
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/12/26.yaml
-    sha256: 95f014df58d0679b1c4a2b7bf2b652b61da8d30de5f571abb0d59015ef678646
-  original: lts-12.26
+    size: 528870
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2020/5/22.yaml
+    sha256: 5084c06d7e6da39523d02af34e97661045018c0a21d7f976325adb6222661241
+  original: nightly-2020-05-22

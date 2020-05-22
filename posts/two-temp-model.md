@@ -10,7 +10,7 @@ Temperature is a measure of the average kinetic energy of all particles in a sys
 
 Note that the above system has a temperature because there exists a clear **average** motion, even though not all particles are moving at the same velocity. This means, a system is at some temperature $T$ as long as the distribution of kinetic energies (often related to velocities) ressembles a **normal distribution**:
 
-```{.pyplot caption="Examples of distribution of particle kinetic energies. **Left**: distribution of particle energies with a well-defined temperature. **Right**: distribution of particle energies does not match an expected thermal equilibrium."}
+```{.matplotlib caption="Examples of distribution of particle kinetic energies. **Left**: distribution of particle energies with a well-defined temperature. **Right**: distribution of particle energies does not match an expected thermal equilibrium."}
 
 CENTER = 3.0
 
@@ -42,7 +42,7 @@ Real materials are composed of two types of particles, nuclei and electrons[^1].
 
 Roughly 100fs after dumping a lot of energy into a material, the nuclei might not have reacted yet, and we might have the following energetic landscape:
 
-```{.pyplot caption="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, $T_l$, and one for the electronic system, $T_e$."}
+```{.matplotlib caption="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, $T_l$, and one for the electronic system, $T_e$."}
 
 CENTER1 = 4.0
 CENTER2 = CENTER1 * 1/4

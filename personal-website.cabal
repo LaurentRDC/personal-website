@@ -24,7 +24,7 @@ executable personal-website
                        hakyll-images >= 0.4.2,
                        pandoc > 2.2,
                        pandoc-types,
-                       pandoc-pyplot >= 2.2.0.0,
+                       pandoc-plot >= 0.3.0.0,
                        skylighting,
                        blaze-html,
                        blaze-markup,

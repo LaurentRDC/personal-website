@@ -1,6 +1,8 @@
 dpi: 100
+source: true
 directory: generated/
-interpreter: python
-include: images/plot_style.py
-transparent: true
-tight_bbox: true
+
+matplotlib:
+  preamble: images/plot_style.py
+  transparent: true
+  tight_bbox: true

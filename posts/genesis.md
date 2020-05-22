@@ -59,17 +59,3 @@ def fib(n):
 >  The number of bins (of size 1) is one larger than the largest value in x. If minlength is specified, there will be at least this number of bins in the output array (though it will be longer if necessary, depending on the contents of x).
 
 - _NumPy documentation for bincount_
-
-### Update 2018-09-30 : Python plots
-
-Using this space to test the use of my first published Haskell package, [`pandoc-pyplot`](http://hackage.haskell.org/package/pandoc-pyplot)
-
-You can click on the image to see the source Python code used to generate the figure.
-
-```{.pyplot caption=""}
-import matplotlib.pyplot as plt
-
-plt.figure()
-plt.plot([1,2,3,4,5], [1,2,3,4,5])
-plt.title('Test plot')
-```

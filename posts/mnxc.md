@@ -14,7 +14,7 @@ $$
 
 For example, if $I_1 = I_2$, then $I_1 \star I_2$ has its maximum at $(u,v) =$ (0,0). What happens if $I_1$ and $I_2$ are shifted from each other? Let's see:
 
-```{.pyplot caption="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation."}
+```{.matplotlib caption="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation."}
 # This example has been adapted from the scikit-image gallery item
 # located here:
 #   https://scikit-image.org/docs/stable/auto_examples/transform/plot_register_translation.html
@@ -62,7 +62,7 @@ Most of the electron beam is unperturbed by the sample; this is why we use a met
 
 Our experiments are synthesized from hundreds of gigabytes of images like the one above, and it may take up to 72h (!) to take all the images we need. Over the course of this time, the electron beam may shift in a way that moves the image, but *not the beam-block*[^1]. Heres's what I mean:
 
-```{.pyplot caption="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel."}
+```{.matplotlib caption="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel."}
 
 from skued import diffread
 
@@ -95,7 +95,7 @@ Thanks to the work of Dr. Dirk Padfield[^2] [^3], we now know that such an opera
 
 In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation --- and its associated registration function --- in our ultrafast electron diffraction toolkit, [scikit-ued](https://scikit-ued.rtfd.io)[^4]. Here's an example of it in action:
 
-```{.pyplot caption="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment!"}
+```{.matplotlib caption="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment!"}
 from skimage.feature import masked_register_translation
 from skued import diffread
 import scipy.ndimage as ndi

@@ -15,8 +15,8 @@ import qualified GHC.IO.Encoding                 as E
 
 import           Text.Pandoc.Definition          (Pandoc(..), Meta(..), Inline(..), MetaValue(..))
 import           Text.Pandoc.Extensions
-import           Text.Pandoc.Filter.Pyplot       (plotTransformWithConfig, configuration)
-import qualified Text.Pandoc.Filter.Pyplot       as P
+import           Text.Pandoc.Filter.Plot         (plotTransform, configuration)
+import qualified Text.Pandoc.Filter.Plot         as P
 import           Text.Pandoc.Highlighting
 import           Text.Pandoc.Options
 import           Text.Pandoc.Walk                (walkM)
@@ -80,7 +80,7 @@ main = do
     -- https://github.com/jaspervdj/hakyll/issues/109
     E.setLocaleEncoding E.utf8
 
-    pyplotConfig <- configuration ".pandoc-pyplot.yml"
+    plotConfig <- configuration ".pandoc-plot.yml"
 
     hakyllWith conf $ do
             
@@ -122,7 +122,7 @@ main = do
         -- Note that /static/index.html is a special case and is handled below
         match "static/*.md" $ do
             route $ (setExtension "html") `composeRoutes` staticRoute
-            compile $ pandocCompiler_ pyplotConfig
+            compile $ pandocCompiler_ plotConfig
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
 
@@ -130,7 +130,7 @@ main = do
         -- Compile projects page
         -- We need to compile each project individually first
         -- If this is not done, we cannot use the metadata in HTML templates
-        match ("projects/**.md") $ compile $ pandocCompiler_ pyplotConfig >>= relativizeUrls
+        match ("projects/**.md") $ compile $ pandocCompiler_ plotConfig >>= relativizeUrls
 
         create ["software.html"] $ do
             route idRoute
@@ -167,7 +167,7 @@ main = do
         --            https://github.com/jaspervdj/hakyll/issues/643
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
-            compile $ pandocCompiler_ pyplotConfig
+            compile $ pandocCompiler_ plotConfig
                     -- Post template is obsolete
                     -- It is now built in the default template
                     -- >>= loadAndApplyTemplate "templates/post.html"    postCtx
@@ -252,7 +252,7 @@ postCtx = mconcat [ defaultContext
 
 -- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 -- Note that the Bulma pandoc filter is always applied last
-pandocCompiler_ :: P.Configuration        -- ^ Pandoc-pyplot configuration
+pandocCompiler_ :: P.Configuration        -- ^ Pandoc-plot configuration
                 -> Compiler (Item String)
 pandocCompiler_ config = do
     ident <- getUnderlying
@@ -279,7 +279,7 @@ pandocCompiler_ config = do
         writerOptions
         (unsafeCompiler . transforms)
     where
-        transforms doc = bulmaTransform <$> plotTransformWithConfig config doc
+        transforms doc = bulmaTransform <$> plotTransform config doc
 
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions

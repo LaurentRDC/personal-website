@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 -- Pandoc transforms for Bulma's oddities
 module BulmaFilter (
     bulmaTransform
