@@ -4,6 +4,7 @@ module BulmaFilter (
     bulmaTransform
 ) where
 
+import           Data.Text              (pack)
 import           Text.Pandoc.Definition (Attr, Block (..), Inline (..), Pandoc)
 import           Text.Pandoc.Walk       (walk)
 
@@ -11,7 +12,7 @@ toBulmaHeading :: Block -> Block
 toBulmaHeading (Header level attrs xs) = Header level newAttrs xs
     where
         (identifier, classes, keyvals) = attrs
-        newAttrs = (identifier, classes <> ["title", "is-" <> show level], keyvals)
+        newAttrs = (identifier, classes <> ["title", "is-" <> (pack . show $ level)], keyvals)
 toBulmaHeading x = x
 
 toBulmaImage :: Inline -> Inline

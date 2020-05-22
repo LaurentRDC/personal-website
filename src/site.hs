@@ -19,6 +19,7 @@ import           Text.Pandoc.Filter.Plot         (plotTransform, configuration)
 import qualified Text.Pandoc.Filter.Plot         as P
 import           Text.Pandoc.Highlighting
 import           Text.Pandoc.Options
+import qualified Text.Pandoc.Templates           as Template
 import           Text.Pandoc.Walk                (walkM)
 
 import           System.IO
@@ -30,7 +31,7 @@ import qualified Data.Text                       as T
 import qualified Data.Text.Encoding              as T
 
 import           Text.Blaze.Html.Renderer.String (renderHtml)
-import qualified Text.Blaze.Html.Renderer.Pretty as P
+import qualified Text.Blaze.Html.Renderer.Pretty as Pretty
 import           Text.Blaze.Html.Renderer.Utf8   (renderHtmlToByteStringIO)
 
 import           BulmaFilter                     (bulmaTransform)
@@ -63,6 +64,7 @@ conf :: Configuration
 conf = defaultConfiguration
         { destinationDirectory = "decotret"
         , deployCommand = "scp -Cr ./decotret decotret@gollum.physics.mcgill.ca:/common/WWW/"
+        , providerDirectory = "."
         }
 
 renderTemplate :: IO B.ByteString
@@ -71,7 +73,7 @@ renderTemplate = do
     let template = mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
     return template
         -- We need to go through Text because of utf8-encoding
-        >>= return . T.encodeUtf8 . T.pack . P.renderHtml
+        >>= return . T.encodeUtf8 . T.pack . Pretty.renderHtml
         
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -258,6 +260,8 @@ pandocCompiler_ config = do
     ident <- getUnderlying
     toc <- getMetadataField ident "withtoc"
     tocDepth <- getMetadataField ident "tocdepth"
+    template <- unsafeCompiler $ (either error id) <$> 
+                    Template.compileTemplate mempty (T.pack . renderHtml $ tocTemplate)
     let extensions = defaultPandocExtensions
         writerOptions = case toc of
             Just _ -> defaultHakyllWriterOptions
@@ -266,7 +270,7 @@ pandocCompiler_ config = do
                 , writerHighlightStyle = Just syntaxHighlightingStyle
                 , writerTableOfContents = True
                 , writerTOCDepth = read (fromMaybe "3" tocDepth) :: Int
-                , writerTemplate = Just $ renderHtml tocTemplate
+                , writerTemplate = Just template
                 }
             Nothing -> defaultHakyllWriterOptions
                 { writerExtensions = extensions
