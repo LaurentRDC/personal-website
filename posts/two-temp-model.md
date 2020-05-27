@@ -38,7 +38,7 @@ So, a system with a well-defined temperature exhibits a normal distribution of p
 
 Real materials are composed of two types of particles, nuclei and electrons[^1]. These particles have widly different masses, so electromagnetic fields --- for example, an intense pulse of light --- will not affect them at the same time; since nuclei are at least ~1000x more massive than electrons, we should expect the electrons to react about ~1000x faster.
 
-[After decades of development culminating in the 2018 Nobel Prize in Physics](cpa-nobel.html), the production of ultrafast laser pulses (less than 30 femtoseconds[^2]) is now routine. These ultrafast laser pulses can be used to prepare systems in a strange configuration: one with seemingly *two temperatures*, albeit only for a short time. Modeling of this situation in crystalline material was done decades ago, and the model is known as the **two-temperature model**[^3].
+After decades of development culminating in the 2018 Nobel Prize in Physics, the production of ultrafast laser pulses (less than 30 femtoseconds[^2]) is now routine. These ultrafast laser pulses can be used to prepare systems in a strange configuration: one with seemingly *two temperatures*, albeit only for a short time. Modeling of this situation in crystalline material was done decades ago, and the model is known as the **two-temperature model**[^3].
 
 Roughly 100fs after dumping a lot of energy into a material, the nuclei might not have reacted yet, and we might have the following energetic landscape:
 
