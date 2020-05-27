@@ -15,7 +15,7 @@ import qualified GHC.IO.Encoding                 as E
 
 import           Text.Pandoc.Definition          (Pandoc(..), Meta(..), Inline(..), MetaValue(..))
 import           Text.Pandoc.Extensions
-import           Text.Pandoc.Filter.Plot         (plotTransform, configuration)
+import           Text.Pandoc.Filter.Plot         (plotTransform)
 import qualified Text.Pandoc.Filter.Plot         as P
 import           Text.Pandoc.Highlighting
 import           Text.Pandoc.Options
@@ -82,7 +82,7 @@ main = do
     -- https://github.com/jaspervdj/hakyll/issues/109
     E.setLocaleEncoding E.utf8
 
-    plotConfig <- configuration ".pandoc-plot.yml"
+    plotConfig <- P.configuration ".pandoc-plot.yml"
 
     hakyllWith conf $ do
             

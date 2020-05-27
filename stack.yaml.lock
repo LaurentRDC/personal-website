@@ -11,9 +11,27 @@ packages:
       sha256: cf6daf24215e2271ac819e44f3f06f27cc7811b6be019f33e8895cb5fa39e412
   original:
     hackage: hakyll-images-0.4.4
+- completed:
+    hackage: pandoc-plot-0.5.0.0@sha256:b9f88fd4d5825935c91367f789846d57c881639bb692b0479326f02ed4998321,4507
+    pantry-tree:
+      size: 2142
+      sha256: eeb2b6daeec31b2437c4e7211aba3de953e158f3e5f80f91792513fb7498c116
+  original:
+    hackage: pandoc-plot-0.5.0.0
+- completed:
+    name: hakyll
+    version: 4.13.3.0
+    git: https://github.com/LaurentRDC/hakyll.git
+    pantry-tree:
+      size: 11758
+      sha256: 9b20f836674fab0efd863bd21f68c8ecd5c283f3513cdadf92c750a7b8221616
+    commit: 128494ffd2986da614ad8c18b096166df4f8d3ac
+  original:
+    git: https://github.com/LaurentRDC/hakyll.git
+    commit: 128494ffd2986da614ad8c18b096166df4f8d3ac
 snapshots:
 - completed:
-    size: 528870
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2020/5/22.yaml
-    sha256: 5084c06d7e6da39523d02af34e97661045018c0a21d7f976325adb6222661241
-  original: nightly-2020-05-22
+    size: 491387
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/15/6.yaml
+    sha256: 8d81505a6de861e167a58534ab62330afb75bfa108735c7db1204f7ef2a39d79
+  original: lts-15.6
