@@ -18,7 +18,7 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-15.6
+resolver: lts-16.0
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -41,9 +41,9 @@ packages:
 # (e.g., acme-missiles-0.3)
 extra-deps: 
 - 'hakyll-images-0.4.4'
-- 'pandoc-plot-0.6.0.0'
+- 'pandoc-plot-0.7.0.0'
 - git: https://github.com/LaurentRDC/hakyll.git
-  commit: 128494ffd2986da614ad8c18b096166df4f8d3ac
+  commit: 4f92f8f84e252bbd8a5db779334ec4817b07a6c4
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
