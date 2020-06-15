@@ -5,7 +5,14 @@ module BulmaTemplate ( mkDefaultTemplate
                      ) where
 
 import           Control.Monad               (forM_)
+
 import           Data.List                   (intersperse)
+import           Data.String                 (fromString)
+import           Data.Text                   (Text, unpack)
+import           Data.Time                   (UTCTime(..), getCurrentTime, toGregorian)
+
+import           System.IO.Unsafe            (unsafePerformIO)
+
 import           Text.Blaze.Html5            as H
 import           Text.Blaze.Html5.Attributes as A
 
@@ -22,6 +29,31 @@ type Link = String
 
 type SocialLink = (Icon, Link, String)
 type NavigationLink = (Link, String)
+
+
+data HeroColor 
+    = Turquoise | Blue | Green | Gold | Red
+    deriving (Eq, Ord, Enum, Bounded)
+
+
+heroColor :: HeroColor -> Text
+heroColor Turquoise = "is-primary"
+heroColor Blue      = "is-info"
+heroColor Green     = "is-success"
+heroColor Gold      = "is-warning"
+heroColor Red       = "is-danger"
+
+-- Monthly color
+-- I don't want to use Template Haskell to get the current month,
+-- so instead here's some unsafe usage. 
+monthlyColor :: HeroColor
+monthlyColor = unsafePerformIO $ do
+    today <- utctDay <$> getCurrentTime
+    -- The color changes based on the month, modulo the number of colors
+    let (_, month, _) = toGregorian today
+        numColors = length $ enumFromTo (minBound::HeroColor) maxBound
+    return $ toEnum . (`mod` numColors) $ month
+
 
 socialLinks :: [SocialLink]
 socialLinks = [
@@ -73,7 +105,7 @@ defaultHead = H.head $ do
     H.script ! type_ "text/javascript" ! src "/js/navbar-onclick.js" $ mempty
 
 navigationBar :: H.Html
-navigationBar = H.section ! class_ "hero is-warning is-bold" $ do
+navigationBar = H.section ! class_ ("hero is-bold" <> " " <> color) $ do
     --------------------------------------------------------------------------
     H.div ! class_ "hero-head" $
         H.nav ! class_ "navbar is-transparent" $
@@ -105,6 +137,9 @@ navigationBar = H.section ! class_ "hero is-warning is-bold" $ do
                         forM_ socialLinks mkSocialLink
 
     where
+        -- Color of the top banner
+        color = fromString . unpack . heroColor $ monthlyColor
+
         renderLink (link, title) = H.a ! class_ "navbar-item" ! href (toValue link) $ toMarkup title
 
         -- Generate an icon + anchor
