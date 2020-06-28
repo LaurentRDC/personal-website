@@ -63,7 +63,7 @@ generatedContent = "generated/**"
 conf :: Configuration
 conf = defaultConfiguration
         { destinationDirectory = "decotret"
-        , deployCommand = "scp -Cr ./decotret decotret@gollum.physics.mcgill.ca:/common/WWW/"
+        , deployCommand = ".\\deploy.ps1"
         , providerDirectory = "."
         }
 
