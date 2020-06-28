@@ -14,6 +14,12 @@ I am a PhD candidate in the [Physics department](http://www.physics.mcgill.ca) a
 
 * 2011-2014 | __McGill University__ B.Sc. Joint Honours in Mathematics and Physics. My undergraduate thesis was titled _High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_.
 
+## Employment
+
+* 2015 - 2017 | __NASA Jet Propulsion Laboratory__
+
+    Design and implementation of real-time holographic reconstruction for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
+
 ## Publications
 
 Open-access publications are highlighted with a <i class="ai ai-open-access"></i>.
