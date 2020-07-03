@@ -29,7 +29,7 @@ I am a PhD candidate in the [Physics department](http://www.physics.mcgill.ca) a
 
 ## Employment
 
-* 2015 - 2017 | __NASA Jet Propulsion Laboratory__
+* 2015 - 2017 | Software Architect | __NASA Jet Propulsion Laboratory__
 
     Design and implementation of real-time holographic reconstruction for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
     <p></p>
