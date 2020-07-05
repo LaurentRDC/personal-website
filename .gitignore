@@ -33,7 +33,6 @@ WinSCP.exe
 WinSCP.ini
 
 # Files automatically generated
-templates/default.html
-images/pandoc-pyplot-gallery/
 generated/*
 stack.yaml.lock
+templates/default.html

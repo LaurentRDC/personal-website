@@ -151,14 +151,7 @@ main = do
                     >>= loadAndApplyTemplate "templates/projects.html" projectsCtx
                     >>= loadAndApplyTemplate "templates/default.html" projectsCtx
                     >>= relativizeUrls
-        
-        --------------------------------------------------------------------------------
-        -- The images used for the pandoc-pyplot examples
-        -- The images must be in the root directory
-        -- for the rendered website
-        match ("images/pandoc-pyplot-gallery/*") $ do
-            route   (gsubRoute "images/pandoc-pyplot-gallery/" (const ""))
-            compile copyFileCompiler
+
 
         --------------------------------------------------------------------------------
         -- Compile blog posts
