@@ -8,19 +8,20 @@ I am a PhD candidate in the [Physics department](http://www.physics.mcgill.ca) a
 
 ## Education
 
-* 2016-now | __McGill University__ Ph.D. Physics 
+* 2016-now | __McGill University__ | Ph.D. Physics 
     
     Doctoral advisor: Bradley J. Siwick
+    
     <p></p>
 
-* 2014-2016 | __McGill University__ M.Sc. Physics 
+* 2014-2016 | __McGill University__ | M.Sc. Physics 
     
     Advisors: Bradley J. Siwick and Jay L. Nadeau. 
     
     My thesis was titled _New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_. [It is freely available here](http://digitool.library.mcgill.ca/thesisfile145488.pdf)
     <p></p>
 
-* 2011-2014 | __McGill University__ B.Sc. Joint Honours in Mathematics and Physics. 
+* 2011-2014 | __McGill University__ | B.Sc. Joint Honours in Mathematics and Physics. 
 
     Advisor: Jack C. Sankey
     
@@ -29,7 +30,7 @@ I am a PhD candidate in the [Physics department](http://www.physics.mcgill.ca) a
 
 ## Employment
 
-* 2015 - 2017 | Software Architect | __NASA Jet Propulsion Laboratory__
+* 2015 - 2017 | __NASA Jet Propulsion Laboratory__ | Software Architect
 
     Design and implementation of real-time holographic reconstruction for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
     <p></p>
