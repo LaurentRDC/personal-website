@@ -139,9 +139,7 @@ However, since this tool could see use in a more general setting, I decided to c
 2. I forked scikit-image and integrated the code and tests from scikit-ued to scikit-image. The changes are visible in the [pull request #3334](https://github.com/scikit-image/scikit-image/pull/3334). 
 3. Finally, some documentation improvements and an additional gallery example were added in [pull request #3528](https://github.com/scikit-image/scikit-image/pull/3528).
 
-In the end, a new function has been added, [`skimage.feature.masked_register_translation`](https://scikit-image.org/docs/stable/api/skimage.feature.html#skimage.feature.masked_register_translation), which mirrors the non-masked function that was previously there. 
-
-**As of scikit-image version 0.15, this contribution is now available for everyone to use**! [You can see final gallery item here.](https://scikit-image.org/docs/stable/auto_examples/transform/plot_masked_register_translation.html#sphx-glr-auto-examples-transform-plot-masked-register-translation-py)
+In the end, a new function has been added, [`skimage.registration.phase_cross_correlation`](https://scikit-image.org/docs/stable/api/skimage.registration.html#skimage.registration.phase_cross_correlation), which mirrors the non-masked function that was previously there. 
 
 [^1]: Technically, the rotation of the electron beam about its source will also move the shadow of the beam-block. However, because the beam-block is much closer to the electron source, the effect is imperceptible.
 
