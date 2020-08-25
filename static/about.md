@@ -8,7 +8,7 @@ I am a PhD candidate in the [Physics department](http://www.physics.mcgill.ca) a
 
 ## Education
 
-* 2016-now | __McGill University__ | Ph.D. Physics 
+* 2016-2021 (expected) | __McGill University__ | Ph.D. Physics 
     
     Doctoral advisor: Bradley J. Siwick
     
@@ -18,14 +18,14 @@ I am a PhD candidate in the [Physics department](http://www.physics.mcgill.ca) a
     
     Advisors: Bradley J. Siwick and Jay L. Nadeau. 
     
-    My thesis was titled _New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_. [It is freely available here](http://digitool.library.mcgill.ca/thesisfile145488.pdf)
+    My thesis was titled [_New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_](/files/msc_thesis.pdf).
     <p></p>
 
 * 2011-2014 | __McGill University__ | B.Sc. Joint Honours in Mathematics and Physics. 
 
     Advisor: Jack C. Sankey
     
-    My undergraduate thesis was titled _High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_.
+    My undergraduate thesis was titled [_High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_](/files/ugrad_project.pdf). It had an [associated poster](/files/ugrad_project_poster.pdf).
     <p></p>
 
 ## Employment

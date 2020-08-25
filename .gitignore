@@ -20,6 +20,7 @@ cabal.sandbox.config
 _cache/
 decotret/
 posts/drafts/
+files/
 
 ### Python ###
 __pycache__/
