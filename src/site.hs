@@ -63,7 +63,7 @@ generatedContent = "generated/**"
 conf :: Configuration
 conf = defaultConfiguration
         { destinationDirectory = "decotret"
-        , deployCommand = ".\\deploy.ps1"
+        , deployCommand = ".\\scripts\\deploy.ps1"
         , providerDirectory = "."
         }
 

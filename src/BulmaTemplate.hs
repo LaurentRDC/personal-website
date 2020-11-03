@@ -20,7 +20,6 @@ import           Text.Blaze                  (toMarkup, toValue)
 
 fontAwesomeURL = "https://use.fontawesome.com/releases/v5.2.0/css/all.css"
 academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
-bulmaURL       = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.min.css"
 mathjaxURL     = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"
 fontURL        = "https://fonts.googleapis.com/css?family=Titillium+Web"
 
@@ -58,7 +57,7 @@ navigationLinks = [
 styleSheets :: [AttributeValue]
 styleSheets =
     [ "/css/syntax.css"
-    , bulmaURL
+    , "/css/style.css"
     , fontAwesomeURL
     , academiconsURL
     ]
