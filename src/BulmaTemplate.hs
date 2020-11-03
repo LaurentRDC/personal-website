@@ -69,7 +69,7 @@ defaultHead = H.head $ do
     H.title "$title$ - Laurent P. René de Cotret"
     -- Tab icon
     -- Note : won't show up for Edge while on localhost
-    H.link ! rel "icon" ! type_ "image/x-icon" ! href "images/atom-solid.png"
+    H.link ! rel "icon" ! type_ "image/x-icon" ! href "/images/atom-solid.png"
     -- Style sheets
     forM_ styleSheets (\link -> H.link ! rel "stylesheet" ! type_ "text/css" ! href link)
     -- Font
@@ -80,7 +80,7 @@ defaultHead = H.head $ do
     H.script ! type_ "text/javascript" ! src "/js/navbar-onclick.js" $ mempty
 
 navigationBar :: H.Html
-navigationBar = H.section ! class_ ("hero is-dark") ! A.style "background: url('images/banner.svg') no-repeat left; background-size: cover;" $ do
+navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
     --------------------------------------------------------------------------
     H.div ! class_ "hero-head" $
         H.nav ! class_ "navbar is-transparent" $
