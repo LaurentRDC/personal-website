@@ -79,6 +79,8 @@ defaultHead = H.head $ do
     -- Bulma helpers
     H.script ! type_ "text/javascript" ! src "/js/navbar-onclick.js" $ mempty
 
+-- Note that the top-level class is extended via sass to have
+-- a background image.
 navigationBar :: H.Html
 navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
     --------------------------------------------------------------------------
