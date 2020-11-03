@@ -20,7 +20,7 @@ import           Text.Blaze                  (toMarkup, toValue)
 
 fontAwesomeURL = "https://use.fontawesome.com/releases/v5.2.0/css/all.css"
 academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
-bulmaURL       = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css"
+bulmaURL       = "https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.min.css"
 mathjaxURL     = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"
 fontURL        = "https://fonts.googleapis.com/css?family=Titillium+Web"
 
@@ -29,30 +29,6 @@ type Link = String
 
 type SocialLink = (Icon, Link, String)
 type NavigationLink = (Link, String)
-
-
-data HeroColor 
-    = Turquoise | Blue | Green | Gold | Red
-    deriving (Eq, Ord, Enum, Bounded)
-
-
-heroColor :: HeroColor -> Text
-heroColor Turquoise = "is-primary"
-heroColor Blue      = "is-info"
-heroColor Green     = "is-success"
-heroColor Gold      = "is-warning"
-heroColor Red       = "is-danger"
-
--- Monthly color
--- I don't want to use Template Haskell to get the current month,
--- so instead here's some unsafe usage. 
-monthlyColor :: HeroColor
-monthlyColor = unsafePerformIO $ do
-    today <- utctDay <$> getCurrentTime
-    -- The color changes based on the month, modulo the number of colors
-    let (_, month, _) = toGregorian today
-        numColors = length $ enumFromTo (minBound::HeroColor) maxBound
-    return $ toEnum . (`mod` numColors) $ month
 
 
 socialLinks :: [SocialLink]
@@ -105,16 +81,16 @@ defaultHead = H.head $ do
     H.script ! type_ "text/javascript" ! src "/js/navbar-onclick.js" $ mempty
 
 navigationBar :: H.Html
-navigationBar = H.section ! class_ ("hero is-bold" <> " " <> color) $ do
+navigationBar = H.section ! class_ ("hero is-dark") ! A.style "background: url('images/banner.svg') no-repeat left; background-size: cover;" $ do
     --------------------------------------------------------------------------
     H.div ! class_ "hero-head" $
         H.nav ! class_ "navbar is-transparent" $
             H.div ! class_ "container" $ do
                 H.div ! class_ "navbar-brand" $ do
-                    H.a ! class_ "navbar-item" ! href "/index.html" $ H.strong $ "Laurent P. René de Cotret"
+                    H.a ! class_ "navbar-item has-text-light" ! href "/index.html" $ H.strong $ "Laurent P. René de Cotret"
 
                     -- toggleBurger function defined in navbar-onclick.js
-                    H.span ! class_ "navbar-burger burger" ! A.id "burger" ! A.onclick "toggleBurger()"$ do
+                    H.span ! class_ "navbar-burger burger has-text-light" ! A.id "burger" ! A.onclick "toggleBurger()"$ do
                         H.span $ mempty
                         H.span $ mempty
                         H.span $ mempty
@@ -125,7 +101,7 @@ navigationBar = H.section ! class_ ("hero is-bold" <> " " <> color) $ do
     --------------------------------------------------------------------------
     H.div ! class_ "hero-body" $
         H.div ! class_ "container has-text-centered" $ do
-            H.h1 ! class_ "title" $
+            H.h1 ! class_ "title has-text-light" $
                 "$title$"
             H.h3 $ "$if(date)$Posted on $date$.$endif$ $if(updated)$Last updated on $updated$.$endif$"
     --------------------------------------------------------------------------
@@ -137,13 +113,10 @@ navigationBar = H.section ! class_ ("hero is-bold" <> " " <> color) $ do
                         forM_ socialLinks mkSocialLink
 
     where
-        -- Color of the top banner
-        color = fromString . unpack . heroColor $ monthlyColor
-
         renderLink (link, title) = H.a ! class_ "navbar-item" ! href (toValue link) $ toMarkup title
 
         -- Generate an icon + anchor
-        mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item" ! target "_blank" ! href (toValue link) $ do
+        mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link) $ do
             H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon) $ mempty
             toMarkup $ name
 

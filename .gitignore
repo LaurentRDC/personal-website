@@ -37,3 +37,4 @@ WinSCP.ini
 generated/*
 stack.yaml.lock
 templates/default.html
+stack.yaml.lock
