@@ -1,7 +1,7 @@
 ---
 title: The masked normalized cross-correlation and its application to image registration
 date: 2019-04-30
-updated: 2019-11-06
+updated: 2020-11-04
 summary: "For my first contribution to open-source library scikit-image, I implemented the masked normalized cross-correlation. This post details the why and how this happened."
 ---
 
@@ -14,7 +14,7 @@ $$
 
 For example, if $I_1 = I_2$, then $I_1 \star I_2$ has its maximum at $(u,v) =$ (0,0). What happens if $I_1$ and $I_2$ are shifted from each other? Let's see:
 
-```{.matplotlib caption="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation."}
+```{.python .matplotlib caption="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation."}
 # This example has been adapted from the scikit-image gallery item
 # located here:
 #   https://scikit-image.org/docs/stable/auto_examples/transform/plot_register_translation.html
@@ -62,7 +62,7 @@ Most of the electron beam is unperturbed by the sample; this is why we use a met
 
 Our experiments are synthesized from hundreds of gigabytes of images like the one above, and it may take up to 72h (!) to take all the images we need. Over the course of this time, the electron beam may shift in a way that moves the image, but *not the beam-block*[^1]. Heres's what I mean:
 
-```{.matplotlib caption="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel."}
+```{.python .matplotlib caption="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel."}
 
 from skued import diffread
 
@@ -72,7 +72,7 @@ im = diffread("images\\mnxc\\Cr_2.tif")
 fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(9, 3))
 ax1.imshow(ref, vmin=0, vmax=200, cmap='inferno')
 ax2.imshow(im, vmin=0, vmax=200, cmap='inferno')
-ax3.imshow(ref - im, cmap="RdBu_r", vmin=-100, vmax=100)
+ax3.imshow((ref - im), cmap="RdBu_r")
 
 for ax in (ax1, ax2, ax3):
     ax.get_xaxis().set_visible(False)
@@ -95,7 +95,7 @@ Thanks to the work of Dr. Dirk Padfield[^2] [^3], we now know that such an opera
 
 In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation --- and its associated registration function --- in our ultrafast electron diffraction toolkit, [scikit-ued](https://scikit-ued.rtfd.io)[^4]. Here's an example of it in action:
 
-```{.matplotlib caption="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment!"}
+```{.python .matplotlib caption="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment!"}
 from skimage.feature import masked_register_translation
 from skued import diffread
 import scipy.ndimage as ndi
@@ -112,10 +112,10 @@ shifted = ndi.shift(im, -1 * shift)
 fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(nrows=2, ncols=3, figsize=(9, 6))
 ax1.imshow(ref, vmin=0, vmax=200, cmap='inferno')
 ax2.imshow(im, vmin=0, vmax=200, cmap='inferno')
-ax3.imshow(ref - im, cmap="RdBu_r", vmin=-100, vmax=100)
+ax3.imshow(ref - im, cmap="RdBu_r")
 ax4.imshow(mask, vmin=0, vmax=1, cmap="binary")
 ax5.imshow(shifted, vmin=0, vmax=200, cmap='inferno')
-ax6.imshow(ref - shifted, cmap="RdBu_r", vmin=-100, vmax=100)
+ax6.imshow(ref - shifted, cmap="RdBu_r")
 
 for ax in (ax1, ax2, ax3, ax4, ax5, ax6):
     ax.get_xaxis().set_visible(False)
