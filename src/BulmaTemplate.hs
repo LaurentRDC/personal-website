@@ -24,10 +24,13 @@ mathjaxURL     = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.j
 fontURL        = "https://fonts.googleapis.com/css?family=Titillium+Web"
 
 type Icon = String
-type Link = String
+type URL = String
 
-type SocialLink = (Icon, Link, String)
-type NavigationLink = (Link, String)
+type SocialLink = (Icon, URL, String)
+data NavigationLink = Link URL String
+                    | Waypoint NavigationLink [NavigationLink]
+
+type Schema = [NavigationLink]
 
 
 socialLinks :: [SocialLink]
@@ -46,13 +49,14 @@ feedLinks = [
     , ("fas fa-atom", "/atom.xml", "Atom feed")
     ]
 
-navigationLinks :: [NavigationLink]
-navigationLinks = [
-      ("/index.html",       "Home")
-    , ("/software.html",    "Software")
-    , ("/about.html",       "About me")
-    , ("/archive.html",     "Blog posts")
+schema :: Schema
+schema = [
+      Link           "/index.html"       "Home"
+    , Waypoint (Link "/software.html"    "Software") []
+    , Waypoint (Link "/about.html"       "About me") []
+    , Link           "/archive.html"     "Blog posts"
     ]
+
 
 styleSheets :: [AttributeValue]
 styleSheets =
@@ -98,7 +102,7 @@ navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
 
                 H.div ! class_ "navbar-menu" ! A.id "navbarMenu" $
                     H.div ! class_ "navbar-end" $
-                        forM_ navigationLinks renderLink
+                        forM_ schema renderLink
     --------------------------------------------------------------------------
     H.div ! class_ "hero-body" $
         H.div ! class_ "container has-text-centered" $ do
@@ -114,7 +118,13 @@ navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
                         forM_ socialLinks mkSocialLink
 
     where
-        renderLink (link, title) = H.a ! class_ "navbar-item" ! href (toValue link) $ toMarkup title
+        renderLink :: NavigationLink -> Html
+        renderLink (Link url title)      = H.a ! class_ "navbar-item" ! href (toValue url) $ toMarkup title
+        renderLink (Waypoint (Link url title) sublinks) = do
+            H.div ! class_"navbar-item has-dropdown is-hoverable" $ do
+                H.a ! class_ "navbar-link" ! href (toValue url) $ toMarkup title
+                H.div ! class_ "navbar-dropdown is-boxed" $ -- is-boxed makes it easier to see hovering if navbar is transparent
+                    forM_ sublinks renderLink
 
         -- Generate an icon + anchor
         mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link) $ do

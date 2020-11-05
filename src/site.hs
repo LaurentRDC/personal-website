@@ -62,8 +62,7 @@ generatedContent = "generated/**"
 -- because of the way scp works.
 conf :: Configuration
 conf = defaultConfiguration
-        { destinationDirectory = "docs" -- For GitHub pages
-        , deployCommand = ".\\scripts\\deploy"
+        { destinationDirectory = "decotret"
         , providerDirectory = "."
         }
 
