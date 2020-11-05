@@ -28,9 +28,17 @@ type URL = String
 
 type SocialLink = (Icon, URL, String)
 data NavigationLink = Link URL String
-                    | Waypoint NavigationLink [NavigationLink]
 
 type Schema = [NavigationLink]
+
+
+schema :: Schema
+schema = [
+      Link "/index.html"       "Home"
+    , Link "/software.html"    "Software"
+    , Link "/about.html"       "About me"
+    , Link "/archive.html"     "Blog posts"
+    ]
 
 
 socialLinks :: [SocialLink]
@@ -47,14 +55,6 @@ feedLinks :: [SocialLink]
 feedLinks = [
       ("fas fa-rss",  "/feed.xml", "RSS feed")
     , ("fas fa-atom", "/atom.xml", "Atom feed")
-    ]
-
-schema :: Schema
-schema = [
-      Link           "/index.html"       "Home"
-    , Waypoint (Link "/software.html"    "Software") []
-    , Waypoint (Link "/about.html"       "About me") []
-    , Link           "/archive.html"     "Blog posts"
     ]
 
 
@@ -119,12 +119,7 @@ navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
 
     where
         renderLink :: NavigationLink -> Html
-        renderLink (Link url title)      = H.a ! class_ "navbar-item" ! href (toValue url) $ toMarkup title
-        renderLink (Waypoint (Link url title) sublinks) = do
-            H.div ! class_"navbar-item has-dropdown is-hoverable" $ do
-                H.a ! class_ "navbar-link" ! href (toValue url) $ toMarkup title
-                H.div ! class_ "navbar-dropdown is-boxed" $ -- is-boxed makes it easier to see hovering if navbar is transparent
-                    forM_ sublinks renderLink
+        renderLink (Link url title) = H.a ! class_ "navbar-item" ! href (toValue url) $ toMarkup title
 
         -- Generate an icon + anchor
         mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link) $ do

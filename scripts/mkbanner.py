@@ -63,4 +63,3 @@ for offset_x, offset_y in [(0, 0), (WIDTH / 2, (3 / 2) * RADIUS)]:
 ax.axis("off")
 plt.subplots_adjust(top=1, bottom=0, left=0, right=1)
 plt.savefig("images/banner.svg")
-plt.show()
