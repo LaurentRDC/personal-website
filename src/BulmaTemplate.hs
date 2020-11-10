@@ -7,20 +7,13 @@ module BulmaTemplate ( mkDefaultTemplate
 import           Control.Monad               (forM_)
 
 import           Data.List                   (intersperse)
-import           Data.String                 (fromString)
-import           Data.Text                   (Text, unpack)
-import           Data.Time                   (UTCTime(..), getCurrentTime, toGregorian)
-
-import           System.IO.Unsafe            (unsafePerformIO)
 
 import           Text.Blaze.Html5            as H
 import           Text.Blaze.Html5.Attributes as A
 
-import           Text.Blaze                  (toMarkup, toValue)
-
 fontAwesomeURL = "https://use.fontawesome.com/releases/v5.2.0/css/all.css"
 academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
-mathjaxURL     = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=default"
+mathjaxURL     = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"
 fontURL        = "https://fonts.googleapis.com/css?family=Titillium+Web"
 
 type Icon = String
