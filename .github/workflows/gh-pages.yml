@@ -30,7 +30,7 @@ jobs:
       run: |
         stack install
         python -m pip install --upgrade pip
-        pip install matplotlib scikit-ued scikit-image
+        pip install -r requirements.txt
     
     - name: Build website
       run: |
