@@ -5,7 +5,7 @@ on:
     branches: [master]
   schedule:
     # See https://crontab.guru/#0_5_*_*_0,4
-    cron: '0 5 * * 0,4'
+    - cron: '0 5 * * 0,4'
 
 jobs:
   build-and-deploy:
