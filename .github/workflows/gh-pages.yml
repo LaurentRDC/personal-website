@@ -28,9 +28,9 @@ jobs:
     
     - name: Build website
       run: |
-        personal-website clean
-        personal-website build
-        personal-website build
+        stack exec -- personal-website clean
+        stack exec -- personal-website build
+        stack exec -- personal-website build
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@3.7.1
