@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>Laurent's personal blog</title>
-    <link href="http://www.physics.mcgill.ca/~decotret//atom.xml" rel="self" />
-    <link href="http://www.physics.mcgill.ca/~decotret/" />
-    <id>http://www.physics.mcgill.ca/~decotret//atom.xml</id>
+    <link href="https://laurentprdc.me/atom.xml" rel="self" />
+    <link href="https://laurentprdc.me" />
+    <id>https://laurentprdc.me/atom.xml</id>
     <author>
         <name>Laurent P. René de Cotret</name>
         <email>laurent.decotret@outlook.com</email>
