@@ -6,6 +6,7 @@ on:
 
 jobs:
   build-and-deploy:
+    if: contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
     runs-on: ubuntu-latest
 
     steps:
