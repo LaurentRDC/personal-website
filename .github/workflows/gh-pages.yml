@@ -4,6 +4,8 @@ on:
   push:
     branches: [master]
   schedule:
+    # Build the website twice a week, to keep it up-to-date
+    # and keep the cache warm.
     # See https://crontab.guru/#0_5_*_*_0,4
     - cron: '0 5 * * 0,4'
 
@@ -21,7 +23,8 @@ jobs:
 
     - uses: actions/setup-python@v2
       with:
-        python-version: '3.8.5'
+        # Issues with dependencies using python 3.9+
+        python-version: '3.8'
 
     - uses: actions/cache@v1
       name: Cache ~/.stack
