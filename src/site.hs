@@ -207,7 +207,6 @@ main = do
                 posts <- recentFirst =<< loadAll "posts/*"
                 let indexCtx =
                         listField "posts" postCtx (return posts) <>
-                        constField "title" "Welcome to my homepage" <>
                         defaultContext
 
                 getResourceBody

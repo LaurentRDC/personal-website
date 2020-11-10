@@ -34,10 +34,11 @@ type Schema = [NavigationLink]
 
 schema :: Schema
 schema = [
-      Link "/index.html"       "Home"
-    , Link "/software.html"    "Software"
-    , Link "/about.html"       "About me"
-    , Link "/archive.html"     "Blog posts"
+      Link "/index.html"        "Home"
+    , Link "/software.html"     "Software"
+    , Link "/publications.html" "Publications"
+    , Link "/about.html"        "About me"
+    , Link "/archive.html"      "Blog posts"
     ]
 
 
