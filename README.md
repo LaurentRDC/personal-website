@@ -1,4 +1,4 @@
-# personal-page
+# personal-page ![GH-Pages](https://github.com/LaurentRDC/personal-website/workflows/GH-Pages/badge.svg)
 
 Welcome to the source code to my personal page. This repository contains everything you need to replicate the webpage on your own machine. 
 
