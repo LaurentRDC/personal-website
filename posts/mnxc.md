@@ -1,7 +1,7 @@
 ---
 title: The masked normalized cross-correlation and its application to image registration
 date: 2019-04-30
-updated: 2020-11-04
+updated: 2020-11-10
 summary: "For my first contribution to open-source library scikit-image, I implemented the masked normalized cross-correlation. This post details the why and how this happened."
 ---
 
@@ -65,9 +65,10 @@ Our experiments are synthesized from hundreds of gigabytes of images like the on
 ```{.python .matplotlib caption="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel."}
 
 from skued import diffread
+from pathlib import Path
 
-ref = diffread("images\\mnxc\\Cr_1.tif")
-im = diffread("images\\mnxc\\Cr_2.tif")
+ref = diffread(Path("images") / "mnxc" / "Cr_1.tif")
+im = diffread(Path("images") / "mnxc" / "Cr_2.tif")
 
 fig, (ax1, ax2, ax3) = plt.subplots(nrows=1, ncols=3, figsize=(9, 3))
 ax1.imshow(ref, vmin=0, vmax=200, cmap='inferno')
@@ -99,9 +100,10 @@ In order to fix our registration problem, then, I implemented the masked normali
 from skimage.feature import masked_register_translation
 from skued import diffread
 import scipy.ndimage as ndi
+from pathlib import Path
 
-ref = diffread("images\\mnxc\\Cr_1.tif")
-im = diffread("images\\mnxc\\Cr_2.tif")
+ref = diffread(Path("images") / "mnxc" / "Cr_1.tif")
+im = diffread(Path("images") / "mnxc" / "Cr_2.tif")
 
 mask = np.ones_like(ref, dtype=np.bool)
 mask[0:1250, 950:1250] = False
