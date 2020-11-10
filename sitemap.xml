@@ -35,6 +35,13 @@
   </url>
 
   <url>
+    <loc>http://www.physics.mcgill.ca/~decotret//publications.html</loc>
+    <lastmod></lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>http://www.physics.mcgill.ca/~decotret//posts/banner.html</loc>
     <lastmod>2020-11-03</lastmod>
     <changefreq>weekly</changefreq>
