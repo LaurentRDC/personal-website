@@ -33,6 +33,7 @@ WinSCP.exe
 WinSCP.ini
 
 # Files automatically generated
+templates/default.html
 generated/*
 stack.yaml.lock
 templates/default.html
