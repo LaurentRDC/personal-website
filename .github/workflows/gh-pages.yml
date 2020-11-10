@@ -16,15 +16,21 @@ jobs:
     - uses: actions/setup-haskell@v1.1
       name: Setup Haskell Stack
 
+    - uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
     - uses: actions/cache@v1
       name: Cache ~/.stack
       with:
         path: ~/.stack
         key: ${{ runner.os }}-stack
 
-    - name: Build compiler
+    - name: Build compiler and dependencies
       run: |
         stack install
+        python -m pip install --upgrade pip
+        pip install matplotlib
     
     - name: Build website
       run: |
