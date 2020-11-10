@@ -23,9 +23,7 @@ jobs:
     - uses: actions/cache@v1
       name: Cache ~/.stack
       with:
-        path: |
-          ~/.stack
-          ~/.cache/pip
+        path: ~/.stack
         key: ${{ runner.os }}-${{ hashFiles('stack.yaml.lock') }}
 
     - name: Build compiler and dependencies
