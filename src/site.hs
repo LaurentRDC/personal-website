@@ -1,38 +1,31 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
-import Control.Monad                    ((>=>), forM_)
+import Control.Monad                    (forM_)
 import Data.Maybe                       (fromMaybe)
-import Data.Monoid                      ((<>))
 import Hakyll
 import Hakyll.Images                    ( loadImage
                                         , compressJpgCompiler
-                                        , scaleImageCompiler )
+                                        )
 
 -- Hakyll can trip on characters like apostrophes
 -- https://github.com/jaspervdj/hakyll/issues/109
 import qualified GHC.IO.Encoding                 as E
 
-import           Text.Pandoc.Definition          (Pandoc(..), Meta(..), Inline(..), MetaValue(..))
 import           Text.Pandoc.Extensions
 import           Text.Pandoc.Filter.Plot         (plotTransform)
 import qualified Text.Pandoc.Filter.Plot         as P
 import           Text.Pandoc.Highlighting
 import           Text.Pandoc.Options
 import qualified Text.Pandoc.Templates           as Template
-import           Text.Pandoc.Walk                (walkM)
-
-import           System.IO
 
 import qualified Data.ByteString                 as B
-import           Data.Map                        (foldMapWithKey)
 
 import qualified Data.Text                       as T
 import qualified Data.Text.Encoding              as T
 
 import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html.Renderer.Pretty as Pretty
-import           Text.Blaze.Html.Renderer.Utf8   (renderHtmlToByteStringIO)
 
 import           BulmaFilter                     (bulmaTransform)
 import           BulmaTemplate                   (mkDefaultTemplate,

@@ -5,7 +5,7 @@ module BulmaFilter (
 ) where
 
 import           Data.Text              (pack)
-import           Text.Pandoc.Definition (Attr, Block (..), Inline (..), Pandoc)
+import           Text.Pandoc.Definition (Block (..), Inline (..), Pandoc)
 import           Text.Pandoc.Walk       (walk)
 
 
