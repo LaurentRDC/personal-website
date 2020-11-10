@@ -12,379 +12,128 @@
     <title>Matplotlib for graphic design</title>
     <link>http://www.physics.mcgill.ca/~decotret//posts/banner.html</link>
     <description><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
-<div class="sourceCode" id="cb1" data-source="False"><pre class="sourceCode python matplotlib"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This is the script that was used to generate the banner (copied from scripts/mkbanner.py)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># it is safer to safeguard it here.</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>random.seed(<span class="dv">23</span>)</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">23</span>)</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagon radius in mm</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>RADIUS <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the bounding box of the hexagons</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>WIDTH <span class="op">=</span> math.sqrt(<span class="dv">3</span>) <span class="op">*</span> RADIUS</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>HEIGHT <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> RADIUS</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Banner dimensions in mm</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>PAGEWIDTH <span class="op">=</span> <span class="dv">300</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>PAGEHEIGHT <span class="op">=</span> <span class="dv">70</span></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>mm_to_in <span class="op">=</span> <span class="fl">0.03937008</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co"># CMAP &quot;cool&quot; also looks, uh, cool</span></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>cmap <span class="op">=</span> plt.get_cmap(<span class="st">&quot;inferno&quot;</span>)</span>
-<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, color):</span>
-<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># because the dimensions of the axes have been set in mm,</span></span>
-<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the dimensions of thie hexagon are given in mm as well.</span></span>
-<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Due to rounding errors I think, it is better to make the hexagons</span></span>
-<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>            <span class="co"># a little larger than the RADIUS parameter</span></span>
-<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>RADIUS <span class="op">+</span> <span class="fl">0.2</span>,</span>
-<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>,</span>
-<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>figure, ax <span class="op">=</span> plt.subplots(</span>
-<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(PAGEWIDTH <span class="op">*</span> mm_to_in, PAGEHEIGHT <span class="op">*</span> mm_to_in), frameon<span class="op">=</span><span class="va">False</span></span>
-<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the page in mm</span></span>
-<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="dv">0</span>, PAGEWIDTH])</span>
-<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="dv">0</span>, PAGEHEIGHT])</span>
-<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> offset_x, offset_y <span class="kw">in</span> [(<span class="dv">0</span>, <span class="dv">0</span>), (WIDTH <span class="op">/</span> <span class="dv">2</span>, (<span class="dv">3</span> <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> RADIUS)]:</span>
-<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> np.arange(start<span class="op">=</span>offset_x, stop<span class="op">=</span><span class="fl">1.05</span> <span class="op">*</span> PAGEWIDTH, step<span class="op">=</span>WIDTH)</span>
-<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a>    columns <span class="op">=</span> np.arange(start<span class="op">=</span>offset_y, stop<span class="op">=</span><span class="fl">1.05</span> <span class="op">*</span> PAGEHEIGHT, step<span class="op">=</span><span class="dv">3</span> <span class="op">*</span> RADIUS)</span>
-<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x, y <span class="kw">in</span> itertools.product(rows, columns):</span>
-<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a>        color <span class="op">=</span> cmap(</span>
-<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>            math.hypot(x, y) <span class="op">/</span> math.hypot(PAGEWIDTH, PAGEHEIGHT) <span class="op">+</span> random.gauss(<span class="dv">0</span>, <span class="fl">0.01</span>)</span>
-<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>        draw_hexagon(ax, center<span class="op">=</span>(x, y), color<span class="op">=</span>color)</span>
-<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">&quot;off&quot;</span>)</span>
-<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(top<span class="op">=</span><span class="dv">1</span>, bottom<span class="op">=</span><span class="dv">0</span>, left<span class="op">=</span><span class="dv">0</span>, right<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<figure>
+<img src="generated/8917920938648941213.png" class="python image" />
+</figure>
 <p>Matplotlib is a plotting library for python, historically inspired by the plotting capabilities of MATLAB. You can take a look at the various <a href="https://matplotlib.org/gallery/index.html">examples</a> on their website. One thing that is not immediately obvious is that you can use Matplotlib to also draw shapes! In this sense, Matplotlib becomes a graphic design library.</p>
 <p>(You can see the exact source code for the images below by clicking on the link in the caption)</p>
 <h3 class="title is-3" id="basic-shapes">Basic shapes</h3>
 <p>Let’s start at the beginning: drawing a single hexagon.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> patches</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&quot;w&quot;</span>):</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius,</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;k&quot;</span>,</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> patches</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&quot;w&quot;</span>):</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;k&quot;</span>,</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
 <p>Using the function, we can draw a tiling of hexagons. Let’s first set-up our plot:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that Matplotlib figure size is (width, height) in INCHES...</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># We want it to be 100mm x 100mm</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>mm_to_in <span class="op">=</span> <span class="fl">0.03937008</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>figure, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">100</span> <span class="op">*</span> mm_to_in, <span class="dv">100</span><span class="op">*</span>mm_to_in))</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Hide as much of the axis borders/margins as possible</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">&quot;off&quot;</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(top<span class="op">=</span><span class="dv">1</span>, bottom<span class="op">=</span><span class="dv">0</span>, left<span class="op">=</span><span class="dv">0</span>, right<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagon radius in mm</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>radius <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the bounding box of the hexagons</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> math.sqrt(<span class="dv">3</span>) <span class="op">*</span> radius</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> radius</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that Matplotlib figure size is (width, height) in INCHES...</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># We want it to be 100mm x 100mm</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>mm_to_in <span class="op">=</span> <span class="fl">0.03937008</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>figure, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">100</span> <span class="op">*</span> mm_to_in, <span class="dv">100</span><span class="op">*</span>mm_to_in))</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Hide as much of the axis borders/margins as possible</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">&quot;off&quot;</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(top<span class="op">=</span><span class="dv">1</span>, bottom<span class="op">=</span><span class="dv">0</span>, left<span class="op">=</span><span class="dv">0</span>, right<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagon radius in mm</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>radius <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the bounding box of the hexagons</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> math.sqrt(<span class="dv">3</span>) <span class="op">*</span> radius</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> radius</span></code></pre></div>
 <h3 class="title is-3" id="tiling">Tiling</h3>
 <p>We note that a tiling of <em>regular</em> hexagons requires a different offset for every row. If you imagine rows being numbered starting at 0, hexagons in rows with odd indices need to be offset by <span class="math inline">\(\frac{\sqrt{3}}{2} r\)</span>, where <span class="math inline">\(r\)</span> is the radius (or distance from the center to vertex). To find the centers of the hexagons, the following loop does the trick:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>centers <span class="op">=</span> <span class="bu">list</span>()</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> offset_x, offset_y <span class="kw">in</span> [(<span class="dv">0</span>, <span class="dv">0</span>), (width <span class="op">/</span> <span class="dv">2</span>, (<span class="dv">3</span> <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> radius)]:</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    rows    <span class="op">=</span> np.arange(start<span class="op">=</span>offset_x, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span>width)</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    columns <span class="op">=</span> np.arange(start<span class="op">=</span>offset_y, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span><span class="dv">3</span> <span class="op">*</span> radius)</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x, y <span class="kw">in</span> itertools.product(rows, columns):</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>        centers.append( (x,y) )</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>centers <span class="op">=</span> <span class="bu">list</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> offset_x, offset_y <span class="kw">in</span> [(<span class="dv">0</span>, <span class="dv">0</span>), (width <span class="op">/</span> <span class="dv">2</span>, (<span class="dv">3</span> <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> radius)]:</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    rows    <span class="op">=</span> np.arange(start<span class="op">=</span>offset_x, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span>width)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    columns <span class="op">=</span> np.arange(start<span class="op">=</span>offset_y, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span><span class="dv">3</span> <span class="op">*</span> radius)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x, y <span class="kw">in</span> itertools.product(rows, columns):</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        centers.append( (x,y) )</span></code></pre></div>
 <p>Once we know about the centers of the hexagons, we can place them one-by-one:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x,y), radius<span class="op">=</span>radius)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x,y), radius<span class="op">=</span>radius)</span></code></pre></div>
 <p>Here’s what it looks like so far:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python matplotlib"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">Create top banner</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagon radius in mm</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>RADIUS <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the bounding box of the hexagons</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>WIDTH <span class="op">=</span> math.sqrt(<span class="dv">3</span>) <span class="op">*</span> RADIUS</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>HEIGHT <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> RADIUS</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>mm_to_in <span class="op">=</span> <span class="fl">0.03937008</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># because the dimensions of the axes have been set in mm,</span></span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># the dimensions of thie hexagon are given in mm as well.</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius,</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;k&quot;</span>,</span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>figure, ax <span class="op">=</span> plt.subplots(</span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">100</span> <span class="op">*</span> mm_to_in, <span class="dv">100</span> <span class="op">*</span> mm_to_in), frameon<span class="op">=</span><span class="va">False</span></span>
-<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the page in mm</span></span>
-<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>centers<span class="op">=</span><span class="bu">list</span>()</span>
-<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> offset_x, offset_y <span class="kw">in</span> [(<span class="dv">0</span>, <span class="dv">0</span>), (WIDTH <span class="op">/</span> <span class="dv">2</span>, (<span class="dv">3</span> <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> RADIUS)]:</span>
-<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> np.arange(start<span class="op">=</span>offset_x, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span>WIDTH)</span>
-<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    columns <span class="op">=</span> np.arange(start<span class="op">=</span>offset_y, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span><span class="dv">3</span> <span class="op">*</span> RADIUS)</span>
-<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x, y <span class="kw">in</span> itertools.product(rows, columns):</span>
-<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        centers.append((x,y))</span>
-<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>RADIUS)</span>
-<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">&quot;off&quot;</span>)</span>
-<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(top<span class="op">=</span><span class="dv">1</span>, bottom<span class="op">=</span><span class="dv">0</span>, left<span class="op">=</span><span class="dv">0</span>, right<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<figure>
+<img src="generated/7353115672018286429.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/7353115672018286429.txt">Source code</a>)</figcaption>
+</figure>
 <h3 class="title is-3" id="color">Color</h3>
 <p>The figure above has the wrong dimension, but you get the idea. Let’s color the hexagons appropriately. In the banner, the color of the hexagons is based on the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“inferno” colormap</a>. The color radiates away from the bottom left corner:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius,</span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>, <span class="co">#note: edgecolor=None is actually the default value!</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> plt.get_cmap(<span class="st">&#39;inferno&#39;</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># radius away from bottom left corner</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proportional to the distance of the top right corner</span></span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># i.e. 0 &lt; r &lt; 1</span></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius,</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>, <span class="co">#note: edgecolor=None is actually the default value!</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> plt.get_cmap(<span class="st">&#39;inferno&#39;</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># radius away from bottom left corner</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proportional to the distance of the top right corner</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># i.e. 0 &lt; r &lt; 1</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>Here’s the result:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python matplotlib"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagon radius in mm</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>RADIUS <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the bounding box of the hexagons</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>WIDTH <span class="op">=</span> math.sqrt(<span class="dv">3</span>) <span class="op">*</span> RADIUS</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>HEIGHT <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> RADIUS</span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>mm_to_in <span class="op">=</span> <span class="fl">0.03937008</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius,</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>,</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>figure, ax <span class="op">=</span> plt.subplots(</span>
-<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">100</span> <span class="op">*</span> mm_to_in, <span class="dv">100</span> <span class="op">*</span> mm_to_in), frameon<span class="op">=</span><span class="va">False</span></span>
-<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the page in mm</span></span>
-<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>centers<span class="op">=</span><span class="bu">list</span>()</span>
-<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> offset_x, offset_y <span class="kw">in</span> [(<span class="dv">0</span>, <span class="dv">0</span>), (WIDTH <span class="op">/</span> <span class="dv">2</span>, (<span class="dv">3</span> <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> RADIUS)]:</span>
-<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> np.arange(start<span class="op">=</span>offset_x, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span>WIDTH)</span>
-<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    columns <span class="op">=</span> np.arange(start<span class="op">=</span>offset_y, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span><span class="dv">3</span> <span class="op">*</span> RADIUS)</span>
-<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x, y <span class="kw">in</span> itertools.product(rows, columns):</span>
-<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>        centers.append((x,y))</span>
-<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> plt.get_cmap(<span class="st">&#39;inferno&#39;</span>)</span>
-<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb8-46"><a href="#cb8-46" aria-hidden="true" tabindex="-1"></a>    <span class="co"># radius away from bottom left corner</span></span>
-<span id="cb8-47"><a href="#cb8-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proportional to the distance of the top right corner</span></span>
-<span id="cb8-48"><a href="#cb8-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># i.e. 0 &lt; r &lt; 1</span></span>
-<span id="cb8-49"><a href="#cb8-49" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
-<span id="cb8-50"><a href="#cb8-50" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>RADIUS, color<span class="op">=</span>colormap(r))</span>
-<span id="cb8-51"><a href="#cb8-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-52"><a href="#cb8-52" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">&quot;off&quot;</span>)</span>
-<span id="cb8-53"><a href="#cb8-53" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(top<span class="op">=</span><span class="dv">1</span>, bottom<span class="op">=</span><span class="dv">0</span>, left<span class="op">=</span><span class="dv">0</span>, right<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<figure>
+<img src="generated/14135902142592784144.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/14135902142592784144.txt">Source code</a>)</figcaption>
+</figure>
 <p>Because of rounding errors of the hexagon dimensions, there is some visible spacing between the hexagons. To get rid of it, we draw the hexagons a bit larger (0.2 millimeters):</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius <span class="op">+</span> <span class="fl">0.2</span>,</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>,</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius <span class="op">+</span> <span class="fl">0.2</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
 <h3 class="title is-3" id="a-bit-of-randomness">A bit of randomness</h3>
 <p>For a light touch of whimsy, I like to make the color fluctuate a little:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> plt.get_cmap(<span class="st">&#39;inferno&#39;</span>)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># radius away from bottom left corner</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proportional to the distance of the top right corner</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># i.e. 0 &lt; r &lt; 1</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    r <span class="op">+=</span> random.gauss(<span class="dv">0</span>, <span class="fl">0.01</span>)</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> plt.get_cmap(<span class="st">&#39;inferno&#39;</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># radius away from bottom left corner</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proportional to the distance of the top right corner</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># i.e. 0 &lt; r &lt; 1</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    r <span class="op">+=</span> random.gauss(<span class="dv">0</span>, <span class="fl">0.01</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>We arrive at the final result:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python matplotlib"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagon radius in mm</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>RADIUS <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the bounding box of the hexagons</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>WIDTH <span class="op">=</span> math.sqrt(<span class="dv">3</span>) <span class="op">*</span> RADIUS</span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>HEIGHT <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> RADIUS</span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>mm_to_in <span class="op">=</span> <span class="fl">0.03937008</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius <span class="op">+</span> <span class="fl">0.2</span>,</span>
-<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>,</span>
-<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>figure, ax <span class="op">=</span> plt.subplots(</span>
-<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">100</span> <span class="op">*</span> mm_to_in, <span class="dv">100</span> <span class="op">*</span> mm_to_in), frameon<span class="op">=</span><span class="va">False</span></span>
-<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the page in mm</span></span>
-<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>centers<span class="op">=</span><span class="bu">list</span>()</span>
-<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> offset_x, offset_y <span class="kw">in</span> [(<span class="dv">0</span>, <span class="dv">0</span>), (WIDTH <span class="op">/</span> <span class="dv">2</span>, (<span class="dv">3</span> <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> RADIUS)]:</span>
-<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>    rows <span class="op">=</span> np.arange(start<span class="op">=</span>offset_x, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span>WIDTH)</span>
-<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>    columns <span class="op">=</span> np.arange(start<span class="op">=</span>offset_y, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span><span class="dv">3</span> <span class="op">*</span> RADIUS)</span>
-<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x, y <span class="kw">in</span> itertools.product(rows, columns):</span>
-<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>        centers.append((x,y))</span>
-<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> plt.get_cmap(<span class="st">&#39;inferno&#39;</span>)</span>
-<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>    <span class="co"># radius away from bottom left corner</span></span>
-<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proportional to the distance of the top right corner</span></span>
-<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>    <span class="co"># i.e. 0 &lt; r &lt; 1</span></span>
-<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
-<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>RADIUS, color<span class="op">=</span>colormap(r <span class="op">+</span> random.gauss(<span class="dv">0</span>, <span class="fl">0.01</span>)))</span>
-<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">&quot;off&quot;</span>)</span>
-<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(top<span class="op">=</span><span class="dv">1</span>, bottom<span class="op">=</span><span class="dv">0</span>, left<span class="op">=</span><span class="dv">0</span>, right<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>
+<figure>
+<img src="generated/15947724880327662140.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/15947724880327662140.txt">Source code</a>)</figcaption>
+</figure>
 <p>You can imagine adapting this approach to different tilings, and different colors schemes. Here’s a final example using squares and the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“cool” colormap</a>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python matplotlib"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> mpatches</span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>SIDE_LENGTH <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>mm_to_in <span class="op">=</span> <span class="fl">0.03937008</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_square(ax, center, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        mpatches.Rectangle(</span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>            width<span class="op">=</span>SIDE_LENGTH <span class="op">+</span> <span class="fl">0.1</span>,</span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>            height<span class="op">=</span>SIDE_LENGTH <span class="op">+</span> <span class="fl">0.1</span>,</span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>,</span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>figure, ax <span class="op">=</span> plt.subplots(</span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="dv">1</span>, <span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">100</span> <span class="op">*</span> mm_to_in, <span class="dv">100</span> <span class="op">*</span> mm_to_in), frameon<span class="op">=</span><span class="va">False</span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the page in mm</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>colormap<span class="op">=</span>plt.get_cmap(<span class="st">&#39;cool&#39;</span>)</span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>centers<span class="op">=</span><span class="bu">list</span>()</span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>rows    <span class="op">=</span> np.arange(start<span class="op">=</span><span class="dv">0</span>, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span>SIDE_LENGTH)</span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>columns <span class="op">=</span> np.arange(start<span class="op">=</span><span class="dv">0</span>, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span>SIDE_LENGTH)</span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> x, y <span class="kw">in</span> itertools.product(rows, columns):</span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    draw_square(ax, center<span class="op">=</span>(x,y), color<span class="op">=</span>colormap(r <span class="op">+</span> random.gauss(<span class="dv">0</span>, <span class="fl">0.03</span>)))</span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">&quot;off&quot;</span>)</span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(top<span class="op">=</span><span class="dv">1</span>, bottom<span class="op">=</span><span class="dv">0</span>, left<span class="op">=</span><span class="dv">0</span>, right<span class="op">=</span><span class="dv">1</span>)</span></code></pre></div>]]></description>
+<figure>
+<img src="generated/16336910572483251846.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/16336910572483251846.txt">Source code</a>)</figcaption>
+</figure>]]></description>
     <pubDate>Tue, 03 Nov 2020 00:00:00 UT</pubDate>
     <guid>http://www.physics.mcgill.ca/~decotret//posts/banner.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
@@ -526,56 +275,16 @@
 <img src="/images/Translational_motion.gif" class="image" alt="Translational motion of particles in a box. Some particles are colored red for better tracking. Image credit to A. Greg." /><figcaption aria-hidden="true">Translational motion of particles in a box. Some particles are colored red for better tracking. <a href="https://en.wikipedia.org/wiki/Thermodynamic_temperature#/media/File:Translational_motion.gif">Image credit to A. Greg.</a></figcaption>
 </figure>
 <p>Note that the above system has a temperature because there exists a clear <strong>average</strong> motion, even though not all particles are moving at the same velocity. This means, a system is at some temperature <span class="math inline">\(T\)</span> as long as the distribution of kinetic energies (often related to velocities) ressembles a <strong>normal distribution</strong>:</p>
-<pre class="matplotlib" data-caption="Examples of distribution of particle kinetic energies. **Left**: distribution of particle energies with a well-defined temperature. **Right**: distribution of particle energies does not match an expected thermal equilibrium."><code>
-CENTER = 3.0
-
-thermal = np.random.normal(loc=CENTER, scale=0.7, size=2500)
-nonthermal = np.random.lognormal(mean=CENTER, sigma=0.7, size=2500)
-
-fig, (ax_temp, ax_no_temp) = plt.subplots(1,2, figsize=(8,3))
-
-ax_temp.axvline(x=CENTER, color=&#39;k&#39;)
-thermal_hist, *_ = ax_temp.hist(thermal, bins=&#39;auto&#39;)
-ax_temp.text(x=0.49, y=0.25, s=&quot;$T$&quot;, transform = ax_temp.transAxes)
-
-nonthermal_hist, *_ = ax_no_temp.hist(nonthermal, bins=&#39;auto&#39;)
-ax_no_temp.text(x=0.45, y=0.5, s=&quot;$T$?&quot;, transform = ax_no_temp.transAxes)
-ax_no_temp.yaxis.set_visible(False)
-
-for ax in (ax_temp, ax_no_temp):
-    ax.set_xlabel(&#39;Particle kinetic energy&#39;)
-    ax.set_ylabel(&#39;Number of particles&#39;)
-    ax.set_yticks([], [])
-    ax.set_xticks([], [])</code></pre>
+<figure>
+<img src="generated/17455048548538307555.png" class="image" alt="Examples of distribution of particle kinetic energies. Left: distribution of particle energies with a well-defined temperature. Right: distribution of particle energies does not match an expected thermal equilibrium. (Source code)" /><figcaption aria-hidden="true">Examples of distribution of particle kinetic energies. <strong>Left</strong>: distribution of particle energies with a well-defined temperature. <strong>Right</strong>: distribution of particle energies does not match an expected thermal equilibrium. (<a href="generated/17455048548538307555.txt">Source code</a>)</figcaption>
+</figure>
 <p>So, a system with a well-defined temperature exhibits a normal distribution of particle energies. It turns out that it is possible to prepare systems into a state where there are <em>two clear average energies</em> , if only for a very short moment.</p>
 <p>Real materials are composed of two types of particles, nuclei and electrons<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. These particles have widly different masses, so electromagnetic fields — for example, an intense pulse of light — will not affect them at the same time; since nuclei are at least ~1000x more massive than electrons, we should expect the electrons to react about ~1000x faster.</p>
 <p>After decades of development culminating in the 2018 Nobel Prize in Physics, the production of ultrafast laser pulses (less than 30 femtoseconds<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>) is now routine. These ultrafast laser pulses can be used to prepare systems in a strange configuration: one with seemingly <em>two temperatures</em>, albeit only for a short time. Modeling of this situation in crystalline material was done decades ago, and the model is known as the <strong>two-temperature model</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
 <p>Roughly 100fs after dumping a lot of energy into a material, the nuclei might not have reacted yet, and we might have the following energetic landscape:</p>
-<pre class="matplotlib" data-caption="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, $T_l$, and one for the electronic system, $T_e$."><code>
-CENTER1 = 4.0
-CENTER2 = CENTER1 * 1/4
-
-electrons = np.random.normal(loc=CENTER1, scale=0.2, size=3000)
-lattice = np.random.normal(loc=CENTER2, scale=0.5, size=2500)
-
-fig, ax = plt.subplots(1,1, figsize=(8,3))
-
-ax.axvline(x=CENTER1, color=&#39;k&#39;)
-ax.axvline(x=CENTER2, color=&#39;k&#39;)
-
-electrons_hist, *_ = ax.hist(electrons, bins=50, color=&#39;b&#39;, label=&#39;electrons&#39;)
-lattice_hist, *_ = ax.hist(lattice, bins=50, color=&#39;r&#39;, label=&#39;nuclei&#39;)
-
-textheight = min([electrons_hist.max(), lattice_hist.max()])/4
-
-ax.text(x=1.02*CENTER1, y=textheight, s=&quot;$T_e$&quot;)
-ax.text(x=1.02*CENTER2, y=textheight, s=&quot;$T_l$&quot;)
-
-ax.set_xlabel(&#39;Particle kinetic energy&#39;)
-ax.set_ylabel(&#39;Number of particles&#39;)
-ax.set_yticks([], [])
-ax.set_xticks([], [])
-plt.legend()</code></pre>
+<figure>
+<img src="generated/9795306776592733869.png" class="image" alt="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, T_l, and one for the electronic system, T_e. (Source code)" /><figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/9795306776592733869.txt">Source code</a>)</figcaption>
+</figure>
 <p>where the nucliei will still be at equilibrium temperature, and the electrons might be at a temperature of 20000<span class="math inline">\(^{\circ}\)</span>C. Therefore, <em>we have a system with two temperatures</em> for a few picoseconds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
 <section class="footnotes" role="doc-endnotes">
 <hr />
