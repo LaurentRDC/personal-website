@@ -2,6 +2,10 @@
 
 Welcome to the source code to my personal page. This repository contains everything you need to replicate the webpage on your own machine. 
 
-This static website is generated using [Hakyll](https://jaspervdj.be/hakyll/). [Blaze](https://jaspervdj.be/blaze/) is also used to create HTML templates.
+This static website is generated using the following tools:
 
-You can access the generated webpage [at this location](http://www.physics.mcgill.ca/~decotret).
+* [Hakyll](https://jaspervdj.be/hakyll/), a static website generator; 
+* [Blaze](https://jaspervdj.be/blaze/), a Haskell HTML templating library; 
+* [pandoc-plot](https://github.com/LaurentRDC/pandoc-plot) to render figures directly from Markdown documents.
+
+You can access the generated webpage [at this location](https://laurentprdc.me).
