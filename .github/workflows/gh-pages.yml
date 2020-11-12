@@ -22,8 +22,7 @@ jobs:
 
     - uses: actions/setup-python@v2
       with:
-        # Issues with dependencies using python 3.9+
-        python-version: '3.8'
+        python-version: '3.9'
 
     - uses: actions/cache@v1
       name: Cache ~/.stack
