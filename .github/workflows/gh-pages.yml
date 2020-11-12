@@ -36,6 +36,12 @@ jobs:
         stack install
         python -m pip install --upgrade pip
         pip install -r requirements.txt
+        
+    - name: Compile CSS from SCSS files
+      uses: gha-utilities/sass-build@v0.2.5
+      with:
+        source: sass/style.scss
+        destination: css/style.css
     
     - name: Build website
       run: |

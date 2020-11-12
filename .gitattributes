@@ -2,6 +2,7 @@
 * text=auto
 
 css/ linguist-vendored
+sass/bulma linguist-vendored
 files/ linguist-vendored
 generated/ linguist-vendored
 fonts/ linguist-vendored

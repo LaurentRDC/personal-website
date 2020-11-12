@@ -25,7 +25,8 @@ posts/drafts/
 __pycache__/
 
 ### Sass ###
-sass/
+sass/src
+sass/*.bat
 
 # Misc
 .vscode/

@@ -1,0 +1,29 @@
+@charset "utf-8";
+
+// Import a Google Font
+@import url('https://fonts.googleapis.com/css?family=Ubuntu:400,700');
+
+// Utility functions like findColorInvert
+@import "./bulma/sass/utilities/functions.sass";
+
+$purple: #600983;
+
+$link: $purple;
+$link-invert: findColorInvert($purple);
+
+// Disable full-hd mode so that the layout is never above ~1350px wide
+// mode readable this way
+$fullhd-enabled: false;
+
+// Import only what you need from Bulma
+@import "./bulma/bulma.sass";
+
+$navbar-breakpoint: $tablet;
+
+// See below for details:
+//   https://github.com/jgthms/bulma/issues/1007
+.hero-with-background {
+  @extend .hero;
+  background-image: url('../images/banner.svg');
+  background-size: cover;
+}
