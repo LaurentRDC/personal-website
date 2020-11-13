@@ -21,6 +21,13 @@
   </url>
 
   <url>
+    <loc>http://www.physics.mcgill.ca/~decotret//about-site.html</loc>
+    <lastmod></lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>http://www.physics.mcgill.ca/~decotret//about.html</loc>
     <lastmod></lastmod>
     <changefreq>weekly</changefreq>
