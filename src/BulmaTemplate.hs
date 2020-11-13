@@ -134,7 +134,7 @@ defaultFooter s = H.footer ! class_ "footer" $
                     [ H.toHtml s
                     , "This website was created using free and open-source technologies. "
                     , "You can learn more about how this website is generated "
-                    , (H.a ! href "/about.html#about-this-site" $ "here")
+                    , (H.a ! href "/about-site.html" $ "here")
                     , "."
                     ]
         H.a ! rel "license" ! href "http://creativecommons.org/licenses/by-sa/4.0/" $ 
