@@ -55,6 +55,10 @@ jobs:
         source: sass/style.scss
         destination: css/style.css
     
+    - name: Generate banner
+      run: |
+        python scripts/mkbanner.py
+    
     # Need to build twice because in the first build,
     # pandoc-plot creates files which are then routed
     # appropriately in the second build.
