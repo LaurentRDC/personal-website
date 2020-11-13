@@ -17,8 +17,11 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
-    - uses: actions/setup-haskell@v1.1
-      name: Setup Haskell Stack
+    - name: Setup Haskell toolchain
+      uses: actions/setup-haskell@v1.1
+      with:
+        enable-stack: true
+        stack-version: 'latest'
 
     - uses: actions/setup-python@v2
       with:
@@ -43,6 +46,9 @@ jobs:
         source: sass/style.scss
         destination: css/style.css
     
+    # Need to build twice because in the first build,
+    # pandoc-plot creates files which are then routed
+    # appropriately in the second build.
     - name: Build website
       run: |
         stack exec -- personal-website clean
