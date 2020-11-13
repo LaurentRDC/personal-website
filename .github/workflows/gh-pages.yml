@@ -42,7 +42,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install numpy wheel
         pip install -r requirements.txt
-        pip cache info
         
     - name: Compile CSS from SCSS files
       uses: gha-utilities/sass-build@v0.2.5
