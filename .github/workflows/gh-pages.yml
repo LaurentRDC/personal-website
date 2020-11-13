@@ -28,10 +28,16 @@ jobs:
         python-version: '3.9'
 
     - uses: actions/cache@v1
-      name: Cache ~/.stack
+      name: Cache Haskell build artifacts
       with:
         path: ~/.stack
         key: ${{ runner.os }}-${{ hashFiles('stack.yaml.lock') }}
+
+    - uses: actions/cache@v1
+      name: Cache Python build artifacts
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
     - name: Build site compiler
       run: |
