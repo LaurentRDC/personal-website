@@ -50,9 +50,11 @@ jobs:
         pip install -r requirements.txt
         
     - name: Download Bulma CSS
+      env:
+        bulma-version: 0.9.1
       run: |
-        wget -c https://github.com/jgthms/bulma/releases/download/0.9.1/bulma-0.9.1.zip 
-        unzip bulma-0.9.1.zip -d sass
+        wget -c https://github.com/jgthms/bulma/releases/download/${{ bulma-version }}/bulma-${{ bulma-version }}.zip 
+        unzip bulma-${{ bulma-version }}.zip -d sass
 
     - name: Compile CSS from SCSS files
       uses: gha-utilities/sass-build@v0.2.5
