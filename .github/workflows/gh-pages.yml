@@ -53,8 +53,8 @@ jobs:
       env:
         bulma-version: 0.9.1
       run: |
-        wget -c https://github.com/jgthms/bulma/releases/download/${{ bulma-version }}/bulma-${{ bulma-version }}.zip 
-        unzip bulma-${{ bulma-version }}.zip -d sass
+        wget -c https://github.com/jgthms/bulma/releases/download/${{ env.bulma-version }}/bulma-${{ env.bulma-version }}.zip 
+        unzip bulma-${{ env.bulma-version }}.zip -d sass
 
     - name: Compile CSS from SCSS files
       uses: gha-utilities/sass-build@v0.2.5
