@@ -49,6 +49,11 @@ jobs:
         pip install numpy wheel
         pip install -r requirements.txt
         
+    - name: Download Bulma CSS
+      run: |
+        wget -c https://github.com/jgthms/bulma/releases/download/0.9.1/bulma-0.9.1.zip 
+        unzip bulma-0.9.1.zip -d sass
+
     - name: Compile CSS from SCSS files
       uses: gha-utilities/sass-build@v0.2.5
       with:
