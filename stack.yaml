@@ -13,7 +13,7 @@ packages:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 extra-deps: 
-- 'hakyll-images-0.4.4'
+- 'hakyll-images-1.0.0'
 - 'pandoc-plot-1.0.0.0'
 - git: https://github.com/LaurentRDC/hakyll.git
   commit: 92e2dc1faacd726fd5a1ce3d6321323a4a89984d

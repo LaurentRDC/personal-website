@@ -1,5 +1,5 @@
 name:                personal-website
-version:             1.1.0.0
+version:             1.2.0.0
 -- synopsis:
 -- description:
 homepage:            https://github.com/LaurentRDC/personal-website#readme
@@ -21,7 +21,7 @@ executable personal-website
   build-depends:       base >= 4.8 && < 5,
                        containers,
                        hakyll,
-                       hakyll-images >= 0.4.4,
+                       hakyll-images >= 1.0.0,
                        pandoc > 2.8,
                        pandoc-types,
                        pandoc-plot >= 0.6.0.0,
