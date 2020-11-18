@@ -8,83 +8,83 @@
   xmlns:video="http://www.google.com/schemas/sitemap-video/1.1"
 >
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret</loc>
+    <loc>https://laurentrdc.xyz/</loc>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//404.html</loc>
+    <loc>https://laurentrdc.xyz//404.html</loc>
     <lastmod></lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//about-site.html</loc>
+    <loc>https://laurentrdc.xyz//about-site.html</loc>
     <lastmod></lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//about.html</loc>
+    <loc>https://laurentrdc.xyz//about.html</loc>
     <lastmod></lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//index.html</loc>
+    <loc>https://laurentrdc.xyz//index.html</loc>
     <lastmod></lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//publications.html</loc>
+    <loc>https://laurentrdc.xyz//publications.html</loc>
     <lastmod></lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//posts/banner.html</loc>
+    <loc>https://laurentrdc.xyz//posts/banner.html</loc>
     <lastmod>2020-11-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//posts/mnxc.html</loc>
+    <loc>https://laurentrdc.xyz//posts/mnxc.html</loc>
     <lastmod>2020-11-10</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//posts/two-temp-model.html</loc>
+    <loc>https://laurentrdc.xyz//posts/two-temp-model.html</loc>
     <lastmod>2019-04-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//posts/bulma-pandoc-filter.html</loc>
+    <loc>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</loc>
     <lastmod>2018-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//posts/making-this-website.html</loc>
+    <loc>https://laurentrdc.xyz//posts/making-this-website.html</loc>
     <lastmod>2018-09-12</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
-    <loc>http://www.physics.mcgill.ca/~decotret//posts/genesis.html</loc>
+    <loc>https://laurentrdc.xyz//posts/genesis.html</loc>
     <lastmod>2018-08-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

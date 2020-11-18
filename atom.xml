@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <title>Laurent's personal blog</title>
-    <link href="https://laurentprdc.me/atom.xml" rel="self" />
-    <link href="https://laurentprdc.me" />
-    <id>https://laurentprdc.me/atom.xml</id>
+    <link href="https://laurentrdc.xyz/atom.xml" rel="self" />
+    <link href="https://laurentrdc.xyz" />
+    <id>https://laurentrdc.xyz/atom.xml</id>
     <author>
         <name>Laurent P. René de Cotret</name>
         <email>laurent.decotret@outlook.com</email>
@@ -11,8 +11,8 @@
     <updated>2020-11-03T00:00:00Z</updated>
     <entry>
     <title>Matplotlib for graphic design</title>
-    <link href="http://www.physics.mcgill.ca/~decotret//posts/banner.html" />
-    <id>http://www.physics.mcgill.ca/~decotret//posts/banner.html</id>
+    <link href="https://laurentrdc.xyz//posts/banner.html" />
+    <id>https://laurentrdc.xyz//posts/banner.html</id>
     <published>2020-11-03T00:00:00Z</published>
     <updated>2020-11-03T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
@@ -141,8 +141,8 @@
 </entry>
 <entry>
     <title>The masked normalized cross-correlation and its application to image registration</title>
-    <link href="http://www.physics.mcgill.ca/~decotret//posts/mnxc.html" />
-    <id>http://www.physics.mcgill.ca/~decotret//posts/mnxc.html</id>
+    <link href="https://laurentrdc.xyz//posts/mnxc.html" />
+    <id>https://laurentrdc.xyz//posts/mnxc.html</id>
     <published>2019-04-30T00:00:00Z</published>
     <updated>2020-11-10</updated>
     <summary type="html"><![CDATA[<p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
@@ -191,8 +191,8 @@
 </entry>
 <entry>
     <title>When one temperature is not enough: the two-temperature model</title>
-    <link href="http://www.physics.mcgill.ca/~decotret//posts/two-temp-model.html" />
-    <id>http://www.physics.mcgill.ca/~decotret//posts/two-temp-model.html</id>
+    <link href="https://laurentrdc.xyz//posts/two-temp-model.html" />
+    <id>https://laurentrdc.xyz//posts/two-temp-model.html</id>
     <published>2019-04-03T00:00:00Z</published>
     <updated>2019-04-03T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Temperature is a measure of the average kinetic energy of all particles in a system. An example of such as system is presented below:</p>
@@ -223,8 +223,8 @@
 </entry>
 <entry>
     <title>Example of a Pandoc filter to abstract away CSS framework quirks</title>
-    <link href="http://www.physics.mcgill.ca/~decotret//posts/bulma-pandoc-filter.html" />
-    <id>http://www.physics.mcgill.ca/~decotret//posts/bulma-pandoc-filter.html</id>
+    <link href="https://laurentrdc.xyz//posts/bulma-pandoc-filter.html" />
+    <id>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</id>
     <published>2018-09-12T00:00:00Z</published>
     <updated>2018-09-12T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>To make this static website render correctly on both desktop and mobile, I’ve decided to ‘upgrade’ my setup to use the <a href="https://bulma.io">Bulma CSS framework</a>. This introduced a problem I did not anticipate.</p>
@@ -326,8 +326,8 @@
 </entry>
 <entry>
     <title>How this website is generated</title>
-    <link href="http://www.physics.mcgill.ca/~decotret//posts/making-this-website.html" />
-    <id>http://www.physics.mcgill.ca/~decotret//posts/making-this-website.html</id>
+    <link href="https://laurentrdc.xyz//posts/making-this-website.html" />
+    <id>https://laurentrdc.xyz//posts/making-this-website.html</id>
     <published>2018-08-02T00:00:00Z</published>
     <updated>2018-09-12</updated>
     <summary type="html"><![CDATA[<p>In the hope that this page is useful to someone, I would like to explain how I generate this website.</p>
@@ -463,8 +463,8 @@
 </entry>
 <entry>
     <title>Genesis</title>
-    <link href="http://www.physics.mcgill.ca/~decotret//posts/genesis.html" />
-    <id>http://www.physics.mcgill.ca/~decotret//posts/genesis.html</id>
+    <link href="https://laurentrdc.xyz//posts/genesis.html" />
+    <id>https://laurentrdc.xyz//posts/genesis.html</id>
     <published>2018-08-01T00:00:00Z</published>
     <updated>2018-08-01T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>This is the first post of my blog, where I can test new features.</p>

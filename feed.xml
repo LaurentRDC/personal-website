@@ -3,14 +3,14 @@
     xmlns:dc="http://purl.org/dc/elements/1.1/">
     <channel>
         <title>Laurent's personal blog</title>
-        <link>https://laurentprdc.me</link>
+        <link>https://laurentrdc.xyz</link>
         <description><![CDATA[My personal blog on science, math, programming, and other interests.]]></description>
-        <atom:link href="https://laurentprdc.me/feed.xml" rel="self"
+        <atom:link href="https://laurentrdc.xyz/feed.xml" rel="self"
                    type="application/rss+xml" />
         <lastBuildDate>Tue, 03 Nov 2020 00:00:00 UT</lastBuildDate>
         <item>
     <title>Matplotlib for graphic design</title>
-    <link>http://www.physics.mcgill.ca/~decotret//posts/banner.html</link>
+    <link>https://laurentrdc.xyz//posts/banner.html</link>
     <description><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
 <figure>
 <img src="generated/8917920938648941213.png" class="python image" />
@@ -135,12 +135,12 @@
 <img src="generated/16336910572483251846.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/16336910572483251846.txt">Source code</a>)</figcaption>
 </figure>]]></description>
     <pubDate>Tue, 03 Nov 2020 00:00:00 UT</pubDate>
-    <guid>http://www.physics.mcgill.ca/~decotret//posts/banner.html</guid>
+    <guid>https://laurentrdc.xyz//posts/banner.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 <item>
     <title>The masked normalized cross-correlation and its application to image registration</title>
-    <link>http://www.physics.mcgill.ca/~decotret//posts/mnxc.html</link>
+    <link>https://laurentrdc.xyz//posts/mnxc.html</link>
     <description><![CDATA[<p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
 <p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <span class="math inline">\(I_1(i,j)\)</span> and <span class="math inline">\(I_2(i,j)\)</span>, their cross-correlation <span class="math inline">\(I_1 \star I_2\)</span> is defined as: <span class="math display">\[
     (I_1 \star I_2)(u, v) \equiv \sum_{i,j} I_1(i, j) \cdot I_2(i - u, j - v)
@@ -185,12 +185,12 @@
 </ol>
 </section>]]></description>
     <pubDate>Tue, 30 Apr 2019 00:00:00 UT</pubDate>
-    <guid>http://www.physics.mcgill.ca/~decotret//posts/mnxc.html</guid>
+    <guid>https://laurentrdc.xyz//posts/mnxc.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 <item>
     <title>When one temperature is not enough: the two-temperature model</title>
-    <link>http://www.physics.mcgill.ca/~decotret//posts/two-temp-model.html</link>
+    <link>https://laurentrdc.xyz//posts/two-temp-model.html</link>
     <description><![CDATA[<p>Temperature is a measure of the average kinetic energy of all particles in a system. An example of such as system is presented below:</p>
 <figure>
 <img src="/images/Translational_motion.gif" class="image" alt="Translational motion of particles in a box. Some particles are colored red for better tracking. Image credit to A. Greg." /><figcaption aria-hidden="true">Translational motion of particles in a box. Some particles are colored red for better tracking. <a href="https://en.wikipedia.org/wiki/Thermodynamic_temperature#/media/File:Translational_motion.gif">Image credit to A. Greg.</a></figcaption>
@@ -217,12 +217,12 @@
 </ol>
 </section>]]></description>
     <pubDate>Wed, 03 Apr 2019 00:00:00 UT</pubDate>
-    <guid>http://www.physics.mcgill.ca/~decotret//posts/two-temp-model.html</guid>
+    <guid>https://laurentrdc.xyz//posts/two-temp-model.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 <item>
     <title>Example of a Pandoc filter to abstract away CSS framework quirks</title>
-    <link>http://www.physics.mcgill.ca/~decotret//posts/bulma-pandoc-filter.html</link>
+    <link>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</link>
     <description><![CDATA[<p>To make this static website render correctly on both desktop and mobile, I’ve decided to ‘upgrade’ my setup to use the <a href="https://bulma.io">Bulma CSS framework</a>. This introduced a problem I did not anticipate.</p>
 <p>For example, consider the following “raw” HTML tag to create a level 1 title:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
@@ -320,12 +320,12 @@
 </ol>
 </section>]]></description>
     <pubDate>Wed, 12 Sep 2018 00:00:00 UT</pubDate>
-    <guid>http://www.physics.mcgill.ca/~decotret//posts/bulma-pandoc-filter.html</guid>
+    <guid>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 <item>
     <title>How this website is generated</title>
-    <link>http://www.physics.mcgill.ca/~decotret//posts/making-this-website.html</link>
+    <link>https://laurentrdc.xyz//posts/making-this-website.html</link>
     <description><![CDATA[<p>In the hope that this page is useful to someone, I would like to explain how I generate this website.</p>
 <h2 class="title is-2" id="static-website-generator">Static website generator</h2>
 <p>I am always looking for an excuse to play with Haskell, and so this website is generated using <a href="https://jaspervdj.be/hakyll/index.html">Hakyll</a>. Hakyll is a static website generator; website configuration is written in Haskell and content is written in Markdown. Hakyll then collects the content, applies templates to it (navigation bar, page footers, etc), and builds a static website in a separate folder. Deploying the website then simply consists in moving the files to the right place.</p>
@@ -457,12 +457,12 @@
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span><span class="ot"> class=</span><span class="st">&quot;subtitle is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
 <p>To modifying headings generated by Pandoc <em>a posteriori</em>, I wrote a Pandoc filter. <strong>The process is documented <a href="/posts/bulma-pandoc-filter.html">in this post</a></strong>.</p>]]></description>
     <pubDate>Thu, 02 Aug 2018 00:00:00 UT</pubDate>
-    <guid>http://www.physics.mcgill.ca/~decotret//posts/making-this-website.html</guid>
+    <guid>https://laurentrdc.xyz//posts/making-this-website.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 <item>
     <title>Genesis</title>
-    <link>http://www.physics.mcgill.ca/~decotret//posts/genesis.html</link>
+    <link>https://laurentrdc.xyz//posts/genesis.html</link>
     <description><![CDATA[<p>This is the first post of my blog, where I can test new features.</p>
 <hr />
 <h3 class="title is-3" id="math">Math</h3>
@@ -504,7 +504,7 @@
 <li><em>NumPy documentation for bincount</em></li>
 </ul>]]></description>
     <pubDate>Wed, 01 Aug 2018 00:00:00 UT</pubDate>
-    <guid>http://www.physics.mcgill.ca/~decotret//posts/genesis.html</guid>
+    <guid>https://laurentrdc.xyz//posts/genesis.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 
