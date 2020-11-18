@@ -72,13 +72,6 @@ jobs:
       run: |
         python scripts/mkbanner.py
     
-    - name: Minify CSS
-      run: |
-        rustup update stable && rustup default stable
-        cd tools 
-        cargo build --bin minifier
-        ./target/debug/minifier ../css
-    
     # Need to build twice because in the first build,
     # pandoc-plot creates files which are then routed
     # appropriately in the second build.
@@ -88,6 +81,16 @@ jobs:
         stack exec -- personal-website build
         stack exec -- personal-website build
   
+    - name: Minify CSS and HTML
+      run: |
+        rustup update stable && rustup default stable
+        cd tools 
+        cargo build --bin minifier
+        ./target/debug/minifier ../decotret
+        
+    - name: Check internal links
+      run: |
+        stack exec -- personal-website check --internal-links -v
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@3.7.1
