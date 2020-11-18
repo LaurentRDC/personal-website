@@ -9,6 +9,7 @@ edition = "2018"
 [dependencies]
 clap = "~2.33"
 minifier = "~0.0"
+minify = "~1.2"
 
 [[bin]]
 name = "minifier"

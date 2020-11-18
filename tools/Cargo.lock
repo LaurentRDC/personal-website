@@ -72,11 +72,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "minify"
+version = "1.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5553f9f8090d7d74a2b321da9d7145d4636252e38a428386c6a920a9a937385a"
+
+[[package]]
 name = "site-tools"
 version = "0.1.0"
 dependencies = [
  "clap",
  "minifier",
+ "minify",
 ]
 
 [[package]]
