@@ -90,7 +90,7 @@ jobs:
         
     - name: Check internal links
       run: |
-        stack exec -- personal-website check --internal-links -v
+        stack exec -- personal-website check --internal-links
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@3.7.1
