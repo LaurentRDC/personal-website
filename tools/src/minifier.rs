@@ -61,6 +61,6 @@ fn main () {
         
         for path in files.iter().filter(|p| p.extension() == Some(std::ffi::OsStr::new("css"))) {
             minify(path);
-            println!("Minifying {}...", path);
+            println!("Minifying {}", path.display());
         }
 }
