@@ -71,7 +71,7 @@ jobs:
         rustup update stable && rustup default stable
         cd tools 
         cargo build --bin minifier
-        minifier ..\css
+        .\target\debug\minifier ..\css
     
     # Need to build twice because in the first build,
     # pandoc-plot creates files which are then routed
