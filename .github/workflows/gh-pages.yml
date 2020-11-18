@@ -86,7 +86,7 @@ jobs:
         rustup update stable && rustup default stable
         cd tools 
         cargo build --bin minifier
-        ./target/debug/minifier ../decotret
+        ./target/debug/minifier ../_rendered
         
     - name: Check internal links
       run: |
@@ -97,5 +97,5 @@ jobs:
       with:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: decotret
+        FOLDER: _rendered
         CLEAN: true

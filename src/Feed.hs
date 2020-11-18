@@ -11,5 +11,5 @@ feedConfiguration = FeedConfiguration
     , feedDescription = "My personal blog on science, math, programming, and other interests."
     , feedAuthorName  = "Laurent P. René de Cotret"
     , feedAuthorEmail = "laurent.decotret@outlook.com"
-    , feedRoot        = "https://laurentprdc.me"
+    , feedRoot        = "https://laurentrdc.xyz"
     }

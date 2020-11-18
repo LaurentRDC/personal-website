@@ -50,12 +50,9 @@ generatedContent = "generated/**"
 
 --------------------------------------------------------------------------------
 -- | Site configuration
--- The remote folder is WWW/decotret. The destination folder 
--- (where the website is rendered) must also be called "decotret/"
--- because of the way scp works.
 conf :: Configuration
 conf = defaultConfiguration
-        { destinationDirectory = "decotret"
+        { destinationDirectory = "_rendered"
         , providerDirectory = "."
         }
 
@@ -219,7 +216,7 @@ main = do
                 pages <- loadAll (fromGlob "static/**")
                 let allPages = pages <> posts
                     sitemapCtx =
-                        constField "root" "http://www.physics.mcgill.ca/~decotret" <>
+                        constField "root" "https://laurentrdc.xyz/" <>
                         listField "pages" postCtx (return allPages)
 
                 makeItem ""
@@ -232,7 +229,7 @@ main = do
 --------------------------------------------------------------------------------
 postCtx :: Context String
 postCtx = mconcat [ defaultContext
-                  , constField "root" "http://www.physics.mcgill.ca/~decotret/"
+                  , constField "root" "https://laurentrdc.xyz/"
                   , dateField "date" "%Y-%m-%d"
                   ] 
 
