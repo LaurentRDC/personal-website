@@ -42,7 +42,7 @@ jobs:
     - uses: actions/cache@v1
       name: Cache Rust build artifacts
       with:
-        path: $GITHUB_WORKSPACE/tools/target
+        path: tools/target
         key: ${{ runner.os }}-${{ hashFiles('tools/Cargo.lock') }}
 
     - name: Build site compiler
