@@ -39,6 +39,12 @@ jobs:
         path: ~/.cache/pip
         key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
+    - uses: actions/cache@v1
+      name: Cache Rust build artifacts
+      with:
+        path: $GITHUB_WORKSPACE/tools/target
+        key: ${{ runner.os }}-${{ hashFiles('tools/Cargo.lock') }}
+
     - name: Build site compiler
       run: |
         stack install
@@ -71,7 +77,7 @@ jobs:
         rustup update stable && rustup default stable
         cd tools 
         cargo build --bin minifier
-        .\target\debug\minifier ..\css
+        ./target/debug/minifier ../css
     
     # Need to build twice because in the first build,
     # pandoc-plot creates files which are then routed
