@@ -36,6 +36,8 @@ WinSCP.ini
 # Files automatically generated
 templates/default.html
 generated/*
-stack.yaml.lock
 templates/default.html
-stack.yaml.lock
+
+# Rust
+tools/target/
+
