@@ -1,6 +1,7 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+templates/* linguist-vendored
 css/* linguist-vendored
 sass/bulma/* linguist-vendored
 files/* linguist-vendored
