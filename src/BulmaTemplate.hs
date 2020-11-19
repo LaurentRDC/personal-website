@@ -11,7 +11,7 @@ import           Data.List                   (intersperse)
 import           Text.Blaze.Html5            as H
 import           Text.Blaze.Html5.Attributes as A
 
-fontAwesomeURL = "https://use.fontawesome.com/releases/v5.2.0/css/all.css"
+fontAwesomeURL = "https://use.fontawesome.com/releases/v5.15.1/css/all.css"
 academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
 mathjaxURL     = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
 fontURL        = "https://fonts.googleapis.com/css?family=Titillium+Web"
