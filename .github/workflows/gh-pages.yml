@@ -27,19 +27,19 @@ jobs:
       with:
         python-version: '3.9'
 
-    - uses: actions/cache@v1
+    - uses: actions/cache@v2
       name: Cache Haskell build artifacts
       with:
         path: ~/.stack
         key: ${{ runner.os }}-v2-${{ hashFiles('stack.yaml.lock') }}
 
-    - uses: actions/cache@v1
+    - uses: actions/cache@v2
       name: Cache Python build artifacts
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
-    - uses: actions/cache@v1
+    - uses: actions/cache@v2
       name: Cache Rust build artifacts
       with:
         path: |
