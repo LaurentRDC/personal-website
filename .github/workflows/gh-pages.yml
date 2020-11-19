@@ -42,7 +42,9 @@ jobs:
     - uses: actions/cache@v1
       name: Cache Rust build artifacts
       with:
-        path: tools/target
+        path: |
+          tools/target
+          ~/.cargo
         key: ${{ runner.os }}-${{ hashFiles('tools/Cargo.lock') }}
 
     - name: Build site compiler
@@ -87,7 +89,6 @@ jobs:
         cd tools 
         cargo build --bin minifier
         ./target/debug/minifier ../_rendered
-        ls -a ~/.cargo
         
     - name: Check internal links
       run: |
