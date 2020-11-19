@@ -43,8 +43,9 @@ jobs:
       name: Cache Rust build artifacts
       with:
         path: |
+          ~/.cargo/registry
+          ~/.cargo/git
           tools/target
-          ~/.cargo
         key: ${{ runner.os }}-v2-${{ hashFiles('tools/Cargo.lock') }}
 
     - name: Build site compiler
