@@ -18,7 +18,9 @@ fn visit_dir_recursively(dir: &std::path::PathBuf) -> HashSet<std::path::PathBuf
         }
 
         if entry.metadata().unwrap().is_dir() {
-            files.union(&visit_dir_recursively(&entry.path()));
+            for f in visit_dir_recursively(&entry.path()) {
+                files.insert(f);
+            }
         } else {
             files.insert(entry.path());
         }
