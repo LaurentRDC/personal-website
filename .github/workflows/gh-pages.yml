@@ -87,6 +87,7 @@ jobs:
         cd tools 
         cargo build --bin minifier
         ./target/debug/minifier ../_rendered
+        ls -a ~/.cargo
         
     - name: Check internal links
       run: |
