@@ -31,7 +31,7 @@ jobs:
       name: Cache Haskell build artifacts
       with:
         path: ~/.stack
-        key: ${{ runner.os }}-${{ hashFiles('stack.yaml.lock') }}
+        key: ${{ runner.os }}-v2-${{ hashFiles('stack.yaml.lock') }}
 
     - uses: actions/cache@v1
       name: Cache Python build artifacts
@@ -45,7 +45,7 @@ jobs:
         path: |
           tools/target
           ~/.cargo
-        key: ${{ runner.os }}-${{ hashFiles('tools/Cargo.lock') }}
+        key: ${{ runner.os }}-v2-${{ hashFiles('tools/Cargo.lock') }}
 
     - name: Build site compiler
       run: |
