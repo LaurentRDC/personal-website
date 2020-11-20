@@ -75,19 +75,18 @@ main = do
 
     plotConfig <- P.configuration ".pandoc-plot.yml"
 
+    -- generate the CSS required to to syntax highlighting
+    let css = styleToCss syntaxHighlightingStyle
+    writeFile ("css" </> "syntax.css") css >> putStrLn "  Generated css/syntax.css"
+
+    -- We generate the default template
+    -- The template has a marking showing on what date was the page generated
+    renderTemplate 
+        >>= B.writeFile ("templates" </> "default.html") 
+        >> putStrLn "  Generated templates/default.html"
+
     hakyllWith conf $ do
             
-        preprocess $ do
-            -- generate the CSS required to to syntax highlighting
-            let css = styleToCss syntaxHighlightingStyle
-            writeFile ("css" </> "syntax.css") css >> putStrLn "  Generated css/syntax.css"
-
-            -- We generate the default template
-            -- The template has a marking showing on what date was the page generated
-            renderTemplate 
-                >>= B.writeFile ("templates" </> "default.html") 
-                >> putStrLn "  Generated templates/default.html"
-
         --------------------------------------------------------------------------------
         -- A lot of things can be compied directly
         forM_ ["files/*", "fonts/*", "js/*", nonJpgImages] $ 
