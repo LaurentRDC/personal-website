@@ -24,6 +24,8 @@ import qualified Data.ByteString                 as B
 import qualified Data.Text                       as T
 import qualified Data.Text.Encoding              as T
 
+import           System.FilePath                 ((</>))
+
 import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html.Renderer.Pretty as Pretty
 
@@ -78,13 +80,13 @@ main = do
         preprocess $ do
             -- generate the CSS required to to syntax highlighting
             let css = styleToCss syntaxHighlightingStyle
-            writeFile "css/syntax.css" css >> putStrLn "  Generated css\\syntax.css"
+            writeFile ("css" </> "syntax.css") css >> putStrLn "  Generated css/syntax.css"
 
             -- We generate the default template
             -- The template has a marking showing on what date was the page generated
             renderTemplate 
-                >>= (B.writeFile "templates/default.html") 
-                >> putStrLn "  Generated templates\\default.html"
+                >>= B.writeFile ("templates" </> "default.html") 
+                >> putStrLn "  Generated templates/default.html"
 
         --------------------------------------------------------------------------------
         -- A lot of things can be compied directly

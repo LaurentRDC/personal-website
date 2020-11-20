@@ -1,5 +1,5 @@
 name:                personal-website
-version:             1.2.0.0
+version:             1.2.0.1
 -- synopsis:
 -- description:
 homepage:            https://github.com/LaurentRDC/personal-website#readme
@@ -20,6 +20,7 @@ executable personal-website
   ghc-options:         -threaded -with-rtsopts=-N -O2
   build-depends:       base >= 4.8 && < 5,
                        containers,
+                       filepath,
                        hakyll,
                        hakyll-images >= 1.0.0,
                        pandoc > 2.8,
