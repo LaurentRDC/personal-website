@@ -35,7 +35,8 @@ fn minify(path: &std::path::PathBuf) -> std::io::Result<()> {
 
     let minified = match path.extension().and_then(OsStr::to_str) {
         Some("css") => Some(css::minify(&content).unwrap()),
-        Some("html") => Some(html::minify(&content)), 
+        // FIXME: HTML minifying changes the formatting of code block
+        // Some("html") => Some(html::minify(&content)), 
         _other => None ,
     };
     
