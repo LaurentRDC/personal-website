@@ -15,8 +15,8 @@ packages:
 extra-deps: 
 - 'hakyll-images-1.0.0'
 - 'pandoc-plot-1.0.0.0'
-- git: https://github.com/LaurentRDC/hakyll.git
-  commit: 92e2dc1faacd726fd5a1ce3d6321323a4a89984d
+- git: https://github.com/jaspervdj/hakyll.git
+  commit: e4d80f0397705950a087176723e31ac91397a08f
 - pandoc-2.11.1
 - citeproc-0.1.0.3@sha256:c73f601fad72d6d74312ae55895e16e2425d86467a16d9a6d1156c6c78d04b62,5395
 - commonmark-0.1.1@sha256:a928f6a36a7e10dceed252a9bb8670c01affbe89d70d81d4ba8530ff86b841a7,3276

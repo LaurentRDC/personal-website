@@ -21,14 +21,14 @@ packages:
 - completed:
     name: hakyll
     version: 4.13.4.1
-    git: https://github.com/LaurentRDC/hakyll.git
+    git: https://github.com/jaspervdj/hakyll.git
     pantry-tree:
-      size: 11762
-      sha256: 2cedb5c3090e279d4f0991b562379166ab3e8db4779bcefa0330e38d785a7611
-    commit: 92e2dc1faacd726fd5a1ce3d6321323a4a89984d
+      size: 11761
+      sha256: 64ea55162461e5f296ed7e319008f123cb12edab938be4d035b42bb9777ef550
+    commit: e4d80f0397705950a087176723e31ac91397a08f
   original:
-    git: https://github.com/LaurentRDC/hakyll.git
-    commit: 92e2dc1faacd726fd5a1ce3d6321323a4a89984d
+    git: https://github.com/jaspervdj/hakyll.git
+    commit: e4d80f0397705950a087176723e31ac91397a08f
 - completed:
     hackage: pandoc-2.11.1@sha256:e9a8d50db0b8f428182217da3c2a55f6c8be3c9e3e74fc7ba127bab6d97eed0c,39388
     pantry-tree:
