@@ -144,7 +144,7 @@
     <link href="https://laurentrdc.xyz//posts/mnxc.html" />
     <id>https://laurentrdc.xyz//posts/mnxc.html</id>
     <published>2019-04-30T00:00:00Z</published>
-    <updated>2020-11-10</updated>
+    <updated>2020-12-18</updated>
     <summary type="html"><![CDATA[<p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
 <p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <span class="math inline">\(I_1(i,j)\)</span> and <span class="math inline">\(I_2(i,j)\)</span>, their cross-correlation <span class="math inline">\(I_1 \star I_2\)</span> is defined as: <span class="math display">\[
     (I_1 \star I_2)(u, v) \equiv \sum_{i,j} I_1(i, j) \cdot I_2(i - u, j - v)
@@ -169,7 +169,7 @@
 <hr>
 <p>In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation — and its associated registration function — in our ultrafast electron diffraction toolkit, <a href="https://scikit-ued.rtfd.io">scikit-ued</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Here’s an example of it in action:</p>
 <figure>
-<img src="generated/17302841498828115539.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment! (Source code)" /><figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment! (<a href="generated/17302841498828115539.txt">Source code</a>)</figcaption>
+<img src="generated/5828933980438641705.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment! (Source code)" /><figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment! (<a href="generated/5828933980438641705.txt">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="contributing-to-scikit-image">Contributing to scikit-image</h2>
 <p>However, since this tool could see use in a more general setting, I decided to contribute it to <a href="https://scikit-image.org/">scikit-image</a>:</p>
