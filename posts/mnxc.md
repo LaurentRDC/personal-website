@@ -1,7 +1,7 @@
 ---
 title: The masked normalized cross-correlation and its application to image registration
 date: 2019-04-30
-updated: 2020-11-10
+updated: 2020-12-18
 summary: "For my first contribution to open-source library scikit-image, I implemented the masked normalized cross-correlation. This post details the why and how this happened."
 ---
 
@@ -96,10 +96,8 @@ Thanks to the work of Dr. Dirk Padfield[^2] [^3], we now know that such an opera
 
 In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation --- and its associated registration function --- in our ultrafast electron diffraction toolkit, [scikit-ued](https://scikit-ued.rtfd.io)[^4]. Here's an example of it in action:
 
-```{.python .matplotlib caption="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. While the aligned image is not perfect, it is much closer to perfect alignment!"}
-from skimage.feature import masked_register_translation
-from skued import diffread
-import scipy.ndimage as ndi
+```{.python .matplotlib caption="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images."}
+from skued import diffread, align
 from pathlib import Path
 
 ref = diffread(Path("images") / "mnxc" / "Cr_1.tif")
@@ -108,14 +106,13 @@ im = diffread(Path("images") / "mnxc" / "Cr_2.tif")
 mask = np.ones_like(ref, dtype=np.bool)
 mask[0:1250, 950:1250] = False
 
-shift = masked_register_translation(im, ref, mask)
-shifted = ndi.shift(im, -1 * shift)
+shifted = align(image=im, reference=ref, mask=mask)
 
 fig, ((ax1, ax2, ax3), (ax4, ax5, ax6)) = plt.subplots(nrows=2, ncols=3, figsize=(9, 6))
 ax1.imshow(ref, vmin=0, vmax=200, cmap='inferno')
 ax2.imshow(im, vmin=0, vmax=200, cmap='inferno')
 ax3.imshow(ref - im, cmap="RdBu_r")
-ax4.imshow(mask, vmin=0, vmax=1, cmap="binary")
+ax4.imshow(mask * im, vmin=0, vmax=200, cmap="inferno")
 ax5.imshow(shifted, vmin=0, vmax=200, cmap='inferno')
 ax6.imshow(ref - shifted, cmap="RdBu_r")
 
@@ -126,7 +123,7 @@ for ax in (ax1, ax2, ax3, ax4, ax5, ax6):
 ax1.set_title("Reference")
 ax2.set_title("Data")
 ax3.set_title("Difference")
-ax4.set_title("Mask")
+ax4.set_title("Masked image")
 ax5.set_title("Aligned data")
 ax6.set_title("Difference after shift")
 
