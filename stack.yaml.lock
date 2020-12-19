@@ -30,19 +30,19 @@ packages:
     git: https://github.com/jaspervdj/hakyll.git
     commit: e4d80f0397705950a087176723e31ac91397a08f
 - completed:
-    hackage: pandoc-2.11.2@sha256:e21f0af1750c4d7a3cf9096c46403c55043c9ac06c7c37627ecb312499eb3136,39349
+    hackage: pandoc-2.11.3.1@sha256:68edca38855bcbf16cb38da3f77f5030b2a3ff3e88cf8bfc749380a9020f1632,39657
     pantry-tree:
-      size: 114848
-      sha256: ef31f41960bd8ae1a1b02b2c56a692583398f2cb3fc7c0177583b698a6a60fdf
+      size: 117077
+      sha256: a82af4d0f3f896f65436f3acb213b83068aef34ab0aabc318a5d0eda52b354f4
   original:
-    hackage: pandoc-2.11.2
+    hackage: pandoc-2.11.3.1
 - completed:
-    hackage: citeproc-0.2@sha256:72a6b976a1d3ff2107043cfeb942e278ce2b93f0e31752da86bc6431b862ae19,5431
+    hackage: citeproc-0.3.0.1@sha256:1860a6757d5bc3ec149a434ed4011edb30155cb6ae92a1d83ccf3bd163bca0f1,5590
     pantry-tree:
-      size: 78527
-      sha256: 1dd0f1ee7bc43367fbb745ba859ad6e2eb3b8d16d515c47deba31a5bd09bc0e2
+      size: 78647
+      sha256: b89e157002539316e59f94b87cf379bf417d036f2f0b7a205fac35fe99998abb
   original:
-    hackage: citeproc-0.2@sha256:72a6b976a1d3ff2107043cfeb942e278ce2b93f0e31752da86bc6431b862ae19,5431
+    hackage: citeproc-0.3.0.1@sha256:1860a6757d5bc3ec149a434ed4011edb30155cb6ae92a1d83ccf3bd163bca0f1,5590
 - completed:
     hackage: commonmark-0.1.1.2@sha256:c06ab05f0f224ab7982502a96e17952823a9b6dae8505fb35194b0baa9e2a975,3278
     pantry-tree:
