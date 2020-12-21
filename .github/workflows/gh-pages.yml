@@ -18,7 +18,7 @@ jobs:
     - uses: actions/checkout@v2
 
     - name: Setup Haskell toolchain
-      uses: actions/setup-haskell@v1
+      uses: haskell/actions/setup@v1
       with:
         enable-stack: true
         stack-version: 'latest'
