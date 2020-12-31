@@ -17,7 +17,7 @@
     <updated>2020-11-03T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
 <figure>
-<img src="generated/8917920938648941213.png" class="python image" />
+<img src="generated/9135047106717421375.png" class="python image" />
 </figure>
 <p>Matplotlib is a plotting library for python, historically inspired by the plotting capabilities of MATLAB. You can take a look at the various <a href="https://matplotlib.org/gallery/index.html">examples</a> on their website. One thing that is not immediately obvious is that you can use Matplotlib to also draw shapes! In this sense, Matplotlib becomes a graphic design library.</p>
 <p>(You can see the exact source code for the images below by clicking on the link in the caption)</p>
@@ -77,7 +77,7 @@
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x,y), radius<span class="op">=</span>radius)</span></code></pre></div>
 <p>Here’s what it looks like so far:</p>
 <figure>
-<img src="generated/7353115672018286429.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/7353115672018286429.txt">Source code</a>)</figcaption>
+<img src="generated/4878600800768797911.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/4878600800768797911.src.html">Source code</a>)</figcaption>
 </figure>
 <h3 class="title is-3" id="color">Color</h3>
 <p>The figure above has the wrong dimension, but you get the idea. Let’s color the hexagons appropriately. In the banner, the color of the hexagons is based on the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“inferno” colormap</a>. The color radiates away from the bottom left corner:</p>
@@ -103,7 +103,7 @@
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>Here’s the result:</p>
 <figure>
-<img src="generated/14135902142592784144.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/14135902142592784144.txt">Source code</a>)</figcaption>
+<img src="generated/767008427113463766.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/767008427113463766.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Because of rounding errors of the hexagon dimensions, there is some visible spacing between the hexagons. To get rid of it, we draw the hexagons a bit larger (0.2 millimeters):</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
@@ -132,11 +132,11 @@
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>We arrive at the final result:</p>
 <figure>
-<img src="generated/15947724880327662140.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/15947724880327662140.txt">Source code</a>)</figcaption>
+<img src="generated/12890768967448385170.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/12890768967448385170.src.html">Source code</a>)</figcaption>
 </figure>
 <p>You can imagine adapting this approach to different tilings, and different colors schemes. Here’s a final example using squares and the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“cool” colormap</a>:</p>
 <figure>
-<img src="generated/16336910572483251846.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/16336910572483251846.txt">Source code</a>)</figcaption>
+<img src="generated/5859492616983685564.png" class="python image" alt=" (Source code)" /><figcaption aria-hidden="true"> (<a href="generated/5859492616983685564.src.html">Source code</a>)</figcaption>
 </figure>]]></summary>
 </entry>
 <entry>
@@ -151,7 +151,7 @@
 \]</span></p>
 <p>For example, if <span class="math inline">\(I_1 = I_2\)</span>, then <span class="math inline">\(I_1 \star I_2\)</span> has its maximum at <span class="math inline">\((u,v) =\)</span> (0,0). What happens if <span class="math inline">\(I_1\)</span> and <span class="math inline">\(I_2\)</span> are shifted from each other? Let’s see:</p>
 <figure>
-<img src="generated/11036279551072440978.png" class="python image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" /><figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/11036279551072440978.txt">Source code</a>)</figcaption>
+<img src="generated/11851014041492450984.png" class="python image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" /><figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/11851014041492450984.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In the above example, the cross-correlation is maximal at (50, 0), which is exactly the translation required to <em>shift back</em> the second image to match the first one. Finding the translation between images is then a simple matter of determining the glocal maximum of the cross-correlation. This operation is so useful that it is implemented in the Python library <a href="https://scikit-image.org">scikit-image</a> as <a href="https://scikit-image.org/docs/stable/api/skimage.feature.html#skimage.feature.register_translation"><code>skimage.feature.register_translation</code></a>.</p>
 <p>It turns out that in my field of research, image registration can be crucial to correct experimental data. My primary research tool is <a href="http://www.physics.mcgill.ca/siwicklab">ultrafast electron diffraction</a>. Without knowing the details, you can think of this technique as a kind of microscope. A single image from one of our experiments looks like this:</p>
@@ -161,7 +161,7 @@
 <p>Most of the electron beam is unperturbed by the sample; this is why we use a metal beam-block (seen as a black rod in the image above) to prevent the electrons from damaging our apparatus.</p>
 <p>Our experiments are synthesized from hundreds of gigabytes of images like the one above, and it may take up to 72h (!) to take all the images we need. Over the course of this time, the electron beam may shift in a way that moves the image, but <em>not the beam-block</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Heres’s what I mean:</p>
 <figure>
-<img src="generated/2839228914052614175.png" class="python image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" /><figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/2839228914052614175.txt">Source code</a>)</figcaption>
+<img src="generated/741674975284586577.png" class="python image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" /><figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/741674975284586577.src.html">Source code</a>)</figcaption>
 </figure>
 <p>This does not fly. We need to be able to compare images together, and shifts by more than 1px are problematic. We need to correct for this shift, for every image, with respect to the first one. However, we are also in a bind, because unlike the example above, the images are not completely shifted; one part of them, the beam-block, is <em>static</em>, while the image behind it shifts.</p>
 <p>The crux of the problem is this: the cross-correlation between images gives us the shift between them. However, it is not immediately obvious how to tell the cross-correlation operation to ignore <em>certain parts</em> of the image. Is there some kind of operation, similar to the cross-correlation, that allows to mask parts of the images we want to ignore?</p>
@@ -169,7 +169,7 @@
 <hr>
 <p>In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation — and its associated registration function — in our ultrafast electron diffraction toolkit, <a href="https://scikit-ued.rtfd.io">scikit-ued</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Here’s an example of it in action:</p>
 <figure>
-<img src="generated/5828933980438641705.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" /><figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/5828933980438641705.txt">Source code</a>)</figcaption>
+<img src="generated/11484028787295421587.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" /><figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/11484028787295421587.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="contributing-to-scikit-image">Contributing to scikit-image</h2>
 <p>However, since this tool could see use in a more general setting, I decided to contribute it to <a href="https://scikit-image.org/">scikit-image</a>:</p>
@@ -201,14 +201,14 @@
 </figure>
 <p>Note that the above system has a temperature because there exists a clear <strong>average</strong> motion, even though not all particles are moving at the same velocity. This means, a system is at some temperature <span class="math inline">\(T\)</span> as long as the distribution of kinetic energies (often related to velocities) ressembles a <strong>normal distribution</strong>:</p>
 <figure>
-<img src="generated/17455048548538307555.png" class="image" alt="Examples of distribution of particle kinetic energies. Left: distribution of particle energies with a well-defined temperature. Right: distribution of particle energies does not match an expected thermal equilibrium. (Source code)" /><figcaption aria-hidden="true">Examples of distribution of particle kinetic energies. <strong>Left</strong>: distribution of particle energies with a well-defined temperature. <strong>Right</strong>: distribution of particle energies does not match an expected thermal equilibrium. (<a href="generated/17455048548538307555.txt">Source code</a>)</figcaption>
+<img src="generated/14307291141021026389.png" class="image" alt="Examples of distribution of particle kinetic energies. Left: distribution of particle energies with a well-defined temperature. Right: distribution of particle energies does not match an expected thermal equilibrium. (Source code)" /><figcaption aria-hidden="true">Examples of distribution of particle kinetic energies. <strong>Left</strong>: distribution of particle energies with a well-defined temperature. <strong>Right</strong>: distribution of particle energies does not match an expected thermal equilibrium. (<a href="generated/14307291141021026389.src.html">Source code</a>)</figcaption>
 </figure>
 <p>So, a system with a well-defined temperature exhibits a normal distribution of particle energies. It turns out that it is possible to prepare systems into a state where there are <em>two clear average energies</em> , if only for a very short moment.</p>
 <p>Real materials are composed of two types of particles, nuclei and electrons<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. These particles have widly different masses, so electromagnetic fields — for example, an intense pulse of light — will not affect them at the same time; since nuclei are at least ~1000x more massive than electrons, we should expect the electrons to react about ~1000x faster.</p>
 <p>After decades of development culminating in the 2018 Nobel Prize in Physics, the production of ultrafast laser pulses (less than 30 femtoseconds<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>) is now routine. These ultrafast laser pulses can be used to prepare systems in a strange configuration: one with seemingly <em>two temperatures</em>, albeit only for a short time. Modeling of this situation in crystalline material was done decades ago, and the model is known as the <strong>two-temperature model</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
 <p>Roughly 100fs after dumping a lot of energy into a material, the nuclei might not have reacted yet, and we might have the following energetic landscape:</p>
 <figure>
-<img src="generated/9795306776592733869.png" class="image" alt="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, T_l, and one for the electronic system, T_e. (Source code)" /><figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/9795306776592733869.txt">Source code</a>)</figcaption>
+<img src="generated/11790927760746282399.png" class="image" alt="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, T_l, and one for the electronic system, T_e. (Source code)" /><figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/11790927760746282399.src.html">Source code</a>)</figcaption>
 </figure>
 <p>where the nucliei will still be at equilibrium temperature, and the electrons might be at a temperature of 20000<span class="math inline">\(^{\circ}\)</span>C. Therefore, <em>we have a system with two temperatures</em> for a few picoseconds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
 <section class="footnotes" role="doc-endnotes">
