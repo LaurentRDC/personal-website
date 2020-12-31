@@ -14,7 +14,7 @@ packages:
 # (e.g., acme-missiles-0.3)
 extra-deps: 
 - 'hakyll-images-1.0.0'
-- 'pandoc-plot-1.0.0.0'
+- 'pandoc-plot-1.0.1.0'
 - git: https://github.com/jaspervdj/hakyll.git
   commit: e4d80f0397705950a087176723e31ac91397a08f
 - pandoc-2.11.2
