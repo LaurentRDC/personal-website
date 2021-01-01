@@ -5,12 +5,12 @@
 
 packages:
 - completed:
-    hackage: hakyll-images-1.0.0@sha256:e79a44971883453e5cbc9a9cbadac35c5b60bc74ff9eedb1770d37d74696d854,2319
+    hackage: hakyll-images-1.0.1@sha256:a88a759731df738f88a0727f0c5a2e737bf662a7aca642155e3d531db124c1e5,2207
     pantry-tree:
       size: 1109
-      sha256: c888aea2e6665e89456fd9a98430f8a552ecf570ff3d8e2543ea8b7cef440e9f
+      sha256: dc96c9515b365815a6bc7b930c99005eff33550bec9e7e9dd5d93cbb26043a60
   original:
-    hackage: hakyll-images-1.0.0
+    hackage: hakyll-images-1.0.1
 - completed:
     hackage: pandoc-plot-1.0.1.0@sha256:dfde3a8c1e7938c372fba68eac86e63468dc583e1c97b9deb05d17fcb471de75,5816
     pantry-tree:
