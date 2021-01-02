@@ -73,7 +73,7 @@ packages:
     hackage: pandoc-citeproc-0.17.0.2@sha256:39c5c60a5eca2c1cb50ae9a00dc7093ca1baac78ad5be4e222505de257dce456,8737
 snapshots:
 - completed:
-    size: 538412
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2020/10/11.yaml
-    sha256: 541d3a42ea5fa56f4ea505ee4e2b3274b56036683436a86f51bf5759243ad8bc
-  original: nightly-2020-10-11
+    size: 558061
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/nightly/2020/12/14.yaml
+    sha256: 0c80697b1db876c0ab31b43e42be53f886657a336eca59c73c361078e631d65b
+  original: nightly-2020-12-14
