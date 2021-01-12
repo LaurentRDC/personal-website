@@ -12,12 +12,12 @@ packages:
   original:
     hackage: hakyll-images-1.0.1
 - completed:
-    hackage: pandoc-plot-1.0.1.0@sha256:dfde3a8c1e7938c372fba68eac86e63468dc583e1c97b9deb05d17fcb471de75,5816
+    hackage: pandoc-plot-1.0.2.1@sha256:4bb226b2f3e467207b64a86dcfdc6e4c757be7ee4bfa30a232dc81bef5ab1d37,5816
     pantry-tree:
-      size: 4117
-      sha256: c8feb794e16eaa36584ab2ba07373a7f11a48f6d02627df3270d0457a1b5a9c9
+      size: 4119
+      sha256: f8f4ba61225f78ed7c555b7264f0a0acc6964e2882130662afe560b9caf2718b
   original:
-    hackage: pandoc-plot-1.0.1.0
+    hackage: pandoc-plot-1.0.2.1
 - completed:
     name: hakyll
     version: 4.13.4.1
