@@ -1,4 +1,4 @@
 matplotlib
 numpy
-scikit-ued >= 2.1.0
+scikit-ued >= 2.1.2
 scikit-image >= 0.17
