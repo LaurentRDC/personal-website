@@ -23,6 +23,14 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * <i class="ai ai-open-access"></i> __L. P. René de Cotret__ and B. J. Siwick, _A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform_, Struct. Dyn. __4__ (2017) [DOI:10.1063/1.4972518](http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518)
 
+## Theses and dissertation
+
+* PhD dissertation coming in April 2021. Tentative title: _Ultrafast energy flow across the Brillouin zone in two-dimensional materials_.
+
+* Master of Science thesis: [_New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_](/files/msc_thesis.pdf).
+
+* Undergraduate thesis: [_High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_](/files/ugrad_project.pdf). It had an [associated poster](/files/ugrad_project_poster.pdf).
+
 ## Conference proceedings
 
 * <i class="ai ai-open-access"></i> __L. P. René de Cotret__, M. J. Stern, M. R. Otto, R. P. Chatelain, J.-P. Boisvert, M. Sutton, and __B. J. Siwick__, _Mapping momentum-dependent electron-phonon coupling and non-equilibrium phonon dynamics with ultrafast electron diffuse scattering_, EPJ Web of Conferences __205__, 08013  (2019) [DOI: 10.1051/epjconf/201920508013](https://doi.org/10.1051/epjconf/201920508013).
