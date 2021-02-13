@@ -30,12 +30,12 @@ packages:
     git: https://github.com/jaspervdj/hakyll.git
     commit: e4d80f0397705950a087176723e31ac91397a08f
 - completed:
-    hackage: pandoc-2.11.2@sha256:e21f0af1750c4d7a3cf9096c46403c55043c9ac06c7c37627ecb312499eb3136,39349
+    hackage: pandoc-2.11.4@sha256:72ff2d50048fe7c11ef67bc936f7fdb986282e72edbb5647db1ab63e415c8bc5,40050
     pantry-tree:
-      size: 114848
-      sha256: ef31f41960bd8ae1a1b02b2c56a692583398f2cb3fc7c0177583b698a6a60fdf
+      size: 118526
+      sha256: 2856fb6c5d6948f3c58f50b3883535f62321db3cceb7b58cd9dd1e6082a0e570
   original:
-    hackage: pandoc-2.11.2
+    hackage: pandoc-2.11.4
 - completed:
     hackage: citeproc-0.2@sha256:72a6b976a1d3ff2107043cfeb942e278ce2b93f0e31752da86bc6431b862ae19,5431
     pantry-tree:
