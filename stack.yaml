@@ -1,7 +1,5 @@
-resolver: nightly-2020-12-14 # GHC 8.10.2
+resolver: nightly-2021-01-05 # GHC 8.10.3
 
-# GHC 8.10.2 is broken on Windows:
-#   https://gitlab.haskell.org/ghc/ghc/-/issues/18550
 compiler: ghc-8.10.4
 
 allow-newer: true
