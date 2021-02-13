@@ -7,9 +7,9 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Letters and articles
 
-* <i class="ai ai-open-access"></i> D. Matte, N. Chamanara, L. Gingras, __L. P. René de Cotret__, T. L. Britt, B. J. Siwick, and D. G. Cooke, Extreme lightwave electron field emission from a nanotip, (2020) Submitted. [Preprint available on arXiv](https://arxiv.org/abs/2006.12677).
+* <i class="ai ai-open-access"></i> M. R. Otto, J.-H. Pöhls, __L. P. René de Cotret__, M. J. Stern, M. Sutton, and B. J. Siwick, _Mechanisms of electron-phonon coupling unraveled in momentum and time: The case of soft-phonons in TiSe~2~_, (2020) Under review. [Preprint available on arXiv](http://arxiv.org/abs/1912.03559).
 
-* <i class="ai ai-open-access"></i> M. R. Otto, J.-H. Pöhls, __L. P. René de Cotret__, M. J. Stern, M. Sutton, and B. J. Siwick, _Mechanisms of electron-phonon coupling unraveled in momentum and time: The case of soft-phonons in TiSe~2~_, (2019) Under review. [Preprint available on arXiv](http://arxiv.org/abs/1912.03559).
+* <i class="ai ai-open-access"></i> D. Matte, N. Chamanara, L. Gingras, __L. P. René de Cotret__, T. L. Britt, B. J. Siwick, and D. G. Cooke, _Extreme lightwave electron field emission from a nanotip_, Phys. Rev. Research **3** (2021) [DOI: 10.1103/PhysRevResearch.3.013137](https://doi.org/10.1103/PhysRevResearch.3.013137).
 
 * __L.P. René de Cotret__, J.-H. Pöhls, M. J. Stern, M. R. Otto, M. Sutton, and B. J. Siwick, _Time- and momentum-resolved phonon population dynamics with ultrafast electron diffuse scattering_, Phys. Rev. B __100__ (2019) [DOI: 10.1103/PhysRevB.100.214115](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.214115). Featured as an __Editors' Suggestion__. <i class="ai ai-open-access"></i>  [Preprint version available on arXiv](https://arxiv.org/abs/1908.02795).
 
