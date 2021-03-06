@@ -7,11 +7,11 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Letters and articles
 
-* <i class="ai ai-open-access"></i> M. R. Otto, J.-H. Pöhls, __L. P. René de Cotret__, M. J. Stern, M. Sutton, and B. J. Siwick, _Mechanisms of electron-phonon coupling unraveled in momentum and time: The case of soft-phonons in TiSe~2~_, (2020) Under review. [Preprint available on arXiv](http://arxiv.org/abs/1912.03559).
+* M. R. Otto, J.-H. Pöhls, __L. P. René de Cotret__, M. J. Stern, M. Sutton, and B. J. Siwick, _Mechanisms of electron-phonon coupling unraveled in momentum and time: The case of soft-phonons in TiSe~2~_, (2021) Accepted. <i class="ai ai-open-access"></i> [Preprint available on arXiv](http://arxiv.org/abs/1912.03559).
 
 * <i class="ai ai-open-access"></i> D. Matte, N. Chamanara, L. Gingras, __L. P. René de Cotret__, T. L. Britt, B. J. Siwick, and D. G. Cooke, _Extreme lightwave electron field emission from a nanotip_, Phys. Rev. Research **3** (2021) [DOI: 10.1103/PhysRevResearch.3.013137](https://doi.org/10.1103/PhysRevResearch.3.013137).
 
-* __L.P. René de Cotret__, J.-H. Pöhls, M. J. Stern, M. R. Otto, M. Sutton, and B. J. Siwick, _Time- and momentum-resolved phonon population dynamics with ultrafast electron diffuse scattering_, Phys. Rev. B __100__ (2019) [DOI: 10.1103/PhysRevB.100.214115](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.214115). Featured as an __Editors' Suggestion__. <i class="ai ai-open-access"></i>  [Preprint version available on arXiv](https://arxiv.org/abs/1908.02795).
+* __L.P. René de Cotret__, J.-H. Pöhls, M. J. Stern, M. R. Otto, M. Sutton, and B. J. Siwick, _Time- and momentum-resolved phonon population dynamics with ultrafast electron diffuse scattering_, Phys. Rev. B __100__ (2019) [DOI: 10.1103/PhysRevB.100.214115](https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.214115). Featured as an __Editors' Suggestion__. <i class="ai ai-open-access"></i> [Preprint version available on arXiv](https://arxiv.org/abs/1908.02795).
 
 * <i class="ai ai-open-access"></i> M. R. Otto, __L. P. René de Cotret__, D. A. Valverde-Chavez, K. L. Tiwari, N. Émond, M. Chaker, D. G. Cooke, and B. J. Siwick, _How optical excitation controls the structure and properties of vanadium dioxide_, PNAS (2018) [DOI: 10.1073/pnas.1808414115](https://doi.org/10.1073/pnas.1808414115).
 
@@ -43,9 +43,8 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * February 2016 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Photoinduced phase transitions in VO2: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_
 
-## Presentations
 
-### Talks
+## Talks
 
 * 2019-02-11 | __6<sup>th</sup> Banff Meeting on Ultrafast Structural Dynamics__ Contributed talk titled _Ultrafast electron diffuse scattering as a window into e-ph and ph-ph dynamics of two-dimensional materials​_ [(Link to program)](https://www.banffdynamics.com/program/).
 
