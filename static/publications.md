@@ -27,9 +27,9 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * PhD dissertation coming in April 2021. Tentative title: _Ultrafast energy flow across the Brillouin zone in two-dimensional materials_.
 
-* Master of Science thesis: [_New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_](/files/msc_thesis.pdf).
+* Master of Science thesis: _New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_ [(PDF)](/files/msc_thesis.pdf).
 
-* Undergraduate thesis: [_High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_](/files/ugrad_project.pdf). It had an [associated poster](/files/ugrad_project_poster.pdf).
+* Undergraduate thesis: _High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_ [(PDF)](/files/ugrad_project.pdf). It had an [associated poster](/files/ugrad_project_poster.pdf).
 
 ## Conference proceedings
 
@@ -39,9 +39,11 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Posters
 
-* February 2017 | __5<sup>th</sup> Banff Meeting on Ultrafast Structural Dynamics__ _Photoinduced phase transitions in VO2: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_
+* February 2020 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Time-and momentum-resolved phonon population dynamicswith ultrafast electron diffuse scattering_ [(PDF)](/files/grc2020poster.pdf)
 
-* February 2016 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Photoinduced phase transitions in VO2: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_
+* February 2017 | __5<sup>th</sup> Banff Meeting on Ultrafast Structural Dynamics__ _Photoinduced phase transitions in VO2: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_ [(PDF)](/files/banff2017poster.pdf)
+
+* February 2016 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Photoinduced phase transitions in VO2: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_ [(PDF)](/files/grc2016poster.pdf)
 
 
 ## Talks
