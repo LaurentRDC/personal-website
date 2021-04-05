@@ -30,4 +30,5 @@ Octave](https://www.gnu.org/software/octave/);
 - `gnuplot`: plots using [gnuplot](http://www.gnuplot.info/);
 - `graphviz`: graphs using [Graphviz](http://graphviz.org/);
 - `bokeh`: plots using the [Bokeh](https://bokeh.org/) visualization library;
-- `plotsjl`: plots using the [Julia `Plots.jl`](https://docs.juliaplots.org/latest/) package.
+- `plotsjl`: plots using the [Julia `Plots.jl`](https://docs.juliaplots.org/latest/) package;
+- `plantuml`: diagrams using the [PlantUML](https://plantuml.com/) software suite.
