@@ -19,7 +19,7 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * __L. P. René de Cotret__, M. J. Stern, M. R. Otto, R. P. Chatelain, J.-P. Boisvert, M. Sutton, and B. J. Siwick, _Mapping momentum-dependent electron-phonon coupling and non-equilibrium phonon dynamics with ultrafast electron diffuse scattering_, Phys.Rev.B __97__ (2018) [DOI:10.1103/PhysRevB.97.165416](https://link.aps.org/doi/10.1103/PhysRevB.97.165416)
 
-* <i class="ai ai-open-access"></i> M. R. Otto, __L. P. René de Cotret__, M. J. Stern, and B. J. Siwick, _Solving the Jitter Problem in Microwave Compressed Ultrafast Electron Diffraction Instruments: Robust Sub-50 fs Cavity-Laser Phase Stabilization_, Struct. Dyn. __5__ (2017) [DOI: 10.1063/1.4989960](http://dx.doi.org/10.1063/1.4989960)
+* <i class="ai ai-open-access"></i> M. R. Otto, __L. P. René de Cotret__, M. J. Stern, and B. J. Siwick, _Solving the jitter problem in microwave compressed ultrafast electron diffraction instruments: robust sub-50 fs cavity-laser phase stabilization_, Struct. Dyn. __5__ (2017) [DOI: 10.1063/1.4989960](http://dx.doi.org/10.1063/1.4989960)
 
 * <i class="ai ai-open-access"></i> __L. P. René de Cotret__ and B. J. Siwick, _A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform_, Struct. Dyn. __4__ (2017) [DOI:10.1063/1.4972518](http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518)
 
@@ -27,9 +27,9 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * PhD dissertation coming in April 2021. Tentative title: _Ultrafast energy flow across the Brillouin zone in two-dimensional materials_.
 
-* Master of Science thesis: _New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_ [(PDF)](/files/msc_thesis.pdf).
+* Master of Science thesis: _New data analysis and visualization methods for ultrafast electron diffraction_ [(PDF)](/files/msc_thesis.pdf).
 
-* Undergraduate thesis: _High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_ [(PDF)](/files/ugrad_project.pdf). It had an [associated poster](/files/ugrad_project_poster.pdf).
+* Undergraduate thesis: _High-speed information processing for laserlocking system applied to optomechanical cavities_ [(PDF)](/files/ugrad_project.pdf). It had an [associated poster](/files/ugrad_project_poster.pdf).
 
 ## Conference proceedings
 
@@ -41,9 +41,9 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * February 2020 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Time-and momentum-resolved phonon population dynamicswith ultrafast electron diffuse scattering_ [(PDF)](/files/grc2020poster.pdf)
 
-* February 2017 | __5<sup>th</sup> Banff Meeting on Ultrafast Structural Dynamics__ _Photoinduced phase transitions in VO2: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_ [(PDF)](/files/banff2017poster.pdf)
+* February 2017 | __5<sup>th</sup> Banff Meeting on Ultrafast Structural Dynamics__ _Photoinduced phase transitions in VO$_2$: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_ [(PDF)](/files/banff2017poster.pdf)
 
-* February 2016 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Photoinduced phase transitions in VO2: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_ [(PDF)](/files/grc2016poster.pdf)
+* February 2016 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Photoinduced phase transitions in VO$_2$: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_ [(PDF)](/files/grc2016poster.pdf)
 
 
 ## Talks
@@ -54,4 +54,4 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * 2018-07-23 | __Fritz-Haber Institute__ Invited seminar titled _Mapping momentum-dependent electron-phonon coupling and phonon dynamics in two-dimensional materials using  ultrafast electron diffuse scattering_. [(Link to abstract)](http://www.fhi-berlin.mpg.de/pc/SEMINAR-ABS/PCseminarabstr_180723.pdf)
 
-* 2016-11-09 | __Stellenbosch University__ Invited workshop titled _Visualizing Structural Dynamics Using Ultrafast Powder Electron Diffraction_
+* 2016-11-09 | __Stellenbosch University__ Invited workshop titled _Visualizing structural dynamics using ultrafast powder electron diffraction_
