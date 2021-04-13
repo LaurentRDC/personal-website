@@ -12,14 +12,18 @@ import Hakyll.Images                    ( loadImage
 -- https://github.com/jaspervdj/hakyll/issues/109
 import qualified GHC.IO.Encoding                 as E
 
+import qualified Text.DocTemplates               as D
 import           Text.Pandoc.Extensions
 import           Text.Pandoc.Filter.Plot         (plotTransform)
 import qualified Text.Pandoc.Filter.Plot         as P
-import           Text.Pandoc.Highlighting
+import           Text.Pandoc.Highlighting        (Style, styleToCss, kate)
 import           Text.Pandoc.Options
 import qualified Text.Pandoc.Templates           as Template
 
+import           Text.Printf                     (printf)
+
 import qualified Data.ByteString                 as B
+import qualified Data.Map.Strict                 as M
 
 import qualified Data.Text                       as T
 import qualified Data.Text.Encoding              as T
@@ -37,6 +41,7 @@ import           Data.Time.Calendar              (showGregorian)
 import           Data.Time.Clock                 (getCurrentTime, utctDay)
 
 import           Feed                            (feedConfiguration)
+import           ReadingTimeFilter               (readingTime)
 
 -- | syntax highlighting style to use throughout
 syntaxHighlightingStyle :: Style
@@ -146,18 +151,19 @@ main = do
         --------------------------------------------------------------------------------
         -- Compile blog posts
         -- Explicitly do not match the drafts
-        --
-        -- TODO: include Pandoc metainformation to implement reading-time filter
-        --       See for example here:
-        --            https://github.com/jaspervdj/hakyll/issues/643
         match ("posts/*" .&&. complement "posts/drafts/*") $ do
             route $ setExtension "html"
-            compile $ pandocCompiler_ plotConfig
-                    -- Post template is obsolete
-                    -- It is now built in the default template
-                    -- >>= loadAndApplyTemplate "templates/post.html"    postCtx
+            compile $ do
+                -- This weird compilation action is structured so that we can extract the reading time
+                -- from the document, and use it in a context
+                -- TODO: include Pandoc metainformation to implement reading-time filter
+                --       See for example here:
+                --            https://github.com/jaspervdj/hakyll/issues/643
+                (rt, a) <- pandocCompilerWithRT plotConfig
+                let postCtxWithRT = postCtx <> constField "reading-time" rt
+                return a
                     >>= saveSnapshot "content"  -- Saved content for RSS feed
-                    >>= loadAndApplyTemplate "templates/default.html" postCtx
+                    >>= loadAndApplyTemplate "templates/default.html" postCtxWithRT
                     >>= relativizeUrls
 
         --------------------------------------------------------------------------------
@@ -234,16 +240,22 @@ postCtx = mconcat [ defaultContext
                   , dateField "date" "%Y-%m-%d"
                   ] 
 
--- | Allow math display, code highlighting, table-of-content, and Pandoc filters
--- Note that the Bulma pandoc filter is always applied last
-pandocCompiler_ :: P.Configuration        -- ^ Pandoc-plot configuration
-                -> Compiler (Item String)
-pandocCompiler_ config = do
+-- Pandoc compiler which also bundles reading time
+-- This is necessary because it is not possible for Hakyll to be
+-- aware of Pandoc document metadata at this time.
+pandocCompilerWithRT :: P.Configuration -> Compiler (String, Item String)
+pandocCompilerWithRT config = do
+    let readerOptions = defaultHakyllReaderOptions
+
+    doc <- traverse (unsafeCompiler . transforms) =<< readPandocWith readerOptions =<< getResourceBody 
+    let rt = readingTime $ itemBody doc
+
     ident <- getUnderlying
     toc <- getMetadataField ident "withtoc"
     tocDepth <- getMetadataField ident "tocdepth"
     template <- unsafeCompiler $ (either error id) <$> 
                     Template.compileTemplate mempty (T.pack . renderHtml $ tocTemplate)
+
     let extensions = defaultPandocExtensions
         writerOptions = case toc of
             Just _ -> defaultHakyllWriterOptions
@@ -260,12 +272,16 @@ pandocCompiler_ config = do
                 , writerHighlightStyle = Just syntaxHighlightingStyle
                 }
 
-    pandocCompilerWithTransformM
-        defaultHakyllReaderOptions
-        writerOptions
-        (unsafeCompiler . transforms)
+    return (printf "%.0f" rt, writePandocWith writerOptions doc)
     where
         transforms doc = bulmaTransform <$> plotTransform config doc
+
+-- | Allow math display, code highlighting, table-of-content, and Pandoc filters
+pandocCompiler_ :: P.Configuration        -- ^ Pandoc-plot configuration
+                -> Compiler (Item String)
+pandocCompiler_ conf = do
+    (_, a) <- pandocCompilerWithRT conf
+    return a
 
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions

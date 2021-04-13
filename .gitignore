@@ -35,9 +35,9 @@ WinSCP.ini
 
 # Files automatically generated
 templates/default.html
+css/syntax.css
 generated/*
 templates/default.html
 
 # Rust
 tools/target/
-

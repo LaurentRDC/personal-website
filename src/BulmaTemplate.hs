@@ -102,7 +102,8 @@ navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
         H.div ! class_ "container has-text-centered" $ do
             H.h1 ! class_ "title has-text-light" $
                 "$title$"
-            H.h3 $ "$if(date)$Posted on $date$.$endif$ $if(updated)$Last updated on $updated$.$endif$"
+            H.h3 $ "$if(date)$Posted on $date$$endif$$if(updated)$ | Last updated on $updated$$endif$"
+            H.h3 $ "$if(reading-time)$Estimated reading time of $reading-time$ min.$endif$"
     --------------------------------------------------------------------------
     H.div ! class_ "hero-foot" $
         H.div ! class_ "navbar is-transparent" $

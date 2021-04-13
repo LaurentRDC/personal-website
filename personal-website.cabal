@@ -1,13 +1,13 @@
 name:                personal-website
-version:             1.2.0.1
+version:             1.3.0
 -- synopsis:
 -- description:
-homepage:            https://github.com/LaurentRDC/personal-website#readme
+homepage:            https://laurentrdc.xyz
 license:             BSD3
 license-file:        LICENSE
 author:              Laurent P. René de Cotret
 maintainer:          laurent.decotret@outlook.com
-copyright:           2018-2020 Laurent P. René de Cotret
+copyright:           2018-2021 Laurent P. René de Cotret
 category:            Web
 build-type:          Simple
 extra-source-files:  README.md
@@ -20,18 +20,19 @@ executable personal-website
   ghc-options:         -threaded -with-rtsopts=-N
   build-depends:       base >= 4.8 && < 5,
                        containers,
+                       doctemplates,
                        filepath,
                        hakyll,
                        hakyll-images >= 1.0.1,
                        pandoc > 2.8,
                        pandoc-types,
-                       pandoc-plot >= 0.6.0.0,
+                       pandoc-plot >= 1.0.0.0,
                        skylighting,
                        blaze-html,
                        blaze-markup,
                        bytestring,
                        time,
                        text
--- For stylistic purposes
-  other-modules:       BulmaTemplate, BulmaFilter, Feed
+
+  other-modules:       BulmaTemplate, BulmaFilter, Feed, ReadingTimeFilter
 
