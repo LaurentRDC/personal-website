@@ -1,5 +1,6 @@
 dpi: 100
 source: true
+strict: true
 directory: generated/
 
 matplotlib:
