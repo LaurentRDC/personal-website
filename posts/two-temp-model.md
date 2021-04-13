@@ -1,6 +1,7 @@
 ---
 title: "When one temperature is not enough: the two-temperature model"
 date: 2019-04-03
+updated: 2021-04-13
 summary: What if we could prepare a system with two distinct temperatures? What would it look like?
 ---
 
@@ -30,8 +31,8 @@ ax_no_temp.yaxis.set_visible(False)
 for ax in (ax_temp, ax_no_temp):
     ax.set_xlabel('Particle kinetic energy')
     ax.set_ylabel('Number of particles')
-    ax.set_yticks([], [])
-    ax.set_xticks([], [])
+    ax.set_yticks([])
+    ax.set_xticks([])
 ```
 
 So, a system with a well-defined temperature exhibits a normal distribution of particle energies. It turns out that it is possible to prepare systems into a state where there are *two clear average energies* , if only for a very short moment. 
@@ -65,8 +66,8 @@ ax.text(x=1.02*CENTER2, y=textheight, s="$T_l$")
 
 ax.set_xlabel('Particle kinetic energy')
 ax.set_ylabel('Number of particles')
-ax.set_yticks([], [])
-ax.set_xticks([], [])
+ax.set_yticks([])
+ax.set_xticks([])
 plt.legend()
 ```
 
