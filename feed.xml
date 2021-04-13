@@ -284,56 +284,16 @@
 <img src="/images/Translational_motion.gif" class="image" alt="Translational motion of particles in a box. Some particles are colored red for better tracking. Image credit to A. Greg." /><figcaption aria-hidden="true">Translational motion of particles in a box. Some particles are colored red for better tracking. <a href="https://en.wikipedia.org/wiki/Thermodynamic_temperature#/media/File:Translational_motion.gif">Image credit to A. Greg.</a></figcaption>
 </figure>
 <p>Note that the above system has a temperature because there exists a clear <strong>average</strong> motion, even though not all particles are moving at the same velocity. This means, a system is at some temperature <span class="math inline">\(T\)</span> as long as the distribution of kinetic energies (often related to velocities) ressembles a <strong>normal distribution</strong>:</p>
-<pre class="matplotlib" data-caption="Examples of distribution of particle kinetic energies. **Left**: distribution of particle energies with a well-defined temperature. **Right**: distribution of particle energies does not match an expected thermal equilibrium."><code>
-CENTER = 3.0
-
-thermal = np.random.normal(loc=CENTER, scale=0.7, size=2500)
-nonthermal = np.random.lognormal(mean=CENTER, sigma=0.7, size=2500)
-
-fig, (ax_temp, ax_no_temp) = plt.subplots(1,2, figsize=(8,3))
-
-ax_temp.axvline(x=CENTER, color=&#39;k&#39;)
-thermal_hist, *_ = ax_temp.hist(thermal, bins=&#39;auto&#39;)
-ax_temp.text(x=0.49, y=0.25, s=&quot;$T$&quot;, transform = ax_temp.transAxes)
-
-nonthermal_hist, *_ = ax_no_temp.hist(nonthermal, bins=&#39;auto&#39;)
-ax_no_temp.text(x=0.45, y=0.5, s=&quot;$T$?&quot;, transform = ax_no_temp.transAxes)
-ax_no_temp.yaxis.set_visible(False)
-
-for ax in (ax_temp, ax_no_temp):
-    ax.set_xlabel(&#39;Particle kinetic energy&#39;)
-    ax.set_ylabel(&#39;Number of particles&#39;)
-    ax.set_yticks([], [])
-    ax.set_xticks([], [])</code></pre>
+<figure>
+<img src="generated/15352328306925730717.png" class="image" alt="Examples of distribution of particle kinetic energies. Left: distribution of particle energies with a well-defined temperature. Right: distribution of particle energies does not match an expected thermal equilibrium. (Source code)" /><figcaption aria-hidden="true">Examples of distribution of particle kinetic energies. <strong>Left</strong>: distribution of particle energies with a well-defined temperature. <strong>Right</strong>: distribution of particle energies does not match an expected thermal equilibrium. (<a href="generated/15352328306925730717.src.html">Source code</a>)</figcaption>
+</figure>
 <p>So, a system with a well-defined temperature exhibits a normal distribution of particle energies. It turns out that it is possible to prepare systems into a state where there are <em>two clear average energies</em> , if only for a very short moment.</p>
 <p>Real materials are composed of two types of particles, nuclei and electrons<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. These particles have widly different masses, so electromagnetic fields — for example, an intense pulse of light — will not affect them at the same time; since nuclei are at least ~1000x more massive than electrons, we should expect the electrons to react about ~1000x faster.</p>
 <p>After decades of development culminating in the 2018 Nobel Prize in Physics, the production of ultrafast laser pulses (less than 30 femtoseconds<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>) is now routine. These ultrafast laser pulses can be used to prepare systems in a strange configuration: one with seemingly <em>two temperatures</em>, albeit only for a short time. Modeling of this situation in crystalline material was done decades ago, and the model is known as the <strong>two-temperature model</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
 <p>Roughly 100fs after dumping a lot of energy into a material, the nuclei might not have reacted yet, and we might have the following energetic landscape:</p>
-<pre class="matplotlib" data-caption="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, $T_l$, and one for the electronic system, $T_e$."><code>
-CENTER1 = 4.0
-CENTER2 = CENTER1 * 1/4
-
-electrons = np.random.normal(loc=CENTER1, scale=0.2, size=3000)
-lattice = np.random.normal(loc=CENTER2, scale=0.5, size=2500)
-
-fig, ax = plt.subplots(1,1, figsize=(8,3))
-
-ax.axvline(x=CENTER1, color=&#39;k&#39;)
-ax.axvline(x=CENTER2, color=&#39;k&#39;)
-
-electrons_hist, *_ = ax.hist(electrons, bins=50, color=&#39;b&#39;, label=&#39;electrons&#39;)
-lattice_hist, *_ = ax.hist(lattice, bins=50, color=&#39;r&#39;, label=&#39;nuclei&#39;)
-
-textheight = min([electrons_hist.max(), lattice_hist.max()])/4
-
-ax.text(x=1.02*CENTER1, y=textheight, s=&quot;$T_e$&quot;)
-ax.text(x=1.02*CENTER2, y=textheight, s=&quot;$T_l$&quot;)
-
-ax.set_xlabel(&#39;Particle kinetic energy&#39;)
-ax.set_ylabel(&#39;Number of particles&#39;)
-ax.set_yticks([], [])
-ax.set_xticks([], [])
-plt.legend()</code></pre>
+<figure>
+<img src="generated/17355183971046952467.png" class="image" alt="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, T_l, and one for the electronic system, T_e. (Source code)" /><figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/17355183971046952467.src.html">Source code</a>)</figcaption>
+</figure>
 <p>where the nucliei will still be at equilibrium temperature, and the electrons might be at a temperature of 20000<span class="math inline">\(^{\circ}\)</span>C. Therefore, <em>we have a system with two temperatures</em> for a few picoseconds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
 <section class="footnotes" role="doc-endnotes">
 <hr />
