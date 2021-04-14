@@ -1,4 +1,4 @@
-resolver: lts-17.5 # GHC 8.10.3
+resolver: lts-17.9 # GHC 8.10.3
 
 compiler: ghc-8.10.4
 
@@ -9,7 +9,9 @@ packages:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 extra-deps: 
+- pandoc-2.13
+- hslua-module-path-0.1.0.1
 - 'hakyll-images-1.0.1'
 - 'pandoc-plot-1.1.1'
 - git: https://github.com/jaspervdj/hakyll.git
-  commit: b54212c7e2b8a84f95815e93a13223e1525c4f85
+  commit: 122dd424891f6c9be15ff5225886484386dd0956

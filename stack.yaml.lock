@@ -5,6 +5,20 @@
 
 packages:
 - completed:
+    hackage: pandoc-2.13@sha256:0a8ecc670a3f808c87c5e88b06daf54cd2edfd9d15e6cea6579d7a1d3a4ef38f,37816
+    pantry-tree:
+      size: 120568
+      sha256: 9296ae69acae072e85b76b90a5a7def857b2615c85e67dc1cf67176882f9dfef
+  original:
+    hackage: pandoc-2.13
+- completed:
+    hackage: hslua-module-path-0.1.0.1@sha256:1fe319f18315618491260c912e85b6f73e406499c8fe2fa505e59036a4ff78fd,2502
+    pantry-tree:
+      size: 418
+      sha256: cc48ce7a84cce91c7655b4127f6fd19dd296a089e65eb58ec595bc3413a07c92
+  original:
+    hackage: hslua-module-path-0.1.0.1
+- completed:
     hackage: hakyll-images-1.0.1@sha256:a88a759731df738f88a0727f0c5a2e737bf662a7aca642155e3d531db124c1e5,2207
     pantry-tree:
       size: 1109
@@ -20,18 +34,18 @@ packages:
     hackage: pandoc-plot-1.1.1
 - completed:
     name: hakyll
-    version: 4.13.4.1
+    version: 4.14.0.0
     git: https://github.com/jaspervdj/hakyll.git
     pantry-tree:
-      size: 12191
-      sha256: fa526cd97f8882cef4b9487e03adb1f60e3172bd5eaf5ce7ff628f994d4ec408
-    commit: b54212c7e2b8a84f95815e93a13223e1525c4f85
+      size: 12190
+      sha256: e7b8133ffe5b393150f0386333801e07d734a113279541692bbd893e5c22166a
+    commit: af9e29b5456c105dc948bc46c93e989a650b5ed1
   original:
     git: https://github.com/jaspervdj/hakyll.git
-    commit: b54212c7e2b8a84f95815e93a13223e1525c4f85
+    commit: af9e29b5456c105dc948bc46c93e989a650b5ed1
 snapshots:
 - completed:
-    size: 565266
-    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/5.yaml
-    sha256: 78e8ebabf11406261abbc95b44f240acf71802630b368888f6d758de7fc3a2f7
-  original: lts-17.5
+    size: 567037
+    url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/17/9.yaml
+    sha256: d7d8d5106e53d1669964bd8bd2b0f88a5ad192d772f5376384b76738fd992311
+  original: lts-17.9

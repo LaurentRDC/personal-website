@@ -3,10 +3,9 @@ module ReadingTimeFilter (
 ) where
 
 import Data.Monoid              (Sum(..))
-import Data.Map                 (insert)
 import qualified Data.Text      as T
 import Text.Pandoc
-import Text.Pandoc.Definition   (Pandoc(..), Inline(..), Block(..), Meta(..), MetaValue(..))
+import Text.Pandoc.Definition   (Pandoc, Inline(..))
 import Text.Pandoc.Walk         (query)
 
 -- | Page reading time in minutes
