@@ -19,19 +19,21 @@ wordCount :: Pandoc -> WordCount
 wordCount = query _wordCount
     where
         _wordCount :: Inline -> WordCount
-        _wordCount (Str s)              = Sum $ length $ T.words s
-        _wordCount (Emph xs)            = mconcat $ _wordCount <$> xs
-        _wordCount (Strong xs)          = mconcat $ _wordCount <$> xs
-        _wordCount (Strikeout xs)       = mconcat $ _wordCount <$> xs
-        _wordCount (Superscript xs)     = mconcat $ _wordCount <$> xs
-        _wordCount (Subscript xs)       = mconcat $ _wordCount <$> xs
-        _wordCount (SmallCaps xs)       = mconcat $ _wordCount <$> xs
-        _wordCount (Quoted qtype xs)    = mconcat $ _wordCount <$> xs
-        _wordCount (Cite citations xs)  = mconcat $ _wordCount <$> xs
-        _wordCount (Span attrs xs)      = mconcat $ _wordCount <$> xs
-        _wordCount (Code attrs s)       = Sum $ length $ T.words s
-        _wordCount (RawInline f s)      = Sum $ length $ T.words s
-        _wordCount _                    = 0
+        _wordCount (Str s)          = Sum $ length $ T.words s
+        _wordCount (Emph xs)        = mconcat $ _wordCount <$> xs
+        _wordCount (Strong xs)      = mconcat $ _wordCount <$> xs
+        _wordCount (Strikeout xs)   = mconcat $ _wordCount <$> xs
+        _wordCount (Superscript xs) = mconcat $ _wordCount <$> xs
+        _wordCount (Subscript xs)   = mconcat $ _wordCount <$> xs
+        _wordCount (SmallCaps xs)   = mconcat $ _wordCount <$> xs
+        _wordCount (Quoted _ xs)    = mconcat $ _wordCount <$> xs
+        _wordCount (Cite _ xs)      = mconcat $ _wordCount <$> xs
+        _wordCount (Span _ xs)      = mconcat $ _wordCount <$> xs
+        _wordCount (Code _ s)       = Sum $ length $ T.words s
+        _wordCount (RawInline _ s)  = Sum $ length $ T.words s
+        _wordCount (Math _ s)       = Sum $ length $ T.words s
+        _wordCount Image {}         = Sum 100 -- Assuming it takes ~40sec to look at an image
+        _wordCount _                = 0
 
 readingTime :: Pandoc -> ReadingTime
 readingTime = (/ wordsPerMinute) . realToFrac . getSum . wordCount
