@@ -37,12 +37,12 @@ packages:
     version: 4.14.0.0
     git: https://github.com/jaspervdj/hakyll.git
     pantry-tree:
-      size: 12190
-      sha256: e7b8133ffe5b393150f0386333801e07d734a113279541692bbd893e5c22166a
-    commit: af9e29b5456c105dc948bc46c93e989a650b5ed1
+      size: 12189
+      sha256: 61def5f4a7eedc4c0e249d4b68228b1deb690b6aecb533c03783eef2787bce51
+    commit: 122dd424891f6c9be15ff5225886484386dd0956
   original:
     git: https://github.com/jaspervdj/hakyll.git
-    commit: af9e29b5456c105dc948bc46c93e989a650b5ed1
+    commit: 122dd424891f6c9be15ff5225886484386dd0956
 snapshots:
 - completed:
     size: 567037
