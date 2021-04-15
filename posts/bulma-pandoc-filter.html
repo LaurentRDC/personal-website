@@ -134,14 +134,14 @@
 <div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
 <p>However, in Bulma, <a href="https://bulma.io/documentation/elements/title/">headings must be of a specific class</a>, like so <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 title --&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span><span class="ot"> class=</span><span class="st">&quot;title is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-2 title --&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h2</span><span class="ot"> class=</span><span class="st">&quot;title is-2&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h2&gt;</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h2</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-2&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h2&gt;</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 subtitle --&gt;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span><span class="ot"> class=</span><span class="st">&quot;subtitle is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
-<p>Problem is, a lot of headings included on my website are generated from Markdown to HTML using <a href="http://pandoc.org/">Pandoc</a>. Predictably, Markdown headings like <code class="sourceCode markdown"><span class="fu"># Title</span></code> are converted to “raw” HTML headings like <code class="sourceCode html"><span class="kw">&lt;h1&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></code>, and not the <code class="sourceCode html"><span class="kw">&lt;h1</span><span class="ot"> class=</span><span class="st">&quot;title is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></code> that I need to use.</p>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;subtitle is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
+<p>Problem is, a lot of headings included on my website are generated from Markdown to HTML using <a href="http://pandoc.org/">Pandoc</a>. Predictably, Markdown headings like <code class="sourceCode markdown"><span class="fu"># Title</span></code> are converted to “raw” HTML headings like <code class="sourceCode html"><span class="kw">&lt;h1&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></code>, and not the <code class="sourceCode html"><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></code> that I need to use.</p>
 <p><strong>This is a textbook example of a problem that can be solved with a Pandoc filter.</strong></p>
 <p>During the conversion from Markdown to HTML, Pandoc constructs an <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax tree</a> representing the document. A Pandoc filter is used to include transformations to this abstract syntax tree. This is precisely what we want : we want to transform headings into a slightly different type of headings that will play nicely with Bulma.</p>
 <p>There are some examples in the <a href="http://pandoc.org/filters.html">Pandoc documentation on filters</a>, but I would like to document the process I used to create this filter.</p>
@@ -163,7 +163,7 @@
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Attr</span> <span class="ot">=</span> ( <span class="dt">String</span>                <span class="co">-- Identifier. Not important</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>            , [<span class="dt">String</span>]              <span class="co">-- ^ class      (e.g. [&quot;a&quot;, &quot;b&quot;] -&gt; class=&quot;a b&quot; in HTML)</span></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            , [(<span class="dt">String</span>, <span class="dt">String</span>)])   <span class="co">-- Not important</span></span></code></pre></div>
-<p>The “classes” part of the attribute is precisely what we’d like to modify. Recall that to get Bulma to work, we want to have headings looking like <code class="sourceCode html"><span class="kw">&lt;h3</span><span class="ot"> class=</span><span class="st">&quot;title is-3&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h3&gt;</span></code>.</p>
+<p>The “classes” part of the attribute is precisely what we’d like to modify. Recall that to get Bulma to work, we want to have headings looking like <code class="sourceCode html"><span class="kw">&lt;h3</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-3&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h3&gt;</span></code>.</p>
 <h3 class="title is-3" id="modifying-one-ast-node">Modifying one AST node</h3>
 <p>Let’s write a function that modifies <code class="sourceCode haskell"><span class="dt">Block</span></code>s (i.e. one tree node) like we want <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- This is from the pandoc-types package</span></span>
@@ -297,7 +297,7 @@
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2021-04-14. 
+                    Page generated on 2021-04-15. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">
