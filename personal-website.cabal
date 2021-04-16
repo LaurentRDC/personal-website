@@ -33,5 +33,5 @@ executable personal-website
                        time,
                        text
 
-  other-modules:       BulmaTemplate, BulmaFilter, Feed, ReadingTimeFilter
+  other-modules:       Template, BulmaFilter, Feed, ReadingTimeFilter
 

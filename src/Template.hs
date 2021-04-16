@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module BulmaTemplate ( mkDefaultTemplate
+module Template ( mkDefaultTemplate
                      , tocTemplate
                      ) where
 
@@ -64,6 +64,10 @@ defaultHead :: H.Html
 defaultHead = H.head $ do
     H.meta ! charset "utf-8"
     H.meta ! name "viewport" ! content "width=device-width, initial-scale=1"
+    -- Opting out of Google FLoC
+    -- https://paramdeo.com/blog/opting-your-website-out-of-googles-floc-network
+    H.meta ! httpEquiv "Permissions-Policy" ! content "interest-cohort=()"
+
     H.title "$title$ - Laurent P. René de Cotret"
     -- Tab icon
     -- Note : won't show up for Edge while on localhost

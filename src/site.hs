@@ -34,7 +34,7 @@ import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html.Renderer.Pretty as Pretty
 
 import           BulmaFilter                     (bulmaTransform)
-import           BulmaTemplate                   (mkDefaultTemplate,
+import           Template                        (mkDefaultTemplate,
                                                   tocTemplate)
 
 import           Data.Time.Calendar              (showGregorian)
