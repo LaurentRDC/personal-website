@@ -1,12 +1,16 @@
+{-# LANGUAGE OverloadedStrings #-}
 module ReadingTimeFilter (
-      readingTime
+      readingTimeFilter
 ) where
 
-import Data.Monoid              (Sum(..))
-import qualified Data.Text      as T
-import Text.Pandoc
-import Text.Pandoc.Definition   (Pandoc, Inline(..))
-import Text.Pandoc.Walk         (query)
+import           Data.Map                 (insert)
+import           Data.Monoid              (Sum(..))
+import qualified Data.Text                as T
+import           Text.Pandoc
+import           Text.Pandoc.Definition   (Pandoc, Inline(..), Meta(..))
+import           Text.Pandoc.Walk         (query)
+
+import           Text.Printf              (printf)
 
 -- | Page reading time in minutes
 type ReadingTime = Double
@@ -38,3 +42,11 @@ readingTime :: Pandoc -> ReadingTime
 readingTime = (/ wordsPerMinute) . realToFrac . getSum . wordCount
     where
         wordsPerMinute = 150
+
+-- | Reads a document and inserts the estimated reading time in minutes
+-- in the metadata, under the key "reading-time"
+readingTimeFilter :: Pandoc -> Pandoc
+readingTimeFilter doc@(Pandoc meta blocks) = Pandoc newMeta blocks
+    where
+        rt = T.pack $ printf "%.0f" $ readingTime doc
+        newMeta = Meta $ insert "reading-time" (MetaString rt) (unMeta meta)

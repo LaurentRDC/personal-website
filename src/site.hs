@@ -13,6 +13,7 @@ import Hakyll.Images                    ( loadImage
 import qualified GHC.IO.Encoding                 as E
 
 import qualified Text.DocTemplates               as D
+import           Text.Pandoc.Definition
 import           Text.Pandoc.Extensions
 import           Text.Pandoc.Filter.Plot         (plotTransform)
 import qualified Text.Pandoc.Filter.Plot         as P
@@ -41,7 +42,7 @@ import           Data.Time.Calendar              (showGregorian)
 import           Data.Time.Clock                 (getCurrentTime, utctDay)
 
 import           Feed                            (feedConfiguration)
-import           ReadingTimeFilter               (readingTime)
+import           ReadingTimeFilter               (readingTimeFilter)
 
 -- | syntax highlighting style to use throughout
 syntaxHighlightingStyle :: Style
@@ -159,11 +160,10 @@ main = do
                 -- TODO: include Pandoc metainformation to implement reading-time filter
                 --       See for example here:
                 --            https://github.com/jaspervdj/hakyll/issues/643
-                (rt, a) <- pandocCompilerWithRT plotConfig
-                let postCtxWithRT = postCtx <> constField "reading-time" rt
-                return a
+                (metaCtx, doc) <- pandocCompilerWithMeta plotConfig
+                return doc
                     >>= saveSnapshot "content"  -- Saved content for RSS feed
-                    >>= loadAndApplyTemplate "templates/default.html" postCtxWithRT
+                    >>= loadAndApplyTemplate "templates/default.html" (postCtx <> metaCtx)
                     >>= relativizeUrls
 
         --------------------------------------------------------------------------------
@@ -240,15 +240,17 @@ postCtx = mconcat [ defaultContext
                   , dateField "date" "%Y-%m-%d"
                   ] 
 
--- Pandoc compiler which also bundles reading time
+-- Pandoc compiler which also provides the Pandoc metadata as template context
 -- This is necessary because it is not possible for Hakyll to be
 -- aware of Pandoc document metadata at this time.
-pandocCompilerWithRT :: P.Configuration -> Compiler (String, Item String)
-pandocCompilerWithRT config = do
+pandocCompilerWithMeta :: P.Configuration -> Compiler (Context String, Item String)
+pandocCompilerWithMeta config = do
     let readerOptions = defaultHakyllReaderOptions
 
     doc <- traverse (unsafeCompiler . transforms) =<< readPandocWith readerOptions =<< getResourceBody 
-    let rt = readingTime $ itemBody doc
+
+    let Pandoc meta _ = itemBody doc
+        metaCtx = M.foldMapWithKey extractMeta (unMeta meta)
 
     ident <- getUnderlying
     toc <- getMetadataField ident "withtoc"
@@ -272,16 +274,22 @@ pandocCompilerWithRT config = do
                 , writerHighlightStyle = Just syntaxHighlightingStyle
                 }
 
-    return (printf "%.0f" rt, writePandocWith writerOptions doc)
+    return (metaCtx, writePandocWith writerOptions doc)
     where
-        transforms doc = bulmaTransform <$> plotTransform config doc
+        transforms doc = bulmaTransform . readingTimeFilter <$> plotTransform config doc
+
+        extractMeta :: T.Text -> MetaValue -> Context String
+        extractMeta name metavalue =
+            case metavalue of
+                MetaString txt -> mkField $ T.unpack txt
+                _ -> mempty
+            where
+                mkField = field (T.unpack name) . const . return
 
 -- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 pandocCompiler_ :: P.Configuration        -- ^ Pandoc-plot configuration
                 -> Compiler (Item String)
-pandocCompiler_ conf = do
-    (_, a) <- pandocCompilerWithRT conf
-    return a
+pandocCompiler_ = fmap snd . pandocCompilerWithMeta
 
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions

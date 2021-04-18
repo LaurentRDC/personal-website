@@ -8,9 +8,51 @@ import           Control.Monad               (forM_)
 
 import           Data.List                   (intersperse)
 
-import           Text.Blaze.Html5            as H
-import           Text.Blaze.Html5.Attributes as A
+import Text.Blaze.Html5 as H
+    ( Html,
+      toHtml,
+      a,
+      body,
+      div,
+      docTypeHtml,
+      footer,
+      h1,
+      h2,
+      h3,
+      head,
+      i,
+      img,
+      link,
+      meta,
+      nav,
+      p,
+      script,
+      section,
+      span,
+      strong,
+      title,
+      ToMarkup(toMarkup),
+      ToValue(toValue),
+      (!),
+      AttributeValue )
+import Text.Blaze.Html5.Attributes as A
+    ( alt,
+      async,
+      charset,
+      class_,
+      content,
+      href,
+      httpEquiv,
+      id,
+      name,
+      onclick,
+      rel,
+      src,
+      style,
+      target,
+      type_ )
 
+fontAwesomeURL, academiconsURL, mathjaxURL, fontURL :: AttributeValue
 fontAwesomeURL = "https://use.fontawesome.com/releases/v5.15.1/css/all.css"
 academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
 mathjaxURL     = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
