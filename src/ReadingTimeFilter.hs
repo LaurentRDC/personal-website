@@ -35,13 +35,16 @@ wordCount = query _wordCount
         _wordCount (Code _ s)       = Sum $ length $ T.words s
         _wordCount (RawInline _ s)  = Sum $ length $ T.words s
         _wordCount (Math _ s)       = Sum $ length $ T.words s
-        _wordCount Image {}         = Sum 100 -- Assuming it takes ~40sec to look at an image
+        -- Word equivalent of the image itself included
+        _wordCount (Image _ s _)    = Sum 100 <> mconcat (_wordCount <$> s)
         _wordCount _                = 0
 
 readingTime :: Pandoc -> ReadingTime
 readingTime = (/ wordsPerMinute) . realToFrac . getSum . wordCount
     where
-        wordsPerMinute = 150
+        -- M. Brysbaert, How many words do we read per minute? A review and meta-analysis of reading rate,
+        -- Journal of Memory and Language (2009) vol 109. DOI: 10.1016/j.jml.2019.104047
+        wordsPerMinute = 238
 
 -- | Reads a document and inserts the estimated reading time in minutes
 -- in the metadata, under the key "reading-time"
