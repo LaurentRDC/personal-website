@@ -13,22 +13,4 @@ repository: https://github.com/LaurentRDC/pandoc-plot
 
 `pandoc-plot` is a Pandoc filter that allows to keep documents and figures always in sync. Write plotting code to make a figure in your Markdown , and `pandoc-plot` will generate the figure for you and embed it in the document. This way, your documents and figures are always up-to-date with each other.
 
-`pandoc-plot` currently supports the following plotting toolkits (**installed separately**):
-
-- `matplotlib`: plots using the [matplotlib](https://matplotlib.org/)
-Python library;
-- `plotly_python` : plots using the
-[plotly](https://plotly.com/python/) Python library;
-- `plotly_r`: plots using the [plotly](https://plotly.com/r/) R
-library
-- `matlabplot`: plots using [MATLAB](https://www.mathworks.com/);
-- `mathplot` : plots using
-[Mathematica](https://www.wolfram.com/mathematica/);
-- `octaveplot`: plots using [GNU
-Octave](https://www.gnu.org/software/octave/);
-- `ggplot2`: plots using [ggplot2](https://ggplot2.tidyverse.org/);
-- `gnuplot`: plots using [gnuplot](http://www.gnuplot.info/);
-- `graphviz`: graphs using [Graphviz](http://graphviz.org/);
-- `bokeh`: plots using the [Bokeh](https://bokeh.org/) visualization library;
-- `plotsjl`: plots using the [Julia `Plots.jl`](https://docs.juliaplots.org/latest/) package;
-- `plantuml`: diagrams using the [PlantUML](https://plantuml.com/) software suite.
+`pandoc-plot` supports many plotting toolkits, including [matplotlib](https://matplotlib.org/), [MATLAB](https://www.mathworks.com/), [GNU Octave](https://www.gnu.org/software/octave/), [ggplot2](https://ggplot2.tidyverse.org/), [Julia's `Plots.jl`](https://docs.juliaplots.org/latest/), and many more! See the [website for examples and documentation](https://laurentrdc.github.io/pandoc-plot/).

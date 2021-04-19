@@ -7,7 +7,7 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Letters and articles
 
-* M. R. Otto, J.-H. Pöhls, __L. P. René de Cotret__, M. J. Stern, M. Sutton, and B. J. Siwick, _Mechanisms of electron-phonon coupling unraveled in momentum and time: The case of soft-phonons in TiSe~2~_, (2021) Accepted. <i class="ai ai-open-access"></i> [Preprint available on arXiv](http://arxiv.org/abs/1912.03559).
+* M. R. Otto, J.-H. Pöhls, __L. P. René de Cotret__, M. J. Stern, M. Sutton, and B. J. Siwick, _Mechanisms of electron-phonon coupling unraveled in momentum and time: The case of soft-phonons in TiSe~2~_, (2021) In press. <i class="ai ai-open-access"></i> [Preprint available on arXiv](http://arxiv.org/abs/1912.03559).
 
 * <i class="ai ai-open-access"></i> D. Matte, N. Chamanara, L. Gingras, __L. P. René de Cotret__, T. L. Britt, B. J. Siwick, and D. G. Cooke, _Extreme lightwave electron field emission from a nanotip_, Phys. Rev. Research **3** (2021) [DOI: 10.1103/PhysRevResearch.3.013137](https://doi.org/10.1103/PhysRevResearch.3.013137).
 
@@ -25,7 +25,7 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Theses and dissertation
 
-* PhD dissertation coming in April 2021. Tentative title: _Ultrafast energy flow across the Brillouin zone in two-dimensional materials_.
+* PhD dissertation coming in Spring 2021. Tentative title: _Ultrafast energy flow across the Brillouin zone in two-dimensional materials_.
 
 * Master of Science thesis: _New data analysis and visualization methods for ultrafast electron diffraction_ [(PDF)](/files/msc_thesis.pdf).
 

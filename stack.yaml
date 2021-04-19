@@ -5,6 +5,11 @@ compiler: ghc-8.10.4
 packages:
 - .
 
+flags:
+  hakyll:
+    previewserver: false
+    watchserver: false
+
 # Dependency packages to be pulled from upstream that are not in the resolver
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)

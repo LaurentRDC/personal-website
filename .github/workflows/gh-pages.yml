@@ -50,7 +50,7 @@ jobs:
 
     - name: Build site compiler
       run: |
-        stack install --fast
+        stack install --fast --flag hakyll:-previewserver --flag hakyll:-watchserver
     
     - name: Install Python dependencies
       run: |
