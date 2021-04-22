@@ -18,5 +18,5 @@ extra-deps:
 - hslua-module-path-0.1.0.1
 - 'hakyll-images-1.0.1'
 - 'pandoc-plot-1.1.1'
-- git: https://github.com/jaspervdj/hakyll.git
-  commit: 122dd424891f6c9be15ff5225886484386dd0956
+- git: https://github.com/LaurentRDC/hakyll.git
+  commit: 17cb404591a637cbb2c323c4b0f7795526bad419

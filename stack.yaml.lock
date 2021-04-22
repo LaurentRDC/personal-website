@@ -35,14 +35,14 @@ packages:
 - completed:
     name: hakyll
     version: 4.14.0.0
-    git: https://github.com/jaspervdj/hakyll.git
+    git: https://github.com/LaurentRDC/hakyll.git
     pantry-tree:
       size: 12189
-      sha256: 61def5f4a7eedc4c0e249d4b68228b1deb690b6aecb533c03783eef2787bce51
-    commit: 122dd424891f6c9be15ff5225886484386dd0956
+      sha256: 3b6ffeefb10df693f19465e42b8442cad71507f714f69e0ab8ad72cde15c4495
+    commit: 0019b207a860d25ddb40c8a4aa71aaf7d5f1d46b
   original:
-    git: https://github.com/jaspervdj/hakyll.git
-    commit: 122dd424891f6c9be15ff5225886484386dd0956
+    git: https://github.com/LaurentRDC/hakyll.git
+    commit: 0019b207a860d25ddb40c8a4aa71aaf7d5f1d46b
 snapshots:
 - completed:
     size: 567037
