@@ -6,6 +6,7 @@ import Data.Maybe                       (fromMaybe)
 import Hakyll
 import Hakyll.Images                    ( loadImage
                                         , compressJpgCompiler
+                                        , ensureFitCompiler
                                         )
 
 -- Hakyll can trip on characters like apostrophes
@@ -106,6 +107,9 @@ main = do
             route   idRoute
             compile $ loadImage
                 >>= compressJpgCompiler 50
+                -- Coffee table pictures are pretty large, so
+                -- I resize them so they fit in 1920x1080px
+                >>= ensureFitCompiler 1920 1080
         
         match generatedContent $ do
             route generatedRoute

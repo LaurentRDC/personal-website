@@ -38,11 +38,11 @@ packages:
     git: https://github.com/LaurentRDC/hakyll.git
     pantry-tree:
       size: 12189
-      sha256: 3b6ffeefb10df693f19465e42b8442cad71507f714f69e0ab8ad72cde15c4495
-    commit: 0019b207a860d25ddb40c8a4aa71aaf7d5f1d46b
+      sha256: d9245cd854d813114aa4008c4858f1d8476d9094cda373a0e655db4075bb0b84
+    commit: 06b1f0aad652d0541062af91b337deb42d220bc6
   original:
     git: https://github.com/LaurentRDC/hakyll.git
-    commit: 0019b207a860d25ddb40c8a4aa71aaf7d5f1d46b
+    commit: 06b1f0aad652d0541062af91b337deb42d220bc6
 snapshots:
 - completed:
     size: 567037

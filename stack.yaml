@@ -19,4 +19,4 @@ extra-deps:
 - 'hakyll-images-1.0.1'
 - 'pandoc-plot-1.1.1'
 - git: https://github.com/LaurentRDC/hakyll.git
-  commit: 17cb404591a637cbb2c323c4b0f7795526bad419
+  commit: 06b1f0aad652d0541062af91b337deb42d220bc6
