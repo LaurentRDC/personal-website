@@ -45,8 +45,9 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * February 2016 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Photoinduced phase transitions in VO$_2$: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_ [(PDF)](/files/grc2016poster.pdf)
 
-
 ## Talks
+
+* 2021-03-01 | __Séminaire pour le regroupement québécois stratégique sur les matériaux de pointe (RQMP)__ | Contributed talk titled _Outrunning temperature to find the origins of high thermoelectric performance in SnSe_ [(Link to video <i class="fab fa-youtube"></i> )](https://youtu.be/eEH7_7DG3ng)
 
 * 2019-02-11 | __6<sup>th</sup> Banff Meeting on Ultrafast Structural Dynamics__ Contributed talk titled _Ultrafast electron diffuse scattering as a window into e-ph and ph-ph dynamics of two-dimensional materials​_ [(Link to program)](https://www.banffdynamics.com/program/).
 
