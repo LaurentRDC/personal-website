@@ -3,13 +3,15 @@ title: About me
 ---
 
 ## Currently
-I am a Ph.D. candidate in the [Physics department](http://www.physics.mcgill.ca) at McGill University. I work in a small team led by Bradley J. Siwick at the forefront of ultrafast condensed matter physics. Our main tool is a RF-compressed ultrafast electron diffractometer. You can learn more about our team on our [group website](http://www.physics.mcgill.ca/siwicklab/index.html).  
+I am a Ph.D. candidate in the [Physics department](http://www.physics.mcgill.ca) at McGill University. I work in a small team led by Bradley J. Siwick at the forefront of ultrafast condensed matter physics. Our main tool is a microwave-compressed ultrafast electron diffractometer. You can learn more about our team on our [group website](http://www.physics.mcgill.ca/siwicklab/index.html).  
 
 ## Education
 
 * 2016-2021 (expected) | __McGill University__ | Ph.D. Physics 
     
     Doctoral advisor: Bradley J. Siwick
+
+    Dissertation (upcoming): Ultrafast energy flow across the Brillouin zone in two-dimensional materials.
     
     <p></p>
 
@@ -29,7 +31,13 @@ I am a Ph.D. candidate in the [Physics department](http://www.physics.mcgill.ca)
 
 ## Employment
 
+* 2020 - 2021 | __Department of Chemistry, University of Toronto__ | Data Engineer
+
+    Design and implementation of an automated data processing pipeline to reconstruct femtosecond‐scale molecular dynamics from ultrafast electron diffraction measurements.
+
+    <p></p>
+
 * 2015 - 2017 | __NASA Jet Propulsion Laboratory__ | Software Architect
 
-    Design and implementation of real-time holographic reconstruction for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
+    Design and implementation of real-time holographic reconstruction pipeline for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
     <p></p>
