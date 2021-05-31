@@ -1,5 +1,4 @@
 resolver: lts-17.9 # GHC 8.10.3
-
 compiler: ghc-8.10.4
 
 packages:
@@ -17,6 +16,6 @@ extra-deps:
 - pandoc-2.13
 - hslua-module-path-0.1.0.1
 - 'hakyll-images-1.0.1'
-- 'pandoc-plot-1.1.1'
+- 'pandoc-plot-1.2.2'
 - git: https://github.com/LaurentRDC/hakyll.git
   commit: 06b1f0aad652d0541062af91b337deb42d220bc6
