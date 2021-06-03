@@ -1,5 +1,6 @@
 resolver: lts-17.9 # GHC 8.10.3
 compiler: ghc-9.0.1
+system-ghc: true
 packages:
 - .
 
