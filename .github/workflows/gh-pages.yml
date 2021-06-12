@@ -25,7 +25,7 @@ jobs:
       name: Cache Haskell build artifacts
       with:
         path: ~/.stack
-        key: ${{ runner.os }}-v2-${{ hashFiles('stack.yaml.lock') }}
+        key: ${{ runner.os }}-${{ hashFiles('stack.yaml.lock') }}
 
     - uses: actions/cache@v2
       name: Cache Python build artifacts
@@ -54,13 +54,13 @@ jobs:
         
     - name: Download Bulma CSS
       env:
-        bulma-version: 0.9.1
+        bulma-version: 0.9.2
       run: |
         wget -c https://github.com/jgthms/bulma/releases/download/${{ env.bulma-version }}/bulma-${{ env.bulma-version }}.zip 
         unzip bulma-${{ env.bulma-version }}.zip -d sass
 
     - name: Compile CSS from SCSS files
-      uses: gha-utilities/sass-build@v0.2.5
+      uses: gha-utilities/sass-build@v0.4.3
       with:
         source: sass/style.scss
         destination: css/style.css
@@ -90,7 +90,7 @@ jobs:
         stack exec -- personal-website check --internal-links
 
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@4.0.0
+      uses: JamesIves/github-pages-deploy-action@4.1.4
       with:
         BRANCH: gh-pages
         FOLDER: _rendered
