@@ -13,10 +13,10 @@ flags:
 # using the same syntax as the packages field.
 # (e.g., acme-missiles-0.3)
 extra-deps: 
-- pandoc-2.14
+- pandoc-2.14.0.1
 - hslua-module-path-0.1.0.1
 - 'hakyll-images-1.0.1'
-- 'pandoc-plot-1.2.2'
+- 'pandoc-plot-1.2.3'
 - git: https://github.com/jaspervdj/hakyll.git
   commit: 591fbe693d87b84c73b1839acdd424cbc12da3b3
 # for GHC 9
