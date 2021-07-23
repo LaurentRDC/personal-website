@@ -31,13 +31,17 @@ I am a Ph.D. candidate in the [Physics department](http://www.physics.mcgill.ca)
 
 ## Employment
 
-* 2020 - 2021 | __Department of Chemistry, University of Toronto__ | Data Engineer
+* August 2021 - | [__SocïVolta__](http://socivolta.com/) | Data Engineer
+
+    <p></p>
+
+* December 2020 - April 2021 | __Department of Chemistry, University of Toronto__ | Data Engineer
 
     Design and implementation of an automated data processing pipeline to reconstruct femtosecond‐scale molecular dynamics from ultrafast electron diffraction measurements.
 
     <p></p>
 
-* 2015 - 2017 | __NASA Jet Propulsion Laboratory__ | Software Architect
+* July 2015 - July 2017 | __NASA Jet Propulsion Laboratory__ | Software Architect
 
     Design and implementation of real-time holographic reconstruction pipeline for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
     <p></p>
