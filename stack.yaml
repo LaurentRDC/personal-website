@@ -8,7 +8,9 @@ flags:
     watchserver: false
 
 extra-deps: 
-- pandoc-2.14.0.3
-- hakyll-images-1.0.1
+- pandoc-2.14.1
+- hakyll-images-1.1.0
 - git: https://github.com/jaspervdj/hakyll.git
   commit: 6885325146aa46adf255c55de0e0345a0f84961e
+
+allow-newer: true
