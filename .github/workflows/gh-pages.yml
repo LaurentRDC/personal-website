@@ -17,15 +17,41 @@ jobs:
     steps:
     - uses: actions/checkout@v2
 
+    - name: Install cabal/ghc
+      uses: haskell/actions/setup@v1
+      id: setup-haskell
+      with:
+        ghc-version: '9.0.1'
+        cabal-version: '3.4.0.0'
+
+    - name: Set PATH for cabal-installed executables
+      run: |
+        echo "$HOME/.cabal/bin" >> $GITHUB_PATH
+
+    - name: Set Cabal options
+      # Overwriting prevent cabal from raising an error when installing
+      # an executable that is already present (because of caching)
+      # Some of these options are superfluous for this workflow,
+      # but I'm keeping them in sync with ci.yml so that caching is
+      # shared
+      run: |
+        cabal update
+        cabal user-config update -f -a "overwrite-policy: always"
+        cabal user-config update -f -a "install-method: copy"
+        cabal user-config update -f -a "split-sections: True"
+        cabal user-config update -f -a "executable-stripping: True"
+
+    - name: Cache cabal work
+      uses: actions/cache@v2
+      with:
+        path: |
+          dist-newstyle
+          ${{ steps.setup-haskell.outputs.cabal-store }}
+        key: ${{ runner.os }}-${{ hashFiles('cabal.project.freeze') }}-cabal-install-v2
+
     - uses: actions/setup-python@v2
       with:
         python-version: '3.9'
-
-    - uses: actions/cache@v2
-      name: Cache Haskell build artifacts
-      with:
-        path: ~/.stack
-        key: ${{ runner.os }}-${{ hashFiles('stack.yaml.lock') }}
 
     - uses: actions/cache@v2
       name: Cache Python build artifacts
@@ -44,7 +70,7 @@ jobs:
 
     - name: Build site compiler
       run: |
-        stack install --fast --flag hakyll:-previewserver --flag hakyll:-watchserver
+        cabal install -j --disable-optimization
     
     - name: Install Python dependencies
       run: |
@@ -74,9 +100,9 @@ jobs:
     # appropriately in the second build.
     - name: Build website
       run: |
-        stack exec -- personal-website clean
-        stack exec -- personal-website build
-        stack exec -- personal-website build
+        personal-website clean
+        personal-website build
+        personal-website build
   
     - name: Minify CSS and HTML
       run: |
@@ -87,7 +113,7 @@ jobs:
         
     - name: Check internal links
       run: |
-        stack exec -- personal-website check --internal-links
+        personal-website check --internal-links
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@4.1.4
