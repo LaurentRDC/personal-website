@@ -4,6 +4,7 @@ strict: true
 directory: generated/
 
 matplotlib:
+  executable: python
   preamble: images/plot_style.py
   transparent: true
   tight_bbox: true
