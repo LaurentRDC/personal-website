@@ -16,7 +16,7 @@ import qualified GHC.IO.Encoding                 as E
 import qualified Text.DocTemplates               as D
 import           Text.Pandoc.Definition
 import           Text.Pandoc.Extensions
-import           Text.Pandoc.Filter.Plot         (plotTransform)
+import           Text.Pandoc.Filter.Plot         (plotFilter)
 import qualified Text.Pandoc.Filter.Plot         as P
 import           Text.Pandoc.Highlighting        (Style, styleToCss, kate)
 import           Text.Pandoc.Options
@@ -280,7 +280,7 @@ pandocCompilerWithMeta config = do
 
     return (metaCtx, writePandocWith writerOptions doc)
     where
-        transforms doc = bulmaTransform . readingTimeFilter <$> plotTransform config doc
+        transforms doc = bulmaTransform . readingTimeFilter <$> plotFilter config (Just "HTML") doc
 
         extractMeta :: T.Text -> MetaValue -> Context String
         extractMeta name metavalue =
