@@ -4,5 +4,5 @@ packages:
 
 source-repository-package
   type: git
-  location: https://github.com/LaurentRDC/hakyll
-  tag: 7a5588a0cb3464a6ad2ad6de48dc6fd21c80f251
+  location: https://github.com/jaspervdj/hakyll
+  tag: 142fc79c82b1bd4601c193f1c66edbb1bdaa3174
