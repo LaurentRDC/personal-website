@@ -47,7 +47,7 @@ jobs:
         path: |
           dist-newstyle
           ${{ steps.setup-haskell.outputs.cabal-store }}
-        key: ${{ runner.os }}-${{ hashFiles('cabal.project.freeze') }}-cabal-install-v2
+        key: ${{ runner.os }}-${{ hashFiles('cabal.*') }}-cabal-install
 
     - uses: actions/setup-python@v2
       with:
