@@ -8,8 +8,211 @@
         <name>Laurent P. René de Cotret</name>
         <email>laurent.decotret@outlook.com</email>
     </author>
-    <updated>2021-06-12T00:00:00Z</updated>
+    <updated>2021-09-26T00:00:00Z</updated>
     <entry>
+    <title>Can you make heterogeneous lists in Haskell? Sure — as long your intent is clear</title>
+    <link href="https://laurentrdc.xyz//posts/existential.html" />
+    <id>https://laurentrdc.xyz//posts/existential.html</id>
+    <published>2021-09-26T00:00:00Z</published>
+    <updated>2021-09-26T00:00:00Z</updated>
+    <summary type="html"><![CDATA[<p>Sometimes, Haskell’s type system seems a bit restrictive compared to dynamic languages like Python. The most obvious example is the heterogenous list:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="co"># Python</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> mylist <span class="op">=</span> [<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>, <span class="dv">117</span>, <span class="va">None</span>]</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="cf">for</span> item <span class="kw">in</span> mylist:</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>...     <span class="bu">print</span>(item) </span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>hello</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>world</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="dv">117</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="va">None</span></span></code></pre></div>
+<p>but in Haskell, list items must be of the same type:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Haskell</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>mylist <span class="ot">=</span> [<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>, <span class="dv">117</span>, ()] <span class="co">-- Invalid: type cannot be inferred!</span></span></code></pre></div>
+<p>This is a contrived example, of course. But consider this use-case: I just want to print the content of the list. It’s unfortunate I can’t write:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">mylist ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> [a]</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>mylist <span class="ot">=</span>  [<span class="st">&quot;hello&quot;</span>, <span class="st">&quot;world&quot;</span>, <span class="dv">117</span>, ()] <span class="co">-- All these types have Show instances, but this won&#39;t compile</span></span></code></pre></div>
+<p>For this specific application, the type system is overly restrictive – as long as all I want to do is print the content of my list! In this post, I’ll show you how to do something like this using the <code>ExistentialQuantification</code> language extension.</p>
+<h2 class="title is-2" id="a-more-complex-example">A more complex example</h2>
+<p>Let’s say I want to list American football players. There are two broad classes of players (offensive and defensive) and we want to keep track of the players in a list – the player registry. Our final objective is to print the list of players to standard output.</p>
+<p>Let’s first do this in a dynamic language:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dataclasses <span class="im">import</span> dataclass</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Player:</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    name: <span class="bu">str</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    position: <span class="bu">str</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__str__</span>(<span class="va">self</span>):</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="ss">f&quot;&lt; </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>name<span class="sc">}</span><span class="ss"> : </span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>position<span class="sc">}</span><span class="ss"> &gt;&quot;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> OffensivePlayer(Player):</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> passingAccuracy(<span class="va">self</span>):</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DefensivePlayer(Player):</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> tacklesPerGame(<span class="va">self</span>):</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>playerRegistry <span class="op">=</span> [OffensivePlayer(<span class="st">&quot;Tom Brady&quot;</span>, <span class="st">&quot;Quarterback&quot;</span>), </span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                  DefensivePlayer(<span class="st">&quot;Michael Strahan&quot;</span>, <span class="st">&quot;Defensive end&quot;</span>)]</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> printPlayerList():</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> player <span class="kw">in</span> playerRegistry:</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(player)</span></code></pre></div>
+<p>In the above, we note that some information only applies to offensive players (<code>passingAccuracy</code>) or defensive players (<code>tacklesPerGame</code>), which requires us to have two separate classes for them. But ultimately, our use of the player registry only requires the ability to print the information.</p>
+<p>Let’s try to do the same in Haskell. Our first reflex might be to use a sum type:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Player</span> <span class="ot">=</span> <span class="dt">OffensivePlayer</span> <span class="dt">String</span> <span class="dt">String</span> <span class="co">-- name and position</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">DefensivePlayer</span> <span class="dt">String</span> <span class="dt">String</span> <span class="co">-- name and position</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ot">playerRegistry ::</span> [<span class="dt">Player</span>]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>playerRegistry <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<p>but then our functions <code>passingAccuracy</code> and <code>tacklesPerGame</code> are rather clunky:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">passingAccuracy ::</span> <span class="dt">Player</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Double</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>passingAccuracy (<span class="dt">OffensivePlayer</span> name pos) <span class="ot">=</span> lookupFromDatabase <span class="st">&quot;passingAccuracy&quot;</span> name</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>passingAccuracy (<span class="dt">DefensivePlayer</span> name pos) <span class="ot">=</span> <span class="fu">return</span> <span class="dv">0</span> <span class="co">-- Defensive players don&#39;t pass</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="ot">tacklesPerGame ::</span> <span class="dt">Player</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Double</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>tacklesPerGame (<span class="dt">OffensivePlayer</span> name pos) <span class="ot">=</span> <span class="fu">return</span> <span class="dv">0</span> <span class="co">-- Offensive players don&#39;t tackle</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>tacklesPerGame (<span class="dt">DefensivePlayer</span> name pos) <span class="ot">=</span> lookupFromDatabase <span class="st">&quot;tacklesPerGame&quot;</span> name</span></code></pre></div>
+<p>The <code>Player</code> type is too general; we’re not using the type system to its full potential. It’s much more representative of our situation to use two separate types:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">OffensivePlayer</span> <span class="ot">=</span> <span class="dt">OffensivePlayer</span> <span class="dt">String</span> <span class="dt">String</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DefensivePlayer</span> <span class="ot">=</span> <span class="dt">DefensivePlayer</span> <span class="dt">String</span> <span class="dt">String</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ot">passingAccuracy ::</span> <span class="dt">OffensivePlayer</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Double</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>passingAccuracy <span class="ot">=</span> <span class="op">...</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ot">tacklesPerGame ::</span> <span class="dt">DefensivePlayer</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Double</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>tacklesPerGame <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<p>This is much safer and appropriate. Now let’s give ourselves the ability to print players:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">OffensivePlayer</span> <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">show</span> (<span class="dt">OffensivePlayer</span> name pos) <span class="ot">=</span> <span class="fu">mconcat</span> [<span class="st">&quot;&lt; &quot;</span>, name, <span class="st">&quot; : &quot;</span>, pos, <span class="st">&quot; &gt;&quot;</span>]</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">DefensivePlayer</span> <span class="kw">where</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">show</span> (<span class="dt">DefensivePlayer</span> name pos) <span class="ot">=</span> <span class="fu">mconcat</span> [<span class="st">&quot;&lt; &quot;</span>, name, <span class="st">&quot; : &quot;</span>, pos, <span class="st">&quot; &gt;&quot;</span>]</span></code></pre></div>
+<p>Awesome. One last problem:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- This won&#39;t typecheck</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>playerRegistry <span class="ot">=</span> [ <span class="dt">OffensivePlayer</span> <span class="st">&quot;Tom Brady&quot;</span>       <span class="st">&quot;Quarterback&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                  , <span class="dt">DefensivePlayer</span> <span class="st">&quot;Michael Strahan&quot;</span> <span class="st">&quot;Defensive end&quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                  ]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ot">printPlayerList ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>printPlayerList <span class="ot">=</span> forM_ playerRegistry <span class="fu">print</span> <span class="co">-- `forM_` from Control.Monad</span></span></code></pre></div>
+<p>Rather annoying. We could wrap the two player types in a sum type:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Player</span> <span class="ot">=</span> <span class="dt">OP</span> <span class="dt">OffensivePlayer</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">DP</span> <span class="dt">DefensivePlayer</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">Player</span> <span class="kw">where</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">show</span> (<span class="dt">OP</span> p) <span class="ot">=</span> <span class="fu">show</span> p</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">show</span> (<span class="dt">DP</span> p) <span class="ot">=</span> <span class="fu">show</span> p</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ot">playerRegistry ::</span> [<span class="dt">Player</span>]</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>playerRegistry <span class="ot">=</span> [ <span class="dt">OP</span> (<span class="dt">OffensivePlayer</span> <span class="st">&quot;Tom Brady&quot;</span>       <span class="st">&quot;Quarterback&quot;</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>                 , <span class="dt">DP</span> (<span class="dt">DefensivePlayer</span> <span class="st">&quot;Michael Strahan&quot;</span> <span class="st">&quot;Defensive end&quot;</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                 ]</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ot">printPlayerList ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>printPlayerList <span class="ot">=</span> forM_ playerRegistry <span class="fu">print</span>        </span></code></pre></div>
+<p>but this is quite clunky. It also doesn’t scale well to cases where we have a lot more types!</p>
+<h2 class="title is-2" id="enter-existential-quantification">Enter existential quantification</h2>
+<p>The latest version of the Haskell language (Haskell 2010) is somewhat dated at this point. However, the Glasgow Haskell Compiler supports <a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts.html">language extensions</a> at the cost of portability. Turns out that the <a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/existential_quantification.html#existentially-quantified-data-constructors"><code>ExistentialQuantification</code></a> language extension can help us with this problem.</p>
+<p>We turn on the extension at the top of our module:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE ExistentialQuantification #-}</span></span></code></pre></div>
+<p>and create an existential datatype:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">ShowPlayer</span> <span class="ot">=</span> <span class="kw">forall</span> a<span class="op">.</span> <span class="dt">Show</span> a</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                <span class="ot">=&gt;</span> <span class="dt">ShowPlayer</span> a (a <span class="ot">-&gt;</span> <span class="dt">String</span>)</span></code></pre></div>
+<p>The datatype <code>ShowPlayer</code> is a real datatype that bundles any data <code>a</code> which can be shown, along with how to show it (<code>a -&gt; String</code>). Note that <strong>everything else</strong> about the internal type is forgotten, since the <code>ShowPlayer</code> type wraps <strong>any</strong> type that can be shown (that’s what <code>forall a. Show a</code> means).</p>
+<p>We can facilitate the construction of a <code>Player</code> with the following helper function:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">mkPlayer ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">ShowPlayer</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mkPlayer a <span class="ot">=</span> <span class="dt">ShowPlayer</span> a <span class="fu">show</span> </span></code></pre></div>
+<p>Now since the data bundled in a <code>ShowPlayer</code> can be shown, the only operation supported by <code>ShowPlayer</code> is <code>Show</code>:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">ShowPlayer</span> <span class="kw">where</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">show</span> (<span class="dt">ShowPlayer</span> a showplayer) <span class="ot">=</span> showplayer a</span></code></pre></div>
+<p>Finally, our heterogenous list:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ot">playerRegistry ::</span> [<span class="dt">ShowPlayer</span>]</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>playerRegistry <span class="ot">=</span> [ <span class="co">-- ✓ OffensivePlayer has a Show instance ✓</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                   mkPlayer (<span class="dt">OffensivePlayer</span> <span class="st">&quot;Tom Brady&quot;</span>       <span class="st">&quot;Quarterback&quot;</span>))</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                   <span class="co">-- ✓ DefensivePlayer has a Show instance ✓</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                 , mkPlayer (<span class="dt">DefensivePlayer</span> <span class="st">&quot;Michael Strahan&quot;</span> <span class="st">&quot;Defensive end&quot;</span>))</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                 ]</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="ot">printPlayerList ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>printPlayerList <span class="ot">=</span> forM_ playerRegistry <span class="fu">print</span> </span></code></pre></div>
+<p>So we <em>can</em> have an heterogenous list – as long as the only thing we can do with it is show it!</p>
+<p>The advantage here compared to the sum-type approach is when we extend our code to many more types:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Quarterback</span>    <span class="ot">=</span> <span class="dt">Quarterback</span>  <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Lineman</span>        <span class="ot">=</span> <span class="dt">Lineman</span>      <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Runningback</span>    <span class="ot">=</span> <span class="dt">Runningback</span>  <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">WideReceiver</span>   <span class="ot">=</span> <span class="dt">WideReceiver</span> <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">DefensiveEnd</span>   <span class="ot">=</span> <span class="dt">DefensiveEnd</span> <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Linebacker</span>     <span class="ot">=</span> <span class="dt">Linebacker</span>   <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Safety</span>         <span class="ot">=</span> <span class="dt">Safety</span>       <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Corner</span>         <span class="ot">=</span> <span class="dt">Corner</span>       <span class="dt">String</span> <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- Example: some functions are specific to certain positions</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a><span class="ot">passingAccuracy ::</span> <span class="dt">Quarterback</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Double</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>assingAccuracy <span class="ot">=</span> <span class="op">...</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="ot">playerRegistry ::</span> [<span class="dt">ShowPlayer</span>]</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>playerRegistry <span class="ot">=</span> [ mkPlayer (<span class="dt">Quarterback</span>  <span class="st">&quot;Tom Brady&quot;</span>))</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>                 , mkPlayer (<span class="dt">DefensiveEnd</span> <span class="st">&quot;Michael Strahan&quot;</span>))</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>                 , mkPlayer (<span class="dt">Safety</span>       <span class="st">&quot;Richard Sherman&quot;</span>))</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>                 , <span class="op">...</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>                 ]</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="ot">printPlayerList ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>printPlayerList <span class="ot">=</span> forM_ playerRegistry <span class="fu">print</span> </span></code></pre></div>
+<p>This way, we can keep the benefits of the type system when we want it, but also give ourselves some flexibility when we need it. This is actually similar to object-oriented programming, where classes bundle data and operations on them into an <strong>object</strong>!</p>
+<h2 class="title is-2" id="a-bit-more-functionality">A bit more functionality</h2>
+<p>Let’s pack in more operations on our heterogenous list. We might want to not only show players, but also access their salaries. We describe the functionality common to all players in a typeclass called <code>BasePlayer</code>:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Show</span> p <span class="ot">=&gt;</span> <span class="dt">BasePlayer</span> p <span class="kw">where</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Operate in IO because of database access, for example</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ot">    getYearlySalary ::</span> p <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Double</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">BasePlayer</span> <span class="dt">Quarterback</span> <span class="kw">where</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">BasePlayer</span> <span class="dt">Lineman</span> <span class="kw">where</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span></span></code></pre></div>
+<p>We can update our player registry to support the same operations as <code>BasePlayer</code> through the <code>Player</code> existential type:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Player</span> <span class="ot">=</span> <span class="kw">forall</span> a<span class="op">.</span> <span class="dt">BasePlayer</span> a</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>            <span class="ot">=&gt;</span> <span class="dt">Player</span> a                 <span class="co">-- data</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                      (a <span class="ot">-&gt;</span> <span class="dt">String</span>)     <span class="co">-- show function</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                      (a <span class="ot">-&gt;</span> <span class="dt">IO</span> <span class="dt">Double</span>)  <span class="co">-- getYearlySalary</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> <span class="dt">Player</span> <span class="kw">where</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">show</span> (<span class="dt">Player</span> a showfunc _) <span class="ot">=</span> showfunc a</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">BasePlayer</span> <span class="dt">Player</span> <span class="kw">where</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    getYearlySalary (<span class="dt">Player</span> a _ salaryfunc)     <span class="ot">=</span> salaryfunc a</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="ot">mkPlayer ::</span> <span class="dt">BasePlayer</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Player</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>mkPlayer a <span class="ot">=</span> <span class="dt">Player</span> a <span class="fu">show</span> getYearlySalary  <span class="co">-- The right functions are selected based on type inference</span></span></code></pre></div>
+<p>and our new heterogenous list now supports:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ot">playerRegistry ::</span> [<span class="dt">Player</span>]</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>playerRegistry <span class="ot">=</span> [ mkPlayer (<span class="dt">Quarterback</span>  <span class="st">&quot;Tom Brady&quot;</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                 , mkPlayer (<span class="dt">DefensiveEnd</span> <span class="st">&quot;Michael Strahan&quot;</span>)</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>                 , mkPlayer (<span class="dt">Safety</span>       <span class="st">&quot;Richard Sherman&quot;</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>                 , <span class="op">...</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>                 ]</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="ot">printPlayerList ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>printPlayerList <span class="ot">=</span> forM_ playerRegistry <span class="fu">print</span> <span class="co">-- unchanged</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="ot">average_salary ::</span> <span class="dt">IO</span> <span class="dt">Double</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>average_salary <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>    salaries <span class="ot">&lt;-</span> for playerRegistry getYearlySalary <span class="co">-- (`for` from Data.Traversable)</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> (<span class="fu">sum</span> salaries) <span class="op">/</span> (<span class="fu">length</span> salaries)</span></code></pre></div>
+<p>So we can have a heterogenous list – but we can only perform operations which are supported by the <code>Player</code> type. In this sense, the <code>Player</code> type encodes our <em>intent</em>.</p>
+<h2 class="title is-2" id="conclusion">Conclusion</h2>
+<p>In this post, we’ve seen how to create heterogenous lists in Haskell. However, contrary to dynamic languages, we can only do so <em>provided we are explicit</em> about our intent. That means we get the safety of strong, static types with some added flexibility if we so choose.</p>
+<p>If you’re interested in type-level programming, including but not limited to the content of this present post, I strongly recommend Rebecca Skinner’s <a href="https://rebeccaskinner.net/posts/2021-08-25-introduction-to-type-level-programming.html">An Introduction to Type Level Programming</a></p>]]></summary>
+</entry>
+<entry>
     <title>In defence of the PhD prelim exam</title>
     <link href="https://laurentrdc.xyz//posts/prelim.html" />
     <id>https://laurentrdc.xyz//posts/prelim.html</id>
