@@ -1,6 +1,7 @@
 ---
 title: Can you make heterogeneous lists in Haskell? Sure — as long your intent is clear
 date: 2021-09-26
+updated: 2021-09-27
 summary: Haskell's type system might seem restrictive sometimes. For example, heterogeneous lists are not allowed. In this post, I show how to build heterogenous collections using existential quantification -- which requires us to be explicit about our intent.
 ---
 
@@ -38,37 +39,6 @@ For this specific application, the type system is overly restrictive -- as long 
 
 Let's say I want to list American football players. There are two broad classes of players (offensive and defensive) and we want to keep track of the players in a list -- the player registry. Our final objective is to print the list of players to standard output. 
 
-Let's first do this in a dynamic language:
-
-```python
-from dataclasses import dataclass
-
-@dataclass
-class Player:
-    name: str
-    position: str
-
-    def __str__(self):
-        return f"< {self.name} : {self.position} >"
-
-class OffensivePlayer(Player):
-    def passingAccuracy(self):
-        pass
-
-class DefensivePlayer(Player):
-    def tacklesPerGame(self):
-        pass
-
-playerRegistry = [OffensivePlayer("Tom Brady", "Quarterback"), 
-                  DefensivePlayer("Michael Strahan", "Defensive end")]
-
-def printPlayerList():
-    for player in playerRegistry:
-        print(player)
-```
-
-In the above, we note that some information only applies to offensive players (`passingAccuracy`) or defensive players (`tacklesPerGame`), which requires us to have two separate classes for them. But ultimately, our use of the player registry only requires the ability to print the information.
-
 Let's try to do the same in Haskell. Our first reflex might be to use a sum type:
 
 ```haskell
@@ -79,7 +49,7 @@ playerRegistry :: [Player]
 playerRegistry = ...
 ```
 
-but then our functions `passingAccuracy` and `tacklesPerGame` are rather clunky:
+However, not all sports stats apply to `OffensivePlayer` and `DefensivePlayer` constructors. For example:
 
 ```haskell
 passingAccuracy :: Player -> IO Double
