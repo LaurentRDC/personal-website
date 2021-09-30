@@ -5,6 +5,8 @@ updated: 2021-09-30
 summary: Haskell's type system might seem restrictive sometimes. For example, heterogeneous lists are not allowed. In this post, I show how to build heterogenous collections using existential quantification -- which requires us to be explicit about our intent.
 ---
 
+*Featured in [Haskell Weekly issue 283](https://haskellweekly.news/issue/283.html)*
+
 Sometimes, Haskell's type system seems a bit restrictive compared to dynamic languages like Python. The most obvious example is the heterogenous list:
 
 ```python
