@@ -1,7 +1,7 @@
 ---
 title: Can you make heterogeneous lists in Haskell? Sure — as long your intent is clear
 date: 2021-09-26
-updated: 2021-09-27
+updated: 2021-09-30
 summary: Haskell's type system might seem restrictive sometimes. For example, heterogeneous lists are not allowed. In this post, I show how to build heterogenous collections using existential quantification -- which requires us to be explicit about our intent.
 ---
 
@@ -132,10 +132,10 @@ and create an existential datatype:
 
 ```haskell
 data ShowPlayer = forall a. Show a
-                => ShowPlayer a (a -> String)
+                => ShowPlayer a
 ```
 
-The datatype `ShowPlayer` is a real datatype that bundles any data `a` which can be shown, along with how to show it (`a -> String`). Note that **everything else** about the internal type is forgotten, since the `ShowPlayer` type wraps **any** type that can be shown (that's what `forall a. Show a` means).
+The datatype `ShowPlayer` is a real datatype that bundles any data `a` which can be shown. Note that **everything else** about the internal type is forgotten, since the `ShowPlayer` type wraps **any** type that can be shown (that's what `forall a. Show a` means).
 
 We can facilitate the construction of a `Player` with the following helper function:
 
@@ -148,7 +148,7 @@ Now since the data bundled in a `ShowPlayer` can be shown, the only operation su
 
 ```haskell
 instance Show ShowPlayer where
-    show (ShowPlayer a showplayer) = showplayer a
+    show (ShowPlayer a) = show a
 ```
 
 Finally, our heterogenous list:
@@ -156,9 +156,9 @@ Finally, our heterogenous list:
 ```haskell
 playerRegistry :: [ShowPlayer]
 playerRegistry = [ -- ✓ OffensivePlayer has a Show instance ✓
-                   mkPlayer (OffensivePlayer "Tom Brady"       "Quarterback"))
+                   ShowPlayer (OffensivePlayer "Tom Brady"       "Quarterback"))
                    -- ✓ DefensivePlayer has a Show instance ✓
-                 , mkPlayer (DefensivePlayer "Michael Strahan" "Defensive end"))
+                 , ShowPlayer (DefensivePlayer "Michael Strahan" "Defensive end"))
                  ]
 
 printPlayerList :: IO ()
@@ -219,27 +219,22 @@ We can update our player registry to support the same operations as `BasePlayer`
 
 ```haskell
 data Player = forall a. BasePlayer a
-            => Player a                 -- data
-                      (a -> String)     -- show function
-                      (a -> IO Double)  -- getYearlySalary
+            => Player a
 
 instance Show Player where
-    show (Player a showfunc _) = showfunc a
+    show (Player a) = show a
 
 instance BasePlayer Player where
-    getYearlySalary (Player a _ salaryfunc)     = salaryfunc a
-
-mkPlayer :: BasePlayer a => a -> Player
-mkPlayer a = Player a show getYearlySalary  -- The right functions are selected based on type inference
+    getYearlySalary (Player a) = getYearlySalary a
 ```
 
 and our new heterogenous list now supports:
 
 ```haskell
 playerRegistry :: [Player]
-playerRegistry = [ mkPlayer (Quarterback  "Tom Brady")
-                 , mkPlayer (DefensiveEnd "Michael Strahan")
-                 , mkPlayer (Safety       "Richard Sherman")
+playerRegistry = [ Player (Quarterback  "Tom Brady")
+                 , Player (DefensiveEnd "Michael Strahan")
+                 , Player (Safety       "Richard Sherman")
                  , ...
                  ]
 
@@ -260,3 +255,5 @@ So we can have a heterogenous list -- but we can only perform operations which a
 In this post, we've seen how to create heterogenous lists in Haskell. However, contrary to dynamic languages, we can only do so *provided we are explicit* about our intent. That means we get the safety of strong, static types with some added flexibility if we so choose.
 
 If you're interested in type-level programming, including but not limited to the content of this present post, I strongly recommend Rebecca Skinner's [An Introduction to Type Level Programming](https://rebeccaskinner.net/posts/2021-08-25-introduction-to-type-level-programming.html) 
+
+*Thanks to [Brandon Chinn](https://brandonchinn178.github.io/blog/) for some explanation on how to simplify existential types*.
