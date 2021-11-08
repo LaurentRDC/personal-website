@@ -4,16 +4,18 @@ title: About me
 
 ## Currently
 
+
 I am a Ph.D. candidate in the [Physics department](http://www.physics.mcgill.ca) at McGill University. I work in a small team led by Bradley J. Siwick at the forefront of ultrafast condensed matter physics. Our main tool is a microwave-compressed ultrafast electron diffractometer. You can learn more about our team on our [group website](http://www.physics.mcgill.ca/siwicklab/index.html).  
 
 ## Education
 
-* 2016-2021 (expected) | __McGill University__ | Ph.D. Physics 
+* 2016-2021  | __McGill University__ | Ph.D. Physics 
     
     Doctoral advisor: Bradley J. Siwick
 
-    Dissertation (upcoming): Ultrafast energy flow across the Brillouin zone in two-dimensional materials.
-    
+    Dissertation: From carrier cooling to polaron formation: ultrafast phonon dynamics across the Brillouin zone
+
+    See the [research group website](http://www.physics.mcgill.ca/siwicklab/index.html) for more details.
     <p></p>
 
 * 2014-2016 | __McGill University__ | M.Sc. Physics 
@@ -21,6 +23,8 @@ I am a Ph.D. candidate in the [Physics department](http://www.physics.mcgill.ca)
     Advisors: Bradley J. Siwick and Jay L. Nadeau. 
     
     My thesis was titled [_New Data Analysis and Visualization Methods for Ultrafast Electron Diffraction_](/files/msc_thesis.pdf).
+
+    See the [research group website](http://www.physics.mcgill.ca/siwicklab/index.html) for more details.
     <p></p>
 
 * 2011-2014 | __McGill University__ | B.Sc. Joint Honours in Mathematics and Physics. 
