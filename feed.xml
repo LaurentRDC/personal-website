@@ -218,7 +218,7 @@
 <p>The comprehensive exam is inherently about making students’ experience more focused on their research area. This is appealing from students point-of-view: why should they have to go out of their way to stay aware about classical mechanics, something which they might never use? The comprehensive exam (in the format that I have described above) streamlines the requirements for graduation.</p>
 <p>The graduate student experience is about much more than the resulting dissertation. We want our students to be more than just experts in their narrow fields; we also want them to be ready to contribute to society beyond their immediate expertise. Does the prelim ensure that this is the case? Of course not. But removing the prelim sends the wrong message about what it means to graduate with a PhD.</p>
 <p>On a personal note, the prelim made me review all of my undergraduate studies. I purchased the Feynman Lectures on Physics and read all three volumes. With a Masters’ degree under my belt, I was able to appreciate my learnings under a new light, even though I haven’t used most of it since then. While I cannot say that the exam was fun, the studying experience was definitely one of the highlights of my PhD.</p>
-<section class="footnotes" role="doc-endnotes">
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1" role="doc-endnote"><p>Other institutions might call it the qualifying examination.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -304,7 +304,7 @@
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, we have determined a robust way to compute the center of a diffraction pattern without any parameters, by making use of a strong invariant: radial inversion symmetry. My favourite part: this method admits no free parameters!</p>
 <p>If you want to make use of this, <a href="https://scikit-ued.readthedocs.io/en/master/functions/skued.autocenter.html#skued.autocenter">take a look at <code>autocenter</code></a>, a new function that has been added to <a href="https://github.com/LaurentRDC/scikit-ued">scikit-ued</a>.</p>
-<section class="footnotes" role="doc-endnotes">
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1" role="doc-endnote"><p>L.P. René de Cotret <em>et al</em>, <em>Time- and momentum-resolved phonon population dynamics with ultrafast electron diffuse scattering</em>, Phys. Rev. B <strong>100</strong> (2019) <a href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.214115">DOI: 10.1103/PhysRevB.100.214115</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -484,7 +484,7 @@
 <li>Finally, some documentation improvements and an additional gallery example were added in <a href="https://github.com/scikit-image/scikit-image/pull/3528">pull request #3528</a>.</li>
 </ol>
 <p>In the end, <strong>a new function has been added, <a href="https://scikit-image.org/docs/stable/api/skimage.registration.html#skimage.registration.phase_cross_correlation"><code>skimage.registration.phase_cross_correlation</code></a></strong> (previously <code>skimage.feature.masked_register_translation</code>).</p>
-<section class="footnotes" role="doc-endnotes">
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1" role="doc-endnote"><p>Technically, the rotation of the electron beam about its source will also move the shadow of the beam-block. However, because the beam-block is much closer to the electron source, the effect is imperceptible.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -516,7 +516,7 @@
 <img src="generated/pandocplot2708481141295126979.png" class="image" alt="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, T_l, and one for the electronic system, T_e. (Source code)" /><figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/pandocplot2708481141295126979.src.html">Source code</a>)</figcaption>
 </figure>
 <p>where the nucliei will still be at equilibrium temperature, and the electrons might be at a temperature of 20000<span class="math inline">\(^{\circ}\)</span>C. Therefore, <em>we have a system with two temperatures</em> for a few picoseconds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
-<section class="footnotes" role="doc-endnotes">
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1" role="doc-endnote"><p>The atomic forces at the nanometer-scale are mostly electromagnetic, so I will consider the atomic nuclei as a single particle.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -621,7 +621,7 @@
 <p>I hope this example has shown you the process behind writing Pandoc filters. Without modifying the content of my posts, I have been able to integrate Bulma in my static website.</p>
 <p>I could also have done it by replacing Markdown headers with inline HTML. However, this would have been less fun.</p>
 <p>You can take a look at the <a href="https://github.com/LaurentRDC/personal-website">source code</a> used to generate this website.</p>
-<section class="footnotes" role="doc-endnotes">
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1" role="doc-endnote"><p>I’m sure there is a way to abstract those details away, but the objective today is to play with Pandoc.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
