@@ -1,7 +1,7 @@
 ---
 title: The masked normalized cross-correlation and its application to image registration
 date: 2019-04-30
-updated: 2020-12-18
+updated: 2021-12-06
 summary: "For my first contribution to open-source library scikit-image, I implemented the masked normalized cross-correlation. This post details the why and how this happened."
 ---
 
@@ -15,12 +15,7 @@ $$
 For example, if $I_1 = I_2$, then $I_1 \star I_2$ has its maximum at $(u,v) =$ (0,0). What happens if $I_1$ and $I_2$ are shifted from each other? Let's see:
 
 ```{.python .matplotlib caption="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation."}
-# This example has been adapted from the scikit-image gallery item
-# located here:
-#   https://scikit-image.org/docs/stable/auto_examples/transform/plot_register_translation.html
-
 from skimage import data
-from skimage.feature import register_translation
 from scipy.ndimage import fourier_shift
 
 image = data.camera()
@@ -52,7 +47,7 @@ ax3.set_axis_off()
 ax3.set_title("Cross-correlation")
 ```
 
-In the above example, the cross-correlation is maximal at (50, 0), which is exactly the translation required to *shift back* the second image to match the first one. Finding the translation between images is then a simple matter of determining the glocal maximum of the cross-correlation. This operation is so useful that it is implemented in the Python library [scikit-image](https://scikit-image.org) as [`skimage.feature.register_translation`](https://scikit-image.org/docs/stable/api/skimage.feature.html#skimage.feature.register_translation).
+In the above example, the cross-correlation is maximal at (50, 0), which is exactly the translation required to *shift back* the second image to match the first one. Finding the translation between images is then a simple matter of determining the glocal maximum of the cross-correlation. This operation is so useful that it is implemented in the Python library [scikit-image](https://scikit-image.org) as [`skimage.feature.phase_cross_correlation`](https://scikit-image.org/docs/dev/api/skimage.registration.html?highlight=phase#skimage.registration.phase_cross_correlation).
 
 It turns out that in my field of research, image registration can be crucial to correct experimental data. My primary research tool is [ultrafast electron diffraction](http://www.physics.mcgill.ca/siwicklab). Without knowing the details, you can think of this technique as a kind of microscope. A single image from one of our experiments looks like this:
 
