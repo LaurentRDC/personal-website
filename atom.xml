@@ -190,7 +190,7 @@
     <link href="https://laurentrdc.xyz//posts/prelim.html" />
     <id>https://laurentrdc.xyz//posts/prelim.html</id>
     <published>2021-06-12T00:00:00Z</published>
-    <updated>2021/12/14
+    <updated>2021/06/12
 </updated>
     <summary type="html"><![CDATA[<p>In the <a href="http://www.physics.mcgill.ca">department of Physics</a> at McGill University, there are a few requirements for graduation in the PhD program. One of these requirements is to pass the <em>preliminary examination</em>, or prelim for short, at the end of the first year<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. This type of examination is becoming rarer across North America. The Physics department has been discussing the modernization of the prelim, either by changing its format or removing it entirely.</p>
 <p>In this post, I want to explain what the prelim is and why I think its essence should be preserved.</p>
@@ -238,7 +238,7 @@
     <link href="https://laurentrdc.xyz//posts/autocenter.html" />
     <id>https://laurentrdc.xyz//posts/autocenter.html</id>
     <published>2021-01-23T00:00:00Z</published>
-    <updated>2021/12/14
+    <updated>2021/01/23
 </updated>
     <summary type="html"><![CDATA[<p>Ultrafast electron diffraction involves the analysis of <em>diffraction patterns</em>. Here is an example diffraction pattern for a thin (&lt;100nm) flake of graphite<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <figure>
@@ -327,7 +327,7 @@
     <link href="https://laurentrdc.xyz//posts/banner.html" />
     <id>https://laurentrdc.xyz//posts/banner.html</id>
     <published>2020-11-03T00:00:00Z</published>
-    <updated>2021/12/14
+    <updated>2020/11/05
 </updated>
     <summary type="html"><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
 <figure>
@@ -542,7 +542,7 @@
     <link href="https://laurentrdc.xyz//posts/bulma-pandoc-filter.html" />
     <id>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</id>
     <published>2018-09-12T00:00:00Z</published>
-    <updated>2021/12/14
+    <updated>2018/10/08
 </updated>
     <summary type="html"><![CDATA[<p>To make this static website render correctly on both desktop and mobile, I’ve decided to ‘upgrade’ my setup to use the <a href="https://bulma.io">Bulma CSS framework</a>. This introduced a problem I did not anticipate.</p>
 <p>For example, consider the following “raw” HTML tag to create a level 1 title:</p>
@@ -646,7 +646,7 @@
     <link href="https://laurentrdc.xyz//posts/coffee-table.html" />
     <id>https://laurentrdc.xyz//posts/coffee-table.html</id>
     <published>2018-09-10T00:00:00Z</published>
-    <updated>2021/12/14
+    <updated>2021/04/23
 </updated>
     <summary type="html"><![CDATA[<p>This post will go through the process of making a concrete coffee table. I had never worked with concrete before. This was a relatively simple introduction to concrete furniture.</p>
 <p>The objective was to make a coffee table out of concrete, using recycled materials as much as possible. Moreover, since concrete is easily shaped, I wanted to make an asymmetric table (i.e. not a rectangle).</p>
@@ -867,7 +867,7 @@
     <link href="https://laurentrdc.xyz//posts/genesis.html" />
     <id>https://laurentrdc.xyz//posts/genesis.html</id>
     <published>2018-08-01T00:00:00Z</published>
-    <updated>2021/12/14
+    <updated>2020/05/22
 </updated>
     <summary type="html"><![CDATA[<p>This is the first post of my blog, where I can test new features.</p>
 <hr />
