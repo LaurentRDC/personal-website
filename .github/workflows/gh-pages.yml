@@ -16,6 +16,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        # We need to fetch the whole history for the automatic 'last-updated'
+        # functionality works as expected
+        fetch-depth: 0
 
     - name: Install cabal/ghc
       uses: haskell/actions/setup@v1
