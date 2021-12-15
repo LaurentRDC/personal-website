@@ -8,13 +8,13 @@
         <name>Laurent P. René de Cotret</name>
         <email>laurent.decotret@outlook.com</email>
     </author>
-    <updated>2021-09-30</updated>
+    <updated>2021-09-26T00:00:00Z</updated>
     <entry>
     <title>Can you make heterogeneous lists in Haskell? Sure — as long your intent is clear</title>
     <link href="https://laurentrdc.xyz//posts/existential.html" />
     <id>https://laurentrdc.xyz//posts/existential.html</id>
     <published>2021-09-26T00:00:00Z</published>
-    <updated>2021-09-30</updated>
+    <updated>2021-09-26T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p><em>Featured in <a href="https://haskellweekly.news/issue/283.html">Haskell Weekly issue 283</a></em></p>
 <p>Sometimes, Haskell’s type system seems a bit restrictive compared to dynamic languages like Python. The most obvious example is the heterogenous list:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="co"># Python</span></span>
@@ -453,7 +453,7 @@
     <link href="https://laurentrdc.xyz//posts/mnxc.html" />
     <id>https://laurentrdc.xyz//posts/mnxc.html</id>
     <published>2019-04-30T00:00:00Z</published>
-    <updated>2021-12-06</updated>
+    <updated>2019-04-30T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
 <p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <span class="math inline">\(I_1(i,j)\)</span> and <span class="math inline">\(I_2(i,j)\)</span>, their cross-correlation <span class="math inline">\(I_1 \star I_2\)</span> is defined as: <span class="math display">\[
     (I_1 \star I_2)(u, v) \equiv \sum_{i,j} I_1(i, j) \cdot I_2(i - u, j - v)
@@ -503,7 +503,7 @@
     <link href="https://laurentrdc.xyz//posts/two-temp-model.html" />
     <id>https://laurentrdc.xyz//posts/two-temp-model.html</id>
     <published>2019-04-03T00:00:00Z</published>
-    <updated>2021-04-13</updated>
+    <updated>2019-04-03T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>Temperature is a measure of the average kinetic energy of all particles in a system. An example of such as system is presented below:</p>
 <figure>
 <img src="/images/Translational_motion.gif" class="image" alt="Translational motion of particles in a box. Some particles are colored red for better tracking. Image credit to A. Greg." /><figcaption aria-hidden="true">Translational motion of particles in a box. Some particles are colored red for better tracking. <a href="https://en.wikipedia.org/wiki/Thermodynamic_temperature#/media/File:Translational_motion.gif">Image credit to A. Greg.</a></figcaption>
@@ -720,7 +720,7 @@
     <link href="https://laurentrdc.xyz//posts/making-this-website.html" />
     <id>https://laurentrdc.xyz//posts/making-this-website.html</id>
     <published>2018-08-02T00:00:00Z</published>
-    <updated>2018-09-12</updated>
+    <updated>2018-08-02T00:00:00Z</updated>
     <summary type="html"><![CDATA[<p>In the hope that this page is useful to someone, I would like to explain how I generate this website.</p>
 <h2 class="title is-2" id="static-website-generator">Static website generator</h2>
 <p>I am always looking for an excuse to play with Haskell, and so this website is generated using <a href="https://jaspervdj.be/hakyll/index.html">Hakyll</a>. Hakyll is a static website generator; website configuration is written in Haskell and content is written in Markdown. Hakyll then collects the content, applies templates to it (navigation bar, page footers, etc), and builds a static website in a separate folder. Deploying the website then simply consists in moving the files to the right place.</p>
