@@ -29,8 +29,12 @@ import qualified Data.Map.Strict                 as M
 
 import qualified Data.Text                       as T
 import qualified Data.Text.Encoding              as T
+import qualified Data.Text.Lazy                  as TL
+import qualified Data.Text.Lazy.Encoding         as TL
 
 import           System.FilePath                 ((</>))
+
+import           System.Process.Typed            (ExitCode(..), readProcess, shell)
 
 import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html.Renderer.Pretty as Pretty
@@ -242,7 +246,29 @@ postCtx :: Context String
 postCtx = mconcat [ defaultContext
                   , constField "root" "https://laurentrdc.xyz/"
                   , dateField "date" "%Y-%m-%d"
+                  , lastUpdatedField
                   ] 
+
+
+-- | Check when a file was last updated, based on the git history
+lastUpdatedViaGit :: FilePath -> IO (Maybe String)
+lastUpdatedViaGit fp = do
+    (ec, out, _) <- readProcess (shell $ "git log -1 --date=format:\"%Y/%m/%d\" --format=\"%ad\" " <> fp )
+    case ec of
+        ExitFailure _ -> return Nothing 
+        ExitSuccess -> return . Just . TL.unpack . TL.decodeUtf8 $ out
+
+
+-- | Field which provides the "last-updated" variable for items, which 
+-- provides the date of the most recent git commit which modifies a file.
+-- Note that this context will be unavailable for generated pages
+lastUpdatedField :: Context String
+lastUpdatedField = field "updated" $ \it@(Item ident x) -> unsafeCompiler $ do
+    lastUpdated <- lastUpdatedViaGit (toFilePath ident)
+    case lastUpdated of 
+        Nothing -> return "<unknown>"
+        Just dt -> return dt
+
 
 -- Pandoc compiler which also provides the Pandoc metadata as template context
 -- This is necessary because it is not possible for Hakyll to be

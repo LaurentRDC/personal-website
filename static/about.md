@@ -31,7 +31,7 @@ title: About me
 
 ## Employment
 
-* August 2021 - | [__SocïVolta__](http://socivolta.com/) | Data Engineer
+* August 2021 - | [__SocïVolta__](http://socivolta.com/) | Research
 
     <p></p>
 

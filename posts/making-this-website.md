@@ -1,7 +1,6 @@
 ---
 title: How this website is generated
 date: 2018-08-02
-updated: 2018-09-12
 summary: "In this post, I go over the process of generating this website using Hakyll and other tools."
 ---
 

@@ -1,7 +1,6 @@
 ---
 title: "When one temperature is not enough: the two-temperature model"
 date: 2019-04-03
-updated: 2021-04-13
 summary: What if we could prepare a system with two distinct temperatures? What would it look like?
 ---
 
