@@ -31,8 +31,7 @@ executable personal-website
                        blaze-markup,
                        bytestring,
                        time,
-                       text,
-                       typed-process >= 0.2.8.0 && <1
+                       text
 
   other-modules:       Template, BulmaFilter, Feed, ReadingTimeFilter
 
