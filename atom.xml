@@ -8,13 +8,15 @@
         <name>Laurent P. René de Cotret</name>
         <email>laurent.decotret@outlook.com</email>
     </author>
-    <updated>2021-09-26T00:00:00Z</updated>
+    <updated>2021/12/14
+</updated>
     <entry>
     <title>Can you make heterogeneous lists in Haskell? Sure — as long your intent is clear</title>
     <link href="https://laurentrdc.xyz//posts/existential.html" />
     <id>https://laurentrdc.xyz//posts/existential.html</id>
     <published>2021-09-26T00:00:00Z</published>
-    <updated>2021-09-26T00:00:00Z</updated>
+    <updated>2021/12/14
+</updated>
     <summary type="html"><![CDATA[<p><em>Featured in <a href="https://haskellweekly.news/issue/283.html">Haskell Weekly issue 283</a></em></p>
 <p>Sometimes, Haskell’s type system seems a bit restrictive compared to dynamic languages like Python. The most obvious example is the heterogenous list:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="co"># Python</span></span>
@@ -188,7 +190,8 @@
     <link href="https://laurentrdc.xyz//posts/prelim.html" />
     <id>https://laurentrdc.xyz//posts/prelim.html</id>
     <published>2021-06-12T00:00:00Z</published>
-    <updated>2021-06-12T00:00:00Z</updated>
+    <updated>2021/06/12
+</updated>
     <summary type="html"><![CDATA[<p>In the <a href="http://www.physics.mcgill.ca">department of Physics</a> at McGill University, there are a few requirements for graduation in the PhD program. One of these requirements is to pass the <em>preliminary examination</em>, or prelim for short, at the end of the first year<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. This type of examination is becoming rarer across North America. The Physics department has been discussing the modernization of the prelim, either by changing its format or removing it entirely.</p>
 <p>In this post, I want to explain what the prelim is and why I think its essence should be preserved.</p>
 <h3 class="title is-3" id="what-is-the-prelim">What is the prelim?</h3>
@@ -235,7 +238,8 @@
     <link href="https://laurentrdc.xyz//posts/autocenter.html" />
     <id>https://laurentrdc.xyz//posts/autocenter.html</id>
     <published>2021-01-23T00:00:00Z</published>
-    <updated>2021-01-23T00:00:00Z</updated>
+    <updated>2021/01/23
+</updated>
     <summary type="html"><![CDATA[<p>Ultrafast electron diffraction involves the analysis of <em>diffraction patterns</em>. Here is an example diffraction pattern for a thin (&lt;100nm) flake of graphite<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <figure>
 <img src="generated/pandocplot11680514825643624886.png" class="python image" alt="Diffraction pattern of graphite (Source code)" /><figcaption aria-hidden="true">Diffraction pattern of graphite (<a href="generated/pandocplot11680514825643624886.src.html">Source code</a>)</figcaption>
@@ -323,7 +327,8 @@
     <link href="https://laurentrdc.xyz//posts/banner.html" />
     <id>https://laurentrdc.xyz//posts/banner.html</id>
     <published>2020-11-03T00:00:00Z</published>
-    <updated>2020-11-03T00:00:00Z</updated>
+    <updated>2020/11/05
+</updated>
     <summary type="html"><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
 <figure>
 <img src="generated/pandocplot2429560394296763025.png" class="python image" />
@@ -453,7 +458,8 @@
     <link href="https://laurentrdc.xyz//posts/mnxc.html" />
     <id>https://laurentrdc.xyz//posts/mnxc.html</id>
     <published>2019-04-30T00:00:00Z</published>
-    <updated>2019-04-30T00:00:00Z</updated>
+    <updated>2021/12/14
+</updated>
     <summary type="html"><![CDATA[<p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
 <p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <span class="math inline">\(I_1(i,j)\)</span> and <span class="math inline">\(I_2(i,j)\)</span>, their cross-correlation <span class="math inline">\(I_1 \star I_2\)</span> is defined as: <span class="math display">\[
     (I_1 \star I_2)(u, v) \equiv \sum_{i,j} I_1(i, j) \cdot I_2(i - u, j - v)
@@ -503,7 +509,8 @@
     <link href="https://laurentrdc.xyz//posts/two-temp-model.html" />
     <id>https://laurentrdc.xyz//posts/two-temp-model.html</id>
     <published>2019-04-03T00:00:00Z</published>
-    <updated>2019-04-03T00:00:00Z</updated>
+    <updated>2021/12/14
+</updated>
     <summary type="html"><![CDATA[<p>Temperature is a measure of the average kinetic energy of all particles in a system. An example of such as system is presented below:</p>
 <figure>
 <img src="/images/Translational_motion.gif" class="image" alt="Translational motion of particles in a box. Some particles are colored red for better tracking. Image credit to A. Greg." /><figcaption aria-hidden="true">Translational motion of particles in a box. Some particles are colored red for better tracking. <a href="https://en.wikipedia.org/wiki/Thermodynamic_temperature#/media/File:Translational_motion.gif">Image credit to A. Greg.</a></figcaption>
@@ -535,7 +542,8 @@
     <link href="https://laurentrdc.xyz//posts/bulma-pandoc-filter.html" />
     <id>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</id>
     <published>2018-09-12T00:00:00Z</published>
-    <updated>2018-09-12T00:00:00Z</updated>
+    <updated>2018/10/08
+</updated>
     <summary type="html"><![CDATA[<p>To make this static website render correctly on both desktop and mobile, I’ve decided to ‘upgrade’ my setup to use the <a href="https://bulma.io">Bulma CSS framework</a>. This introduced a problem I did not anticipate.</p>
 <p>For example, consider the following “raw” HTML tag to create a level 1 title:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
@@ -638,7 +646,8 @@
     <link href="https://laurentrdc.xyz//posts/coffee-table.html" />
     <id>https://laurentrdc.xyz//posts/coffee-table.html</id>
     <published>2018-09-10T00:00:00Z</published>
-    <updated>2018-09-10T00:00:00Z</updated>
+    <updated>2021/04/23
+</updated>
     <summary type="html"><![CDATA[<p>This post will go through the process of making a concrete coffee table. I had never worked with concrete before. This was a relatively simple introduction to concrete furniture.</p>
 <p>The objective was to make a coffee table out of concrete, using recycled materials as much as possible. Moreover, since concrete is easily shaped, I wanted to make an asymmetric table (i.e. not a rectangle).</p>
 <p>First, here’s the final result:</p>
@@ -720,7 +729,8 @@
     <link href="https://laurentrdc.xyz//posts/making-this-website.html" />
     <id>https://laurentrdc.xyz//posts/making-this-website.html</id>
     <published>2018-08-02T00:00:00Z</published>
-    <updated>2018-08-02T00:00:00Z</updated>
+    <updated>2021/12/14
+</updated>
     <summary type="html"><![CDATA[<p>In the hope that this page is useful to someone, I would like to explain how I generate this website.</p>
 <h2 class="title is-2" id="static-website-generator">Static website generator</h2>
 <p>I am always looking for an excuse to play with Haskell, and so this website is generated using <a href="https://jaspervdj.be/hakyll/index.html">Hakyll</a>. Hakyll is a static website generator; website configuration is written in Haskell and content is written in Markdown. Hakyll then collects the content, applies templates to it (navigation bar, page footers, etc), and builds a static website in a separate folder. Deploying the website then simply consists in moving the files to the right place.</p>
@@ -857,7 +867,8 @@
     <link href="https://laurentrdc.xyz//posts/genesis.html" />
     <id>https://laurentrdc.xyz//posts/genesis.html</id>
     <published>2018-08-01T00:00:00Z</published>
-    <updated>2018-08-01T00:00:00Z</updated>
+    <updated>2020/05/22
+</updated>
     <summary type="html"><![CDATA[<p>This is the first post of my blog, where I can test new features.</p>
 <hr />
 <h3 class="title is-3" id="math">Math</h3>
