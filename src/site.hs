@@ -253,7 +253,7 @@ postCtx = mconcat [ defaultContext
 -- | Check when a file was last updated, based on the git history
 lastUpdatedViaGit :: FilePath -> IO (Maybe String)
 lastUpdatedViaGit fp = do
-    (ec, out, _) <- readProcess (shell $ "git log -1 --date=format:\"%Y/%m/%d\" --format=\"%ad\" " <> fp )
+    (ec, out, _) <- readProcess (shell $ "git log -1 --date=format:\"%Y-%m-%d\" --format=\"%ad\" " <> fp )
     case ec of
         ExitFailure _ -> return Nothing 
         ExitSuccess -> return . Just . TL.unpack . TL.decodeUtf8 $ out
