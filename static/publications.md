@@ -27,7 +27,7 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Theses and dissertation
 
-* PhD dissertation coming in Spring 2021. Tentative title: _Ultrafast energy flow across the Brillouin zone in two-dimensional materials_.
+* Ph.D. dissertation: _From carrier cooling to polaron formation: ultrafast phonon dynamics across the Brillouin zone_ [(PDF)](/files/dissertation.pdf). All source material, including text files, figure scripts, and more, are available on [GitHub](https://github.com/LaurentRDC/dissertation).
 
 * Master of Science thesis: _New data analysis and visualization methods for ultrafast electron diffraction_ [(PDF)](/files/msc_thesis.pdf).
 

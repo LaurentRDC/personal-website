@@ -8,7 +8,7 @@ title: About me
     
     Doctoral advisor: Bradley J. Siwick
 
-    Dissertation: From carrier cooling to polaron formation: ultrafast phonon dynamics across the Brillouin zone
+    Dissertation: [_From carrier cooling to polaron formation: ultrafast phonon dynamics across the Brillouin zone_](/files/dissertation.pdf). All source material, including text files, figure scripts, and more, are available on [GitHub](https://github.com/LaurentRDC/dissertation).
 
     See the [research group website](http://www.physics.mcgill.ca/siwicklab/index.html) for more details.
     <p></p>
