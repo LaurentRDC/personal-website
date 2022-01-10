@@ -7,7 +7,7 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Letters and articles
 
-* __L. P. René de Cotret__, M. R. Otto, J.-H. Pöhls, Z. Luo, M. G. Kanatzidis, and B. J. Siwick, _Direct visualization of polaron formation in the thermoelectric SnSe_, PNAS (in press). <i class="ai ai-open-access"></i> [Preprint version available on arXiv](https://arxiv.org/abs/2111.10012).
+* __L. P. René de Cotret__, M. R. Otto, J.-H. Pöhls, Z. Luo, M. G. Kanatzidis, and B. J. Siwick, _Direct visualization of polaron formation in the thermoelectric SnSe_, PNAS **119** (2022) [DOI: 10.1073/pnas.2113967119](https://www.pnas.org/content/119/3/e2113967119). <i class="ai ai-open-access"></i> [Preprint version available on arXiv](https://arxiv.org/abs/2111.10012).
 
 * <i class="ai ai-open-access"></i> M. R. Otto, J.-H. Pöhls, __L. P. René de Cotret__, M. J. Stern, M. Sutton, and B. J. Siwick, _Mechanisms of electron-phonon coupling unraveled in momentum and time: The case of soft-phonons in TiSe~2~_, Science Advances **7** (2021) [DOI: 10.1126/sciadv.abf2810](https://doi.org/10.1126/sciadv.abf2810)
 
