@@ -132,22 +132,26 @@
             <div class="container">
                 <div class="content">
                     <p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
-<p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <span class="math inline">\(I_1(i,j)\)</span> and <span class="math inline">\(I_2(i,j)\)</span>, their cross-correlation <span class="math inline">\(I_1 \star I_2\)</span> is defined as: <span class="math display">\[
+<p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <span class="math inline">\(I_1(i,j)\)</span> and <span class="math inline">\(I_2(i,j)\)</span>, their cross-correlation <span class="math inline">\(I_1 \star I_2\)</span> is defined as:
+<span class="math display">\[
     (I_1 \star I_2)(u, v) \equiv \sum_{i,j} I_1(i, j) \cdot I_2(i - u, j - v)
 \]</span></p>
 <p>For example, if <span class="math inline">\(I_1 = I_2\)</span>, then <span class="math inline">\(I_1 \star I_2\)</span> has its maximum at <span class="math inline">\((u,v) =\)</span> (0,0). What happens if <span class="math inline">\(I_1\)</span> and <span class="math inline">\(I_2\)</span> are shifted from each other? Let’s see:</p>
 <figure>
-<img src="generated/pandocplot13432148782759260146.png" class="python image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" /><figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/pandocplot13432148782759260146.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot13432148782759260146.png" class="python image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" />
+<figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/pandocplot13432148782759260146.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In the above example, the cross-correlation is maximal at (50, 0), which is exactly the translation required to <em>shift back</em> the second image to match the first one. Finding the translation between images is then a simple matter of determining the glocal maximum of the cross-correlation. This operation is so useful that it is implemented in the Python library <a href="https://scikit-image.org">scikit-image</a> as <a href="https://scikit-image.org/docs/dev/api/skimage.registration.html?highlight=phase#skimage.registration.phase_cross_correlation"><code>skimage.feature.phase_cross_correlation</code></a>.</p>
 <p>It turns out that in my field of research, image registration can be crucial to correct experimental data. My primary research tool is <a href="http://www.physics.mcgill.ca/siwicklab">ultrafast electron diffraction</a>. Without knowing the details, you can think of this technique as a kind of microscope. A single image from one of our experiments looks like this:</p>
 <figure>
-<img src="../images/mnxc/Cr_1.png" class="image" alt="An electron diffraction pattern of polycrystalline chromium." /><figcaption aria-hidden="true">An electron diffraction pattern of polycrystalline chromium.</figcaption>
+<img src="../images/mnxc/Cr_1.png" class="image" alt="An electron diffraction pattern of polycrystalline chromium." />
+<figcaption aria-hidden="true">An electron diffraction pattern of polycrystalline chromium.</figcaption>
 </figure>
 <p>Most of the electron beam is unperturbed by the sample; this is why we use a metal beam-block (seen as a black rod in the image above) to prevent the electrons from damaging our apparatus.</p>
 <p>Our experiments are synthesized from hundreds of gigabytes of images like the one above, and it may take up to 72h (!) to take all the images we need. Over the course of this time, the electron beam may shift in a way that moves the image, but <em>not the beam-block</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Heres’s what I mean:</p>
 <figure>
-<img src="generated/pandocplot15771760378111292808.png" class="python image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" /><figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/pandocplot15771760378111292808.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot15771760378111292808.png" class="python image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" />
+<figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/pandocplot15771760378111292808.src.html">Source code</a>)</figcaption>
 </figure>
 <p>This does not fly. We need to be able to compare images together, and shifts by more than 1px are problematic. We need to correct for this shift, for every image, with respect to the first one. However, we are also in a bind, because unlike the example above, the images are not completely shifted; one part of them, the beam-block, is <em>static</em>, while the image behind it shifts.</p>
 <p>The crux of the problem is this: the cross-correlation between images gives us the shift between them. However, it is not immediately obvious how to tell the cross-correlation operation to ignore <em>certain parts</em> of the image. Is there some kind of operation, similar to the cross-correlation, that allows to mask parts of the images we want to ignore?</p>
@@ -155,7 +159,8 @@
 <hr>
 <p>In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation — and its associated registration function — in our ultrafast electron diffraction toolkit, <a href="https://scikit-ued.rtfd.io">scikit-ued</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Here’s an example of it in action:</p>
 <figure>
-<img src="generated/pandocplot11977411221955085584.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" /><figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot11977411221955085584.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot11977411221955085584.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" />
+<figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot11977411221955085584.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="contributing-to-scikit-image">Contributing to scikit-image</h2>
 <p>However, since this tool could see use in a more general setting, I decided to contribute it to <a href="https://scikit-image.org/">scikit-image</a>:</p>
@@ -246,7 +251,7 @@
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2022-01-23. 
+                    Page generated on 2022-01-24. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">
