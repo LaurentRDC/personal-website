@@ -71,10 +71,10 @@ from skued import diffread
 from pathlib import Path
 
 im1 = diffread(Path("images") / "autocenter" / "graphite.tif")
-mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(np.bool)
+mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(bool)
 
 im2 = diffread(Path("images") / "mnxc" / "Cr_1.tif")
-mask2 = np.ones_like(im2, dtype=np.bool)
+mask2 = np.ones_like(im2, dtype=bool)
 mask2[0:1250, 950:1250] = False
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6,3))
@@ -115,10 +115,10 @@ def center_of_mass_masked(im, mask):
     return r, c
 
 im1 = diffread(Path("images") / "autocenter" / "graphite.tif")
-mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(np.bool)
+mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(bool)
 
 im2 = diffread(Path("images") / "mnxc" / "Cr_1.tif")
-mask2 = np.ones_like(im2, dtype=np.bool)
+mask2 = np.ones_like(im2, dtype=bool)
 mask2[0:1250, 950:1250] = False
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6,3))
@@ -196,10 +196,10 @@ def center_of_mass_masked(im, mask):
     return int(r), int(c)
 
 im1 = diffread(Path("images") / "autocenter" / "graphite.tif")
-mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(np.bool)
+mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(bool)
 
 im2 = diffread(Path("images") / "mnxc" / "Cr_1.tif")
-mask2 = np.ones_like(im2, dtype=np.bool)
+mask2 = np.ones_like(im2, dtype=bool)
 mask2[0:1250, 950:1250] = False
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6,3))
@@ -236,10 +236,10 @@ def center_of_mass_masked(im, mask):
     return int(r), int(c)
 
 im1 = diffread(Path("images") / "autocenter" / "graphite.tif")
-mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(np.bool)
+mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(bool)
 
 im2 = diffread(Path("images") / "mnxc" / "Cr_1.tif")
-mask2 = np.ones_like(im2, dtype=np.bool)
+mask2 = np.ones_like(im2, dtype=bool)
 mask2[0:1250, 950:1250] = False
 
 fig, ((ax1, ax2), (ax3, ax4)) = plt.subplots(2, 2, figsize=(6,6))
@@ -286,7 +286,7 @@ def correlate(arr1, arr2, m1, m2):
 
 
 im = diffread(Path("images") / "mnxc" / "Cr_1.tif")
-mask = np.ones_like(im, dtype=np.bool)
+mask = np.ones_like(im, dtype=bool)
 mask[0:1250, 950:1250] = False
 
 im = im[::2, ::2]
@@ -370,7 +370,7 @@ def correlate(arr1, arr2, m1, m2):
 
 
 im = diffread(Path("images") / "autocenter" / "graphite.tif")
-mask = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(np.bool)
+mask = diffread(Path("images") / "autocenter" / "graphite_mask.tif").astype(bool)
 
 r, c = center_of_mass_masked(im, mask)
 side_length = floor(min([r, abs(r - im.shape[0]), c, abs(c - im.shape[1])]))
@@ -434,7 +434,7 @@ im1 = diffread(Path("images") / "autocenter" / "graphite.tif")
 mask1 = diffread(Path("images") / "autocenter" / "graphite_mask.tif")
 
 im2 = diffread(Path("images") / "mnxc" / "Cr_1.tif")
-mask2 = np.ones_like(im2, dtype=np.bool)
+mask2 = np.ones_like(im2, dtype=bool)
 mask2[0:1250, 950:1250] = False
 
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(6,3))

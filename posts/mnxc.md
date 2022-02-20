@@ -97,7 +97,7 @@ from pathlib import Path
 ref = diffread(Path("images") / "mnxc" / "Cr_1.tif")
 im = diffread(Path("images") / "mnxc" / "Cr_2.tif")
 
-mask = np.ones_like(ref, dtype=np.bool)
+mask = np.ones_like(ref, dtype=bool)
 mask[0:1250, 950:1250] = False
 
 shifted = align(image=im, reference=ref, mask=mask)
