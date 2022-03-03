@@ -8,9 +8,140 @@
         <name>Laurent P. René de Cotret</name>
         <email>laurent.decotret@outlook.com</email>
     </author>
-    <updated>2021-12-14
+    <updated>2022-03-02
 </updated>
     <entry>
+    <title>Exploring the multiverse of possibilities all at once using monads</title>
+    <link href="https://laurentrdc.xyz//posts/multiverse.html" />
+    <id>https://laurentrdc.xyz//posts/multiverse.html</id>
+    <published>2022-03-02T00:00:00Z</published>
+    <updated>2022-03-02
+</updated>
+    <summary type="html"><![CDATA[<p>I’m working on a global optimization problem these days. Unlike local optimization problems, e.g. what you would solve using least-square minimization, global optimization inevitably involves exhaustively evaluating all <em>possible</em> solutions and choosing the best one. As you can imagine, global optimization is much more computationally-intensive than local optimization, due to the size of the set of potential solutions. Speeding up a global optimization problem involves reducing the set of possible solution to a minimum, based on the specifics of the problem.</p>
+<p>In this post, I’ll show you how to <em>build</em> the minimal set of possible solutions to an optimization problem, instead of searching for solutions in a larger space. As we’ll see, only viable solutions are ever considered. This will be done by splitting the computations into multiple universes whenever a choice is presented to us, such that we traverse the multiverse of possibilities all at once.</p>
+<h3 class="title is-3" id="an-example-problem">An example problem</h3>
+<p>Let’s say we’ve got 8 friends going out for a drink, in two cars with four seats each. How many arrangements of people can we have? If we don’t care about where people sit in each car, the number of arrangements is the number of combinations of 4 people we can make from 8 people, since the remaining 4 people will go in the second car. Therefore, there are:</p>
+<p><span class="math display">\[
+    \binom{8}{4} = \frac{8!}{4!(8-4)!} = 70
+\]</span></p>
+<p>possible combinations. If you’re not familiar with this notation, you can read <span class="math inline">\(\binom{8}{4}\)</span> as <em>choose 4 people out of 8 people</em>, of which there are 70 possibilities. That means that if we wanted to optimize the distribution of people into the two cars – for example, if we wanted to group up the best friends together, or minimize the total weight of people in car1, or some other objective –, we would need to look at 70 solutions. This problem is purely combinatorial.</p>
+<p><em>Now let’s add some constraints</em>. Our 8 friends are coming back from the bar. Out of the 8 friends, 3 of them didn’t drink and are therefore allowed to drive. Thus, the number of possible arrangements of friends in the car has been reduced, as each car needs a driver. For one car, we need to select 1 driver out of 3, and 3 remaining passengers out of 7. However, the other car will need a driver, so really there are 6 passengers to choose from. Finally, for every arrangement there is a duplicate arrangement with the cars swapped. The number of possibilities is therefore:</p>
+<p><span class="math display">\[
+    \binom{3}{1} \binom{6}{3} \times 2 = 120
+\]</span></p>
+<h3 class="title is-3" id="potential-solutions-as-a-decision-graph">Potential solutions as a decision graph</h3>
+<p>How else can we express the number of combinations? Think of building a solution, instead of searching for one. We may want to start by assigning a driver to car 1. For each possible decision here, we’ll assign a driver to the second car next, then passengers. The possibilities look like this:</p>
+<figure>
+<img src="generated/pandocplot6050784310393959377.png" class="python image" alt="Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (Source code)" />
+<figcaption aria-hidden="true">Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (<a href="generated/pandocplot6050784310393959377.src.html">Source code</a>)</figcaption>
+</figure>
+<p>In the figure above, no one is assigned at the start. Then, we assign the first driver (out of three choices). Then, we need to assign a second driver, of which there are only two remaining. Each of the 6 passengers are then assigned. A potential solution (i.e. a assignment between people and cars) is represented by a path in the decision tree. Three possibilities are shown as examples.</p>
+<p>This way of thinking about solutions reminds me strongly of the <a href="https://en.wikipedia.org/wiki/Many-worlds_interpretation">Everett interpretation of quantum mechanics</a>, also known as the <em>many-worlds interpretation</em> or the <em>multiverse interpretation</em>. The three potential assignments are three universes that split from the same starting point. Enumerating all possible solutions to our example problem consists in crawling the decision tree, or crawling the multiverse of possibilities.</p>
+<h3 class="title is-3" id="expressing-the-multiverse-of-solutions-in-haskell">Expressing the multiverse of solutions in Haskell</h3>
+<p>Based on the decision tree above, I want to run a computation which, when presented with choices, explores all possibilities all at once.</p>
+<p>Consider the following type constructor:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Possibilities</span> a <span class="ot">=</span> <span class="dt">Possibilities</span> [a]</span></code></pre></div>
+<p>A computation that returns a result <code>Possibilities a</code> represents all possible answers of final type <code>a</code>. For example, a computation can possibly have multiple answers might look like:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">possibly ::</span> [a] <span class="ot">-&gt;</span> <span class="dt">Possibilities</span> a</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>possibly xs <span class="ot">=</span> <span class="dt">Possibilities</span> xs</span></code></pre></div>
+<p>Alternatively, a computation which is <em>certain</em>, i.e. has a single possibility, is represented by:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">certainly ::</span> a <span class="ot">-&gt;</span> <span class="dt">Possibilities</span> a</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>certainly x <span class="ot">=</span> <span class="dt">Possibilities</span> [x] <span class="co">-- A single possibility = a certainty.</span></span></code></pre></div>
+<p><code>Possibilities</code> is basically a list, so we’ll start with a <code>Foldable</code> instance which is useful for counting the number of possibilities using <code>length</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Foldable</span> <span class="dt">Possibilities</span> <span class="kw">where</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foldMap</span> m (<span class="dt">Possibilities</span> xs) <span class="ot">=</span> <span class="fu">foldMap</span> m xs</span></code></pre></div>
+<p><code>Possibilities</code> is a functor:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Possibilities</span> <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmap</span> f (<span class="dt">Possibilities</span> ps) <span class="ot">=</span> <span class="dt">Possibilities</span> (<span class="fu">fmap</span> f ps)</span></code></pre></div>
+<p>The interesting tidbit starts with the <code>Applicative</code> instance. Combining possibilities should be combinatorial, e.g. combining the possibilities of 3 drivers and 6 passengers results in 18 possibilities.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Applicative</span> <span class="dt">Possibilities</span> <span class="kw">where</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pure</span> x <span class="ot">=</span> certainly x <span class="co">-- see above</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Possibilities</span> fs) <span class="op">&lt;*&gt;</span> (<span class="dt">Possibilities</span> ps) <span class="ot">=</span> <span class="dt">Possibilities</span> [f p <span class="op">|</span> f <span class="ot">&lt;-</span> fs, p <span class="ot">&lt;-</span> ps]</span></code></pre></div>
+<p>Recall that the list comprehension notation is combinatorial, i.e. <code>[(n,m) | n &lt;- [1..3], m &lt;- [1..3]]</code> has 9 elements (<code>[(1,1),(1,2),(1,3),(2,1),(2,2),(2,3),(3,1),(3,2),(3,3)]</code>).</p>
+<p>Now for the crucial part of composing possibilities. We want past possibilities to influence future possibilities; we’ll need a monad instance. A monad instance means that if we start with multiple possibilities, and each possibility can results in multiple possibilities, the whole computation should produce multiple possibilities<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> <span class="dt">Possibilities</span> <span class="kw">where</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Possibilities</span> ps <span class="op">&gt;&gt;=</span> f <span class="ot">=</span> <span class="dt">Possibilities</span> <span class="op">$</span> <span class="fu">concat</span> [toList (f p) <span class="op">|</span> p <span class="ot">&lt;-</span> ps] <span class="co">-- concat :: [ [a] ] -&gt; [a]</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">where</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>            toList (<span class="dt">Possibilities</span> xs) <span class="ot">=</span> xs</span></code></pre></div>
+<p>Let’s define some helper datatypes and functions. We</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">{- </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">With the following imports:</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">import           Data.Set    (Set, (\\))</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">import qualified Data.Set as Set </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">-}</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- | All possible people which can be assigned to cars</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">People</span> <span class="ot">=</span> <span class="dt">Driver1</span>    <span class="op">|</span> <span class="dt">Driver2</span>    <span class="op">|</span> <span class="dt">Driver3</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Passenger1</span> <span class="op">|</span> <span class="dt">Passenger2</span> <span class="op">|</span> <span class="dt">Passenger3</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Passenger4</span> <span class="op">|</span> <span class="dt">Passenger5</span> <span class="op">|</span> <span class="dt">Passenger6</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> (<span class="dt">Bounded</span>, <span class="dt">Eq</span>, <span class="dt">Enum</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">-- A car assignment consists in two cars, each with a driver, </span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">-- as well as passengers</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">CarAssignment</span> </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">CarAssignment</span> {<span class="ot"> driver1        ::</span> <span class="dt">Person</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                    ,<span class="ot"> driver2        ::</span> <span class="dt">Person</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                    ,<span class="ot"> car1Passengers ::</span> <span class="dt">Set</span> <span class="dt">Person</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>                    ,<span class="ot"> car2Passengers ::</span> <span class="dt">Set</span> <span class="dt">Person</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                    }</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="ot">allDrivers ::</span> <span class="dt">Set</span> <span class="dt">Person</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>allDrivers <span class="ot">=</span> Set.fromList [<span class="dt">Driver1</span>, <span class="dt">Driver2</span>, <span class="dt">Driver3</span>]</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">-- Pick a driver from an available group of people.</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co">-- Returns the assigned driver, and the remaining unassigned people</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="ot">assignDriver ::</span> <span class="dt">Set</span> <span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">Possibilities</span> (<span class="dt">Person</span>, <span class="dt">Set</span> <span class="dt">Person</span>)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>assignDriver people </span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> possibly [ (driver, Set.delete driver people) </span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>               <span class="op">|</span> driver <span class="ot">&lt;-</span> Set.toList <span class="op">$</span> people <span class="ot">`Set.intersection`</span> allDrivers</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>               ]</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">-- Pick three passengers from an available group of people.</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co">-- Returns the assigned passengers, and the remaining unassigned people</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="ot">assign3Passengers ::</span> <span class="dt">Set</span> <span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">Possibilities</span> (<span class="dt">Set</span> <span class="dt">Person</span>, <span class="dt">Set</span> <span class="dt">Person</span>)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>assign3Passengers people <span class="ot">=</span> possibly [ (passengers, people \\ passengers) </span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>                                   <span class="op">|</span> passengers <span class="ot">&lt;-</span> setsOf3</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>                                   ]</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span> setsOf3 <span class="ot">=</span> <span class="fu">filter</span> (\s <span class="ot">-&gt;</span> <span class="fu">length</span> s <span class="op">==</span> <span class="dv">3</span>) <span class="op">$</span> Set.toList <span class="op">$</span> Set.powerSet people</span></code></pre></div>
+<p>Finally, we can express the multiverse of possible drivers-and-passengers assignments with great elegance. Behold:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">carAssignments ::</span> <span class="dt">Possibilities</span> <span class="dt">CarAssignment</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>carAssignments <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> everyone <span class="ot">=</span> Set.fromList <span class="op">$</span> <span class="fu">enumFromTo</span> <span class="fu">minBound</span> <span class="fu">maxBound</span> <span class="co">-- [Driver1, Driver2, ..., Passenger6]</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    (driver1, rest) <span class="ot">&lt;-</span> assignDriver everyone</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    (driver2, rest) <span class="ot">&lt;-</span> assignDriver rest</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    (car1Passengers, rest) <span class="ot">&lt;-</span> assign3Passengers rest</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    (car2Passengers, _)    <span class="ot">&lt;-</span> assign3Passengers rest</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> <span class="dt">CarAssignment</span> driver1 driver2 car1Passengers car2Passengers</span></code></pre></div>
+<p>Given the monad instance for <code>Possibilities</code>, the <code>return</code> function returns all possible possibilities. Let’s take a look at the size of the multiverse in this case:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">let</span> multiverse <span class="ot">=</span> carAssignments</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="fu">print</span> <span class="op">$</span> <span class="fu">length</span> multiverse</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="dv">120</span></span></code></pre></div>
+<p>Just as we had calculated by hand. Amazing!</p>
+<h3 class="title is-3" id="conclusion">Conclusion</h3>
+<p>What I’ve shown you today is how to structure computations in such a way that you are exploring the multiverse of possibilities all at once. The seasoned Haskell programmer will have recognized that the <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> instances of <code>Possibilities</code> are just like lists!</p>
+<p>Although I’m not using Haskell at work<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, I expect that something similar will need to be built in the near future to speed up our global optimization problem. The specific problem we are tackling has many more constraints than the example presented in this post. It’s easier to generate a list of solutions, most of which are unsuitable, and filter the solutions one by one. There is a fixed computational cost associated with generating and checking a solution, and so reducing the set of possible solutions is even more important.</p>
+<p>This post was partly inspired by the legendary blog post <a href="https://aphyr.com/posts/342-typing-the-technical-interview">Typing the technical interview</a></p>
+<p><em>A self-contained Haskell source file containing all code from this post is <a href="/files/multiverse.hs">available for download here</a></em></p>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>This is why some people like to thing of monads as types that support flatMap.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>Boss, if you’re reading this, please let me use Haskell :).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>]]></summary>
+</entry>
+<entry>
     <title>Can you make heterogeneous lists in Haskell? Sure — as long your intent is clear</title>
     <link href="https://laurentrdc.xyz//posts/existential.html" />
     <id>https://laurentrdc.xyz//posts/existential.html</id>
@@ -238,7 +369,7 @@
     <link href="https://laurentrdc.xyz//posts/autocenter.html" />
     <id>https://laurentrdc.xyz//posts/autocenter.html</id>
     <published>2021-01-23T00:00:00Z</published>
-    <updated>2021-01-23
+    <updated>2022-02-20
 </updated>
     <summary type="html"><![CDATA[<p>Ultrafast electron diffraction involves the analysis of <em>diffraction patterns</em>. Here is an example diffraction pattern for a thin (&lt;100nm) flake of graphite<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <figure>
@@ -262,8 +393,8 @@
 </figure>
 <p>Not bad! Especially in the first image, really not a bad first try. But I’m looking for something <em>pixel-perfect</em>. Intuitively, the beam-block in each image should mess with the calculation of the center of mass. Let’s define the following areas that we would like to ignore:</p>
 <figure>
-<img src="generated/pandocplot2056705493792406716.png" class="python image" alt="Areas that are bright are defined as being masked (Source code)" />
-<figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot2056705493792406716.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14067312701948802826.png" class="python image" alt="Areas that are bright are defined as being masked (Source code)" />
+<figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot14067312701948802826.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Masks are generally defined as boolean arrays with True (or 1) where pixels are valid, and False (or 0) where pixels are invalid. Therefore, we should ignore the weight of masked pixels. <code>scipy.ndimage.center_of_mass</code> does not support this feature; we need an extension of <code>center_of_mass</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> center_of_mass_masked(im, mask):</span>
@@ -275,8 +406,8 @@
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> r, c</span></code></pre></div>
 <p>This is effectively an average of the row and column coordinates (<code>rr</code> and <code>cc</code>) weighted by the image intensity. The trick here is that <code>mask.astype(im.dtype)</code> is 0 where pixels are “invalid”; therefore they don’t count in the average! Let’s look at the result:</p>
 <figure>
-<img src="generated/pandocplot473781445088900008.png" class="python image" alt="Demonstration of using center_of_mass_masked (see above) to find the center of diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of using <code>center_of_mass_masked</code> (see above) to find the center of diffraction patterns. (<a href="generated/pandocplot473781445088900008.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot13899544475836004146.png" class="python image" alt="Demonstration of using center_of_mass_masked (see above) to find the center of diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of using <code>center_of_mass_masked</code> (see above) to find the center of diffraction patterns. (<a href="generated/pandocplot13899544475836004146.src.html">Source code</a>)</figcaption>
 </figure>
 <p>I’m not sure if it’s looking better, honestly. But at least we have an approximate center! That’s a good starting point that feeds in to the next step.</p>
 <h2 class="title is-2" id="friedel-pairs-and-radial-inversion-symmetry">Friedel pairs and radial inversion symmetry</h2>
@@ -292,28 +423,28 @@
 <p>The algorithm by Liu was meant for single-crystal diffraction patterns with well-defined peaks, and not so much for rings. However, we can distill Liu’s idea into a new, more general approach. If the approximate center coincides with the actual center of the image, then the image should be invariant under radial-inversion with respect to the approximate center. Said another way: if the image <span class="math inline">\(I\)</span> is defined on polar coordinates <span class="math inline">\((r, \theta)\)</span>, then the center maximizes correlation between <span class="math inline">\(I(r, \theta)\)</span> and <span class="math inline">\(I(-r, \theta)\)</span>. Thankfully, computing the masked correlation between images <a href="/posts/mnxc.html">is something I’ve worked on before</a>!</p>
 <p>Let’s look at what radial inversion looks like. There are ways to do it with interpolation, e.g. <a href="https://scikit-image.org/docs/stable/api/skimage.transform.html#warp">scikit-image’s <code>warp</code> function</a>. However, in my testing, this is incredibly slow compared to what I will show you. A faster approach is to consider that if the image was centered on the array, then radial inversion is really flipping the direction of the array axes; that is, if the image array <code>I</code> has size (128, 128), and the center is at (64, 64), the radial inverse of <code>I</code> is <code>I[::-1, ::-1]</code> (numpy) / <code>flip(flip(I, 1), 2)</code> (MATLAB) / <code>I[end:-1:1,end:-1:1]</code> (Julia). Another important note is that if the approximate center of the image is far from the center of the array, the overlap between the image and its radial inverse is limited. Consider this:</p>
 <figure>
-<img src="generated/pandocplot5210405458651319501.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot5210405458651319501.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot3039683716146499891.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot3039683716146499891.src.html">Source code</a>)</figcaption>
 </figure>
 <p>If we cropped out the bright areas around the frame, then the approximate center found would coincide with the center of the array; then, radial inversion is very fast.</p>
 <figure>
-<img src="generated/pandocplot6780774696221700224.png" class="python image" alt="Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (<a href="generated/pandocplot6780774696221700224.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot9311168632730849694.png" class="python image" alt="Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (<a href="generated/pandocplot9311168632730849694.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Now, especially for the right column of images, it’s pretty clear that the approximate center wasn’t perfect. The <em>correction</em> to the approximate center is can be calculated with the masked normalized cross-correlation<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
 <figure>
-<img src="generated/pandocplot16827808026559328088.png" class="python image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot16827808026559328088.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot7153214188955064207.png" class="python image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot7153214188955064207.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The cross-correlation in the bottom right corner (zoomed by 2x) shows that the true center is the approximate center we found earlier, corrected by the small shift (white arrow)! For single-crystal diffraction patterns, the resulting is even more striking:</p>
 <figure>
-<img src="generated/pandocplot895420456952402455.png" class="python image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot895420456952402455.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot18417634545044508040.png" class="python image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot18417634545044508040.src.html">Source code</a>)</figcaption>
 </figure>
 <p>We can put the two steps together and determine a pixel-perfect center:</p>
 <figure>
-<img src="generated/pandocplot3975654348632553341.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot3975654348632553341.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16481428494023282258.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot16481428494023282258.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="bonus-low-quality-diffraction">Bonus: low-quality diffraction</h2>
 <p>Here’s a fun consequence: the technique works also for diffraction patterns that are pretty crappy and very far off center, provided that the asymmetry in the background is taken care-of:</p>
@@ -474,7 +605,7 @@
     <link href="https://laurentrdc.xyz//posts/mnxc.html" />
     <id>https://laurentrdc.xyz//posts/mnxc.html</id>
     <published>2019-04-30T00:00:00Z</published>
-    <updated>2021-12-14
+    <updated>2022-02-20
 </updated>
     <summary type="html"><![CDATA[<p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
 <p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <span class="math inline">\(I_1(i,j)\)</span> and <span class="math inline">\(I_2(i,j)\)</span>, their cross-correlation <span class="math inline">\(I_1 \star I_2\)</span> is defined as:
@@ -504,8 +635,8 @@
 <hr>
 <p>In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation — and its associated registration function — in our ultrafast electron diffraction toolkit, <a href="https://scikit-ued.rtfd.io">scikit-ued</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Here’s an example of it in action:</p>
 <figure>
-<img src="generated/pandocplot11977411221955085584.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" />
-<figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot11977411221955085584.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16925808237712602977.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" />
+<figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot16925808237712602977.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="contributing-to-scikit-image">Contributing to scikit-image</h2>
 <p>However, since this tool could see use in a more general setting, I decided to contribute it to <a href="https://scikit-image.org/">scikit-image</a>:</p>
@@ -885,55 +1016,6 @@
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 subtitle --&gt;</span></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;subtitle is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
 <p>To modifying headings generated by Pandoc <em>a posteriori</em>, I wrote a Pandoc filter. <strong>The process is documented <a href="/posts/bulma-pandoc-filter.html">in this post</a></strong>.</p>]]></summary>
-</entry>
-<entry>
-    <title>Genesis</title>
-    <link href="https://laurentrdc.xyz//posts/genesis.html" />
-    <id>https://laurentrdc.xyz//posts/genesis.html</id>
-    <published>2018-08-01T00:00:00Z</published>
-    <updated>2020-05-22
-</updated>
-    <summary type="html"><![CDATA[<p>This is the first post of my blog, where I can test new features.</p>
-<hr />
-<h3 class="title is-3" id="math">Math</h3>
-<p>Math display works:</p>
-<p><span class="math display">\[ 
-\begin{align}
-    \nabla \cdot \textbf{E} &amp;= \frac{\rho}{\epsilon_0} \\
-    \nabla \cdot \textbf{B} &amp;= 0 \\
-    \nabla \times \textbf{E} &amp;= -\frac{\partial \textbf{B}}{\partial t} \\
-    \nabla \times \textbf{B} &amp;= \mu_0 \left( \textbf{J} + \epsilon_0 \frac{\partial \textbf{E}}{\partial t} \right) \\
-    \frac{\partial \rho}{\partial t} + \nabla \cdot \textbf{J} &amp;= 0
-\end{align}
-\]</span></p>
-<hr />
-<h3 class="title is-3" id="code">Code</h3>
-<p>Code blocks also work, including syntax highlighting:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Haskell</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">fib ::</span> <span class="dt">Integer</span> <span class="ot">-&gt;</span> <span class="dt">Integer</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>fib <span class="dv">0</span> <span class="ot">=</span> <span class="dv">0</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>fib <span class="dv">1</span> <span class="ot">=</span> <span class="dv">1</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>fib n <span class="ot">=</span> fib (n <span class="op">-</span> <span class="dv">1</span>) <span class="op">+</span> fib (n <span class="op">-</span> <span class="dv">2</span>)</span></code></pre></div>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Python</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fib(n):</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    i, j <span class="op">=</span> <span class="dv">0</span>, <span class="dv">1</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(n):</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span> i</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        i, j <span class="op">=</span> j, i <span class="op">+</span> j</span></code></pre></div>
-<hr />
-<h3 class="title is-3" id="images">Images</h3>
-<figure>
-<img src="/images/Laurent.jpg" class="image" alt="Caption: this is me" />
-<figcaption aria-hidden="true">Caption: this is me</figcaption>
-</figure>
-<hr />
-<h3 class="title is-3" id="quotes">Quotes</h3>
-<blockquote>
-<p>The number of bins (of size 1) is one larger than the largest value in x. If minlength is specified, there will be at least this number of bins in the output array (though it will be longer if necessary, depending on the contents of x).</p>
-</blockquote>
-<ul>
-<li><em>NumPy documentation for bincount</em></li>
-</ul>]]></summary>
 </entry>
 
 </feed>
