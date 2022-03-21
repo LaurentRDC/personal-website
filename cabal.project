@@ -4,3 +4,8 @@ packages:
 
 optimization: 0
 jobs: $ncpus
+
+source-repository-package
+  type:     git
+  location: https://github.com/jaspervdj/hakyll
+  tag:      83fb2e64c49cc659bdbbcc8c63f00e3f84f521eb
