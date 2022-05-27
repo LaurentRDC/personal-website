@@ -7,7 +7,7 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Letters and articles
 
-* T. L. Britt, Q. Li, __L. P. René de Cotret__, N. Olsen, M. R. Otto, S. A. Hassan, M. Zacharias, F. Caruso, X. Zhu, and B. J. Siwick, _Direct view of phonon dynamics in atomically thin MoS~2~_ (2022) <i class="ai ai-open-access"></i> [Preprint available on arXiv](https://arxiv.org/abs/2205.07672).
+* T. L. Britt, Q. Li, __L. P. René de Cotret__, N. Olsen, M. R. Otto, S. A. Hassan, M. Zacharias, F. Caruso, X. Zhu, and B. J. Siwick, _Direct view of phonon dynamics in atomically thin MoS~2~_ (2022). Accepted for publication in ACS Nano Letters. <i class="ai ai-open-access"></i> [Preprint available on arXiv](https://arxiv.org/abs/2205.07672).
 
 * __L. P. René de Cotret__, M. R. Otto, J.-H. Pöhls, Z. Luo, M. G. Kanatzidis, and B. J. Siwick, _Direct visualization of polaron formation in the thermoelectric SnSe_, PNAS **119** (2022) [DOI: 10.1073/pnas.2113967119](https://www.pnas.org/content/119/3/e2113967119). <i class="ai ai-open-access"></i> [Preprint version available on arXiv](https://arxiv.org/abs/2111.10012). [Featured on McGill University News](https://www.mcgill.ca/channels/channels/news/visualizing-how-polarons-form-best-thermoelectric-material-yet-developed-336618)
 
