@@ -33,6 +33,11 @@ title: About me
 
 * August 2021 - | [__SocïVolta__](http://socivolta.com/) | Research
 
+    My role at SocïVolta involves multiple tasks and research subjects, including:
+     * Prediction of power arbitrage using time-series analysis and machine learning techniques;
+     * Portfolio optimization and backtesting;
+     * Short-term probabilistic forecasting using Monte-Carlo methods;
+     * High-performance, real-time, global optimization of resource allocations ([related blog post](/posts/multiverse.html)).
     <p></p>
 
 * December 2020 - April 2021 | __Department of Chemistry, University of Toronto__ | Data Engineer
