@@ -142,11 +142,11 @@
 </section>]]></summary>
 </entry>
 <entry>
-    <title>Can you make heterogeneous lists in Haskell? Sure — as long your intent is clear</title>
+    <title>Can you make heterogeneous lists in Haskell? Sure — as long as your intent is clear</title>
     <link href="https://laurentrdc.xyz//posts/existential.html" />
     <id>https://laurentrdc.xyz//posts/existential.html</id>
     <published>2021-09-26T00:00:00Z</published>
-    <updated>2021-12-14
+    <updated>2022-07-06
 </updated>
     <summary type="html"><![CDATA[<p><em>Featured in <a href="https://haskellweekly.news/issue/283.html">Haskell Weekly issue 283</a></em></p>
 <p>Sometimes, Haskell’s type system seems a bit restrictive compared to dynamic languages like Python. The most obvious example is the heterogenous list:</p>
