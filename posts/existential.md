@@ -1,5 +1,5 @@
 ---
-title: Can you make heterogeneous lists in Haskell? Sure — as long your intent is clear
+title: Can you make heterogeneous lists in Haskell? Sure — as long as your intent is clear
 date: 2021-09-26
 summary: Haskell's type system might seem restrictive sometimes. For example, heterogeneous lists are not allowed. In this post, I show how to build heterogenous collections using existential quantification -- which requires us to be explicit about our intent.
 ---
