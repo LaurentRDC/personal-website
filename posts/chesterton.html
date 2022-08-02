@@ -6,7 +6,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
         <title>
-            When one temperature is not enough: the two-temperature model - Laurent P. René de Cotret
+            Chesterton's fence and why I'm not sold on the blockchain - Laurent P. René de Cotret
         </title>
         <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
         <link rel="stylesheet" type="text/css" href="../css/syntax.css">
@@ -64,14 +64,14 @@
             <div class="hero-body">
                 <div class="container has-text-centered">
                     <h1 class="title has-text-light">
-                        When one temperature is not enough: the two-temperature model
+                        Chesterton's fence and why I'm not sold on the blockchain
                     </h1>
                     <h3>
-                        Posted on 2019-04-03 | Last updated on 2021-12-14
+                        Posted on 2022-08-02 | Last updated on 2022-08-02
 
                     </h3>
                     <h3>
-                        Estimated reading time of 4 min.
+                        Estimated reading time of 2 min.
                     </h3>
                 </div>
             </div>
@@ -131,32 +131,27 @@
         <div class="section">
             <div class="container">
                 <div class="content">
-                    <p>Temperature is a measure of the average kinetic energy of all particles in a system. An example of such as system is presented below:</p>
-<figure>
-<img src="../images/Translational_motion.gif" class="image" alt="Translational motion of particles in a box. Some particles are colored red for better tracking. Image credit to A. Greg." />
-<figcaption aria-hidden="true">Translational motion of particles in a box. Some particles are colored red for better tracking. <a href="https://en.wikipedia.org/wiki/Thermodynamic_temperature#/media/File:Translational_motion.gif">Image credit to A. Greg.</a></figcaption>
-</figure>
-<p>Note that the above system has a temperature because there exists a clear <strong>average</strong> motion, even though not all particles are moving at the same velocity. This means, a system is at some temperature <span class="math inline">\(T\)</span> as long as the distribution of kinetic energies (often related to velocities) ressembles a <strong>normal distribution</strong>:</p>
-<figure>
-<img src="generated/pandocplot5022343156198846568.png" class="image" alt="Examples of distribution of particle kinetic energies. Left: distribution of particle energies with a well-defined temperature. Right: distribution of particle energies does not match an expected thermal equilibrium. (Source code)" />
-<figcaption aria-hidden="true">Examples of distribution of particle kinetic energies. <strong>Left</strong>: distribution of particle energies with a well-defined temperature. <strong>Right</strong>: distribution of particle energies does not match an expected thermal equilibrium. (<a href="generated/pandocplot5022343156198846568.src.html">Source code</a>)</figcaption>
-</figure>
-<p>So, a system with a well-defined temperature exhibits a normal distribution of particle energies. It turns out that it is possible to prepare systems into a state where there are <em>two clear average energies</em> , if only for a very short moment.</p>
-<p>Real materials are composed of two types of particles, nuclei and electrons<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. These particles have widly different masses, so electromagnetic fields — for example, an intense pulse of light — will not affect them at the same time; since nuclei are at least ~1000x more massive than electrons, we should expect the electrons to react about ~1000x faster.</p>
-<p>After decades of development culminating in the 2018 Nobel Prize in Physics, the production of ultrafast laser pulses (less than 30 femtoseconds<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>) is now routine. These ultrafast laser pulses can be used to prepare systems in a strange configuration: one with seemingly <em>two temperatures</em>, albeit only for a short time. Modeling of this situation in crystalline material was done decades ago, and the model is known as the <strong>two-temperature model</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
-<p>Roughly 100fs after dumping a lot of energy into a material, the nuclei might not have reacted yet, and we might have the following energetic landscape:</p>
-<figure>
-<img src="generated/pandocplot7229732910474229839.png" class="image" alt="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, T_l, and one for the electronic system, T_e. (Source code)" />
-<figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/pandocplot7229732910474229839.src.html">Source code</a>)</figcaption>
-</figure>
-<p>where the nucliei will still be at equilibrium temperature, and the electrons might be at a temperature of 20000<span class="math inline">\(^{\circ}\)</span>C. Therefore, <em>we have a system with two temperatures</em> for a few picoseconds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+                    <p>The key technological advances which brought Bitcoin to life are the blockchain and its associated proof-of-work consensus algorithm. The Bitcoin whitepaper<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is very clear on its purpose:</p>
+<blockquote>
+<p>A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution. Digital signatures provide part of the solution, but the main benefits are lost if a trusted third party is still required to prevent double-spending.</p>
+</blockquote>
+<p>The <em>double-spending</em> problem to which Nakamoto refers is a unique challenge of digital cash implementations. Contrary to physical cash, which is difficult to copy, digital cash is but bytes; it can be trivially copied. Before Bitcoin, the most popular way to prevent double-spending has been to route all digital cash transactions on a particular network through a trusted entity which ensures that no double-spending occurs. This is how the credit card and Interac networks work, for example.</p>
+<p>The Bitcoin whitepaper brings a new solution to the double-spending problem, a solution designed to explicitly avoid centralized trusted entities.</p>
+<hr />
+<p>In software engineering, there is a principle that one should understand <em>why</em> something is the way it is, before trying to change it. This principle is known as <em>Chesterton’s fence</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<blockquote>
+<p>There exists (…) a fence or gate erected across a road. The more modern type of reformer goes gaily up to it and says, ‘I don’t see the use of this; let us clear it away.’ To which the more intelligent type of reformer will do well to answer: ’If you don’t see the use of it, I certainly won’t let you clear it away. Go away and think. Then, when you can come back and tell me that you do see the use of it, I may allow you to destroy it.</p>
+</blockquote>
+<p>To me, the push towards decentralization is a case of Chesterton’s fence. No one wants to involve a third-party in every transactions, but it is this way for two main reasons: fraud management and performance (transaction throughput).</p>
+<p><strong>Fraud management</strong> is a weak point of an anonymous peer-to-peer network like Bitcoin. While I appreciate the desire for anonymity, this leads to the same behaviors which lead to the founding of the US Securities and Exchange Commission almost a hundred years ago. Decentralization also enabled the rise of ransomware, as it is now much harder to track the flow of money between anonymous, single-use cryptocurrency accounts.</p>
+<p><strong>Performance</strong> is another major downside of decentralization. As an example, Bitcoin’s throughput has never reached more than <a href="https://blockchair.com/bitcoin/charts/transactions-per-second">6 transactions per second</a> as of the time of writing. By contract, the electronic payment network VisaNet (which powers Visa credit card) can process up to <a href="https://usa.visa.com/about-visa/visanet.html">76 000 transactions per second</a>.</p>
+<p>Until blockchain enthusiasts understand the advantages of centralization presented above, I don’t think cryptocurrencies will become mainstream.</p>
+<p><em>This post was inspired by the <a href="https://rationalreminder.ca/podcast/crypto8">Tim O’Reilly interview on the Rational Reminder podcast</a></em>.</p>
 <section class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>The atomic forces at the nanometer-scale are mostly electromagnetic, so I will consider the atomic nuclei as a single particle.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p><span class="math inline">\(1\)</span> femtosecond <span class="math inline">\(= 10^{-15}\)</span> seconds<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>P. B. Allen, <em>Theory of thermal relaxation of electrons in metals</em> (1987). Physics Review Letters <strong>59</strong>, DOI: <a href="https://link.aps.org/doi/10.1103/PhysRevLett.59.1460">10.1103/PhysRevLett.59.1460</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4" role="doc-endnote"><p><span class="math inline">\(1\)</span> picosecond <span class="math inline">\(= 1000\)</span> fs <span class="math inline">\(= 10^{-12}\)</span> seconds<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1" role="doc-endnote"><p>S. Nakamoto, <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> (2008). <a href="https://bitcoin.org/bitcoin.pdf">Link to PDF</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>G. K. Chesterton, <em>The Thing: Why I Am a Catholic</em>, chapter 4 (1929).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>
                 </div>

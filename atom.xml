@@ -8,9 +8,40 @@
         <name>Laurent P. René de Cotret</name>
         <email>laurent.decotret@outlook.com</email>
     </author>
-    <updated>2022-03-02
+    <updated>2022-08-02
 </updated>
     <entry>
+    <title>Chesterton's fence and why I'm not sold on the blockchain</title>
+    <link href="https://laurentrdc.xyz//posts/chesterton.html" />
+    <id>https://laurentrdc.xyz//posts/chesterton.html</id>
+    <published>2022-08-02T00:00:00Z</published>
+    <updated>2022-08-02
+</updated>
+    <summary type="html"><![CDATA[<p>The key technological advances which brought Bitcoin to life are the blockchain and its associated proof-of-work consensus algorithm. The Bitcoin whitepaper<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is very clear on its purpose:</p>
+<blockquote>
+<p>A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution. Digital signatures provide part of the solution, but the main benefits are lost if a trusted third party is still required to prevent double-spending.</p>
+</blockquote>
+<p>The <em>double-spending</em> problem to which Nakamoto refers is a unique challenge of digital cash implementations. Contrary to physical cash, which is difficult to copy, digital cash is but bytes; it can be trivially copied. Before Bitcoin, the most popular way to prevent double-spending has been to route all digital cash transactions on a particular network through a trusted entity which ensures that no double-spending occurs. This is how the credit card and Interac networks work, for example.</p>
+<p>The Bitcoin whitepaper brings a new solution to the double-spending problem, a solution designed to explicitly avoid centralized trusted entities.</p>
+<hr />
+<p>In software engineering, there is a principle that one should understand <em>why</em> something is the way it is, before trying to change it. This principle is known as <em>Chesterton’s fence</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<blockquote>
+<p>There exists (…) a fence or gate erected across a road. The more modern type of reformer goes gaily up to it and says, ‘I don’t see the use of this; let us clear it away.’ To which the more intelligent type of reformer will do well to answer: ’If you don’t see the use of it, I certainly won’t let you clear it away. Go away and think. Then, when you can come back and tell me that you do see the use of it, I may allow you to destroy it.</p>
+</blockquote>
+<p>To me, the push towards decentralization is a case of Chesterton’s fence. No one wants to involve a third-party in every transactions, but it is this way for two main reasons: fraud management and performance (transaction throughput).</p>
+<p><strong>Fraud management</strong> is a weak point of an anonymous peer-to-peer network like Bitcoin. While I appreciate the desire for anonymity, this leads to the same behaviors which lead to the founding of the US Securities and Exchange Commission almost a hundred years ago. Decentralization also enabled the rise of ransomware, as it is now much harder to track the flow of money between anonymous, single-use cryptocurrency accounts.</p>
+<p><strong>Performance</strong> is another major downside of decentralization. As an example, Bitcoin’s throughput has never reached more than <a href="https://blockchair.com/bitcoin/charts/transactions-per-second">6 transactions per second</a> as of the time of writing. By contract, the electronic payment network VisaNet (which powers Visa credit card) can process up to <a href="https://usa.visa.com/about-visa/visanet.html">76 000 transactions per second</a>.</p>
+<p>Until blockchain enthusiasts understand the advantages of centralization presented above, I don’t think cryptocurrencies will become mainstream.</p>
+<p><em>This post was inspired by the <a href="https://rationalreminder.ca/podcast/crypto8">Tim O’Reilly interview on the Rational Reminder podcast</a></em>.</p>
+<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1" role="doc-endnote"><p>S. Nakamoto, <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> (2008). <a href="https://bitcoin.org/bitcoin.pdf">Link to PDF</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2" role="doc-endnote"><p>G. K. Chesterton, <em>The Thing: Why I Am a Catholic</em>, chapter 4 (1929).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>]]></summary>
+</entry>
+<entry>
     <title>Exploring the multiverse of possibilities all at once using monads</title>
     <link href="https://laurentrdc.xyz//posts/multiverse.html" />
     <id>https://laurentrdc.xyz//posts/multiverse.html</id>
@@ -876,144 +907,6 @@
 <li><p>free leftover varnish;</p></li>
 <li><p>free man-hours over the course of a few months.</p></li>
 </ul>]]></summary>
-</entry>
-<entry>
-    <title>How this website is generated</title>
-    <link href="https://laurentrdc.xyz//posts/making-this-website.html" />
-    <id>https://laurentrdc.xyz//posts/making-this-website.html</id>
-    <published>2018-08-02T00:00:00Z</published>
-    <updated>2021-12-14
-</updated>
-    <summary type="html"><![CDATA[<p>In the hope that this page is useful to someone, I would like to explain how I generate this website.</p>
-<h2 class="title is-2" id="static-website-generator">Static website generator</h2>
-<p>I am always looking for an excuse to play with Haskell, and so this website is generated using <a href="https://jaspervdj.be/hakyll/index.html">Hakyll</a>. Hakyll is a static website generator; website configuration is written in Haskell and content is written in Markdown. Hakyll then collects the content, applies templates to it (navigation bar, page footers, etc), and builds a static website in a separate folder. Deploying the website then simply consists in moving the files to the right place.</p>
-<p>I use <a href="https://docs.haskellstack.org/en/stable/README/"><code>stack</code></a> to manage the project. <code>stack</code> even has a Hakyll template (<code>hakyll-template</code>).</p>
-<p>My <code>site.hs</code> configuration file is fairly standard, but I want to mention two modifications I have made that might help you as well.</p>
-<h3 class="title is-3" id="math-display-and-syntax-highlighting">Math display and syntax highlighting</h3>
-<p>This idea is borrowed from <a href="https://github.com/jdreaver/jdreaver.com/">JD Reaver</a></p>
-<p>By default, LaTeX-style math is not rendered properly when posts are consumed by Hakyll. We need to provide <code>pandoc</code> - the library that performs the Markdown-to-HTML translation - with a list of extensions to use.</p>
-<p>The same problem arises when trying to highlight code. Instead of using the default <code>pandocCompiler</code>, I use a slightly modified compiler that passes extra options to <code>pandoc</code>.</p>
-<p>The type signature of our new compiler <code>pandocCompiler_</code> is:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">pandocCompiler_ ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</span></code></pre></div>
-<p>Exactly the same signature as <code>pandocCompiler</code>, what did you expect? The first step is to collect the relevant <a href="http://hackage.haskell.org/package/pandoc-2.2.2.1/docs/Text-Pandoc-Extensions.html">Pandoc extensions</a>, which I have separated for clarity:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pandocCompiler_ <span class="ot">=</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    mathExtensions <span class="ot">=</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        [ <span class="dt">Ext_tex_math_dollars</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_tex_math_double_backslash</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_latex_macros</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    codeExtensions <span class="ot">=</span> </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        [ <span class="dt">Ext_fenced_code_blocks</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_backtick_code_blocks</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_fenced_code_attributes</span></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        ]</span></code></pre></div>
-<p>The math extensions allows me to write LaTeX code inclusing macros like <code>\begin{align} ... \end{align}</code>. The code extensions allow me to easily switch languages for code blocks.</p>
-<p>I then collect all the extensions:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>newExtensions <span class="ot">=</span> <span class="fu">foldr</span> enableExtension defaultExtensions (mathExtensions <span class="op">&lt;&gt;</span> codeExtensions)</span></code></pre></div>
-<p>Note the use of the <code>mappend</code> function (<code>&lt;&gt;</code>), which could be replaces with list concatenation <code>++</code>. We modify the Pandoc write options to include these extensions:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>defaultExtensions <span class="ot">=</span> writerExtensions defaultHakyllWriterOptions</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>writerOptions <span class="ot">=</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    defaultHakyllWriterOptions</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    { writerExtensions <span class="ot">=</span> newExtensions</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    , writerHTMLMathMethod <span class="ot">=</span> <span class="dt">MathJax</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    , writerHighlightStyle <span class="ot">=</span> <span class="dt">Just</span> syntaxHighlightingStyle</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
-<p>(Ignore the line <code>writerHighlightStyle = Just syntaxHighlightingStyle</code> for now, this is related to syntax highlighting.) Finally, we create a new compiler that takes those write options into account:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pandocCompilerWith defaultHakyllReaderOptions writerOptions</span></code></pre></div>
-<p>The full code for this math-and-code compiler is below:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">pandocCompiler_ ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pandocCompiler_ <span class="ot">=</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    mathExtensions <span class="ot">=</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        [ <span class="dt">Ext_tex_math_dollars</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_tex_math_double_backslash</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_latex_macros</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    codeExtensions <span class="ot">=</span> </span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        [ <span class="dt">Ext_fenced_code_blocks</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_backtick_code_blocks</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_fenced_code_attributes</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        ]</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    newExtensions <span class="ot">=</span> <span class="fu">foldr</span> enableExtension defaultExtensions (mathExtensions <span class="op">&lt;&gt;</span> codeExtensions)</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    defaultExtensions <span class="ot">=</span> writerExtensions defaultHakyllWriterOptions</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    writerOptions <span class="ot">=</span></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        defaultHakyllWriterOptions</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        { writerExtensions <span class="ot">=</span> newExtensions</span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        , writerHTMLMathMethod <span class="ot">=</span> <span class="dt">MathJax</span> <span class="st">&quot;&quot;</span></span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        , writerHighlightStyle <span class="ot">=</span> <span class="dt">Just</span> syntaxHighlightingStyle</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> pandocCompilerWith defaultHakyllReaderOptions writerOptions</span></code></pre></div>
-<p>All <code>pandocCompiler</code> function calls are replaced with <code>pandocCompiler_</code></p>
-<h3 class="title is-3" id="syntax-highlighting-style-as-css">Syntax highlighting style as CSS</h3>
-<p>Pandoc comes with <a href="http://hackage.haskell.org/package/pandoc-2.2.2.1/docs/Text-Pandoc-Highlighting.html">eight syntax highlighting styles</a>:</p>
-<ul>
-<li>pygments</li>
-<li>espresso</li>
-<li>zenburn</li>
-<li>tango</li>
-<li>kate</li>
-<li>monochrome</li>
-<li>breezeDark</li>
-<li>haddock</li>
-</ul>
-<p>For some reason, there was no difference between the different highlighting styles when generating my website. Therefore, I wanted to generate a CSS file for the style I want to use.</p>
-<p>First, I pinned the style I want to use:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">syntaxHighlightingStyle ::</span> <span class="dt">Style</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>syntaxHighlightingStyle <span class="ot">=</span> haddock</span></code></pre></div>
-<p>You will recognize the use of this in the above <code>pandocCompiler_</code>. Next, I want to generate CSS for this style with Pandoc and place it with all other CSS files for this website:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">generateSyntaxHighlightingCSS ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>generateSyntaxHighlightingCSS <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> css <span class="ot">=</span> styleToCss syntaxHighlightingStyle</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">writeFile</span> <span class="st">&quot;css/syntax.css&quot;</span> css</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> ()</span></code></pre></div>
-<p>The <code>syntax.css</code> file must be included in the HTML template:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;link</span> <span class="er">rel</span><span class="ot">=</span><span class="st">&quot;stylesheet&quot;</span> <span class="er">type</span><span class="ot">=</span><span class="st">&quot;text/css&quot;</span> <span class="er">href</span><span class="ot">=</span><span class="st">&quot;/css/syntax.css&quot;</span> <span class="kw">/&gt;</span></span></code></pre></div>
-<p>Finally, before Hakyll does anything, I generate this styling file:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    generateSyntaxHighlightingCSS</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    hakyll <span class="op">$</span> <span class="kw">do</span> <span class="op">...</span></span></code></pre></div>
-<p>This way, changing the highlighting style is a simple matter of modifying <code>syntaxHighlightingStyle</code>. In the future, I will want to define my own <code>Style</code> (monokai).</p>
-<h2 class="title is-2" id="update-2018-08-05-generating-the-html-templates-using-blaze">Update 2018-08-05 : Generating the HTML templates using Blaze</h2>
-<p>Hakyll uses HTML templating to enforce consistent styling for all pages of this website. Handwriting HTML is error-prone; therefore, this website uses an HTML template generated using <a href="https://hackage.haskell.org/package/blaze-html"><code>blaze-html</code></a>.</p>
-<p><code>blaze-html</code> is a domain-specific language - a library of Haskell functions that mimic HTML. For example, the following <code>blaze-html</code> code:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Blaze.Html5</span> <span class="kw">as</span> <span class="dt">H</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ot">defaultMain ::</span> <span class="dt">H.Html</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>defaultMain <span class="ot">=</span> H.main <span class="op">$</span> <span class="kw">do</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    H.h1 <span class="st">&quot;$title$&quot;</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$body$&quot;</span></span></code></pre></div>
-<p>will render to the following HTML:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;main&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">&lt;h1&gt;</span>$title$<span class="kw">&lt;/h1&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    $body$</span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;/main&gt;</span></span></code></pre></div>
-<p>Note that in this case, <code>$title$</code> and <code>$body$</code> are placeholders that will be replaced with page content, like a blog post title and text. I generate the HTML template before Hakyll goes to work:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Generate the CSS required to to syntax highlighting</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> css <span class="ot">=</span> styleToCss syntaxHighlightingStyle</span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">writeFile</span> <span class="st">&quot;css/syntax.css&quot;</span> css</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Generate the default HTML template</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> template <span class="ot">=</span> renderHtml mkDefaultTemplate</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    B.writeFile <span class="st">&quot;templates/default.html&quot;</span> template</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    hakyll <span class="op">$</span> <span class="kw">do</span> <span class="op">...</span></span></code></pre></div>
-<h2 class="title is-2" id="update-2018-09-12-using-a-pandoc-filter-to-abstract-away-bulma-quirks">Update 2018-09-12 : using a Pandoc filter to abstract away Bulma quirks</h2>
-<p>I recently upgraded the website to use the <a href="https://bulma.io">Bulma CSS Framework</a>. There are interesting quirks, like the requirement to have all heading be of a certain class:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 title --&gt;</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-2 title --&gt;</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h2</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-2&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h2&gt;</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 subtitle --&gt;</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;subtitle is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
-<p>To modifying headings generated by Pandoc <em>a posteriori</em>, I wrote a Pandoc filter. <strong>The process is documented <a href="/posts/bulma-pandoc-filter.html">in this post</a></strong>.</p>]]></summary>
 </entry>
 
 </feed>
