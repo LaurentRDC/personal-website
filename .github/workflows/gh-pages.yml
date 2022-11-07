@@ -25,8 +25,8 @@ jobs:
       uses: haskell/actions/setup@v1
       id: setup-haskell
       with:
-        ghc-version: '9.2.2'
-        cabal-version: '3.6.2.0'
+        ghc-version: '9.4.3'
+        cabal-version: '3.8.1.0'
 
     - name: Set PATH for cabal-installed executables
       run: |

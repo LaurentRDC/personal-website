@@ -5,7 +5,9 @@ packages:
 optimization: 0
 jobs: $ncpus
 
+allow-newer: hakyll:template-haskell
+
 source-repository-package
   type:     git
   location: https://github.com/jaspervdj/hakyll
-  tag:      8ce297337d6071033b3f154408ad2dc369d7ca55
+  tag:      736a09d5521a20958221b0a19b1fd4a7cfd10be0
