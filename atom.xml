@@ -33,11 +33,11 @@
 <p><strong>Performance</strong> is another major downside of decentralization. As an example, Bitcoin’s throughput has never reached more than <a href="https://blockchair.com/bitcoin/charts/transactions-per-second">6 transactions per second</a> as of the time of writing. By contract, the electronic payment network VisaNet (which powers Visa credit card) can process up to <a href="https://usa.visa.com/about-visa/visanet.html">76 000 transactions per second</a>.</p>
 <p>Until blockchain enthusiasts understand the advantages of centralization presented above, I don’t think cryptocurrencies will become mainstream.</p>
 <p><em>This post was inspired by the <a href="https://rationalreminder.ca/podcast/crypto8">Tim O’Reilly interview on the Rational Reminder podcast</a></em>.</p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>S. Nakamoto, <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> (2008). <a href="https://bitcoin.org/bitcoin.pdf">Link to PDF</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>G. K. Chesterton, <em>The Thing: Why I Am a Catholic</em>, chapter 4 (1929).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>S. Nakamoto, <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> (2008). <a href="https://bitcoin.org/bitcoin.pdf">Link to PDF</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>G. K. Chesterton, <em>The Thing: Why I Am a Catholic</em>, chapter 4 (1929).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
 </entry>
@@ -63,8 +63,8 @@
 <h3 class="title is-3" id="potential-solutions-as-a-decision-graph">Potential solutions as a decision graph</h3>
 <p>How else can we express the number of combinations? Think of building a solution, instead of searching for one. We may want to start by assigning a driver to car 1. For each possible decision here, we’ll assign a driver to the second car next, then passengers. The possibilities look like this:</p>
 <figure>
-<img src="generated/pandocplot1630891373530411367.png" class="python image" alt="Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (Source code)" />
-<figcaption aria-hidden="true">Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (<a href="generated/pandocplot1630891373530411367.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot7040476987407944813.png" class="python image" alt="Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (Source code)" />
+<figcaption aria-hidden="true">Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (<a href="generated/pandocplot7040476987407944813.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In the figure above, no one is assigned at the start. Then, we assign the first driver (out of three choices). Then, we need to assign a second driver, of which there are only two remaining. Each of the 6 passengers are then assigned. A potential solution (i.e. a assignment between people and cars) is represented by a path in the decision tree. Three possibilities are shown as examples.</p>
 <p>This way of thinking about solutions reminds me strongly of the <a href="https://en.wikipedia.org/wiki/Many-worlds_interpretation">Everett interpretation of quantum mechanics</a>, also known as the <em>many-worlds interpretation</em> or the <em>multiverse interpretation</em>. The three potential assignments are three universes that split from the same starting point. Enumerating all possible solutions to our example problem consists in crawling the decision tree, or crawling the multiverse of possibilities.</p>
@@ -164,11 +164,11 @@
 <p>Although I’m not using Haskell at work<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, I expect that something similar will need to be built in the near future to speed up our global optimization problem. The specific problem we are tackling has many more constraints than the example presented in this post. It’s easier to generate a list of solutions, most of which are unsuitable, and filter the solutions one by one. There is a fixed computational cost associated with generating and checking a solution, and so reducing the set of possible solutions is even more important.</p>
 <p>This post was partly inspired by the legendary blog post <a href="https://aphyr.com/posts/342-typing-the-technical-interview">Typing the technical interview</a></p>
 <p><em>A self-contained Haskell source file containing all code from this post is <a href="/files/multiverse.hs">available for download here</a></em></p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>This is why some people like to thing of monads as types that support flatMap.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Boss, if you’re reading this, please let me use Haskell :).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>This is why some people like to thing of monads as types that support flatMap.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Boss, if you’re reading this, please let me use Haskell :).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
 </entry>
@@ -387,11 +387,11 @@
 <p>The comprehensive exam is inherently about making students’ experience more focused on their research area. This is appealing from students point-of-view: why should they have to go out of their way to stay aware about classical mechanics, something which they might never use? The comprehensive exam (in the format that I have described above) streamlines the requirements for graduation.</p>
 <p>The graduate student experience is about much more than the resulting dissertation. We want our students to be more than just experts in their narrow fields; we also want them to be ready to contribute to society beyond their immediate expertise. Does the prelim ensure that this is the case? Of course not. But removing the prelim sends the wrong message about what it means to graduate with a PhD.</p>
 <p>On a personal note, the prelim made me review all of my undergraduate studies. I purchased the Feynman Lectures on Physics and read all three volumes. With a Masters’ degree under my belt, I was able to appreciate my learnings under a new light, even though I haven’t used most of it since then. While I cannot say that the exam was fun, the studying experience was definitely one of the highlights of my PhD.</p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Other institutions might call it the qualifying examination.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Again, this might have other names at other institutions.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Other institutions might call it the qualifying examination.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Again, this might have other names at other institutions.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
 </entry>
@@ -404,14 +404,14 @@
 </updated>
     <summary type="html"><![CDATA[<p>Ultrafast electron diffraction involves the analysis of <em>diffraction patterns</em>. Here is an example diffraction pattern for a thin (&lt;100nm) flake of graphite<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <figure>
-<img src="generated/pandocplot2095852745883678822.png" class="python image" alt="Diffraction pattern of graphite (Source code)" />
-<figcaption aria-hidden="true">Diffraction pattern of graphite (<a href="generated/pandocplot2095852745883678822.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot773093250800775522.png" class="python image" alt="Diffraction pattern of graphite (Source code)" />
+<figcaption aria-hidden="true">Diffraction pattern of graphite (<a href="generated/pandocplot773093250800775522.src.html">Source code</a>)</figcaption>
 </figure>
 <p>A diffraction pattern is effectively the intensity of the Fourier transform. Given that crystals like graphite are well-ordered, the diffraction peaks (i.e. Fourier components) are very large. You can see that the diffraction pattern is six-fold symmetric; that’s because the atoms in graphite arrange themselves in a honeycomb pattern, which is also six-fold symmetric. In these experiments, the fundamental Fourier component is so strong that we need to block it. That’s what that black <em>beam-block</em> is about.</p>
 <p>There are crystals that are not as well-ordered as graphite. Think of a powder made of many small crystallites, each being about 50nm x 50nm x 50nm. Diffraction electrons through a sample like that results in a kind of average of all possible diffraction patterns. Here’s an example with polycrystalline Chromium:</p>
 <figure>
-<img src="generated/pandocplot1766005575624377083.png" class="python image" alt="Diffraction pattern of polycrystalline Chromium (Source code)" />
-<figcaption aria-hidden="true">Diffraction pattern of polycrystalline Chromium (<a href="generated/pandocplot1766005575624377083.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot6760969048523804557.png" class="python image" alt="Diffraction pattern of polycrystalline Chromium (Source code)" />
+<figcaption aria-hidden="true">Diffraction pattern of polycrystalline Chromium (<a href="generated/pandocplot6760969048523804557.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Each ring in the above pattern pattern corresponds to a Fourier component. Notice again how symmetric the pattern is; the material itself is symmetric enough that the fundamental Fourier component needs to be blocked.</p>
 <p>For my work on <a href="https://github.com/LaurentRDC/iris-ued">iris-ued</a>, a data analysis package for ultrafast electron scattering, I needed to find a reliable, automatic way to get the center of such diffraction patterns to get rid of the manual work required now. So let’s see how!</p>
@@ -419,13 +419,13 @@
 <p>A first naive attempt might start with the <em>center-of-mass</em>, i.e. the average of pixel positions weighted by their intensity. Since intensity is symmetric about the center, the <em>center-of-mass</em> should coincide with the actual physical center of the image.</p>
 <p>Good news, <a href="https://docs.scipy.org/doc/scipy/reference/ndimage.html#multidimensional-image-processing-scipy-ndimage">scipy’s <code>ndimage</code> module</a> exports such a function: <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.center_of_mass.html#scipy.ndimage.center_of_mass"><code>center_of_mass</code></a>. Let’s try it:</p>
 <figure>
-<img src="generated/pandocplot7930956619854109889.png" class="python image" alt="Demonstration of using scipy.ndimage.center_of_mass to find the center of diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of using <code>scipy.ndimage.center_of_mass</code> to find the center of diffraction patterns. (<a href="generated/pandocplot7930956619854109889.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot5660652621951363167.png" class="python image" alt="Demonstration of using scipy.ndimage.center_of_mass to find the center of diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of using <code>scipy.ndimage.center_of_mass</code> to find the center of diffraction patterns. (<a href="generated/pandocplot5660652621951363167.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Not bad! Especially in the first image, really not a bad first try. But I’m looking for something <em>pixel-perfect</em>. Intuitively, the beam-block in each image should mess with the calculation of the center of mass. Let’s define the following areas that we would like to ignore:</p>
 <figure>
-<img src="generated/pandocplot8897865034709372372.png" class="python image" alt="Areas that are bright are defined as being masked (Source code)" />
-<figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot8897865034709372372.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot17688551264658102162.png" class="python image" alt="Areas that are bright are defined as being masked (Source code)" />
+<figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot17688551264658102162.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Masks are generally defined as boolean arrays with True (or 1) where pixels are valid, and False (or 0) where pixels are invalid. Therefore, we should ignore the weight of masked pixels. <code>scipy.ndimage.center_of_mass</code> does not support this feature; we need an extension of <code>center_of_mass</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> center_of_mass_masked(im, mask):</span>
@@ -437,8 +437,8 @@
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> r, c</span></code></pre></div>
 <p>This is effectively an average of the row and column coordinates (<code>rr</code> and <code>cc</code>) weighted by the image intensity. The trick here is that <code>mask.astype(im.dtype)</code> is 0 where pixels are “invalid”; therefore they don’t count in the average! Let’s look at the result:</p>
 <figure>
-<img src="generated/pandocplot6217973964244725308.png" class="python image" alt="Demonstration of using center_of_mass_masked (see above) to find the center of diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of using <code>center_of_mass_masked</code> (see above) to find the center of diffraction patterns. (<a href="generated/pandocplot6217973964244725308.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot2244683666322652308.png" class="python image" alt="Demonstration of using center_of_mass_masked (see above) to find the center of diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of using <code>center_of_mass_masked</code> (see above) to find the center of diffraction patterns. (<a href="generated/pandocplot2244683666322652308.src.html">Source code</a>)</figcaption>
 </figure>
 <p>I’m not sure if it’s looking better, honestly. But at least we have an approximate center! That’s a good starting point that feeds in to the next step.</p>
 <h2 class="title is-2" id="friedel-pairs-and-radial-inversion-symmetry">Friedel pairs and radial inversion symmetry</h2>
@@ -448,51 +448,51 @@
 </blockquote>
 <p>Friedel pairs are peaks related by inversion through the center of the diffraction pattern. The existence of these pairs is guaranteed by crystal symmetry. For polycrystalline patterns, Friedel pairs are averaged into rings; rings are always inversion-symmetric about their centers. Here’s an example of two Friedel pairs:</p>
 <figure>
-<img src="generated/pandocplot13047546941514121723.png" class="python image" alt="Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (Source code)" />
-<figcaption aria-hidden="true">Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (<a href="generated/pandocplot13047546941514121723.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot17750390375976996381.png" class="python image" alt="Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (Source code)" />
+<figcaption aria-hidden="true">Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (<a href="generated/pandocplot17750390375976996381.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The algorithm by Liu was meant for single-crystal diffraction patterns with well-defined peaks, and not so much for rings. However, we can distill Liu’s idea into a new, more general approach. If the approximate center coincides with the actual center of the image, then the image should be invariant under radial-inversion with respect to the approximate center. Said another way: if the image <span class="math inline">\(I\)</span> is defined on polar coordinates <span class="math inline">\((r, \theta)\)</span>, then the center maximizes correlation between <span class="math inline">\(I(r, \theta)\)</span> and <span class="math inline">\(I(-r, \theta)\)</span>. Thankfully, computing the masked correlation between images <a href="/posts/mnxc.html">is something I’ve worked on before</a>!</p>
 <p>Let’s look at what radial inversion looks like. There are ways to do it with interpolation, e.g. <a href="https://scikit-image.org/docs/stable/api/skimage.transform.html#warp">scikit-image’s <code>warp</code> function</a>. However, in my testing, this is incredibly slow compared to what I will show you. A faster approach is to consider that if the image was centered on the array, then radial inversion is really flipping the direction of the array axes; that is, if the image array <code>I</code> has size (128, 128), and the center is at (64, 64), the radial inverse of <code>I</code> is <code>I[::-1, ::-1]</code> (numpy) / <code>flip(flip(I, 1), 2)</code> (MATLAB) / <code>I[end:-1:1,end:-1:1]</code> (Julia). Another important note is that if the approximate center of the image is far from the center of the array, the overlap between the image and its radial inverse is limited. Consider this:</p>
 <figure>
-<img src="generated/pandocplot10069996423160747409.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot10069996423160747409.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot5515440253176515753.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot5515440253176515753.src.html">Source code</a>)</figcaption>
 </figure>
 <p>If we cropped out the bright areas around the frame, then the approximate center found would coincide with the center of the array; then, radial inversion is very fast.</p>
 <figure>
-<img src="generated/pandocplot10866181847257855472.png" class="python image" alt="Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (<a href="generated/pandocplot10866181847257855472.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot7373824072003746476.png" class="python image" alt="Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (<a href="generated/pandocplot7373824072003746476.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Now, especially for the right column of images, it’s pretty clear that the approximate center wasn’t perfect. The <em>correction</em> to the approximate center is can be calculated with the masked normalized cross-correlation<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
 <figure>
-<img src="generated/pandocplot4660273953183407957.png" class="python image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot4660273953183407957.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot1996850662712713537.png" class="python image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot1996850662712713537.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The cross-correlation in the bottom right corner (zoomed by 2x) shows that the true center is the approximate center we found earlier, corrected by the small shift (white arrow)! For single-crystal diffraction patterns, the resulting is even more striking:</p>
 <figure>
-<img src="generated/pandocplot8507967003117996850.png" class="python image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot8507967003117996850.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot17068833857862408724.png" class="python image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot17068833857862408724.src.html">Source code</a>)</figcaption>
 </figure>
 <p>We can put the two steps together and determine a pixel-perfect center:</p>
 <figure>
-<img src="generated/pandocplot11699794190451674636.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot11699794190451674636.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot9554142891009055188.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot9554142891009055188.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="bonus-low-quality-diffraction">Bonus: low-quality diffraction</h2>
 <p>Here’s a fun consequence: the technique works also for diffraction patterns that are pretty crappy and very far off center, provided that the asymmetry in the background is taken care-of:</p>
 <figure>
-<img src="generated/pandocplot14471255124304795806.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot14471255124304795806.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot13132296367129586998.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot13132296367129586998.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, we have determined a robust way to compute the center of a diffraction pattern without any parameters, by making use of a strong invariant: radial inversion symmetry. My favourite part: this method admits no free parameters!</p>
 <p>If you want to make use of this, <a href="https://scikit-ued.readthedocs.io/en/master/functions/skued.autocenter.html#skued.autocenter">take a look at <code>autocenter</code></a>, a new function that has been added to <a href="https://github.com/LaurentRDC/scikit-ued">scikit-ued</a>.</p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>L.P. René de Cotret <em>et al</em>, <em>Time- and momentum-resolved phonon population dynamics with ultrafast electron diffuse scattering</em>, Phys. Rev. B <strong>100</strong> (2019) <a href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.214115">DOI: 10.1103/PhysRevB.100.214115</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Liu, Lai Chung. <a href="http://hdl.handle.net/1807/97517">Chemistry in Action: Making Molecular Movies with Ultrafast Electron Diffraction and Data Science</a>. University of Toronto, 2019.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Dirk Padfield. <em>Masked object registration in the Fourier domain</em>. IEEE Transactions on Image Processing, <strong>21</strong>(5):2706–2718, 2012. <a href="https://doi.org/10.1109/TIP.2011.2181402">DOI: 10.1109/TIP.2011.2181402</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4" role="doc-endnote"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>L.P. René de Cotret <em>et al</em>, <em>Time- and momentum-resolved phonon population dynamics with ultrafast electron diffuse scattering</em>, Phys. Rev. B <strong>100</strong> (2019) <a href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.214115">DOI: 10.1103/PhysRevB.100.214115</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Liu, Lai Chung. <a href="http://hdl.handle.net/1807/97517">Chemistry in Action: Making Molecular Movies with Ultrafast Electron Diffraction and Data Science</a>. University of Toronto, 2019.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Dirk Padfield. <em>Masked object registration in the Fourier domain</em>. IEEE Transactions on Image Processing, <strong>21</strong>(5):2706–2718, 2012. <a href="https://doi.org/10.1109/TIP.2011.2181402">DOI: 10.1109/TIP.2011.2181402</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
 </entry>
@@ -504,7 +504,7 @@
     <updated>2020-11-05
 </updated>
     <summary type="html"><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
-<p><img src="generated/pandocplot2209305446766108021.png" class="python image" /></p>
+<p><img src="generated/pandocplot1039458773358732069.png" class="python image" /></p>
 <p>Matplotlib is a plotting library for python, historically inspired by the plotting capabilities of MATLAB. You can take a look at the various <a href="https://matplotlib.org/gallery/index.html">examples</a> on their website. One thing that is not immediately obvious is that you can use Matplotlib to also draw shapes! In this sense, Matplotlib becomes a graphic design library.</p>
 <p>(You can see the exact source code for the images below by clicking on the link in the caption)</p>
 <h3 class="title is-3" id="basic-shapes">Basic shapes</h3>
@@ -563,8 +563,8 @@
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x,y), radius<span class="op">=</span>radius)</span></code></pre></div>
 <p>Here’s what it looks like so far:</p>
 <figure>
-<img src="generated/pandocplot6242921203501451106.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot6242921203501451106.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14504442810472128638.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot14504442810472128638.src.html">Source code</a>)</figcaption>
 </figure>
 <h3 class="title is-3" id="color">Color</h3>
 <p>The figure above has the wrong dimension, but you get the idea. Let’s color the hexagons appropriately. In the banner, the color of the hexagons is based on the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“inferno” colormap</a>. The color radiates away from the bottom left corner:</p>
@@ -590,8 +590,8 @@
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>Here’s the result:</p>
 <figure>
-<img src="generated/pandocplot213370533711269294.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot213370533711269294.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot4280651347516258934.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot4280651347516258934.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Because of rounding errors of the hexagon dimensions, there is some visible spacing between the hexagons. To get rid of it, we draw the hexagons a bit larger (0.2 millimeters):</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
@@ -620,13 +620,13 @@
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>We arrive at the final result:</p>
 <figure>
-<img src="generated/pandocplot8507926181532959158.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot8507926181532959158.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot3871999160157069650.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot3871999160157069650.src.html">Source code</a>)</figcaption>
 </figure>
 <p>You can imagine adapting this approach to different tilings, and different colors schemes. Here’s a final example using squares and the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“cool” colormap</a>:</p>
 <figure>
-<img src="generated/pandocplot6979077011365778787.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot6979077011365778787.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot7983311719023536353.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot7983311719023536353.src.html">Source code</a>)</figcaption>
 </figure>]]></summary>
 </entry>
 <entry>
@@ -643,8 +643,8 @@
 \]</span></p>
 <p>For example, if <span class="math inline">\(I_1 = I_2\)</span>, then <span class="math inline">\(I_1 \star I_2\)</span> has its maximum at <span class="math inline">\((u,v) =\)</span> (0,0). What happens if <span class="math inline">\(I_1\)</span> and <span class="math inline">\(I_2\)</span> are shifted from each other? Let’s see:</p>
 <figure>
-<img src="generated/pandocplot6095713792841056580.png" class="python image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" />
-<figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/pandocplot6095713792841056580.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot17670528374398421472.png" class="python image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" />
+<figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/pandocplot17670528374398421472.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In the above example, the cross-correlation is maximal at (50, 0), which is exactly the translation required to <em>shift back</em> the second image to match the first one. Finding the translation between images is then a simple matter of determining the glocal maximum of the cross-correlation. This operation is so useful that it is implemented in the Python library <a href="https://scikit-image.org">scikit-image</a> as <a href="https://scikit-image.org/docs/dev/api/skimage.registration.html?highlight=phase#skimage.registration.phase_cross_correlation"><code>skimage.feature.phase_cross_correlation</code></a>.</p>
 <p>It turns out that in my field of research, image registration can be crucial to correct experimental data. My primary research tool is <a href="http://www.physics.mcgill.ca/siwicklab">ultrafast electron diffraction</a>. Without knowing the details, you can think of this technique as a kind of microscope. A single image from one of our experiments looks like this:</p>
@@ -655,8 +655,8 @@
 <p>Most of the electron beam is unperturbed by the sample; this is why we use a metal beam-block (seen as a black rod in the image above) to prevent the electrons from damaging our apparatus.</p>
 <p>Our experiments are synthesized from hundreds of gigabytes of images like the one above, and it may take up to 72h (!) to take all the images we need. Over the course of this time, the electron beam may shift in a way that moves the image, but <em>not the beam-block</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Heres’s what I mean:</p>
 <figure>
-<img src="generated/pandocplot16267013416537760034.png" class="python image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" />
-<figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/pandocplot16267013416537760034.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot13195054142178579038.png" class="python image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" />
+<figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/pandocplot13195054142178579038.src.html">Source code</a>)</figcaption>
 </figure>
 <p>This does not fly. We need to be able to compare images together, and shifts by more than 1px are problematic. We need to correct for this shift, for every image, with respect to the first one. However, we are also in a bind, because unlike the example above, the images are not completely shifted; one part of them, the beam-block, is <em>static</em>, while the image behind it shifts.</p>
 <p>The crux of the problem is this: the cross-correlation between images gives us the shift between them. However, it is not immediately obvious how to tell the cross-correlation operation to ignore <em>certain parts</em> of the image. Is there some kind of operation, similar to the cross-correlation, that allows to mask parts of the images we want to ignore?</p>
@@ -664,8 +664,8 @@
 <hr>
 <p>In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation — and its associated registration function — in our ultrafast electron diffraction toolkit, <a href="https://scikit-ued.rtfd.io">scikit-ued</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Here’s an example of it in action:</p>
 <figure>
-<img src="generated/pandocplot3534695941041659063.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" />
-<figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot3534695941041659063.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot9636403097299375927.png" class="python image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" />
+<figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot9636403097299375927.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="contributing-to-scikit-image">Contributing to scikit-image</h2>
 <p>However, since this tool could see use in a more general setting, I decided to contribute it to <a href="https://scikit-image.org/">scikit-image</a>:</p>
@@ -675,13 +675,13 @@
 <li>Finally, some documentation improvements and an additional gallery example were added in <a href="https://github.com/scikit-image/scikit-image/pull/3528">pull request #3528</a>.</li>
 </ol>
 <p>In the end, <strong>a new function has been added, <a href="https://scikit-image.org/docs/stable/api/skimage.registration.html#skimage.registration.phase_cross_correlation"><code>skimage.registration.phase_cross_correlation</code></a></strong> (previously <code>skimage.feature.masked_register_translation</code>).</p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>Technically, the rotation of the electron beam about its source will also move the shadow of the beam-block. However, because the beam-block is much closer to the electron source, the effect is imperceptible.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>Dirk Padfield. <em>Masked object registration in the Fourier domain</em>. IEEE Transactions on Image Processing, <strong>21</strong>(5):2706–2718, 2012. <a href="https://doi.org/10.1109/TIP.2011.2181402">DOI: 10.1109/TIP.2011.2181402</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4" role="doc-endnote"><p>L. P. René de Cotret et al, <em>An open-source software ecosystem for the interactive exploration of ultrafast electron scattering data</em>, Advanced Structural and Chemical Imaging <strong>4</strong>:11 (2018) <a href="https://ascimaging.springeropen.com/articles/10.1186/s40679-018-0060-y">DOI:10.1186/s40679-018-0060-y</a>. This publication is open-access<i class="ai ai-open-access"></i> .<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>Technically, the rotation of the electron beam about its source will also move the shadow of the beam-block. However, because the beam-block is much closer to the electron source, the effect is imperceptible.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Dirk Padfield. <em>Masked object registration in the Fourier domain</em>. IEEE Transactions on Image Processing, <strong>21</strong>(5):2706–2718, 2012. <a href="https://doi.org/10.1109/TIP.2011.2181402">DOI: 10.1109/TIP.2011.2181402</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>L. P. René de Cotret et al, <em>An open-source software ecosystem for the interactive exploration of ultrafast electron scattering data</em>, Advanced Structural and Chemical Imaging <strong>4</strong>:11 (2018) <a href="https://ascimaging.springeropen.com/articles/10.1186/s40679-018-0060-y">DOI:10.1186/s40679-018-0060-y</a>. This publication is open-access<i class="ai ai-open-access"></i> .<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
 </entry>
@@ -699,25 +699,25 @@
 </figure>
 <p>Note that the above system has a temperature because there exists a clear <strong>average</strong> motion, even though not all particles are moving at the same velocity. This means, a system is at some temperature <span class="math inline">\(T\)</span> as long as the distribution of kinetic energies (often related to velocities) ressembles a <strong>normal distribution</strong>:</p>
 <figure>
-<img src="generated/pandocplot5022343156198846568.png" class="image" alt="Examples of distribution of particle kinetic energies. Left: distribution of particle energies with a well-defined temperature. Right: distribution of particle energies does not match an expected thermal equilibrium. (Source code)" />
-<figcaption aria-hidden="true">Examples of distribution of particle kinetic energies. <strong>Left</strong>: distribution of particle energies with a well-defined temperature. <strong>Right</strong>: distribution of particle energies does not match an expected thermal equilibrium. (<a href="generated/pandocplot5022343156198846568.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot10924177388630350322.png" class="image" alt="Examples of distribution of particle kinetic energies. Left: distribution of particle energies with a well-defined temperature. Right: distribution of particle energies does not match an expected thermal equilibrium. (Source code)" />
+<figcaption aria-hidden="true">Examples of distribution of particle kinetic energies. <strong>Left</strong>: distribution of particle energies with a well-defined temperature. <strong>Right</strong>: distribution of particle energies does not match an expected thermal equilibrium. (<a href="generated/pandocplot10924177388630350322.src.html">Source code</a>)</figcaption>
 </figure>
 <p>So, a system with a well-defined temperature exhibits a normal distribution of particle energies. It turns out that it is possible to prepare systems into a state where there are <em>two clear average energies</em> , if only for a very short moment.</p>
 <p>Real materials are composed of two types of particles, nuclei and electrons<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. These particles have widly different masses, so electromagnetic fields — for example, an intense pulse of light — will not affect them at the same time; since nuclei are at least ~1000x more massive than electrons, we should expect the electrons to react about ~1000x faster.</p>
 <p>After decades of development culminating in the 2018 Nobel Prize in Physics, the production of ultrafast laser pulses (less than 30 femtoseconds<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>) is now routine. These ultrafast laser pulses can be used to prepare systems in a strange configuration: one with seemingly <em>two temperatures</em>, albeit only for a short time. Modeling of this situation in crystalline material was done decades ago, and the model is known as the <strong>two-temperature model</strong><a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>.</p>
 <p>Roughly 100fs after dumping a lot of energy into a material, the nuclei might not have reacted yet, and we might have the following energetic landscape:</p>
 <figure>
-<img src="generated/pandocplot7229732910474229839.png" class="image" alt="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, T_l, and one for the electronic system, T_e. (Source code)" />
-<figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/pandocplot7229732910474229839.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14931608043176803975.png" class="image" alt="Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, T_l, and one for the electronic system, T_e. (Source code)" />
+<figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/pandocplot14931608043176803975.src.html">Source code</a>)</figcaption>
 </figure>
 <p>where the nucliei will still be at equilibrium temperature, and the electrons might be at a temperature of 20000<span class="math inline">\(^{\circ}\)</span>C. Therefore, <em>we have a system with two temperatures</em> for a few picoseconds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>The atomic forces at the nanometer-scale are mostly electromagnetic, so I will consider the atomic nuclei as a single particle.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p><span class="math inline">\(1\)</span> femtosecond <span class="math inline">\(= 10^{-15}\)</span> seconds<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3" role="doc-endnote"><p>P. B. Allen, <em>Theory of thermal relaxation of electrons in metals</em> (1987). Physics Review Letters <strong>59</strong>, DOI: <a href="https://link.aps.org/doi/10.1103/PhysRevLett.59.1460">10.1103/PhysRevLett.59.1460</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4" role="doc-endnote"><p><span class="math inline">\(1\)</span> picosecond <span class="math inline">\(= 1000\)</span> fs <span class="math inline">\(= 10^{-12}\)</span> seconds<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>The atomic forces at the nanometer-scale are mostly electromagnetic, so I will consider the atomic nuclei as a single particle.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><span class="math inline">\(1\)</span> femtosecond <span class="math inline">\(= 10^{-15}\)</span> seconds<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>P. B. Allen, <em>Theory of thermal relaxation of electrons in metals</em> (1987). Physics Review Letters <strong>59</strong>, DOI: <a href="https://link.aps.org/doi/10.1103/PhysRevLett.59.1460">10.1103/PhysRevLett.59.1460</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p><span class="math inline">\(1\)</span> picosecond <span class="math inline">\(= 1000\)</span> fs <span class="math inline">\(= 10^{-12}\)</span> seconds<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
 </entry>
@@ -817,11 +817,11 @@
 <p>I hope this example has shown you the process behind writing Pandoc filters. Without modifying the content of my posts, I have been able to integrate Bulma in my static website.</p>
 <p>I could also have done it by replacing Markdown headers with inline HTML. However, this would have been less fun.</p>
 <p>You can take a look at the <a href="https://github.com/LaurentRDC/personal-website">source code</a> used to generate this website.</p>
-<section class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
-<li id="fn1" role="doc-endnote"><p>I’m sure there is a way to abstract those details away, but the objective today is to play with Pandoc.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2" role="doc-endnote"><p>I’m using the <code class="sourceCode haskell"><span class="fu">mappend</span></code> operation <code class="sourceCode haskell"><span class="op">&lt;&gt;</span></code> to concatenate lists and strings. I could have used <code class="sourceCode haskell"><span class="op">++</span></code>, but <code class="sourceCode haskell"><span class="op">&lt;&gt;</span></code> just looks so slick.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn1"><p>I’m sure there is a way to abstract those details away, but the objective today is to play with Pandoc.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I’m using the <code class="sourceCode haskell"><span class="fu">mappend</span></code> operation <code class="sourceCode haskell"><span class="op">&lt;&gt;</span></code> to concatenate lists and strings. I could have used <code class="sourceCode haskell"><span class="op">++</span></code>, but <code class="sourceCode haskell"><span class="op">&lt;&gt;</span></code> just looks so slick.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
 </entry>
