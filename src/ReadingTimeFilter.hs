@@ -6,8 +6,7 @@ module ReadingTimeFilter (
 import           Data.Map                 (insert)
 import           Data.Monoid              (Sum(..))
 import qualified Data.Text                as T
-import           Text.Pandoc
-import           Text.Pandoc.Definition   (Pandoc, Inline(..), Meta(..))
+import           Text.Pandoc.Definition   (Pandoc(..), Inline(..), Meta(..), MetaValue(..))
 import           Text.Pandoc.Walk         (query)
 
 import           Text.Printf              (printf)
@@ -24,6 +23,7 @@ wordCount = query _wordCount
         _wordCount :: Inline -> WordCount
         _wordCount (Str s)          = Sum $ length $ T.words s
         _wordCount (Emph xs)        = mconcat $ _wordCount <$> xs
+        _wordCount (Underline xs)   = mconcat $ _wordCount <$> xs
         _wordCount (Strong xs)      = mconcat $ _wordCount <$> xs
         _wordCount (Strikeout xs)   = mconcat $ _wordCount <$> xs
         _wordCount (Superscript xs) = mconcat $ _wordCount <$> xs
@@ -31,13 +31,17 @@ wordCount = query _wordCount
         _wordCount (SmallCaps xs)   = mconcat $ _wordCount <$> xs
         _wordCount (Quoted _ xs)    = mconcat $ _wordCount <$> xs
         _wordCount (Cite _ xs)      = mconcat $ _wordCount <$> xs
-        _wordCount (Span _ xs)      = mconcat $ _wordCount <$> xs
         _wordCount (Code _ s)       = Sum $ length $ T.words s
-        _wordCount (RawInline _ s)  = Sum $ length $ T.words s
+        _wordCount Space            = 0 
+        _wordCount SoftBreak        = 0 
+        _wordCount LineBreak        = 0 
         _wordCount (Math _ s)       = Sum $ length $ T.words s
-        -- Word equivalent of the image itself included
+        _wordCount (RawInline _ s)  = Sum $ length $ T.words s
+        _wordCount (Link _ xs _)    = mconcat $ _wordCount <$> xs
         _wordCount (Image _ s _)    = Sum 100 <> mconcat (_wordCount <$> s)
-        _wordCount _                = 0
+        _wordCount (Note _)         = 0
+        _wordCount (Span _ xs)      = mconcat $ _wordCount <$> xs
+
 
 readingTime :: Pandoc -> ReadingTime
 readingTime = (/ wordsPerMinute) . realToFrac . getSum . wordCount

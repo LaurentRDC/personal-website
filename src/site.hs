@@ -13,7 +13,6 @@ import Hakyll.Images                    ( loadImage
 -- https://github.com/jaspervdj/hakyll/issues/109
 import qualified GHC.IO.Encoding                 as E
 
-import qualified Text.DocTemplates               as D
 import           Text.Pandoc.Definition
 import           Text.Pandoc.Extensions
 import           Text.Pandoc.Filter.Plot         (plotFilter)
@@ -21,8 +20,6 @@ import qualified Text.Pandoc.Filter.Plot         as P
 import           Text.Pandoc.Highlighting        (Style, styleToCss, kate)
 import           Text.Pandoc.Options
 import qualified Text.Pandoc.Templates           as Template
-
-import           Text.Printf                     (printf)
 
 import qualified Data.ByteString                 as B
 import qualified Data.Map.Strict                 as M
@@ -55,6 +52,7 @@ syntaxHighlightingStyle = kate
 
 -- We match images down to two levels
 -- Images/* and images/*/**
+jpgImages, nonJpgImages, generatedContent :: Pattern
 jpgImages = "images/*.jpg" .||. "images/*/**.jpg"
 nonJpgImages = (     "images/*/**"
                 .||. "images/*"
@@ -110,7 +108,7 @@ main = do
         match jpgImages $ do
             route   idRoute
             compile $ loadImage
-                >>= compressJpgCompiler 50
+                >>= compressJpgCompiler (50::Integer)
                 -- Coffee table pictures are pretty large, so
                 -- I resize them so they fit in 1920x1080px
                 >>= ensureFitCompiler 1920 1080
@@ -234,7 +232,7 @@ main = do
                         constField "root" "https://laurentrdc.xyz/" <>
                         listField "pages" postCtx (return allPages)
 
-                makeItem ""
+                makeItem (""::String)
                     >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
 
         --------------------------------------------------------------------------------
@@ -263,7 +261,7 @@ lastUpdatedViaGit fp = do
 -- provides the date of the most recent git commit which modifies a file.
 -- Note that this context will be unavailable for generated pages
 lastUpdatedField :: Context String
-lastUpdatedField = field "updated" $ \it@(Item ident x) -> unsafeCompiler $ do
+lastUpdatedField = field "updated" $ \(Item ident _) -> unsafeCompiler $ do
     lastUpdated <- lastUpdatedViaGit (toFilePath ident)
     case lastUpdated of 
         Nothing -> return "<unknown>"
