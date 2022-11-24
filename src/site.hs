@@ -194,7 +194,7 @@ main = do
                 posts <- recentFirst =<< loadAll "posts/*"
                 let archiveCtx =
                         listField "posts" postCtx (return posts) <>
-                        constField "title" "Blog posts"          <>
+                        constField "title" "All blog posts"          <>
                         defaultContext
 
                 makeItem ""
@@ -207,7 +207,7 @@ main = do
         match "static/index.html" $ do
             route staticRoute
             compile $ do
-                posts <- recentFirst =<< loadAll "posts/*"
+                posts <- pure . take 10 =<< recentFirst =<< loadAll "posts/*"
                 let indexCtx =
                         listField "posts" postCtx (return posts) <>
                         defaultContext

@@ -73,7 +73,7 @@ schema = [
     , Link "/software.html"     "Software"
     , Link "/publications.html" "Publications"
     , Link "/about.html"        "About me"
-    , Link "/archive.html"      "Blog posts"
+    , Link "/archive.html"      "All blog posts"
     ]
 
 
@@ -115,7 +115,7 @@ defaultHead = H.head $ do
     -- Note : won't show up for Edge while on localhost
     H.link ! rel "icon" ! type_ "image/x-icon" ! href "/images/atom-solid.png"
     -- Style sheets
-    forM_ styleSheets (\link -> H.link ! rel "stylesheet" ! type_ "text/css" ! href link)
+    forM_ styleSheets (\lnk -> H.link ! rel "stylesheet" ! type_ "text/css" ! href lnk)
     -- Font
     H.link ! rel "stylesheet" ! type_ "font" ! href fontURL
     -- Math display
@@ -160,12 +160,12 @@ navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
 
     where
         renderLink :: NavigationLink -> Html
-        renderLink (Link url title) = H.a ! class_ "navbar-item" ! href (toValue url) $ toMarkup title
+        renderLink (Link url title_) = H.a ! class_ "navbar-item" ! href (toValue url) $ toMarkup title_
 
         -- Generate an icon + anchor
-        mkSocialLink (icon, link, name) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link) $ do
+        mkSocialLink (icon, link_, name_) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link_) $ do
             H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon) $ mempty
-            toMarkup $ name
+            toMarkup $ name_
 
 defaultFooter :: String -> H.Html
 defaultFooter s = H.footer ! class_ "footer" $
@@ -189,9 +189,9 @@ defaultFooter s = H.footer ! class_ "footer" $
                   ! A.style "border-width:0" 
                   ! src "/images/cc-by-sa.svg"
     where
-        renderLink (icon, link, name) = do
+        renderLink (icon, link_, name_) = do
             H.span ! class_ "icon" $ H.i ! class_ (toValue icon) $ mempty
-            H.a ! target "_blank" ! href (toValue link) $ toMarkup name
+            H.a ! target "_blank" ! href (toValue link_) $ toMarkup name_
 
 -- | Full default template
 -- The templateFooter will be adorned with the message @s@
