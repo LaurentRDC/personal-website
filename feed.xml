@@ -7,9 +7,156 @@
         <description><![CDATA[My personal blog on science, math, programming, and other interests.]]></description>
         <atom:link href="https://laurentrdc.xyz/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>2022-08-02
+        <lastBuildDate>2022-11-23
 </lastBuildDate>
         <item>
+    <title>Filtering noise with discrete wavelet transforms</title>
+    <link>https://laurentrdc.xyz//posts/wavelet-filtering.html</link>
+    <description><![CDATA[<div class="message is-link"><div class="message-body"><h2>On this page</h2><p><ul>
+<li><a href="#integral-transforms" id="toc-integral-transforms">Integral transforms</a>
+<ul>
+<li><a href="#discretization" id="toc-discretization">Discretization</a></li>
+</ul></li>
+<li><a href="#using-the-discrete-fourier-transform-to-filter-noise" id="toc-using-the-discrete-fourier-transform-to-filter-noise">Using the discrete Fourier transform to filter noise</a></li>
+<li><a href="#discrete-wavelet-transforms" id="toc-discrete-wavelet-transforms">Discrete wavelet transforms</a></li>
+<li><a href="#filtering-using-the-discrete-wavelet-transform" id="toc-filtering-using-the-discrete-wavelet-transform">Filtering using the discrete wavelet transform</a></li>
+<li><a href="#conclusion" id="toc-conclusion">Conclusion</a></li>
+</ul></p></div></div><p>All experimental data contains noise. Distinguishing between measurement and noise is an important component of any data analysis pipeline. However, different noise-filtering techniques are suited to different categories of noise.</p>
+<p>In this post, I’ll show you a class of filtering technique, based on discrete wavelet transforms, which is suited to noise that cannot be filtered away with more traditional techniques – such as ones that rely on the Fourier transform. This has been important in my past research<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, and I hope that this can help you too.</p>
+<h2 class="title is-2" id="integral-transforms">Integral transforms</h2>
+<p>A large category of filtering techniques are based on <em>integral transforms</em>. Broadly speaking, an integral transform <span class="math inline">\(T\)</span> is an operation that is performed on a function <span class="math inline">\(f\)</span> and builds a function <span class="math inline">\(T\left[ f\right]\)</span> which is defined on a variable <span class="math inline">\(s\)</span>, such that:</p>
+<p><span class="math display">\[
+    T\left[ f \right](s) = \int dt ~ f(t) \cdot K(t, s)
+\]</span></p>
+<p>Here, <span class="math inline">\(K\)</span> (for kernel) is a function which “selects” which parts of <span class="math inline">\(f(t)\)</span> are important as a fixed <span class="math inline">\(s\)</span>. Note that for an integral transform to be useful as a filter, we’ll need the ability to invert the transformation, i.e. there exists an inverse kernel <span class="math inline">\(K^{-1}(s, t)\)</span> such that:</p>
+<p><span class="math display">\[
+    f(t) = \int ds ~ \left( T \left[ f\right] (s) \right) \cdot K^{-1}(s,t)
+\]</span></p>
+<p>All of this was very abstract, so let’s look at a concrete example: the Fourier transform. The Fourier transform is an integral transform where<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>:</p>
+<p><span class="math display">\[
+    \begin{align}
+        K(t, \omega)      &amp;\equiv \frac{e^{-i \omega t}}{\sqrt{2 \pi}}\\
+        K^{-1}(\omega, t) &amp;\equiv  e^{i \omega t}\\
+        \omega            &amp; \in \mathbb{R}
+    \end{align}
+\]</span></p>
+<p>There are many other integral transforms, such as:</p>
+<ul>
+<li>The Laplace transform (<span class="math inline">\(K(t, s) \equiv e^{- s t}\)</span>) which is useful to solve linear ordinary differential equations;</li>
+<li>The Legendre transforms (<span class="math inline">\(K_n(t, s) \equiv P_n(s)\)</span>, where <span class="math inline">\(P_n\)</span> is the n<sup>th</sup> <a href="https://en.wikipedia.org/wiki/Legendre_polynomials">Legendre polynomial</a>) which is used to solve for electron motion in hydrogen atoms;</li>
+<li>The Radon transform (for which I cannot write down a kernel) which is used to analyze <a href="https://scikit-image.org/docs/stable/auto_examples/transform/plot_radon_transform.html">computed tomography data</a>.</li>
+</ul>
+<p>So why are integral transforms interesting? Well, depending on the function <span class="math inline">\(f(t)\)</span> you want to transform, you might end up with a representation of <span class="math inline">\(f\)</span> in the transformed space, <span class="math inline">\(T \left[ f\right] (s)\)</span>, which has nice properties! Re-using the Fourier transform for a simple, consider a function made up of two well-defined frequencies:
+<span class="math display">\[
+    f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}
+\]</span>
+The representation of <span class="math inline">\(f(t)\)</span> in frequency space – the Fourier transform of <span class="math inline">\(f\)</span>, <span class="math inline">\(F\left[ f\right](\omega)\)</span> – is very simple:
+<span class="math display">\[
+    F\left[ f\right](\omega) = \sqrt{2 \pi} \left[ \delta(\omega - 2) + \delta(\omega - 5) \right]
+\]</span>
+The Fourier transform of <span class="math inline">\(f\)</span> is perfectly localized in frequency space, being zero everywhere except at <span class="math inline">\(\omega=2\)</span> and <span class="math inline">\(\omega=5\)</span>. Functions composed of infinite waves (like the example above) always have the nice property of being localized in frequency space, which makes it easy to manipulate them… like filtering some of their components away!</p>
+<h3 class="title is-3" id="discretization">Discretization</h3>
+<p>It is much more efficient to use discretized versions of integral transforms on computers. Loosely speaking, given a discrete signal composed of <span class="math inline">\(N\)</span> terms <span class="math inline">\(x_0\)</span>, …, <span class="math inline">\(x_{N-1}\)</span>:
+<span class="math display">\[
+    T\left[ f \right](k) = \sum_n x_n \cdot K(n, k)
+\]</span>
+i.e. the integral is now a finite sum. For example, the discrete Fourier transform of the signal <span class="math inline">\(x_n\)</span>, <span class="math inline">\(X_k\)</span>, can be written as:
+<span class="math display">\[
+    X_k = \sum_n x_n \cdot e^{-i 2 \pi k n / N}
+\]</span>
+and its inverse becomes:
+<span class="math display">\[
+    x_n = \frac{1}{N}\sum_k X_k \cdot e^{i 2 \pi k n / N}
+\]</span>
+This is the definition used by <a href="https://numpy.org/doc/stable/reference/routines.fft.html#module-numpy.fft">numpy</a>, for example. Let’s use this definition to compute the discrete Fourier transform of <span class="math inline">\(f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}\)</span>:</p>
+<figure>
+<img src="generated/pandocplot9016912680466573892.png" class="python image" alt="Top: Signal which is composed of two natural frequencies. Bottom: Discrete Fourier transform of the top signal, showing two natural frequencies. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Signal which is composed of two natural frequencies. <strong>Bottom</strong>: Discrete Fourier transform of the top signal, showing two natural frequencies. (<a href="generated/pandocplot9016912680466573892.src.html">Source code</a>)</figcaption>
+</figure>
+<h2 class="title is-2" id="using-the-discrete-fourier-transform-to-filter-noise">Using the discrete Fourier transform to filter noise</h2>
+<p>Let’s add some noise to our signal and see how we can use the discrete Fourier transform to filter it away. The discrete Fourier transform is most effective if your noise has some nice properties in frequency space. For example, consider high-frequency noise:
+<span class="math display">\[
+    N(t) = \sum_{\omega=20}^{50} \sin(\omega t + \phi_{\omega})
+\]</span>
+where <span class="math inline">\(\phi_\omega\)</span> are random phases, one for each frequency component of the noise. While the signal looks very noisy, it’s very obvious in frequency-space what is noise and what is signal:</p>
+<figure>
+<img src="generated/pandocplot4482781002630889888.png" class="python image" alt="Top: Noisy signal (red) with the pure signal shown in comparison. Bottom: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal (red) with the pure signal shown in comparison. <strong>Bottom</strong>: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (<a href="generated/pandocplot4482781002630889888.src.html">Source code</a>)</figcaption>
+</figure>
+<p>The basics of filtering is as follows: set the transform of a signal to 0 in regions which are thought to be undesirable. In the case of the Fourier transform, this is known as a <em>band-pass filter</em>; frequency components of a particular frequency <em>band</em> are passed-through unchanged, and frequency components outside of this band are zeroed. Special names are given to band-pass filters with no lower bound (low-pass filter) and no upper bound (high-pass filter). We can express this filtering as a window function <span class="math inline">\(W_k\)</span> in the inverse discrete Fourier transform:
+<span class="math display">\[
+    x_{n}^{\text{filtered}} = \frac{1}{N}\sum_k W_k \cdot X_k \cdot e^{i 2 \pi k n / N}
+\]</span>
+In the case of the plot above, we want to apply a low-pass filter with a cutoff at <span class="math inline">\(\omega=10\)</span>. That is:
+<span class="math display">\[
+W_k = \left\{ \begin{array}{cl}
+    1 &amp; : \ |k| \leq 10 \\
+    0 &amp; : \ |k| &gt; 10
+\end{array} \right.
+\]</span>
+Visually:</p>
+<figure>
+<img src="generated/pandocplot1315854343000121577.png" class="python image" alt="Top: Noisy signal with the pure signal shown in comparison. Middle: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of \omega=10. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. Bottom: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal with the pure signal shown in comparison. <strong>Middle</strong>: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of <span class="math inline">\(\omega=10\)</span>. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. <strong>Bottom</strong>: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (<a href="generated/pandocplot1315854343000121577.src.html">Source code</a>)</figcaption>
+</figure>
+<p>The lesson here is that filtering signals using a discretized integral transform (like the discrete Fourier transform) consists in:</p>
+<ol type="1">
+<li>Performing a forward transform;</li>
+<li>Modifying the transformed signal using a window function, usually by zeroing components;</li>
+<li>Performing the inverse transform on the modified signal.</li>
+</ol>
+<h2 class="title is-2" id="discrete-wavelet-transforms">Discrete wavelet transforms</h2>
+<p>Discrete wavelet transforms are a class of discrete transforms which decomposes signals into a sum of wavelets. While the complex exponential functions which make up the Fourier transform are localized in frequency but infinite in space, wavelets are localized in both time space and frequency space.</p>
+<p>In order to generate the basis wavelets, the original wavelet is stretched. This is akin to the Fourier transform, where the sine/cosine basis functions are ‘stretched’ by decreasing their frequency. In technical terms, the amount of ‘stretch’ is called the <strong>level</strong>. For example, the discrete wavelet transform using the <code>db4</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> wavelet up to level 5 is the decomposition of a signal into the following wavelets:</p>
+<figure>
+<img src="generated/pandocplot7239936856268262684.png" class="python image" alt="Five of the db4 basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (Source code)" />
+<figcaption aria-hidden="true">Five of the <code>db4</code> basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (<a href="generated/pandocplot7239936856268262684.src.html">Source code</a>)</figcaption>
+</figure>
+<p>In practice, discrete wavelet transforms are expressed as two transforms per level. This means that a discrete wavelet transform of level 1 gives back two sets of coefficients. One set of coefficient contains the low-frequency components of the signal, and are usually called the <em>approximate coefficients</em>. The other set of coefficients contains the high-frequency components of the signal, and are usually called the <em>detail coefficients</em>. A wavelet transform of level 2 is done by taking the approximate coefficients of level 1, and transforming them using a stretched wavelet into two sets of coefficients: the approximate coefficients of level 2, and the detail coefficients of level 2. Therefore, a signal transformed using a wavelet transform of level <span class="math inline">\(N\)</span> has <span class="math inline">\(N\)</span> sets of coefficients: the approximate and detail coefficients of level <span class="math inline">\(N\)</span>, and the detail coefficients of levels <span class="math inline">\(N-1\)</span>, <span class="math inline">\(N-2\)</span>, …, <span class="math inline">\(1\)</span>.</p>
+<h2 class="title is-2" id="filtering-using-the-discrete-wavelet-transform">Filtering using the discrete wavelet transform</h2>
+<p>The discrete Fourier transform excels at filtering away noise which has nice properties in frequency space. This is isn’t always the case in practice; for example, noise may have frequency components which overlap with the signal we’re looking for. This was the case in my research on ultrafast electron diffraction of polycrystalline samples<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a> <a href="#fn6" class="footnote-ref" id="fnref6" role="doc-noteref"><sup>6</sup></a>, where the ‘noise’ was a trendline which moved over time, and whose frequency components overlapped with diffraction pattern we were trying to isolate.</p>
+<p>As an example, let’s use <a href="/files/wavelet-filter/diffraction.csv">real diffraction data</a> and we’ll pretend this is a time signal, to keep the units familiar. We’ll take a look at some really annoying noise: normally-distributed white noise drawn from this distribution<a href="#fn7" class="footnote-ref" id="fnref7" role="doc-noteref"><sup>7</sup></a>:
+<span class="math display">\[
+    P(x) = \frac{1}{\sqrt{2 \pi}} \exp{-\frac{(x + 1/2)^2}{2}}
+\]</span></p>
+<p>Visually:</p>
+<figure>
+<img src="generated/pandocplot14137784513437703910.png" class="python image" alt="Top: Example signal with added synthetic noise. Bottom: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Example signal with added synthetic noise. <strong>Bottom</strong>: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (<a href="generated/pandocplot14137784513437703910.src.html">Source code</a>)</figcaption>
+</figure>
+<p>This example shows a common situation: realistic noise whose frequency components overlap with the signal we’re trying to isolate. We wouldn’t be able to use filtering techniques based on the Fourier transform.</p>
+<p>Now let’s look at a particular discrete wavelet transform, with the underlying wavelet <code>sym17</code>. Decomposing the noisy signal up to level 3, we get four components:</p>
+<figure>
+<img src="generated/pandocplot11548363607980879995.png" class="python image" alt="All coefficients from a discrete wavelet transform up to level 3 with wavelet sym17. (Source code)" />
+<figcaption aria-hidden="true">All coefficients from a discrete wavelet transform up to level 3 with wavelet <code>sym17</code>. (<a href="generated/pandocplot11548363607980879995.src.html">Source code</a>)</figcaption>
+</figure>
+<p>Looks like the approximate coefficients at level 3 contain all the information we’re looking for. Let’s set all detail coefficients to 0, and invert the transform:</p>
+<figure>
+<img src="generated/pandocplot11165045477663619147.png" class="python image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot11165045477663619147.src.html">Source code</a>)</figcaption>
+</figure>
+<p>That’s looking pretty good! Not perfect of course, which I expected because we’re using real data here.</p>
+<h2 class="title is-2" id="conclusion">Conclusion</h2>
+<p>In this post, I’ve tried to give some of the intuition behind filtering signals using discrete wavelet transforms as an analogy to filtering with the discrete Fourier transform.</p>
+<p>This was only a basic explanation. There is so much more to wavelet transforms. There are many classes of wavelets with different properties, some of which<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> are very useful when dealing with higher-dimensional data (e.g. images and videos). If you’re dealing with noisy data, it won’t hurt to try and see if wavelets will help you understand it!</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><strong>L. P. René de Cotret</strong> and B. J. Siwick, <em>A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform</em>, Struct. Dyn. <strong>4</strong> (2017) <a href="http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518">DOI:10.1063/1.4972518</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>M. R. Otto, <strong>L. P. René de Cotret</strong>, <em>et al</em>, <em>How optical excitation controls the structure and properties of vanadium dioxide</em>, PNAS (2018) <a href="https://doi.org/10.1073/pnas.1808414115">DOI: 10.1073/pnas.1808414115</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>Note that it is traditional in physics to represent the transform variable as <span class="math inline">\(\omega\)</span> instead of <span class="math inline">\(s\)</span>. If <span class="math inline">\(t\)</span> is time (in seconds), then <span class="math inline">\(\omega\)</span> is <em>angular frequency</em> (in radians per seconds). If <span class="math inline">\(t\)</span> is distance (in meters), <span class="math inline">\(\omega\)</span> is spatial angular frequency (in radians per meter).<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>I will be using the wavelet naming scheme from <a href="https://pywavelets.readthedocs.io/en/latest/ref/index.html">PyWavelets</a>.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn5"><p><strong>L. P. René de Cotret</strong> and B. J. Siwick, <em>A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform</em>, Struct. Dyn. <strong>4</strong> (2017) <a href="http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518">DOI:10.1063/1.4972518</a><a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn6"><p>M. R. Otto, <strong>L. P. René de Cotret</strong>, <em>et al</em>, <em>How optical excitation controls the structure and properties of vanadium dioxide</em>, PNAS (2018) <a href="https://doi.org/10.1073/pnas.1808414115">DOI: 10.1073/pnas.1808414115</a>.<a href="#fnref6" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn7"><p>Note that this distribution contains a bias of -<span class="math inline">\(1/2\)</span>, which is useful in order to introduce low-frequencies in the noise which overlap with the spectrum of the signal.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn8"><p>N. G. Kingsbury, <em>The dual-tree complex wavelet transform: a new technique for shift invariance and directional filters</em>, IEEE Digital Signal Processing Workshop, DSP <strong>98</strong> (1998)<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>]]></description>
+    <pubDate>Wed, 23 Nov 2022 00:00:00 UT</pubDate>
+    <guid>https://laurentrdc.xyz//posts/wavelet-filtering.html</guid>
+    <dc:creator>Laurent P. René de Cotret</dc:creator>
+</item>
+<item>
     <title>Chesterton's fence and why I'm not sold on the blockchain</title>
     <link>https://laurentrdc.xyz//posts/chesterton.html</link>
     <description><![CDATA[<p>The key technological advances which brought Bitcoin to life are the blockchain and its associated proof-of-work consensus algorithm. The Bitcoin whitepaper<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is very clear on its purpose:</p>
@@ -813,88 +960,6 @@
 </section>]]></description>
     <pubDate>Wed, 12 Sep 2018 00:00:00 UT</pubDate>
     <guid>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</guid>
-    <dc:creator>Laurent P. René de Cotret</dc:creator>
-</item>
-<item>
-    <title>Making a concrete coffee table</title>
-    <link>https://laurentrdc.xyz//posts/coffee-table.html</link>
-    <description><![CDATA[<p>This post will go through the process of making a concrete coffee table. I had never worked with concrete before. This was a relatively simple introduction to concrete furniture.</p>
-<p>The objective was to make a coffee table out of concrete, using recycled materials as much as possible. Moreover, since concrete is easily shaped, I wanted to make an asymmetric table (i.e. not a rectangle).</p>
-<p>First, here’s the final result:</p>
-<p><img src="/images/coffee-table/finished.jpg" class="image" /></p>
-<p>Here it is ‘installed’ (on a wooden box I had lying around):</p>
-<p><img src="/images/coffee-table/installed.jpg" class="image" /></p>
-<h2 class="title is-2" id="making-the-mould">Making the mould</h2>
-<p>Concrete tables are easiest to make using a <em>reverse cast</em> method. We made a mould from a smooth material, <strong>melamine boards</strong>, that my dad found in the trash at his job. I first brainstormed what shape I wanted, then drew the shape on the main board:</p>
-<p><img src="/images/coffee-table/brainstorming.jpg" class="image" /></p>
-<p>Other melamine boards were cut into strips of about 1.5 inches wide. These would later make the sides of the mould. Here is the partially-assembled mould:</p>
-<p><img src="/images/coffee-table/mould-assembly-1.jpg" class="image" /></p>
-<p>Note that since the table is asymmetric, some of the joints between strips are at small angles. We used a <a href="https://en.wikipedia.org/wiki/Miter_saw">Miter saw</a> to cut the end of strips. Here is an example:</p>
-<p><img src="/images/coffee-table/joints.jpg" class="image" /></p>
-<p>We also pre-drilled the holes with a wider drill bit so that screws would not protrude from the strips, like so:</p>
-<p><img src="/images/coffee-table/pre-drilling.jpg%22" class="image" /></p>
-<p>This will make it easier to level the concrete later on, as the surface of the strips will be flat.</p>
-<p>Here is the assembled mould:</p>
-<p><img src="/images/coffee-table/mould-assembly-2.jpg" class="image" /></p>
-<p>Note that at this points, joints are not water tight; concrete would slowly leak out. Here’s an example joint:</p>
-<p><img src="/images/coffee-table/not-water-tight.jpg" class="image" /></p>
-<p>We need to make the mould water-tight. Caulking was used for this purpose:</p>
-<p><img src="/images/coffee-table/water-tight.jpg" class="image" /></p>
-<p>Here is the finished mould after cleaning:</p>
-<p><img src="/images/coffee-table/mould-assembly-3.jpg" class="image" /></p>
-<h2 class="title is-2" id="concrete-mix">Concrete mix</h2>
-<p>I used two 80 lbs (~36 kg) bags of concrete mix. The idea was to mix all the concrete, then separate it in two batches : one left as-is, and the other batch colored with charcoal pigments. Then, recombine the two halves, without mixing too much, to create a marbled look.</p>
-<p>I mixed the concrete by hand(-held mixer) in this wheelbarrow:</p>
-<p><img src="/images/coffee-table/wheelbarrow.jpg" class="image" /></p>
-<p>Charcoal pigments mixed in water are waiting in a separate container:</p>
-<p><img src="/images/coffee-table/pigments-bucket.jpg" class="image" /></p>
-<p>Unfortunately I have no pictures showing the process before I recombined the two concrete halves. Here is the final mix. You can also see the tool I used to mix the concrete (handheld drill + concrete mixing attachment):</p>
-<p><img src="/images/coffee-table/concrete-mixed.jpg" class="image" /></p>
-<p>Note that while the mix seems uniform, I mixed the final concrete <em>very little</em>. At this point I thought I failed to do the marbling; as you will see, it actually worked. Also the mix looks brown; the color will change during hardening.</p>
-<h2 class="title is-2" id="moulding">Moulding</h2>
-<p>Here is the filled mould:</p>
-<p><img src="/images/coffee-table/filled-mould.jpg" class="image" /></p>
-<p>I have no pictures of this, but we added some metal rebar to help with structural integrity.</p>
-<p>We leveled the surface with another melamine strip. This is why we pre-drilled the holes, so that the entire mould + concrete assembly lays perfectly flat.</p>
-<p>At this point, we needed to remove the air bubbles trapped in the concrete. This was done by hammering the underside of the mould with a rubber mallet for about an hour. Bubbles appeared at the surface like so:</p>
-<p><img src="/images/coffee-table/air-bubbles.jpg" class="image" /></p>
-<p>To help the concrete harden more uniformly, I ‘sealed’ the mould using plastic bags:</p>
-<p><img src="/images/coffee-table/sealed-mould.jpg" class="image" /></p>
-<p>Every few days, I would remove the plastic layer and spray water on the concrete surface.</p>
-<h2 class="title is-2" id="initial-hardening">Initial hardening</h2>
-<p>After a week, the concrete is hard enough to partially de-mould. Here is the hardened surface (which will end up being the bottom of the table):</p>
-<p><img src="/images/coffee-table/demould.jpg" class="image" /></p>
-<p>At least this is confirmation that the table is not <em>brown</em>. We flipped the table to expose the top surface. It’s difficult to see on this image, but the surface looks like it might be marbled:</p>
-<p><img src="/images/coffee-table/raw-surface.jpg" class="image" /></p>
-<h2 class="title is-2" id="polishing-and-finish">Polishing and Finish</h2>
-<p>After about two weeks, I polished the surface (200-grit) to reveal the marbling.</p>
-<p><em>Before</em>:</p>
-<p><img src="/images/coffee-table/before-polishing.jpg" class="image" /></p>
-<p><em>After</em>:</p>
-<p><img src="/images/coffee-table/after-polishing.jpg" class="image" /></p>
-<p>Looking closely, we can see air bubbles:</p>
-<p><img src="/images/coffee-table/surface-holes.jpg" class="image" /></p>
-<p>Note that if I was making a kitchen counter, I would want to get rid of the holes in the surface (for sanitary reasons); in my case I thought it was not important. However, I still tried to fill in some of the larger holes using a more liquid concrete mix:</p>
-<p><img src="/images/coffee-table/filling-holes.jpg" class="image" /></p>
-<p>After 24h, I polished the surface and sides again, with a smaller grit (400-grit):</p>
-<p><img src="/images/coffee-table/before-coating.jpg" class="image" /></p>
-<p>Finally, to protect the surface and make the marbling more visible, I coated the table with some wood varnish I found lying around at my parents’. I only have a picture of coating the underside of the table:</p>
-<p><img src="/images/coffee-table/underside-coating.jpg" class="image" /></p>
-<p>Transport from my parents’ garage to my apartment:</p>
-<p><img src="/images/coffee-table/in-transport.jpg" class="image" /></p>
-<p>Final coat of varnish at home:</p>
-<p><img src="/images/coffee-table/after-coating.jpg" class="image" /></p>
-<h2 class="title is-2" id="closing-comments">Closing comments</h2>
-<p>The final cost was about 85 $CAD dollars:</p>
-<ul>
-<li><p>50 $CAD for two bags of concrete and metal reinforcements;</p></li>
-<li><p>35 $CAD for iron oxide pigments (5kg);</p></li>
-<li><p>free melamine picked up from trash;</p></li>
-<li><p>free leftover varnish;</p></li>
-<li><p>free man-hours over the course of a few months.</p></li>
-</ul>]]></description>
-    <pubDate>Mon, 10 Sep 2018 00:00:00 UT</pubDate>
-    <guid>https://laurentrdc.xyz//posts/coffee-table.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 
