@@ -71,7 +71,7 @@
 
                     </h3>
                     <h3>
-                        Estimated reading time of 13 min.
+                        Estimated reading time of 14 min.
                     </h3>
                 </div>
             </div>
@@ -188,9 +188,9 @@ and its inverse becomes:
     x_n = \frac{1}{N}\sum_k X_k \cdot e^{i 2 \pi k n / N}
 \]</span>
 This is the definition used by <a href="https://numpy.org/doc/stable/reference/routines.fft.html#module-numpy.fft">numpy</a>, for example. Let’s use this definition to compute the discrete Fourier transform of <span class="math inline">\(f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}\)</span>:</p>
-<figure>
-<img src="generated/pandocplot9016912680466573892.png" class="python image" alt="Top: Signal which is composed of two natural frequencies. Bottom: Discrete Fourier transform of the top signal, showing two natural frequencies. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Signal which is composed of two natural frequencies. <strong>Bottom</strong>: Discrete Fourier transform of the top signal, showing two natural frequencies. (<a href="generated/pandocplot9016912680466573892.src.html">Source code</a>)</figcaption>
+<figure class="python">
+<img src="generated/pandocplot15927463806157644340.png" class="image" alt="Top: Signal which is composed of two natural frequencies. Bottom: Discrete Fourier transform of the top signal, showing two natural frequencies. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Signal which is composed of two natural frequencies. <strong>Bottom</strong>: Discrete Fourier transform of the top signal, showing two natural frequencies. (<a href="generated/pandocplot15927463806157644340.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="using-the-discrete-fourier-transform-to-filter-noise">Using the discrete Fourier transform to filter noise</h2>
 <p>Let’s add some noise to our signal and see how we can use the discrete Fourier transform to filter it away. The discrete Fourier transform is most effective if your noise has some nice properties in frequency space. For example, consider high-frequency noise:
@@ -198,9 +198,9 @@ This is the definition used by <a href="https://numpy.org/doc/stable/reference/r
     N(t) = \sum_{\omega=20}^{50} \sin(\omega t + \phi_{\omega})
 \]</span>
 where <span class="math inline">\(\phi_\omega\)</span> are random phases, one for each frequency component of the noise. While the signal looks very noisy, it’s very obvious in frequency-space what is noise and what is signal:</p>
-<figure>
-<img src="generated/pandocplot4482781002630889888.png" class="python image" alt="Top: Noisy signal (red) with the pure signal shown in comparison. Bottom: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal (red) with the pure signal shown in comparison. <strong>Bottom</strong>: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (<a href="generated/pandocplot4482781002630889888.src.html">Source code</a>)</figcaption>
+<figure class="python">
+<img src="generated/pandocplot4757975600496694508.png" class="image" alt="Top: Noisy signal (red) with the pure signal shown in comparison. Bottom: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal (red) with the pure signal shown in comparison. <strong>Bottom</strong>: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (<a href="generated/pandocplot4757975600496694508.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The basics of filtering is as follows: set the transform of a signal to 0 in regions which are thought to be undesirable. In the case of the Fourier transform, this is known as a <em>band-pass filter</em>; frequency components of a particular frequency <em>band</em> are passed-through unchanged, and frequency components outside of this band are zeroed. Special names are given to band-pass filters with no lower bound (low-pass filter) and no upper bound (high-pass filter). We can express this filtering as a window function <span class="math inline">\(W_k\)</span> in the inverse discrete Fourier transform:
 <span class="math display">\[
@@ -214,9 +214,9 @@ W_k = \left\{ \begin{array}{cl}
 \end{array} \right.
 \]</span>
 Visually:</p>
-<figure>
-<img src="generated/pandocplot1315854343000121577.png" class="python image" alt="Top: Noisy signal with the pure signal shown in comparison. Middle: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of \omega=10. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. Bottom: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal with the pure signal shown in comparison. <strong>Middle</strong>: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of <span class="math inline">\(\omega=10\)</span>. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. <strong>Bottom</strong>: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (<a href="generated/pandocplot1315854343000121577.src.html">Source code</a>)</figcaption>
+<figure class="python">
+<img src="generated/pandocplot8120734980045893289.png" class="image" alt="Top: Noisy signal with the pure signal shown in comparison. Middle: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of \omega=10. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. Bottom: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal with the pure signal shown in comparison. <strong>Middle</strong>: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of <span class="math inline">\(\omega=10\)</span>. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. <strong>Bottom</strong>: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (<a href="generated/pandocplot8120734980045893289.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The lesson here is that filtering signals using a discretized integral transform (like the discrete Fourier transform) consists in:</p>
 <ol type="1">
@@ -227,9 +227,9 @@ Visually:</p>
 <h2 class="title is-2" id="discrete-wavelet-transforms">Discrete wavelet transforms</h2>
 <p>Discrete wavelet transforms are a class of discrete transforms which decomposes signals into a sum of wavelets. While the complex exponential functions which make up the Fourier transform are localized in frequency but infinite in space, wavelets are localized in both time space and frequency space.</p>
 <p>In order to generate the basis wavelets, the original wavelet is stretched. This is akin to the Fourier transform, where the sine/cosine basis functions are ‘stretched’ by decreasing their frequency. In technical terms, the amount of ‘stretch’ is called the <strong>level</strong>. For example, the discrete wavelet transform using the <code>db4</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> wavelet up to level 5 is the decomposition of a signal into the following wavelets:</p>
-<figure>
-<img src="generated/pandocplot7239936856268262684.png" class="python image" alt="Five of the db4 basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (Source code)" />
-<figcaption aria-hidden="true">Five of the <code>db4</code> basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (<a href="generated/pandocplot7239936856268262684.src.html">Source code</a>)</figcaption>
+<figure class="python">
+<img src="generated/pandocplot18110029167299907952.png" class="image" alt="Five of the db4 basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (Source code)" />
+<figcaption aria-hidden="true">Five of the <code>db4</code> basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (<a href="generated/pandocplot18110029167299907952.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In practice, discrete wavelet transforms are expressed as two transforms per level. This means that a discrete wavelet transform of level 1 gives back two sets of coefficients. One set of coefficient contains the low-frequency components of the signal, and are usually called the <em>approximate coefficients</em>. The other set of coefficients contains the high-frequency components of the signal, and are usually called the <em>detail coefficients</em>. A wavelet transform of level 2 is done by taking the approximate coefficients of level 1, and transforming them using a stretched wavelet into two sets of coefficients: the approximate coefficients of level 2, and the detail coefficients of level 2. Therefore, a signal transformed using a wavelet transform of level <span class="math inline">\(N\)</span> has <span class="math inline">\(N\)</span> sets of coefficients: the approximate and detail coefficients of level <span class="math inline">\(N\)</span>, and the detail coefficients of levels <span class="math inline">\(N-1\)</span>, <span class="math inline">\(N-2\)</span>, …, <span class="math inline">\(1\)</span>.</p>
 <h2 class="title is-2" id="filtering-using-the-discrete-wavelet-transform">Filtering using the discrete wavelet transform</h2>
@@ -239,20 +239,20 @@ Visually:</p>
     P(x) = \frac{1}{\sqrt{2 \pi}} \exp{-\frac{(x + 1/2)^2}{2}}
 \]</span></p>
 <p>Visually:</p>
-<figure>
-<img src="generated/pandocplot14137784513437703910.png" class="python image" alt="Top: Example signal with added synthetic noise. Bottom: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Example signal with added synthetic noise. <strong>Bottom</strong>: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (<a href="generated/pandocplot14137784513437703910.src.html">Source code</a>)</figcaption>
+<figure class="python">
+<img src="generated/pandocplot5442718403832904666.png" class="image" alt="Top: Example signal with added synthetic noise. Bottom: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Example signal with added synthetic noise. <strong>Bottom</strong>: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (<a href="generated/pandocplot5442718403832904666.src.html">Source code</a>)</figcaption>
 </figure>
 <p>This example shows a common situation: realistic noise whose frequency components overlap with the signal we’re trying to isolate. We wouldn’t be able to use filtering techniques based on the Fourier transform.</p>
 <p>Now let’s look at a particular discrete wavelet transform, with the underlying wavelet <code>sym17</code>. Decomposing the noisy signal up to level 3, we get four components:</p>
-<figure>
-<img src="generated/pandocplot11548363607980879995.png" class="python image" alt="All coefficients from a discrete wavelet transform up to level 3 with wavelet sym17. (Source code)" />
-<figcaption aria-hidden="true">All coefficients from a discrete wavelet transform up to level 3 with wavelet <code>sym17</code>. (<a href="generated/pandocplot11548363607980879995.src.html">Source code</a>)</figcaption>
+<figure class="python">
+<img src="generated/pandocplot7011453840349469315.png" class="image" alt="All coefficients from a discrete wavelet transform up to level 3 with wavelet sym17. (Source code)" />
+<figcaption aria-hidden="true">All coefficients from a discrete wavelet transform up to level 3 with wavelet <code>sym17</code>. (<a href="generated/pandocplot7011453840349469315.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Looks like the approximate coefficients at level 3 contain all the information we’re looking for. Let’s set all detail coefficients to 0, and invert the transform:</p>
-<figure>
-<img src="generated/pandocplot11165045477663619147.png" class="python image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot11165045477663619147.src.html">Source code</a>)</figcaption>
+<figure class="python">
+<img src="generated/pandocplot4269772623451249117.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot4269772623451249117.src.html">Source code</a>)</figcaption>
 </figure>
 <p>That’s looking pretty good! Not perfect of course, which I expected because we’re using real data here.</p>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
@@ -343,7 +343,7 @@ Visually:</p>
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2023-01-24. 
+                    Page generated on 2023-01-25. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">
