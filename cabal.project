@@ -7,5 +7,5 @@ jobs: $ncpus
 
 source-repository-package
   type:     git
-  location: https://github.com/LaurentRDC/hakyll
-  tag:      364e4051d400964a8010c0eca36a3b3aaf5e0546
+  location: https://github.com/jaspervdj/hakyll
+  tag:      8b0a398a82afdb0a03b24fd0a635b9894d8909fc
