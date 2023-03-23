@@ -59,8 +59,8 @@ assignDriver people = possibly [ (driver, Set.delete driver people)
 
 assign3Passengers :: Set Person -> Possibilities (Set Person, Set Person)
 assign3Passengers people = possibly [ (passengers, people \\ passengers) 
-                                   | passengers <- Set.toList setsOf3
-                                   ]
+                                    | passengers <- Set.toList setsOf3
+                                    ]
     where setsOf3 = Set.filter (\s -> length s == 3) $ Set.powerSet people
 
 

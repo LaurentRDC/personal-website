@@ -2,6 +2,30 @@
 title: About me
 ---
 
+## Employment
+
+* August 2021 - | [__SocïVolta__](http://socivolta.com/) | Research
+
+    My role at SocïVolta involves multiple tasks and research subjects, including:
+     * Strategy design ([related blog post](/posts/rolling-stats.html));
+     * Portfolio optimization and backtesting;
+     * Prediction of power arbitrage using time-series analysis and machine learning techniques;
+     * Short-term probabilistic forecasting using Monte-Carlo methods;
+     * High-performance, real-time, global optimization of resource allocations ([related blog post](/posts/multiverse.html)).
+    
+    <p></p>
+
+* December 2020 - April 2021 | __Department of Chemistry, University of Toronto__ | Data Engineer
+
+    Design and implementation of an automated data processing pipeline to reconstruct femtosecond‐scale molecular dynamics from ultrafast electron diffraction measurements.
+
+    <p></p>
+
+* July 2015 - July 2017 | __NASA Jet Propulsion Laboratory__ | Software Architect
+
+    Design and implementation of real-time holographic reconstruction pipeline for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
+    <p></p>
+
 ## Education
 
 * 2016-2021  | __McGill University__ | Ph.D. Physics 
@@ -27,29 +51,6 @@ title: About me
     Advisor: Jack C. Sankey
     
     My undergraduate thesis was titled [_High-Speed Information Processing for Laserlocking System Applied to Optomechanical Cavities_](/files/ugrad_project.pdf). It had an [associated poster](/files/ugrad_project_poster.pdf).
-    <p></p>
-
-## Employment
-
-* August 2021 - | [__SocïVolta__](http://socivolta.com/) | Research
-
-    My role at SocïVolta involves multiple tasks and research subjects, including:
-     * Prediction of power arbitrage using time-series analysis and machine learning techniques;
-     * Portfolio optimization and backtesting;
-     * Short-term probabilistic forecasting using Monte-Carlo methods;
-     * High-performance, real-time, global optimization of resource allocations ([related blog post](/posts/multiverse.html)).
-    
-    <p></p>
-
-* December 2020 - April 2021 | __Department of Chemistry, University of Toronto__ | Data Engineer
-
-    Design and implementation of an automated data processing pipeline to reconstruct femtosecond‐scale molecular dynamics from ultrafast electron diffraction measurements.
-
-    <p></p>
-
-* July 2015 - July 2017 | __NASA Jet Propulsion Laboratory__ | Software Architect
-
-    Design and implementation of real-time holographic reconstruction pipeline for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
     <p></p>
 
 ## Volunteering

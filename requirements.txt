@@ -1,5 +1,6 @@
 matplotlib   >= 3,      <4
 numpy        >= 1.20,   <2
+pandas       >= 1.5,    <2
 PyWavelets   >= 1.2,    <2 
 scikit-ued   >= 2.1.14, <3
 scikit-image >= 0.20,   <1
