@@ -7,9 +7,252 @@
         <description><![CDATA[My personal blog on science, math, programming, and other interests.]]></description>
         <atom:link href="https://laurentrdc.xyz/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>2022-11-23
+        <lastBuildDate>2023-03-23
 </lastBuildDate>
         <item>
+    <title>Efficient rolling statistics</title>
+    <link>https://laurentrdc.xyz//posts/rolling-stats.html</link>
+    <description><![CDATA[<p>In the context of an array, rolling operations are operations on a set of values which are computed at each index of the array based on a subset of values in the array. A common rolling operation is the rolling mean, also known as the moving average.</p>
+<p>The best way to understand is to see it in action. Consider the following list:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>]</span></code></pre></div>
+<p>The rolling average with a window size of 2 is:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[ (<span class="dv">0</span> <span class="op">+</span> <span class="dv">0</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">4</span> <span class="op">+</span> <span class="dv">3</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">3</span> <span class="op">+</span> <span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span>)<span class="op">/</span><span class="dv">2</span>]</span></code></pre></div>
+<p>or</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.5</span>, <span class="fl">1.5</span>]</span></code></pre></div>
+<p>Rolling operations such as the rolling mean tremendously useful at my work. When working with time-series, for example, the rolling mean may be a good indicator to include as part of machine learning feature engineering or trading strategy design. Here’s an example of using the rolling average price of AAPL stock as an indicator:</p>
+<figure class="python">
+<img src="generated/pandocplot3322386701801246758.png" class="image" alt="Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (Source code)" />
+<figcaption aria-hidden="true">Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (<a href="generated/pandocplot3322386701801246758.src.html">Source code</a>)</figcaption>
+</figure>
+<p>The problem is that rolling operations can be rather slow if implemented improperly. In this post, I’ll show you how to implement efficient rolling statistics using a method based on <em>recurrence relations</em>.</p>
+<p>In principle, a general rolling function for lists might have the following type signature:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">rolling ::</span> <span class="dt">Int</span>        <span class="co">-- ^ Window length</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> ([a] <span class="ot">-&gt;</span> b) <span class="co">-- ^ Rolling function, e.g. the mean or the standard deviation</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> [a]        <span class="co">-- ^ An input list of values</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> [b]        <span class="co">-- ^ An output list of values</span></span></code></pre></div>
+<p>In this hypothetical scenario, the rolling function of type <code class="sourceCode haskell">[a] <span class="ot">-&gt;</span> b</code> receives a sublist of length <span class="math inline">\(M\)</span>, the window length. The problem is, if the input list has size <span class="math inline">\(N\)</span>, and the window has length <span class="math inline">\(M\)</span>, the complexity of this operation is at best <span class="math inline">\(\mathcal{O}(N \cdot M)\)</span>. Even if you’re using a data structure which is more efficient than a list – an array, for example –, this is still inefficient.</p>
+<p>Let’s see how to make this operation <span class="math inline">\(\mathcal{O}(N)\)</span>, i.e. constant in the window length!</p>
+<h2 class="title is-2" id="recurrence-relations-and-the-rolling-average">Recurrence relations and the rolling average</h2>
+<p>The recipe for these algorithms is construct the recurrence relation of the operation. A recurrence relation is a way to describe a series by expressing how a term at index <span class="math inline">\(i\)</span> is related to the term at index <span class="math inline">\(i-1\)</span>.</p>
+<p>Let proceed by example. Consider a series of values <span class="math inline">\(X\)</span> like so:</p>
+<p><span class="math display">\[
+    X = \left[ x_0, x_1, ...\right]
+\]</span></p>
+<p>We want to calculate the rolling average <span class="math inline">\(\bar{X} = \left[ \bar{x}_0, \bar{x}_1, ... \right]\)</span> of series <span class="math inline">\(X\)</span> with a window length <span class="math inline">\(N\)</span>. The equation for the <span class="math inline">\(j\)</span><sup>th</sup> term, <span class="math inline">\(\bar{x}_j\)</span> is given by:</p>
+<p><span class="math display">\[
+    \bar{x}_j = \frac{1}{N}\sum_{i=j - N + 1}^{N} x_i = \frac{1}{N} \sum \left[ x_{j - N + 1}, x_{j - N + 2}, ..., x_{j} \right]
+\]</span></p>
+<p>Now let’s look at the equation for the <span class="math inline">\((j-1)\)</span><sup>th</sup> term:</p>
+<p><span class="math display">\[
+    \bar{x}_{j-1} = \frac{1}{N}\sum_{i=j - N}^{j-1} x_i = \frac{1}{N} \sum \left[ x_{j - N}, x_{j - N + 1}, ..., x_{j-1} \right]
+\]</span></p>
+<p>Note the large overlap between the computation of <span class="math inline">\(\bar{x}_j\)</span> and <span class="math inline">\(\bar{x}_{j-1}\)</span>; in both cases, you need to sum up <span class="math inline">\(\left[ x_{j-N+1}, x_{j-N+2}, ..., x_{j-1} \right]\)</span></p>
+<p>Given that the overlap is very large, let’s take the difference between two consecutive terms, <span class="math inline">\(\bar{x}_j\)</span> and <span class="math inline">\(\bar{x}_{j-1}\)</span>:</p>
+<p><span class="math display">\[
+\begin{aligned}
+    \bar{x}_j - \bar{x}_{j-1} &amp;= \frac{1}{N} \sum \left[ x_{j - N + 1}, x_{j - N + 2}, ..., x_j \right] - \frac{1}{N} \sum \left[ x_{j - N}, x_{j - N + 1}, ..., x_{j-1} \right] \\
+                              &amp;= \frac{1}{N} \sum \left[ -x_{j-N} + x_{j - N + 1} - x_{j - N + 1} + x_{j - N + 2} - x_{j - N + 2} + ... + x_{j-1} - x_{j-1} + x_j\right] \\
+                              &amp;= \frac{1}{N} ( x_{j} - x_{j - N} )
+\end{aligned}
+\]</span></p>
+<p>Rewriting a little:</p>
+<p><span class="math display">\[
+    \bar{x}_j = \bar{x}_{j-1} + \frac{1}{N} ( x_j - x_{j-N} )
+\]</span></p>
+<p>This is the recurrence relation of the rolling average with a window of length <span class="math inline">\(N\)</span>. It tells us that for every term of the rolling average series <span class="math inline">\(\bar{X}\)</span>, we only need to involve two terms of the original series <span class="math inline">\(X\)</span>, regardless of the window. Awesome!</p>
+<h4 class="title is-4" id="haskell-implementation">Haskell implementation</h4>
+<p>Let’s implement this in Haskell. We’ll use the <a href="https://hackage.haskell.org/package/vector"><code>vector</code></a> library which is much faster than lists for numerical calculations like this, and comes with some combinatiors which make it pretty easy to implement the rolling mean. Regular users of <code>vector</code> will notice that the recurrence relation above fits the <code>scanl</code> use-case. If you’re unfamiliar, <code>scanl</code> is a function which looks like this:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scanl</span><span class="ot"> ::</span> (b <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> b) <span class="co">-- ^ Combination function</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> b             <span class="co">-- ^ Starting value</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> <span class="dt">Vector</span> a      <span class="co">-- ^ Input</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> <span class="dt">Vector</span> b      <span class="co">-- ^ Output</span></span></code></pre></div>
+<p>For example:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="kw">import</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> Vector.scanl (<span class="op">+</span>) <span class="dv">0</span> (Vector.fromList [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">10</span>])</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">22</span>]</span></code></pre></div>
+<p>If we decompose the example:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>[    <span class="dv">1</span>,     <span class="dv">5</span>,    <span class="dv">12</span>,      <span class="dv">22</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>, <span class="dv">1</span> <span class="op">+</span> <span class="dv">4</span>, <span class="dv">5</span> <span class="op">+</span> <span class="dv">7</span>, <span class="dv">12</span> <span class="op">+</span> <span class="dv">10</span>]</span></code></pre></div>
+<p><code>scanl</code> is an accumulation from left to right, where the “scanned” term at index <code>i</code> depends on the value of the input at indices <code>i</code> and the scanned term at <code>i-1</code>. This is perfect to represent recurrence relations. Note that in the case of the rolling mean recurrence relation, we’ll need access to the value at index <code>i</code> and <code>i - N</code>, where again <code>N</code> is the length of the window. The canonical way to operate on more than one array at once elementwise is the <code>zip*</code> family of functions.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `vector` library</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Vector</span> ( <span class="dt">Vector</span> )   </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Perform the rolling mean calculation on a vector.</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingMean ::</span> <span class="dt">Int</span>            <span class="co">-- ^ Window length</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span>  <span class="co">-- ^ Input series</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span>  </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>rollingMean window vs</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="kw">let</span> w     <span class="ot">=</span> <span class="fu">fromIntegral</span> window </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Starting point is the mean of the first complete window</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>          start <span class="ot">=</span> Vector.sum (Vector.take window vs) <span class="op">/</span> w</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Consider the recurrence relation mean[i] = mean[i-1] + (edge - lag)/w </span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- where w    = window length</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>          <span class="co">--       edge = vs[i]</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>          <span class="co">--       lag  = vs[i - w]</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>          edge <span class="ot">=</span> Vector.drop window vs</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>          lag  <span class="ot">=</span> Vector.take (Vector.length vs <span class="op">-</span> window) vs</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- mean[i] = mean[i-1] + diff, where diff is:</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>          diff <span class="ot">=</span> Vector.zipWith (\p n <span class="ot">-&gt;</span> (p <span class="op">-</span> n)<span class="op">/</span>w) edge lag</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The rolling mean for the elements at indices i &lt; window is set to 0</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>       <span class="kw">in</span> Vector.replicate (window <span class="op">-</span> <span class="dv">1</span>) <span class="dv">0</span> <span class="op">&lt;&gt;</span> Vector.scanl (<span class="op">+</span>) start diff</span></code></pre></div>
+<p>With this function, we can compute the rolling mean like so:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="kw">import</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> rollingMean <span class="dv">2</span> <span class="op">$</span> Vector.fromList [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>[<span class="fl">0.0</span>,<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="fl">3.5</span>,<span class="fl">4.5</span>]</span></code></pre></div>
+<h4 class="title is-4" id="complexity-analysis">Complexity analysis</h4>
+<p>Let’s say the window length is <span class="math inline">\(N\)</span> and the input array length is <span class="math inline">\(n\)</span>. The naive algorithm has complexity <span class="math inline">\(\mathcal{O}(n \cdot N)\)</span>. On the other hand, <code>rollingMean</code> has a complexity of <span class="math inline">\(\mathcal{O}(n + N)\)</span>:</p>
+<ul>
+<li><code>Vector.sum</code> to compute <code>start</code> is <span class="math inline">\(\mathcal{O}(N)\)</span>;</li>
+<li><code>Vector.replicate (window - 1)</code> has order <span class="math inline">\(\mathcal{O}(N)\)</span></li>
+<li><code>Vector.drop</code> and <code>Vector.take</code> are both <span class="math inline">\(\mathcal{O}(1)\)</span>;</li>
+<li><code>Vector.scanl</code> and <code>Vector.zipWith</code> are both <span class="math inline">\(\mathcal{O}(n)\)</span> (and in practice, these operations should get fused to a single pass);</li>
+</ul>
+<p>However, usually <span class="math inline">\(N &lt;&lt; n\)</span>. For example, at work, we typically roll 10+ years of data with a window on the order of days / weeks. Therefore, we have that <code>rollingMean</code> scales linearly with the length of the input (<span class="math inline">\(\mathcal{O}(n)\)</span>)</p>
+<h2 class="title is-2" id="efficient-rolling-variance">Efficient rolling variance</h2>
+<p>Now that we’ve developed a procedure on how to determine an efficient rolling algorithm, let’s do it for the (unbiased) variance.</p>
+<p>Again, consider a series of values:</p>
+<p><span class="math display">\[
+    X = \left[ x_0, x_1, ...\right]
+\]</span></p>
+<p>We want to calculate the rolling variance <span class="math inline">\(\sigma^2(X)\)</span> of series <span class="math inline">\(X\)</span> with a window length <span class="math inline">\(N\)</span>. The equation for the <span class="math inline">\(j\)</span><sup>th</sup> term, <span class="math inline">\(\sigma^2_j\)</span> is given by:</p>
+<p><span class="math display">\[
+    \sigma^2_j = \frac{1}{N - 1}\sum_{i=j - N + 1}^{j} (x_i - \bar{x}_j)^2 = \frac{1}{N-1} \sum \left[ (x_{j - N + 1} - \bar{x}_j)^2, ..., (x_j - \bar{x}_j)^2 \right]
+\]</span></p>
+<p>where <span class="math inline">\(\bar{x}_i\)</span> is the rolling mean at index <span class="math inline">\(i\)</span>, just like in the previous section. Let’s simplify a bit by expanding the squares:</p>
+<p><span class="math display">\[
+\begin{aligned}
+    (N - 1) ~ \sigma^2_j &amp;= \sum_{i=j-N+1}^{j} (x_i - \bar{x}_j)^2 \\
+                         &amp;= N\bar{x}^2_j + \sum_{i=j - N + 1}^{j} x^2_i - 2 x_i \bar{x}_j
+\end{aligned}
+\]</span></p>
+<p>We note here that <span class="math inline">\(\sum_{i=j - N + 1}^{j} x_i \equiv N \bar{x}_j\)</span>, which allows to simplify the equation further:</p>
+<p><span class="math display">\[
+\begin{aligned}
+    (N - 1) ~ \sigma^2_j &amp;= N\bar{x}^2_j - 2 N \bar{x}^2_j + \sum_{i=j - N + 1}^{j} x^2_i  \\
+                         &amp;= -N\bar{x}^2_j + \sum_{i=j - N + 1}^{j} x^2_i 
+\end{aligned}
+\]</span></p>
+<p>This leads to the following difference between consecutive rolling unbiased variance terms:</p>
+<p><span class="math display">\[
+\begin{aligned}
+(N - 1) \left( \sigma^2_j - \sigma^2_{j-1} \right) &amp;= N\bar{x}^2_{j - 1} - N\bar{x}^2_j + \sum_{i=j - N + 1}^{j} x^2_i - \sum_{i&#39;=j - N}^{j-1} x^2_{i&#39;} \\
+                                                   &amp;= N\bar{x}^2_{j - 1} - N\bar{x}^2_j + x^2_j - x^2_{j-N}
+\end{aligned}
+\]</span></p>
+<p>and therefore, the recurrence relation:</p>
+<p><span class="math display">\[
+\sigma^2_j = \sigma^2_{j-1} + \frac{1}{N-1} \left[ N\bar{x}^2_{j - 1} - N\bar{x}^2_j + x^2_j - x^2_{j - N} \right] 
+\]</span></p>
+<p>This recurrence relation looks pretty similar to the rolling mean recurrence relation, with the added wrinkle that you need to know the rolling mean in advance.</p>
+<h4 class="title is-4" id="haskell-implementation-1">Haskell implementation</h4>
+<p>Let’s implement this in Haskell again. We can re-use our <code>rollingMean</code>. We’ll also need to compute the unbiased variance in the starting window; I’ll use the <code>statistics</code> library for brevity, but it’s easy to implement yourself if you care about minimizing dependencies.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `vector` library</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Vector</span> ( <span class="dt">Vector</span> )   </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `statistics` library</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Statistics.Sample</span> ( varianceUnbiased )</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingMean ::</span> <span class="dt">Int</span>          </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>rollingMean <span class="ot">=</span> (<span class="op">...</span>)  <span class="co">-- see above</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Perform the rolling unbiased variance calculation on a vector.</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingVar ::</span> <span class="dt">Int</span>          </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>           <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>           <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>rollingVar window vs</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="kw">let</span> start   <span class="ot">=</span> varianceUnbiased <span class="op">$</span> Vector.take window vs</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>          n       <span class="ot">=</span> <span class="fu">fromIntegral</span> window</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>          ms      <span class="ot">=</span> rollingMean window vs</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Rolling mean terms leading by N</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>          ms_edge <span class="ot">=</span> Vector.drop window ms</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Rolling mean terms leading by N - 1</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>          ms_lag  <span class="ot">=</span> Vector.drop (window <span class="op">-</span> <span class="dv">1</span>) ms</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Values leading by N</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>          xs_edge <span class="ot">=</span> Vector.drop window vs</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Values leading by 0</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>          xs_lag  <span class="ot">=</span> vs</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Implementation of the recurrence relation, minus the previous term in the series</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- There&#39;s no way to make the following look nice, sorry.</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- N * \bar{x}^2_{N-1} - N * \bar{x}^2_{N} + x^2_N - x^2_0</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>          term xbar_nm1 xbar_n x_n x_0 <span class="ot">=</span> (n <span class="op">*</span> (xbar_nm1<span class="op">**</span><span class="dv">2</span>) <span class="op">-</span> n <span class="op">*</span> (xbar_n <span class="op">**</span> <span class="dv">2</span>) <span class="op">+</span> x_n<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> x_0<span class="op">**</span><span class="dv">2</span>)<span class="op">/</span>(n <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The rolling variance for the elements at indices i &lt; window is set to 0</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>       <span class="kw">in</span> Vector.replicate (window <span class="op">-</span> <span class="dv">1</span>) <span class="dv">0</span> <span class="op">&lt;&gt;</span> Vector.scanl (<span class="op">+</span>) start (Vector.zipWith4 term ms_lag ms_edge xs_edge xs_lag)</span></code></pre></div>
+<p>Note that it may be benificial to reformulate the <span class="math inline">\(N\bar{x}^2_{j - 1} - N\bar{x}^2_j + x^2_j - x^2_{j - N}\)</span> part of the recurrence relation to optimize the <code>rollingVar</code> function. For example, is it faster to minimize the number of exponentiations, or multiplications? I do not know, and leave further optimizations aside.</p>
+<h4 class="title is-4" id="complexity-analysis-1">Complexity analysis</h4>
+<p>Again, let’s say the window length is <span class="math inline">\(N\)</span> and the input array length is <span class="math inline">\(n\)</span>. The naive algorithm still has complexity <span class="math inline">\(\mathcal{O}(n \cdot N)\)</span>. On the other hand, <code>rollingVar</code> has a complexity of <span class="math inline">\(\mathcal{O}(n + N)\)</span>:</p>
+<ul>
+<li><code>varianceUnbiased</code> to compute <code>start</code> is <span class="math inline">\(\mathcal{O}(N)\)</span>;</li>
+<li><code>Vector.replicate (window - 1)</code> has order <span class="math inline">\(\mathcal{O}(N)\)</span></li>
+<li><code>Vector.drop</code> and <code>Vector.take</code> are both <span class="math inline">\(\mathcal{O}(1)\)</span>;</li>
+<li><code>Vector.scanl</code> and <code>Vector.zipWith4</code> are both <span class="math inline">\(\mathcal{O}(n)\)</span> (and in practice, these operations should get fused to a single pass);</li>
+</ul>
+<p>Since usually <span class="math inline">\(N &lt;&lt; n\)</span>, as before, we have that <code>rollingVar</code> scales linearly with the length of the input (<span class="math inline">\(\mathcal{O}(n)\)</span>).</p>
+<h2 class="title is-2" id="bonus-rolling-sharpe-ratio">Bonus: rolling Sharpe ratio</h2>
+<p>The Sharpe ratio<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is a common financial indicator of return on risk. It’s definition is simple. Consider returns (also known as PnL) in a set <span class="math inline">\(X\)</span>. The Sharpe ratio <span class="math inline">\(S(X)\)</span> of these returns is:</p>
+<p><span class="math display">\[
+S(X) = \frac{\bar{X}}{\sigma_X} 
+\]</span></p>
+<p>For ordered returns <span class="math inline">\(X = \left[ x_0, x_1, ... \right]\)</span>, the rolling Sharpe ratio at index <span class="math inline">\(j\)</span> is:</p>
+<p><span class="math display">\[
+    S_j = \frac{\bar{x}_j}{\sigma_j}
+\]</span></p>
+<p>where <span class="math inline">\(\bar{x}_j\)</span> and <span class="math inline">\(\sigma_j\)</span> are the rolling mean and standard deviation at index <span class="math inline">\(j\)</span>, respectively.</p>
+<p>Since the rolling variance requires knowledge of the rolling mean, we can easily compute the rolling Sharpe ratio by modifying the implementation of <code>rollingVariance</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `vector` library</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Vector</span> ( <span class="dt">Vector</span> )   </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `statistics` library</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Statistics.Sample</span> ( varianceUnbiased )</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingMean ::</span> <span class="dt">Int</span>          </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>rollingMean <span class="ot">=</span> (<span class="op">...</span>)  <span class="co">-- see above</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingSharpe ::</span> <span class="dt">Int</span>          </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>              <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>              <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>rollingSharpe window vs</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="kw">let</span> start   <span class="ot">=</span> varianceUnbiased <span class="op">$</span> Vector.take window vs</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>          n       <span class="ot">=</span> <span class="fu">fromIntegral</span> window</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>          ms      <span class="ot">=</span> rollingMean window vs</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- The following expressions are taken from rollingVar</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>          ms_edge <span class="ot">=</span> Vector.drop window ms</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>          ms_lag  <span class="ot">=</span> Vector.drop (window <span class="op">-</span> <span class="dv">1</span>) ms</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>          xs_edge <span class="ot">=</span> Vector.drop window vs</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>          xs_lag  <span class="ot">=</span> vs</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>          term xbar_nm1 xbar_n x_n x_0 <span class="ot">=</span> (n <span class="op">*</span> (xbar_nm1<span class="op">**</span><span class="dv">2</span>) <span class="op">-</span> n <span class="op">*</span> (xbar_n <span class="op">**</span> <span class="dv">2</span>) <span class="op">+</span> x_n<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> x_0<span class="op">**</span><span class="dv">2</span>)<span class="op">/</span>(n <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- standard deviation from variance</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>          std <span class="ot">=</span> <span class="fu">sqrt</span> <span class="op">&lt;$&gt;</span> Vector.scanl (<span class="op">+</span>) start (Vector.zipWith4 term ms_lag ms_edge xs_edge xs_lag)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The rolling Sharpe ratio for the elements at indices i &lt; window is set to 0</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>       <span class="kw">in</span> Vector.replicate (window <span class="op">-</span> <span class="dv">1</span>) <span class="dv">0</span> <span class="op">&lt;&gt;</span> Vector.zipWith (<span class="op">/</span>) (Vector.drop window ms) std</span></code></pre></div>
+<h2 class="title is-2" id="conclusion">Conclusion</h2>
+<p>In this blog post, I’ve shown you a recipe to design rolling statistics algorithms which are efficient (i.e. <span class="math inline">\(\mathcal{O}(n)\)</span>) based on recurrence relations. Efficient rolling statistics as implemented in this post are an essential part of backtesting software, which is software to test trading strategies.</p>
+<p><em>All code is available in this <a href="/files/Rolling.hs">Haskell module</a></em></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>William F. Sharpe. <em>Mutual Fund Performance</em>. Journal of Business, <strong>31</strong> (1966). <a href="https://doi.org/10.1086/294846">DOI: 10.1086/294846</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>]]></description>
+    <pubDate>Thu, 23 Mar 2023 00:00:00 UT</pubDate>
+    <guid>https://laurentrdc.xyz//posts/rolling-stats.html</guid>
+    <dc:creator>Laurent P. René de Cotret</dc:creator>
+</item>
+<item>
     <title>Filtering noise with discrete wavelet transforms</title>
     <link>https://laurentrdc.xyz//posts/wavelet-filtering.html</link>
     <description><![CDATA[<div class="message is-link"><div class="message-body"><h2>On this page</h2><p><ul>
@@ -859,109 +1102,6 @@ Visually:</p>
 </section>]]></description>
     <pubDate>Wed, 03 Apr 2019 00:00:00 UT</pubDate>
     <guid>https://laurentrdc.xyz//posts/two-temp-model.html</guid>
-    <dc:creator>Laurent P. René de Cotret</dc:creator>
-</item>
-<item>
-    <title>Example of a Pandoc filter to abstract away CSS framework quirks</title>
-    <link>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</link>
-    <description><![CDATA[<p>To make this static website render correctly on both desktop and mobile, I’ve decided to ‘upgrade’ my setup to use the <a href="https://bulma.io">Bulma CSS framework</a>. This introduced a problem I did not anticipate.</p>
-<p>For example, consider the following “raw” HTML tag to create a level 1 title:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
-<p>However, in Bulma, <a href="https://bulma.io/documentation/elements/title/">headings must be of a specific class</a>, like so <a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 title --&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-2 title --&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h2</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-2&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h2&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 subtitle --&gt;</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;subtitle is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></span></code></pre></div>
-<p>Problem is, a lot of headings included on my website are generated from Markdown to HTML using <a href="http://pandoc.org/">Pandoc</a>. Predictably, Markdown headings like <code class="sourceCode markdown"><span class="fu"># Title</span></code> are converted to “raw” HTML headings like <code class="sourceCode html"><span class="kw">&lt;h1&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></code>, and not the <code class="sourceCode html"><span class="kw">&lt;h1</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-1&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h1&gt;</span></code> that I need to use.</p>
-<p><strong>This is a textbook example of a problem that can be solved with a Pandoc filter.</strong></p>
-<p>During the conversion from Markdown to HTML, Pandoc constructs an <a href="https://en.wikipedia.org/wiki/Abstract_syntax_tree">abstract syntax tree</a> representing the document. A Pandoc filter is used to include transformations to this abstract syntax tree. This is precisely what we want : we want to transform headings into a slightly different type of headings that will play nicely with Bulma.</p>
-<p>There are some examples in the <a href="http://pandoc.org/filters.html">Pandoc documentation on filters</a>, but I would like to document the process I used to create this filter.</p>
-<p>We’ll be writing the filter in Haskell, because I can then include in directly in the website code generation (<a href="/posts/making-this-website.html">more info here</a>).</p>
-<h3 class="title is-3" id="the-pandoc-abstract-syntax-tree">The Pandoc abstract syntax tree</h3>
-<p>We need to familiarize ourselves with the Pandoc abstract syntax tree (AST). This is defined in the <a href="https://hackage.haskell.org/package/pandoc-types"><code>pandoc-types</code> package</a>, most importantly in the <code class="sourceCode haskell"><span class="dt">Text.Pandoc.Definition</span></code> module (see <a href="https://hackage.haskell.org/package/pandoc-types-1.17.5.1/docs/Text-Pandoc-Definition.html">here</a>).</p>
-<p>We’re using Haskell, so let’s look at the data types. A Pandoc document is converted from some source format (in our case, Markdown) to the <code>Pandoc</code> type:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Pandoc</span> <span class="ot">=</span> <span class="dt">Pandoc</span> <span class="dt">Meta</span> [<span class="dt">Block</span>]</span></code></pre></div>
-<p>Without looking at the details, we can see that a document is a list of blocks as well as some metadata. The <code class="sourceCode haskell"><span class="dt">Block</span></code> datatype is more interesting:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Block</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">Plain</span> [<span class="dt">Inline</span>]        <span class="co">-- ^ Plain text, not a paragraph</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">Para</span> [<span class="dt">Inline</span>]         <span class="co">-- ^ Paragraph</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    (<span class="op">...</span>)                   <span class="co">-- (omitted)</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">Header</span> <span class="dt">Int</span> <span class="dt">Attr</span> [<span class="dt">Inline</span>] <span class="co">-- ^ Header - level (integer) and text (inlines)</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    (<span class="op">...</span>)                   <span class="co">-- (omitted)</span></span></code></pre></div>
-<p>(source <a href="https://hackage.haskell.org/package/pandoc-types-1.17.5.1/docs/src/Text.Pandoc.Definition.html#Block">here</a>)</p>
-<p>There we go! One of the possible type of blocks is a header. This header has a level (level 1 header is the largest title), some attributes, and <code class="sourceCode haskell">[<span class="dt">Inline</span>]</code> represents the content of the header. We’re interested in modifying the header attributes, so let’s look at <code class="sourceCode haskell"><span class="dt">Attr</span></code>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Attributes: identifier, classes, key-value pairs</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Attr</span> <span class="ot">=</span> ( <span class="dt">String</span>                <span class="co">-- Identifier. Not important</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>            , [<span class="dt">String</span>]              <span class="co">-- ^ class      (e.g. [&quot;a&quot;, &quot;b&quot;] -&gt; class=&quot;a b&quot; in HTML)</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            , [(<span class="dt">String</span>, <span class="dt">String</span>)])   <span class="co">-- Not important</span></span></code></pre></div>
-<p>The “classes” part of the attribute is precisely what we’d like to modify. Recall that to get Bulma to work, we want to have headings looking like <code class="sourceCode html"><span class="kw">&lt;h3</span> <span class="er">class</span><span class="ot">=</span><span class="st">&quot;title is-3&quot;</span><span class="kw">&gt;</span>Title<span class="kw">&lt;/h3&gt;</span></code>.</p>
-<h3 class="title is-3" id="modifying-one-ast-node">Modifying one AST node</h3>
-<p>Let’s write a function that modifies <code class="sourceCode haskell"><span class="dt">Block</span></code>s (i.e. one tree node) like we want <a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- This is from the pandoc-types package</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Pandoc.Definition</span>   (<span class="dt">Block</span>(..), <span class="dt">Attr</span>)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ot">toBulmaHeading ::</span> <span class="dt">Block</span> <span class="ot">-&gt;</span> <span class="dt">Block</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- Pattern matching on the input</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- Any Block that is actually a header should be changed</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>toBulmaHeading (<span class="dt">Header</span> level attrs xs) <span class="ot">=</span> <span class="dt">Header</span> level newAttrs xs</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>        (identifier, classes, keyvals) <span class="ot">=</span> attrs</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- We leave identifier and key-value pairs unchanged</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        newAttrs <span class="ot">=</span> ( identifier</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>                    <span class="co">-- We extend header classes to have the Bulma classes &quot;title&quot; and &quot;is-*&quot;</span></span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>                    <span class="co">-- where * is the header level</span></span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>                   , classes <span class="op">&lt;&gt;</span> [<span class="st">&quot;title&quot;</span>, <span class="st">&quot;is-&quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> level]</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>                   , keyvals)</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="co">-- We leave any non-header blocks unchanged</span></span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>toBulmaHeading x <span class="ot">=</span> x</span></code></pre></div>
-<h3 class="title is-3" id="modifying-the-entire-ast">Modifying the entire AST</h3>
-<p>All we need now is to traverse the entire syntax tree, and modify every block according to the <code class="sourceCode haskell">toBulmaHeading</code> function. This is trivial using the <code class="sourceCode haskell">Text.Pandoc.Walk.walk</code> function (also from <code>pandoc-types</code>). Thanks to typeclasses, <code class="sourceCode haskell">walk</code> works on many types, but the one specialization I’m looking for is:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">walk ::</span> (<span class="dt">Block</span> <span class="ot">-&gt;</span> <span class="dt">Block</span>)    <span class="co">-- ^ A function that modifies the abstract syntax three</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>     <span class="ot">-&gt;</span> <span class="dt">Pandoc</span>              <span class="co">-- ^ A syntax tree       </span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>     <span class="ot">-&gt;</span> <span class="dt">Pandoc</span>              <span class="co">-- ^ Our modified syntax tree</span></span></code></pre></div>
-<p>Our filter then becomes:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- This is from the pandoc-types package</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Pandoc.Definition</span>   (<span class="dt">Pandoc</span>, <span class="dt">Block</span>(..), <span class="dt">Attr</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Pandoc.Walk</span>         (walk)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ot">toBulmaHeading ::</span> <span class="dt">Block</span> <span class="ot">-&gt;</span> <span class="dt">Block</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>toBulmaHeading (<span class="dt">Header</span> level attrs xs) <span class="ot">=</span> <span class="dt">Header</span> level newAttrs xs</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        (identifier, classes, keyvals) <span class="ot">=</span> attrs</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- We leave identifier and key-value pairs unchanged</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        newAttrs <span class="ot">=</span> ( identifier</span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>                    <span class="co">-- We extend header classes to have the Bulma classes &quot;title&quot; and &quot;is-*&quot;</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>                    <span class="co">-- where * is the header level</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>                   , classes <span class="op">&lt;&gt;</span> [<span class="st">&quot;title&quot;</span>, <span class="st">&quot;is-&quot;</span> <span class="op">&lt;&gt;</span> <span class="fu">show</span> level]</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>                   , keyvals)</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">-- We leave any non-header blocks unchanged</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>toBulmaHeading x <span class="ot">=</span> x</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Pandoc filter that changes headings to play nicely with Bulma</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="ot">bulmaHeadingTransform ::</span> <span class="dt">Pandoc</span> <span class="ot">-&gt;</span> <span class="dt">Pandoc</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>bulmaHeadingTransform <span class="ot">=</span> walk toBulmaHeading</span></code></pre></div>
-<h3 class="title is-3" id="hooking-into-hakyll">Hooking into Hakyll</h3>
-<p>To include this filter in my Hakyll pipeline, I only need to provide this filter to the <code class="sourceCode haskell">pandocCompilerWithTransform</code> function. Hakyll will then apply the Pandoc filter after the AST has been generated from Markdown, but before HTML rendering happens.</p>
-<p>If you want to know how to integrate all of this you can shoot me an e-mail.</p>
-<h2 class="title is-2" id="closing-remarks">Closing remarks</h2>
-<p>I hope this example has shown you the process behind writing Pandoc filters. Without modifying the content of my posts, I have been able to integrate Bulma in my static website.</p>
-<p>I could also have done it by replacing Markdown headers with inline HTML. However, this would have been less fun.</p>
-<p>You can take a look at the <a href="https://github.com/LaurentRDC/personal-website">source code</a> used to generate this website.</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr />
-<ol>
-<li id="fn1"><p>I’m sure there is a way to abstract those details away, but the objective today is to play with Pandoc.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>I’m using the <code class="sourceCode haskell"><span class="fu">mappend</span></code> operation <code class="sourceCode haskell"><span class="op">&lt;&gt;</span></code> to concatenate lists and strings. I could have used <code class="sourceCode haskell"><span class="op">++</span></code>, but <code class="sourceCode haskell"><span class="op">&lt;&gt;</span></code> just looks so slick.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section>]]></description>
-    <pubDate>Wed, 12 Sep 2018 00:00:00 UT</pubDate>
-    <guid>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 
