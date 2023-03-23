@@ -98,7 +98,7 @@ main = do
             
         --------------------------------------------------------------------------------
         -- A lot of things can be compied directly
-        forM_ ["files/*", "fonts/*", "js/*", nonJpgImages] $ 
+        forM_ ["files/*/**", "fonts/*", "js/*", nonJpgImages] $ 
             \pattern ->
                 match pattern $ do
                     route idRoute
