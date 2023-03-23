@@ -32,7 +32,7 @@ Note that since the table is asymmetric, some of the joints between strips are a
 
 We also pre-drilled the holes with a wider drill bit so that screws would not protrude from the strips, like so:
 
-![](/images/coffee-table/pre-drilling.jpg")
+![](/images/coffee-table/pre-drilling.jpg)
 
 This will make it easier to level the concrete later on, as the surface of the strips will be flat.
 

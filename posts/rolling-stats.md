@@ -359,6 +359,6 @@ rollingSharpe window vs
 
 In this blog post, I've shown you a recipe to design rolling statistics algorithms which are efficient (i.e. $\mathcal{O}(n)$) based on recurrence relations. Efficient rolling statistics as implemented in this post are an essential part of backtesting software, which is software to test trading strategies. 
 
-*All code is available in this [Haskell module](/files/Rolling.hs)*
+*All code is available in this [Haskell module](/files/rolling-stats/Rolling.hs).*
 
 [^sharpe]: William F. Sharpe. *Mutual Fund Performance*. Journal of Business, **31** (1966). [DOI: 10.1086/294846](https://doi.org/10.1086/294846)

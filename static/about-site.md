@@ -4,7 +4,7 @@ title: About this site
 
 This site was built using open-source tools.
 
-* Site compiler built using [Hakyll](https://jaspervdj.be/hakyll/) and [hakyll-images](github.com/LaurentRDC/hakyll-images) libraries;
+* Site compiler built using [Hakyll](https://jaspervdj.be/hakyll/) and [hakyll-images](https://github.com/LaurentRDC/hakyll-images) libraries;
 * Markdown-to-HTML conversion using [Pandoc](https://pandoc.org) and [pandoc-plot](https://github.com/LaurentRDC/pandoc-plot);
 * Cascading style sheet components from [Bulma](https://bulma.io);
 * Icons provided by [Font Awesome](https://fontawesome.com/);
