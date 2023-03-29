@@ -5,7 +5,14 @@ packages:
 optimization: 0
 jobs: $ncpus
 
+allow-newer: haddock-library:base
+
 source-repository-package
   type:     git
-  location: https://github.com/jaspervdj/hakyll
-  tag:      8b0a398a82afdb0a03b24fd0a635b9894d8909fc
+  location: https://github.com/LaurentRDC/hakyll
+  tag:      c9f329563a1bda7f9188b28c2996e0a914a11524
+
+source-repository-package
+  type:     git
+  location: https://github.com/LaurentRDC/pandoc-plot
+  tag:      57fce6c45a9d696f867c3cf2c6d576abac6a633d
