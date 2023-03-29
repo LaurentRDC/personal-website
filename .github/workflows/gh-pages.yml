@@ -22,7 +22,7 @@ jobs:
         fetch-depth: 0
 
     - name: Install cabal/ghc
-      uses: haskell/actions/setup@v1
+      uses: haskell/actions/setup@v2
       id: setup-haskell
       with:
         ghc-version: '9.4.4'
