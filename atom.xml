@@ -249,12 +249,12 @@ S(X) = \frac{\bar{X}}{\sigma_X}
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this blog post, I’ve shown you a recipe to design rolling statistics algorithms which are efficient (i.e. <span class="math inline">\(\mathcal{O}(n)\)</span>) based on recurrence relations. Efficient rolling statistics as implemented in this post are an essential part of backtesting software, which is software to test trading strategies.</p>
 <p><em>All code is available in this <a href="/files/rolling-stats/Rolling.hs">Haskell module</a>.</em></p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>William F. Sharpe. <em>Mutual Fund Performance</em>. Journal of Business, <strong>31</strong> (1966). <a href="https://doi.org/10.1086/294846">DOI: 10.1086/294846</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>]]></summary>
+</aside>]]></summary>
 </entry>
 <entry>
     <title>Filtering noise with discrete wavelet transforms</title>
@@ -390,7 +390,7 @@ Visually:</p>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, I’ve tried to give some of the intuition behind filtering signals using discrete wavelet transforms as an analogy to filtering with the discrete Fourier transform.</p>
 <p>This was only a basic explanation. There is so much more to wavelet transforms. There are many classes of wavelets with different properties, some of which<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> are very useful when dealing with higher-dimensional data (e.g. images and videos). If you’re dealing with noisy data, it won’t hurt to try and see if wavelets will help you understand it!</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p><strong>L. P. René de Cotret</strong> and B. J. Siwick, <em>A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform</em>, Struct. Dyn. <strong>4</strong> (2017) <a href="http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518">DOI:10.1063/1.4972518</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -402,7 +402,7 @@ Visually:</p>
 <li id="fn7"><p>Note that this distribution contains a bias of -<span class="math inline">\(1/2\)</span>, which is useful in order to introduce low-frequencies in the noise which overlap with the spectrum of the signal.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>N. G. Kingsbury, <em>The dual-tree complex wavelet transform: a new technique for shift invariance and directional filters</em>, IEEE Digital Signal Processing Workshop, DSP <strong>98</strong> (1998)<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>]]></summary>
+</aside>]]></summary>
 </entry>
 <entry>
     <title>Chesterton's fence and why I'm not sold on the blockchain</title>
@@ -427,13 +427,13 @@ Visually:</p>
 <p><strong>Performance</strong> is another major downside of decentralization. As an example, Bitcoin’s throughput has never reached more than <a href="https://blockchair.com/bitcoin/charts/transactions-per-second">6 transactions per second</a> as of the time of writing. By contract, the electronic payment network VisaNet (which powers Visa credit card) can process up to <a href="https://usa.visa.com/about-visa/visanet.html">76 000 transactions per second</a>.</p>
 <p>Until blockchain enthusiasts understand the advantages of centralization presented above, I don’t think cryptocurrencies will become mainstream.</p>
 <p><em>This post was inspired by the <a href="https://rationalreminder.ca/podcast/crypto8">Tim O’Reilly interview on the Rational Reminder podcast</a></em>.</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>S. Nakamoto, <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> (2008). <a href="https://bitcoin.org/bitcoin.pdf">Link to PDF</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>G. K. Chesterton, <em>The Thing: Why I Am a Catholic</em>, chapter 4 (1929).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>]]></summary>
+</aside>]]></summary>
 </entry>
 <entry>
     <title>Exploring the multiverse of possibilities all at once using monads</title>
@@ -558,13 +558,13 @@ Visually:</p>
 <p>Although I’m not using Haskell at work<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, I expect that something similar will need to be built in the near future to speed up our global optimization problem. The specific problem we are tackling has many more constraints than the example presented in this post. It’s easier to generate a list of solutions, most of which are unsuitable, and filter the solutions one by one. There is a fixed computational cost associated with generating and checking a solution, and so reducing the set of possible solutions is even more important.</p>
 <p>This post was partly inspired by the legendary blog post <a href="https://aphyr.com/posts/342-typing-the-technical-interview">Typing the technical interview</a></p>
 <p><em>A self-contained Haskell source file containing all code from this post is <a href="/files/multiverse.hs">available for download here</a></em></p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>This is why some people like to thing of monads as types that support flatMap.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Boss, if you’re reading this, please let me use Haskell :).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>]]></summary>
+</aside>]]></summary>
 </entry>
 <entry>
     <title>Can you make heterogeneous lists in Haskell? Sure — as long as your intent is clear</title>
@@ -781,13 +781,13 @@ Visually:</p>
 <p>The comprehensive exam is inherently about making students’ experience more focused on their research area. This is appealing from students point-of-view: why should they have to go out of their way to stay aware about classical mechanics, something which they might never use? The comprehensive exam (in the format that I have described above) streamlines the requirements for graduation.</p>
 <p>The graduate student experience is about much more than the resulting dissertation. We want our students to be more than just experts in their narrow fields; we also want them to be ready to contribute to society beyond their immediate expertise. Does the prelim ensure that this is the case? Of course not. But removing the prelim sends the wrong message about what it means to graduate with a PhD.</p>
 <p>On a personal note, the prelim made me review all of my undergraduate studies. I purchased the Feynman Lectures on Physics and read all three volumes. With a Masters’ degree under my belt, I was able to appreciate my learnings under a new light, even though I haven’t used most of it since then. While I cannot say that the exam was fun, the studying experience was definitely one of the highlights of my PhD.</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>Other institutions might call it the qualifying examination.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Again, this might have other names at other institutions.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>]]></summary>
+</aside>]]></summary>
 </entry>
 <entry>
     <title>Harnessing symmetry to find the center of a diffraction pattern</title>
@@ -880,7 +880,7 @@ Visually:</p>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, we have determined a robust way to compute the center of a diffraction pattern without any parameters, by making use of a strong invariant: radial inversion symmetry. My favourite part: this method admits no free parameters!</p>
 <p>If you want to make use of this, <a href="https://scikit-ued.readthedocs.io/en/master/functions/skued.autocenter.html#skued.autocenter">take a look at <code>autocenter</code></a>, a new function that has been added to <a href="https://github.com/LaurentRDC/scikit-ued">scikit-ued</a>.</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>L.P. René de Cotret <em>et al</em>, <em>Time- and momentum-resolved phonon population dynamics with ultrafast electron diffuse scattering</em>, Phys. Rev. B <strong>100</strong> (2019) <a href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.214115">DOI: 10.1103/PhysRevB.100.214115</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -888,7 +888,7 @@ Visually:</p>
 <li id="fn3"><p>Dirk Padfield. <em>Masked object registration in the Fourier domain</em>. IEEE Transactions on Image Processing, <strong>21</strong>(5):2706–2718, 2012. <a href="https://doi.org/10.1109/TIP.2011.2181402">DOI: 10.1109/TIP.2011.2181402</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>]]></summary>
+</aside>]]></summary>
 </entry>
 <entry>
     <title>Matplotlib for graphic design</title>
@@ -1071,7 +1071,7 @@ Visually:</p>
 <li>Finally, some documentation improvements and an additional gallery example were added in <a href="https://github.com/scikit-image/scikit-image/pull/3528">pull request #3528</a>.</li>
 </ol>
 <p>In the end, <strong>a new function has been added, <a href="https://scikit-image.org/docs/stable/api/skimage.registration.html#skimage.registration.phase_cross_correlation"><code>skimage.registration.phase_cross_correlation</code></a></strong> (previously <code>skimage.feature.masked_register_translation</code>).</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>Technically, the rotation of the electron beam about its source will also move the shadow of the beam-block. However, because the beam-block is much closer to the electron source, the effect is imperceptible.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1079,7 +1079,7 @@ Visually:</p>
 <li id="fn3"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>L. P. René de Cotret et al, <em>An open-source software ecosystem for the interactive exploration of ultrafast electron scattering data</em>, Advanced Structural and Chemical Imaging <strong>4</strong>:11 (2018) <a href="https://ascimaging.springeropen.com/articles/10.1186/s40679-018-0060-y">DOI:10.1186/s40679-018-0060-y</a>. This publication is open-access<i class="ai ai-open-access"></i> .<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>]]></summary>
+</aside>]]></summary>
 </entry>
 <entry>
     <title>When one temperature is not enough: the two-temperature model</title>
@@ -1107,7 +1107,7 @@ Visually:</p>
 <figcaption aria-hidden="true">Idealized view of the distribution of kinetic energy, 100 femtosecond after photoexcitation by an ultrafast laser pulse. For a very short time, the system can be described by two temperatures; one for the lattice of nuclei, <span class="math inline">\(T_l\)</span>, and one for the electronic system, <span class="math inline">\(T_e\)</span>. (<a href="generated/pandocplot6264699886788336207.src.html">Source code</a>)</figcaption>
 </figure>
 <p>where the nucliei will still be at equilibrium temperature, and the electrons might be at a temperature of 20000<span class="math inline">\(^{\circ}\)</span>C. Therefore, <em>we have a system with two temperatures</em> for a few picoseconds<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>The atomic forces at the nanometer-scale are mostly electromagnetic, so I will consider the atomic nuclei as a single particle.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1115,7 +1115,7 @@ Visually:</p>
 <li id="fn3"><p>P. B. Allen, <em>Theory of thermal relaxation of electrons in metals</em> (1987). Physics Review Letters <strong>59</strong>, DOI: <a href="https://link.aps.org/doi/10.1103/PhysRevLett.59.1460">10.1103/PhysRevLett.59.1460</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p><span class="math inline">\(1\)</span> picosecond <span class="math inline">\(= 1000\)</span> fs <span class="math inline">\(= 10^{-12}\)</span> seconds<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</section>]]></summary>
+</aside>]]></summary>
 </entry>
 
 </feed>
