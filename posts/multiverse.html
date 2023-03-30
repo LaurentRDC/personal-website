@@ -67,7 +67,7 @@
                         Exploring the multiverse of possibilities all at once using monads
                     </h1>
                     <h3>
-                        Posted on 2022-03-02 | Last updated on 2022-03-02
+                        Posted on 2022-03-02 | Last updated on 2023-03-30
 
                     </h3>
                     <h3>
@@ -134,11 +134,11 @@
                     <p>I’m working on a global optimization problem these days. Unlike local optimization problems, e.g. what you would solve using least-square minimization, global optimization inevitably involves exhaustively evaluating all <em>possible</em> solutions and choosing the best one. As you can imagine, global optimization is much more computationally-intensive than local optimization, due to the size of the set of potential solutions. Speeding up a global optimization problem involves reducing the set of possible solution to a minimum, based on the specifics of the problem.</p>
 <p>In this post, I’ll show you how to <em>build</em> the minimal set of possible solutions to an optimization problem, instead of searching for solutions in a larger space. As we’ll see, only viable solutions are ever considered. This will be done by splitting the computations into multiple universes whenever a choice is presented to us, such that we traverse the multiverse of possibilities all at once.</p>
 <h3 class="title is-3" id="an-example-problem">An example problem</h3>
-<p>Let’s say we’ve got 8 friends going out for a drink, in two cars with four seats each. How many arrangements of people can we have? If we don’t care about where people sit in each car, the number of arrangements is the number of combinations of 4 people we can make from 8 people, since the remaining 4 people will go in the second car. Therefore, there are:</p>
+<p>Let’s say we’ve got 8 friends going out for a drink, in two cars with four seats each. How many arrangements of people can we have? If we don’t care about where people sit in each car, the number of arrangements is the number of combinations of 4 people we can make from 8 people, since the remaining 4 people will go in the second car. For every configuration, there’s also a configuration which swaps the car. Therefore, there are:</p>
 <p><span class="math display">\[
-    \binom{8}{4} = \frac{8!}{4!(8-4)!} = 70
+    \binom{8}{4} \times 2 = \frac{8!}{4!(8-4)!} \times 2 = 140
 \]</span></p>
-<p>possible combinations. If you’re not familiar with this notation, you can read <span class="math inline">\(\binom{8}{4}\)</span> as <em>choose 4 people out of 8 people</em>, of which there are 70 possibilities. That means that if we wanted to optimize the distribution of people into the two cars – for example, if we wanted to group up the best friends together, or minimize the total weight of people in car1, or some other objective –, we would need to look at 70 solutions. This problem is purely combinatorial.</p>
+<p>possible combinations. If you’re not familiar with this notation, you can read <span class="math inline">\(\binom{8}{4}\)</span> as <em>choose 4 people out of 8 people</em>, of which there are 70 possibilities (and then 70 other possibilities with the cars swapped). That means that if we wanted to optimize the distribution of people into the two cars – for example, if we wanted to group up the best friends together, or minimize the total weight of people in car1, or some other objective –, we would need to look at 140 solutions. This problem is purely combinatorial.</p>
 <p><em>Now let’s add some constraints</em>. Our 8 friends are coming back from the bar. Out of the 8 friends, 3 of them didn’t drink and are therefore allowed to drive. Thus, the number of possible arrangements of friends in the car has been reduced, as each car needs a driver. For one car, we need to select 1 driver out of 3, and 3 remaining passengers out of 7. However, the other car will need a driver, so really there are 6 passengers to choose from. Finally, for every arrangement there is a duplicate arrangement with the cars swapped. The number of possibilities is therefore:</p>
 <p><span class="math display">\[
     \binom{3}{1} \binom{6}{3} \times 2 = 120
