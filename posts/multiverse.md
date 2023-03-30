@@ -10,13 +10,13 @@ In this post, I'll show you how to *build* the minimal set of possible solutions
 
 ### An example problem
 
-Let's say we've got 8 friends going out for a drink, in two cars with four seats each. How many arrangements of people can we have? If we don't care about where people sit in each car, the number of arrangements is the number of combinations of 4 people we can make from 8 people, since the remaining 4 people will go in the second car. Therefore, there are:
+Let's say we've got 8 friends going out for a drink, in two cars with four seats each. How many arrangements of people can we have? If we don't care about where people sit in each car, the number of arrangements is the number of combinations of 4 people we can make from 8 people, since the remaining 4 people will go in the second car. For every configuration, there's also a configuration which swaps the car. Therefore, there are:
 
 $$
-    \binom{8}{4} = \frac{8!}{4!(8-4)!} = 70
+    \binom{8}{4} \times 2 = \frac{8!}{4!(8-4)!} \times 2 = 140
 $$
 
-possible combinations. If you're not familiar with this notation, you can read $\binom{8}{4}$ as *choose 4 people out of 8 people*, of which there are 70 possibilities. That means that if we wanted to optimize the distribution of people into the two cars -- for example, if we wanted to group up the best friends together, or minimize the total weight of people in car1, or some other objective --, we would need to look at 70 solutions. This problem is purely combinatorial.
+possible combinations. If you're not familiar with this notation, you can read $\binom{8}{4}$ as *choose 4 people out of 8 people*, of which there are 70 possibilities (and then 70 other possibilities with the cars swapped). That means that if we wanted to optimize the distribution of people into the two cars -- for example, if we wanted to group up the best friends together, or minimize the total weight of people in car1, or some other objective --, we would need to look at 140 solutions. This problem is purely combinatorial.
 
 *Now let's add some constraints*. Our 8 friends are coming back from the bar. Out of the 8 friends, 3 of them didn't drink and are therefore allowed to drive. Thus, the number of possible arrangements of friends in the car has been reduced, as each car needs a driver. For one car, we need to select 1 driver out of 3, and 3 remaining passengers out of 7. However, the other car will need a driver, so really there are 6 passengers to choose from. Finally, for every arrangement there is a duplicate arrangement with the cars swapped. The number of possibilities is therefore:
 
