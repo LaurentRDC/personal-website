@@ -5,12 +5,13 @@ packages:
 optimization: 0
 jobs: $ncpus
 
-allow-newer: haddock-library:base
+allow-newer: haddock-library:base,
+             hakyll:template-haskell,
 
 source-repository-package
   type:     git
-  location: https://github.com/LaurentRDC/hakyll
-  tag:      c9f329563a1bda7f9188b28c2996e0a914a11524
+  location: https://github.com/jaspervdj/hakyll
+  tag:      f9f99bedc9281b8606371de6e39385112cb6dde0
 
 source-repository-package
   type:     git

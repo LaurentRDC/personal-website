@@ -19,9 +19,12 @@
                         </p>
                         <p>
                             <em>Posted on $date$</em>.
-                            $if(updated)$
-                                <em>Last updated on $updated$</em>.
-                            $endif$
+                            <!-- 
+                                We're placing the entire update message in the $updatedMessage$ variable
+                                because there's no easy way to check for equality between publication
+                                date ($date$) and the updated date
+                            -->
+                            <em>$updatedMessage$</em>
                         </p>
                     </div>
                 </div>
