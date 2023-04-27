@@ -32,7 +32,7 @@ executable personal-website
                        containers,
                        doctemplates,
                        filepath,
-                       hakyll >= 4.15.1.1,
+                       hakyll >= 4.16.0.0,
                        hakyll-images >= 1.2.0,
                        pandoc > 2.11,
                        pandoc-types,
