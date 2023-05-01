@@ -7,7 +7,8 @@ title: About me
 * August 2021 - | [__SocïVolta__](http://socivolta.com/) | Research
 
     My role at SocïVolta involves multiple tasks and research subjects, including:
-     * Strategy design ([related blog post](/posts/rolling-stats.html));
+     * Trading strategy design;
+     * Design and implementation of high-performance strategy evaluation infrastructure ([related blog post](/posts/rolling-stats.html));
      * Portfolio optimization and backtesting;
      * Prediction of power arbitrage using time-series analysis and machine learning techniques;
      * Short-term probabilistic forecasting using Monte-Carlo methods;
