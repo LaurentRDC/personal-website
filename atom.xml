@@ -10,14 +10,14 @@
         <email>laurent.decotret@outlook.com</email>
         
     </author>
-    <updated>2023-03-23
+    <updated>2023-05-01
 </updated>
     <entry>
     <title>Efficient rolling statistics</title>
     <link href="https://laurentrdc.xyz//posts/rolling-stats.html" />
     <id>https://laurentrdc.xyz//posts/rolling-stats.html</id>
     <published>2023-03-23T00:00:00Z</published>
-    <updated>2023-03-23
+    <updated>2023-05-01
 </updated>
     <summary type="html"><![CDATA[<p>In the context of an array, rolling operations are operations on a set of values which are computed at each index of the array based on a subset of values in the array. A common rolling operation is the rolling mean, also known as the moving average.</p>
 <p>The best way to understand is to see it in action. Consider the following list:</p>
@@ -68,7 +68,7 @@
 \]</span></p>
 <p>This is the recurrence relation of the rolling average with a window of length <span class="math inline">\(N\)</span>. It tells us that for every term of the rolling average series <span class="math inline">\(\bar{X}\)</span>, we only need to involve two terms of the original series <span class="math inline">\(X\)</span>, regardless of the window. Awesome!</p>
 <h4 class="title is-4" id="haskell-implementation">Haskell implementation</h4>
-<p>Let’s implement this in Haskell. We’ll use the <a href="https://hackage.haskell.org/package/vector"><code>vector</code></a> library which is much faster than lists for numerical calculations like this, and comes with some combinatiors which make it pretty easy to implement the rolling mean. Regular users of <code>vector</code> will notice that the recurrence relation above fits the <code>scanl</code> use-case. If you’re unfamiliar, <code>scanl</code> is a function which looks like this:</p>
+<p>Let’s implement this in Haskell. We’ll use the <a href="https://hackage.haskell.org/package/vector"><code>vector</code></a> library which is much faster than lists for numerical calculations like this, and comes with some combinators which make it pretty easy to implement the rolling mean. Regular users of <code>vector</code> will notice that the recurrence relation above fits the <code>scanl</code> use-case. If you’re unfamiliar, <code>scanl</code> is a function which looks like this:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scanl</span><span class="ot"> ::</span> (b <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> b) <span class="co">-- ^ Combination function</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> b             <span class="co">-- ^ Starting value</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> <span class="dt">Vector</span> a      <span class="co">-- ^ Input</span></span>
@@ -78,9 +78,12 @@
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> Vector.scanl (<span class="op">+</span>) <span class="dv">0</span> (Vector.fromList [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">10</span>])</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">22</span>]</span></code></pre></div>
 <p>If we decompose the example:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>[    <span class="dv">1</span>,     <span class="dv">5</span>,    <span class="dv">12</span>,      <span class="dv">22</span>]</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>, <span class="dv">1</span> <span class="op">+</span> <span class="dv">4</span>, <span class="dv">5</span> <span class="op">+</span> <span class="dv">7</span>, <span class="dv">12</span> <span class="op">+</span> <span class="dv">10</span>]</span></code></pre></div>
-<p><code>scanl</code> is an accumulation from left to right, where the “scanned” term at index <code>i</code> depends on the value of the input at indices <code>i</code> and the scanned term at <code>i-1</code>. This is perfect to represent recurrence relations. Note that in the case of the rolling mean recurrence relation, we’ll need access to the value at index <code>i</code> and <code>i - N</code>, where again <code>N</code> is the length of the window. The canonical way to operate on more than one array at once elementwise is the <code>zip*</code> family of functions.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>[    <span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>                 <span class="co">-- 1</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>,   (<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="dv">4</span>            <span class="co">-- 5</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>,  ((<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="dv">4</span>) <span class="op">+</span> <span class="dv">7</span>       <span class="co">-- 12</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>, (((<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="dv">4</span>) <span class="op">+</span> <span class="dv">7</span>) <span class="op">+</span> <span class="dv">10</span> <span class="co">-- 22</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
+<p>In this specific case, <code>Vector.scanl (+) 0</code> is the same as <code>numpy.cumsum</code> if you’re more familiar with Python. In general, <code>scanl</code> is an accumulation from left to right, where the “scanned” term at index <code>i</code> depends on the value of the input at indices <code>i</code> and the scanned term at <code>i-1</code>. This is perfect to represent recurrence relations. Note that in the case of the rolling mean recurrence relation, we’ll need access to the value at index <code>i</code> and <code>i - N</code>, where again <code>N</code> is the length of the window. The canonical way to operate on more than one array at once elementwise is the <code>zip*</code> family of functions.</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `vector` library</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Vector</span> ( <span class="dt">Vector</span> )   </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
