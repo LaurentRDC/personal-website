@@ -122,7 +122,7 @@ This is the recurrence relation of the rolling average with a window of length $
 
 #### Haskell implementation
 
-Let's implement this in Haskell. We'll use the [`vector`](https://hackage.haskell.org/package/vector) library which is much faster than lists for numerical calculations like this, and comes with some combinatiors which make it pretty easy to implement the rolling mean. Regular users of `vector` will notice that the recurrence relation above fits the `scanl` use-case. If you're unfamiliar, `scanl` is a function which looks like this:
+Let's implement this in Haskell. We'll use the [`vector`](https://hackage.haskell.org/package/vector) library which is much faster than lists for numerical calculations like this, and comes with some combinators which make it pretty easy to implement the rolling mean. Regular users of `vector` will notice that the recurrence relation above fits the `scanl` use-case. If you're unfamiliar, `scanl` is a function which looks like this:
 
 ```haskell
 scanl :: (b -> a -> b) -- ^ Combination function
@@ -142,11 +142,14 @@ For example:
 If we decompose the example:
 
 ```haskell
-[    1,     5,    12,      22]
-[0 + 1, 1 + 4, 5 + 7, 12 + 10]
+[    0 + 1                 -- 1
+,   (0 + 1) + 4            -- 5
+,  ((0 + 1) + 4) + 7       -- 12
+, (((0 + 1) + 4) + 7) + 10 -- 22
+]
 ```
 
-`scanl` is an accumulation from left to right, where the "scanned" term at index `i` depends on the value of the input at indices `i` and the scanned term at `i-1`. This is perfect to represent recurrence relations. Note that in the case of the rolling mean recurrence relation, we'll need access to the value at index `i` and `i - N`, where again `N` is the length of the window. The canonical way to operate on more than one array at once elementwise is the `zip*` family of functions. 
+In this specific case, `Vector.scanl (+) 0` is the same as `numpy.cumsum` if you're more familiar with Python. In general, `scanl` is an accumulation from left to right, where the "scanned" term at index `i` depends on the value of the input at indices `i` and the scanned term at `i-1`. This is perfect to represent recurrence relations. Note that in the case of the rolling mean recurrence relation, we'll need access to the value at index `i` and `i - N`, where again `N` is the length of the window. The canonical way to operate on more than one array at once elementwise is the `zip*` family of functions. 
 
 ```haskell
 -- from the `vector` library
