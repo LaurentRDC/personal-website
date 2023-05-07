@@ -1,0 +1,573 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            The algebraic structure of a trading stop-loss system - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+        </script>
+        <script type="text/javascript" src="../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        The algebraic structure of a trading stop-loss system
+                    </h1>
+                    <h3>
+                        Posted on 2023-05-07. 
+                    </h3>
+                    <h3>
+                        Estimated reading time of 16 min.
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="mailto:laurent.decotret@outlook.com">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurent-p-ren%C3%A9-de-cotret-ph-d-296b38152/">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>I was once an undergraduate student in a joint Mathematics &amp; Physics program. Some of the math courses, namely group theory and algebra, remained very abstract to me throughout my education. There is some group theory in the description of symmetries of physical systems; but being an experimentalist, I didn’t use more than 5% of what I learned in my undergrad during my PhD.</p>
+<p>However, in the course of my work now in finance, I had the pleasure of discovering that I was actually working with an algebraic structure. This post describes how that happened.</p>
+<hr />
+<p>The small trading firm for which I work is focusing a bit more on automated performance monitoring these days. With detailed trading performance data streaming in, it is now a good time to implement a <em>stop-loss system</em>.</p>
+<p>A stop-loss system is a system which receives trading performance data, and emits three categories of signal:</p>
+<ul>
+<li>an all-clear signal, meaning that nothing in recent trading performance indicates a problem;</li>
+<li>a warning signal, meaning that recent trading performance is degraded – but not yet concerning – and a human should take a look under the hood;</li>
+<li>a halt signal, meaning that there is most probably something wrong, trading should be halted at once.</li>
+</ul>
+<p>Of course, we’re trading different products in different markets and even jurisdictions, and therefore the trading performance of every product is monitored independently. Moreover, our risk tolerance or expectations may be different for every product, and so a stop-loss system is really a framework in which to express multiple stop-loss rules, with different products being supervised by completely different stop-loss rules.</p>
+<p>Let us consider examples: assume that we’re trading a particular stock like AAPL<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Sensible stop-loss rules might be:</p>
+<ul>
+<li>If our current position has lost &gt;10% in value over the last month, emit a warning; if the position has lost &gt;25% over the last month, emit a halt signal.</li>
+<li>If we’re expecting market volatility in the next hour to be high (for example, due to expected high-impact news), emit a halt signal.</li>
+<li>If our forecast of the ticker price is <strong>way off</strong> – perhaps due to a problem in the forecasting model –, emit a halt signal.</li>
+</ul>
+<p>Here is what a rule framework might looks like<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> enum <span class="im">import</span> Enum, auto, unique</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Callable</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">@unique</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Signal(Enum):</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    AllClear <span class="op">=</span> auto()</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    Warn     <span class="op">=</span> auto()</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    Halt     <span class="op">=</span> auto()</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Context:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>Rule <span class="op">=</span> Callable[[Context], Signal]</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Example rule</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
+<p>A <code>Rule</code> is a function from some <code>Context</code> object to a <code>Signal</code>. We’re packing all information required to make decisions in a single data structure for reasons which will become obvious shortly. In this framework, we may express one of the stop loss rule examples as:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    recent_loss <span class="op">=</span> loss_percent( context.recent_performance(period<span class="op">=</span><span class="st">&quot;30d&quot;</span>) )</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recent_loss <span class="op">&gt;</span> <span class="fl">0.25</span>:</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Halt</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> recent_loss <span class="op">&gt;</span> <span class="fl">0.10</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Warn</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.AllClear</span></code></pre></div>
+<p>For the remainder of this post, I don’t care anymore about the domain-specific content of a rule.</p>
+<p>My colleagues and I are expecting that, in practice, we will have pretty complex rules. In order to build complex rules from smaller, simpler rules, I wanted to be able to compose <code>Rule</code>s together. This is straightforward because all rules have the same input and output types. Consider two rules, <code>rule1</code> and <code>rule2</code>. If I want a new rule to halt if both <code>rule1</code> and <code>rule2</code> emit <code>Signal.Halt</code>, I could write it like this:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule1(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule2(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule_lax(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    sig1 <span class="op">=</span> rule1(context)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    sig2 <span class="op">=</span> rule2(context)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> sig1 <span class="op">==</span> sig2 <span class="op">==</span> Signal.Halt:</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Halt</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> sig1 <span class="op">==</span> sig2 <span class="op">==</span> Signal.Warn:</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Warn</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.AllClear</span></code></pre></div>
+<p>That is an acceptable definition of rule composition. Since <code>rule_lax</code> will emit a <code>Halt</code> signal if both sub-rules emit a <code>Halt</code> signal, we’ll call this type of composition <em>conjunction</em>. In order to make it more ergonomic to write, let us wrap all rules in an object and re-use the <code>&amp;</code> (overloaded and) operator:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dataclasses <span class="im">import</span> dataclass</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> enum <span class="im">import</span> Enum</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> operator <span class="im">import</span> attrgetter</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Signal(Enum):</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Signals can be composed using (&amp;):</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.AllClear &amp; Signal.AllClear</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.AllClear: 1 &gt; </span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.Warn &amp; Signal.Halt</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.Warn: 2 &gt; </span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.Halt &amp; Signal.Halt</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.Halt: 3 &gt;</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    AllClear <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    Warn     <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    Halt     <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__and__</span>(<span class="va">self</span>, other: <span class="st">&quot;Signal&quot;</span>) <span class="op">-&gt;</span> <span class="st">&quot;Signal&quot;</span>:</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">min</span>(<span class="va">self</span>, other, key<span class="op">=</span>attrgetter(<span class="st">'value'</span>))</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> rule(Callable):</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    _inner: Callable[[Context], Signal]</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._inner.<span class="fu">__call__</span>(context<span class="op">=</span>context)</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__and__</span>(<span class="va">self</span>, other: <span class="st">&quot;rule&quot;</span>):</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> newinner(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> rule1(context) <span class="op">&amp;</span> rule2(context)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.__class__(newinner)</span></code></pre></div>
+<p>and now we can re-write <code>rule_lax</code> like so:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The @rule decorator is required in order to lift rule1 from a regular function</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to the `rule` object</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">@rule</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule1(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">@rule</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule2(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>rule_lax <span class="op">=</span> rule1 <span class="op">&amp;</span> rule2</span></code></pre></div>
+<p>Now, <code>rule_lax</code> is defined such that it’ll emit <code>Signal.Halt</code> if both <code>rule1</code> and <code>rule2</code> emit <code>Signal.Halt</code>. The same is true of warnings; if both rules emit a warning, then <code>rule_lax</code> will emit <code>Signal.Warning</code>. Here is a table which summarizes this composition:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(A\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(B\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(A ~ \&amp; ~ B\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>where <span class="math inline">\(C\)</span> is <code>Signal.AllClear</code>, <span class="math inline">\(W\)</span> is <code>Signal.Warning</code>, and <span class="math inline">\(H\)</span> is <code>Signal.Halt</code>. Therefore, <code>&amp;</code> is a binary function from <code>Rule</code>s to <code>Rule</code>.</p>
+<p>This is not the <em>only</em> natural way to compose rules. What about this?</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule_strict(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    sig1 <span class="op">=</span> rule1(context)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    sig2 <span class="op">=</span> rule2(context)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (sig1 <span class="op">==</span> Signal.Halt) <span class="kw">or</span> (sig2 <span class="op">==</span> Signal.Halt):</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Halt</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (sig1 <span class="op">==</span> Signal.<span class="pp">Warning</span>) <span class="kw">or</span> (sig2 <span class="op">==</span> Signal.<span class="pp">Warning</span>):</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.<span class="pp">Warning</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.AllClear</span></code></pre></div>
+<p>In this case, <code>rule_strict</code> is more, uh, strict than <code>rule_lax</code>; it emits <code>Signal.Halt</code> if <strong>either</strong> <code>rule1</code> or <code>rule2</code> emits a stop signal. We’ll call this composition <em>disjunction</em> and re-use the <code>|</code> (overloaded or) operator to make it more ergonomic to write:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Signal(Enum):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Signals can be composed using (&amp;) and (|):</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.AllClear &amp; Signal.AllClear</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.AllClear: 1 &gt; </span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.Warn &amp; Signal.Halt</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.Warn: 2 &gt; </span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.Warn | Signal.Halt</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.Halt: 3 &gt;</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    AllClear <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    Warn     <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    Halt     <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__and__</span>(<span class="va">self</span>, other: <span class="st">&quot;Signal&quot;</span>) <span class="op">-&gt;</span> <span class="st">&quot;Signal&quot;</span>:</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">min</span>(<span class="va">self</span>, other, key<span class="op">=</span>attrgetter(<span class="st">'value'</span>))</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__or__</span>(<span class="va">self</span>, other: <span class="st">&quot;Signal&quot;</span>) <span class="op">-&gt;</span> <span class="st">&quot;Signal&quot;</span>:</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">max</span>(<span class="va">self</span>, other, key<span class="op">=</span>attrgetter(<span class="st">'value'</span>))</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> rule(Callable):</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    _inner: Callable[[Context], Signal]</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._inner.<span class="fu">__call__</span>(context<span class="op">=</span>context)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__and__</span>(<span class="va">self</span>, other: <span class="st">&quot;rule&quot;</span>):</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> newinner(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> rule1(context) <span class="op">&amp;</span> rule2(context)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.__class__(newinner)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__or__</span>(<span class="va">self</span>, other: <span class="st">&quot;rule&quot;</span>):</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> newinner(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> rule1(context) <span class="op">|</span> rule2(context)</span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.__class__(newinner)</span></code></pre></div>
+<p>With this implementation, we can express <code>rule_lax</code> and <code>rule_strict</code> as:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The @rule decorator is required in order to lift rule1 from a regular function</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to the `rule` object</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">@rule</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule1(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="at">@rule</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule2(context: Context) <span class="op">-&gt;</span> Signal:</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>rule_lax    <span class="op">=</span> rule1 <span class="op">&amp;</span> rule2</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>rule_strict <span class="op">=</span> rule1 <span class="op">|</span> rule2</span></code></pre></div>
+<p>We can update the table for the definition of <code>&amp;</code> and <code>|</code>:</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: center;"><span class="math inline">\(A\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(B\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(A ~ \&amp; ~ B\)</span></th>
+<th style="text-align: center;"><span class="math inline">\(A ~ | ~ B\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(C\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(W\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+<td style="text-align: center;"><span class="math inline">\(H\)</span></td>
+</tr>
+</tbody>
+</table>
+<p>So for a given a given <code>Context</code>, which is fixed when the trading stop-loss system is running, we have:</p>
+<ul>
+<li>A set of rule outcomes of type <code>Signal</code>;</li>
+<li>A binary operation called <em>conjunction</em> (the <code>&amp;</code> operator);
+<ul>
+<li><code>&amp;</code> is associative;</li>
+<li><code>&amp;</code> is commutative;</li>
+<li><code>&amp;</code> has an identity, <code>Signal.Halt</code>;</li>
+<li><code>&amp;</code> does NOT have an inverse element.</li>
+</ul></li>
+<li>A binary operation called <em>disjunction</em> (the <code>|</code> operator).
+<ul>
+<li><code>|</code> is associative;</li>
+<li><code>|</code> is commutative;</li>
+<li><code>|</code> has an identity, <code>Signal.AllClear</code>;</li>
+<li><code>|</code> does NOT have an inverse element.</li>
+</ul></li>
+</ul>
+<p>That looks like a commutative semiring to me! Just a few more things to check:</p>
+<ul>
+<li><code>|</code> distributes from both sides over <code>&amp;</code>:
+<ul>
+<li><span class="math inline">\(a ~|~ (b ~\&amp;~ c)=(a ~|~ b) ~\&amp;~ (a ~\&amp;~ c)\)</span> for all <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, and <span class="math inline">\(c\)</span>;</li>
+<li><span class="math inline">\((a ~ \&amp; ~ b) ~|~ c = (a ~|~ c) ~\&amp;~ (b ~\&amp;~ c)\)</span> for all <span class="math inline">\(a\)</span>, <span class="math inline">\(b\)</span>, and <span class="math inline">\(c\)</span>.</li>
+</ul></li>
+<li>The identity element of <code>&amp;</code> (called <span class="math inline">\(0\)</span>, in this case <code>Signal.Halt</code>) annihilates the <code>|</code> operation, i.e. <span class="math inline">\(0 ~ | ~ a = 0\)</span> for all <span class="math inline">\(a\)</span>.</li>
+</ul>
+<p>Don’t take my word for it, we can check exhaustively:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> product</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>zero <span class="op">=</span> Signal.Halt</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>one  <span class="op">=</span> Signal.AllClear</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert &amp; is associative</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (a <span class="op">&amp;</span> b) <span class="op">&amp;</span> c <span class="op">==</span> a <span class="op">&amp;</span> (b <span class="op">&amp;</span> c) <span class="cf">for</span> (a, b, c) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">3</span>)  )</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert &amp; is commutative</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( a <span class="op">&amp;</span> b <span class="op">==</span> b <span class="op">&amp;</span> a <span class="cf">for</span> (a, b) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">2</span>)  )</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert &amp; has an identity</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( a <span class="op">&amp;</span> zero <span class="op">==</span> a <span class="cf">for</span> a <span class="kw">in</span> Signal )</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert | is associative</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (a <span class="op">|</span> b) <span class="op">|</span> c <span class="op">==</span> a <span class="op">|</span> (b <span class="op">|</span> c) <span class="cf">for</span> (a, b, c) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">3</span>)  )</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert | has an identity</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( a <span class="op">|</span> one <span class="op">==</span> a <span class="cf">for</span> a <span class="kw">in</span> Signal )</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert | distributes over &amp; on both sides</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( a <span class="op">|</span> (b <span class="op">&amp;</span> c) <span class="op">==</span> (a <span class="op">|</span> b) <span class="op">&amp;</span> (a <span class="op">|</span> c) <span class="cf">for</span> (a, b, c) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">3</span>)  )</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (a <span class="op">&amp;</span> b) <span class="op">|</span> c <span class="op">==</span> (a <span class="op">|</span> c) <span class="op">&amp;</span> (b <span class="op">|</span> c) <span class="cf">for</span> (a, b, c) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">3</span>)  )</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert identity of &amp; annihilates with respect to |</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (zero <span class="op">|</span> a) <span class="op">==</span> zero <span class="cf">for</span> a <span class="kw">in</span> Signal)</span></code></pre></div>
+<p>and there we have it! This design of a trading stop-loss system is an example of commutative semirings. This fact does absolutely nothing in the practical sense; I’m just happy to have spotted this structure more than 10 years after seeing it in undergrad.</p>
+<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>I’m actually not involved in trading securities at all, but I think intuition about stock markets is more common<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>I’ll be using Python in this post because it was a requirement of the implementation, but know that I’m doing this under protest.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</aside>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="mailto:laurent.decotret@outlook.com">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurent-p-ren%C3%A9-de-cotret-ph-d-296b38152/">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2023-05-07. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>
