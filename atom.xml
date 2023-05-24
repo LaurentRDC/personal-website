@@ -379,7 +379,7 @@
     <link href="https://laurentrdc.xyz//posts/rolling-stats.html" />
     <id>https://laurentrdc.xyz//posts/rolling-stats.html</id>
     <published>2023-03-23T00:00:00Z</published>
-    <updated>2023-05-01
+    <updated>2023-05-24
 </updated>
     <summary type="html"><![CDATA[<p>In the context of an array, rolling operations are operations on a set of values which are computed at each index of the array based on a subset of values in the array. A common rolling operation is the rolling mean, also known as the moving average.</p>
 <p>The best way to understand is to see it in action. Consider the following list:</p>
@@ -570,11 +570,11 @@
 </ul>
 <p>Since usually <span class="math inline">\(N &lt;&lt; n\)</span>, as before, we have that <code>rollingVar</code> scales linearly with the length of the input (<span class="math inline">\(\mathcal{O}(n)\)</span>).</p>
 <h2 class="title is-2" id="bonus-rolling-sharpe-ratio">Bonus: rolling Sharpe ratio</h2>
-<p>The Sharpe ratio<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is a common financial indicator of return on risk. It’s definition is simple. Consider returns (also known as PnL) in a set <span class="math inline">\(X\)</span>. The Sharpe ratio <span class="math inline">\(S(X)\)</span> of these returns is:</p>
+<p>The Sharpe ratio<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is a common financial indicator of return on risk. Its definition is simple. Consider excess returns in a set <span class="math inline">\(X\)</span>. The Sharpe ratio <span class="math inline">\(S(X)\)</span> of these excess returns is:</p>
 <p><span class="math display">\[
 S(X) = \frac{\bar{X}}{\sigma_X} 
 \]</span></p>
-<p>For ordered returns <span class="math inline">\(X = \left[ x_0, x_1, ... \right]\)</span>, the rolling Sharpe ratio at index <span class="math inline">\(j\)</span> is:</p>
+<p>For ordered excess returns <span class="math inline">\(X = \left[ x_0, x_1, ... \right]\)</span>, the rolling Sharpe ratio at index <span class="math inline">\(j\)</span> is:</p>
 <p><span class="math display">\[
     S_j = \frac{\bar{x}_j}{\sigma_j}
 \]</span></p>
