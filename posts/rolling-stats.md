@@ -308,13 +308,13 @@ Since usually $N << n$, as before, we have that `rollingVar` scales linearly wit
 
 ## Bonus: rolling Sharpe ratio
 
-The Sharpe ratio[^sharpe] is a common financial indicator of return on risk. It's definition is simple. Consider returns (also known as PnL) in a set $X$. The Sharpe ratio $S(X)$ of these returns is:
+The Sharpe ratio[^sharpe] is a common financial indicator of return on risk. Its definition is simple. Consider excess returns in a set $X$. The Sharpe ratio $S(X)$ of these excess returns is:
 
 $$
 S(X) = \frac{\bar{X}}{\sigma_X} 
 $$
 
-For ordered returns $X = \left[ x_0, x_1, ... \right]$, the rolling Sharpe ratio at index $j$ is:
+For ordered excess returns $X = \left[ x_0, x_1, ... \right]$, the rolling Sharpe ratio at index $j$ is:
 
 $$
     S_j = \frac{\bar{x}_j}{\sigma_j}
