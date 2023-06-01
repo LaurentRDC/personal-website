@@ -6,7 +6,7 @@ homepage:            https://laurentrdc.xyz
 license:             BSD3
 license-file:        LICENSE
 author:              Laurent P. René de Cotret
-maintainer:          laurent.decotret@outlook.com
+maintainer:          Laurent P. René de Cotret
 copyright:           2018-present Laurent P. René de Cotret
 category:            Web
 build-type:          Simple

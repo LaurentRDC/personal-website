@@ -10,6 +10,6 @@ feedConfiguration = FeedConfiguration
     { feedTitle       = "Laurent's personal blog"
     , feedDescription = "My personal blog on science, math, programming, and other interests."
     , feedAuthorName  = "Laurent P. René de Cotret"
-    , feedAuthorEmail = "laurent.decotret@outlook.com"
+    , feedAuthorEmail = mempty
     , feedRoot        = "https://laurentrdc.xyz"
     }
