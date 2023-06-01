@@ -315,7 +315,7 @@ pandocCompilerWithMeta config = do
         writerOptions = case toc of
             Just _ -> defaultHakyllWriterOptions
                 { writerExtensions = extensions
-                , writerHTMLMathMethod = MathJax ""
+                , writerHTMLMathMethod = MathML
                 , writerHighlightStyle = Just syntaxHighlightingStyle
                 , writerTableOfContents = True
                 , writerTOCDepth = read (fromMaybe "3" tocDepth) :: Int
@@ -323,7 +323,7 @@ pandocCompilerWithMeta config = do
                 }
             Nothing -> defaultHakyllWriterOptions
                 { writerExtensions = extensions
-                , writerHTMLMathMethod = MathJax ""
+                , writerHTMLMathMethod = MathML
                 , writerHighlightStyle = Just syntaxHighlightingStyle
                 }
 

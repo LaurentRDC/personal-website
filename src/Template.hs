@@ -37,7 +37,6 @@ import Text.Blaze.Html5 as H
       AttributeValue )
 import Text.Blaze.Html5.Attributes as A
     ( alt,
-      async,
       charset,
       class_,
       content,
@@ -52,10 +51,9 @@ import Text.Blaze.Html5.Attributes as A
       target,
       type_ )
 
-fontAwesomeURL, academiconsURL, mathjaxURL, fontURL :: AttributeValue
+fontAwesomeURL, academiconsURL, fontURL :: AttributeValue
 fontAwesomeURL = "https://use.fontawesome.com/releases/v5.15.1/css/all.css"
 academiconsURL = "https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css"
-mathjaxURL     = "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"
 fontURL        = "https://fonts.googleapis.com/css?family=Titillium+Web"
 
 type Icon = String
@@ -79,7 +77,7 @@ schema = [
 
 socialLinks :: [SocialLink]
 socialLinks = [
-      ("fas fa-envelope",      "mailto:laurent.decotret@outlook.com",                                        "e-mail")
+      ("fas fa-envelope",      "/email.html",                                                                "e-mail")
     , ("fab fa-github",        "https://github.com/LaurentRDC",                                              "GitHub")
     , ("fab fa-linkedin",      "https://www.linkedin.com/in/laurent-p-ren%C3%A9-de-cotret-ph-d-296b38152/",  "LinkedIn")
     , ("ai ai-researchgate",   "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",                "ResearchGate")
@@ -118,8 +116,6 @@ defaultHead = H.head $ do
     forM_ styleSheets (\lnk -> H.link ! rel "stylesheet" ! type_ "text/css" ! href lnk)
     -- Font
     H.link ! rel "stylesheet" ! type_ "font" ! href fontURL
-    -- Math display
-    H.script ! type_ "text/javascript" ! async "" ! src mathjaxURL $ mempty
     -- Bulma helpers
     H.script ! type_ "text/javascript" ! src "/js/navbar-onclick.js" $ mempty
 
