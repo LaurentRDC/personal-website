@@ -14,8 +14,6 @@
         <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
         <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
-        <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-        </script>
         <script type="text/javascript" src="../js/navbar-onclick.js">
         </script>
     </head>
@@ -79,7 +77,7 @@
                     <div class="container">
                         <div class="navbar-menu">
                             <div class="navbar-start">
-                                <a class="navbar-item has-text-light" target="_blank" href="mailto:laurent.decotret@outlook.com">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
                                     <span class="icon is-medium">
                                         <i class="fas fa-envelope">
                                         </i>
@@ -131,11 +129,11 @@
             <div class="container">
                 <div class="content">
                     <p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
-<p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <span class="math inline">\(I_1(i,j)\)</span> and <span class="math inline">\(I_2(i,j)\)</span>, their cross-correlation <span class="math inline">\(I_1 \star I_2\)</span> is defined as:
-<span class="math display">\[
+<p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I_1(i,j)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I_2(i,j)</annotation></semantics></math>, their cross-correlation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>⋆</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_1 \star I_2</annotation></semantics></math> is defined as:
+<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>I</mi><mn>1</mn></msub><mo>⋆</mo><msub><mi>I</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≡</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></munder><msub><mi>I</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><msub><mi>I</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>−</mo><mi>u</mi><mo>,</mo><mi>j</mi><mo>−</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
     (I_1 \star I_2)(u, v) \equiv \sum_{i,j} I_1(i, j) \cdot I_2(i - u, j - v)
-\]</span></p>
-<p>For example, if <span class="math inline">\(I_1 = I_2\)</span>, then <span class="math inline">\(I_1 \star I_2\)</span> has its maximum at <span class="math inline">\((u,v) =\)</span> (0,0). What happens if <span class="math inline">\(I_1\)</span> and <span class="math inline">\(I_2\)</span> are shifted from each other? Let’s see:</p>
+</annotation></semantics></math></p>
+<p>For example, if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>=</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_1 = I_2</annotation></semantics></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>⋆</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_1 \star I_2</annotation></semantics></math> has its maximum at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">(u,v) =</annotation></semantics></math> (0,0). What happens if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>I</mi><mn>1</mn></msub><annotation encoding="application/x-tex">I_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>I</mi><mn>2</mn></msub><annotation encoding="application/x-tex">I_2</annotation></semantics></math> are shifted from each other? Let’s see:</p>
 <figure class="python">
 <img src="generated/pandocplot15499111724966621276.png" class="image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" />
 <figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/pandocplot15499111724966621276.src.html">Source code</a>)</figcaption>
@@ -188,7 +186,7 @@
                         <i class="fas fa-envelope">
                         </i>
                     </span>
-                    <a target="_blank" href="mailto:laurent.decotret@outlook.com">
+                    <a target="_blank" href="../email.html">
                         e-mail
                     </a>
                      | 

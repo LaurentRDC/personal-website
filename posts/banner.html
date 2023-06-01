@@ -14,8 +14,6 @@
         <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
         <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
-        <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-        </script>
         <script type="text/javascript" src="../js/navbar-onclick.js">
         </script>
     </head>
@@ -79,7 +77,7 @@
                     <div class="container">
                         <div class="navbar-menu">
                             <div class="navbar-start">
-                                <a class="navbar-item has-text-light" target="_blank" href="mailto:laurent.decotret@outlook.com">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
                                     <span class="icon is-medium">
                                         <i class="fas fa-envelope">
                                         </i>
@@ -175,7 +173,7 @@
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> math.sqrt(<span class="dv">3</span>) <span class="op">*</span> radius</span>
 <span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> radius</span></code></pre></div>
 <h3 class="title is-3" id="tiling">Tiling</h3>
-<p>We note that a tiling of <em>regular</em> hexagons requires a different offset for every row. If you imagine rows being numbered starting at 0, hexagons in rows with odd indices need to be offset by <span class="math inline">\(\frac{\sqrt{3}}{2} r\)</span>, where <span class="math inline">\(r\)</span> is the radius (or distance from the center to vertex). To find the centers of the hexagons, the following loop does the trick:</p>
+<p>We note that a tiling of <em>regular</em> hexagons requires a different offset for every row. If you imagine rows being numbered starting at 0, hexagons in rows with odd indices need to be offset by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mi>r</mi></mrow><annotation encoding="application/x-tex">\frac{\sqrt{3}}{2} r</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> is the radius (or distance from the center to vertex). To find the centers of the hexagons, the following loop does the trick:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>centers <span class="op">=</span> <span class="bu">list</span>()</span>
@@ -267,7 +265,7 @@
                         <i class="fas fa-envelope">
                         </i>
                     </span>
-                    <a target="_blank" href="mailto:laurent.decotret@outlook.com">
+                    <a target="_blank" href="../email.html">
                         e-mail
                     </a>
                      | 
