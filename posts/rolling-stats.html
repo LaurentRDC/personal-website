@@ -65,7 +65,7 @@
                         Efficient rolling statistics
                     </h1>
                     <h3>
-                        Posted on 2023-03-23. Last updated on 2023-05-24.
+                        Posted on 2023-03-23. Last updated on 2023-07-17.
                     </h3>
                     <h3>
                         Estimated reading time of 19 min.
@@ -149,7 +149,7 @@
 <p>In this hypothetical scenario, the rolling function of type <code class="sourceCode haskell">[a] <span class="ot">-&gt;</span> b</code> receives a sublist of length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>, the window length. The problem is, if the input list has size <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, and the window has length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>, the complexity of this operation is at best <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>⋅</mo><mi>M</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(N \cdot M)</annotation></semantics></math>. Even if you’re using a data structure which is more efficient than a list – an array, for example –, this is still inefficient.</p>
 <p>Let’s see how to make this operation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(N)</annotation></semantics></math>, i.e. constant in the window length!</p>
 <h2 class="title is-2" id="recurrence-relations-and-the-rolling-average">Recurrence relations and the rolling average</h2>
-<p>The recipe for these algorithms is construct the recurrence relation of the operation. A recurrence relation is a way to describe a series by expressing how a term at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> is related to the term at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i-1</annotation></semantics></math>.</p>
+<p>The recipe for these algorithms involves constructing the <em>recurrence relation</em> of the operation. A recurrence relation is a way to describe a series by expressing how a term at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> is related to the term at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i-1</annotation></semantics></math>.</p>
 <p>Let proceed by example. Consider a series of values <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> like so:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mn>0</mn></msub><mo>,</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
     X = \left[ x_0, x_1, ...\right]
@@ -439,7 +439,7 @@ S(X) = \frac{\bar{X}}{\sigma_X}
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2023-07-16. 
+                    Page generated on 2023-07-17. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">
