@@ -80,7 +80,7 @@ Let's see how to make this operation $\mathcal{O}(N)$, i.e. constant in the wind
 
 ## Recurrence relations and the rolling average
 
-The recipe for these algorithms is construct the recurrence relation of the operation. A recurrence relation is a way to describe a series by expressing how a term at index $i$ is related to the term at index $i-1$. 
+The recipe for these algorithms involves constructing the *recurrence relation* of the operation. A recurrence relation is a way to describe a series by expressing how a term at index $i$ is related to the term at index $i-1$. 
 
 Let proceed by example. Consider a series of values $X$ like so:
 
