@@ -388,8 +388,8 @@
 <div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.5</span>, <span class="fl">1.5</span>]</span></code></pre></div>
 <p>Rolling operations such as the rolling mean tremendously useful at my work. When working with time-series, for example, the rolling mean may be a good indicator to include as part of machine learning feature engineering or trading strategy design. Here’s an example of using the rolling average price of AAPL stock as an indicator:</p>
 <figure class="python">
-<img src="generated/pandocplot7562145495815374986.png" class="image" alt="Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (Source code)" />
-<figcaption aria-hidden="true">Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (<a href="generated/pandocplot7562145495815374986.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16495654872120024391.png" class="image" alt="Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (Source code)" />
+<figcaption aria-hidden="true">Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (<a href="generated/pandocplot16495654872120024391.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The problem is that rolling operations can be rather slow if implemented improperly. In this post, I’ll show you how to implement efficient rolling statistics using a method based on <em>recurrence relations</em>.</p>
 <p>In principle, a general rolling function for lists might have the following type signature:</p>
@@ -684,8 +684,8 @@ and its inverse becomes:
 </annotation></semantics></math>
 This is the definition used by <a href="https://numpy.org/doc/stable/reference/routines.fft.html#module-numpy.fft">numpy</a>, for example. Let’s use this definition to compute the discrete Fourier transform of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≡</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>i</mi><mspace width="0.222em"></mspace><mn>2</mn><mi>t</mi></mrow></msup><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>i</mi><mspace width="0.222em"></mspace><mn>5</mn><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}</annotation></semantics></math>:</p>
 <figure class="python">
-<img src="generated/pandocplot16503602130599803112.png" class="image" alt="Top: Signal which is composed of two natural frequencies. Bottom: Discrete Fourier transform of the top signal, showing two natural frequencies. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Signal which is composed of two natural frequencies. <strong>Bottom</strong>: Discrete Fourier transform of the top signal, showing two natural frequencies. (<a href="generated/pandocplot16503602130599803112.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot10016942825544372365.png" class="image" alt="Top: Signal which is composed of two natural frequencies. Bottom: Discrete Fourier transform of the top signal, showing two natural frequencies. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Signal which is composed of two natural frequencies. <strong>Bottom</strong>: Discrete Fourier transform of the top signal, showing two natural frequencies. (<a href="generated/pandocplot10016942825544372365.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="using-the-discrete-fourier-transform-to-filter-noise">Using the discrete Fourier transform to filter noise</h2>
 <p>Let’s add some noise to our signal and see how we can use the discrete Fourier transform to filter it away. The discrete Fourier transform is most effective if your noise has some nice properties in frequency space. For example, consider high-frequency noise:
@@ -694,8 +694,8 @@ This is the definition used by <a href="https://numpy.org/doc/stable/reference/r
 </annotation></semantics></math>
 where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ϕ</mi><mi>ω</mi></msub><annotation encoding="application/x-tex">\phi_\omega</annotation></semantics></math> are random phases, one for each frequency component of the noise. While the signal looks very noisy, it’s very obvious in frequency-space what is noise and what is signal:</p>
 <figure class="python">
-<img src="generated/pandocplot13940388476741153044.png" class="image" alt="Top: Noisy signal (red) with the pure signal shown in comparison. Bottom: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal (red) with the pure signal shown in comparison. <strong>Bottom</strong>: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (<a href="generated/pandocplot13940388476741153044.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14234629799862466461.png" class="image" alt="Top: Noisy signal (red) with the pure signal shown in comparison. Bottom: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal (red) with the pure signal shown in comparison. <strong>Bottom</strong>: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (<a href="generated/pandocplot14234629799862466461.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The basics of filtering is as follows: set the transform of a signal to 0 in regions which are thought to be undesirable. In the case of the Fourier transform, this is known as a <em>band-pass filter</em>; frequency components of a particular frequency <em>band</em> are passed-through unchanged, and frequency components outside of this band are zeroed. Special names are given to band-pass filters with no lower bound (low-pass filter) and no upper bound (high-pass filter). We can express this filtering as a window function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>W</mi><mi>k</mi></msub><annotation encoding="application/x-tex">W_k</annotation></semantics></math> in the inverse discrete Fourier transform:
 <math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>x</mi><mi>n</mi><mtext mathvariant="normal">filtered</mtext></msubsup><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munder><mo>∑</mo><mi>k</mi></munder><msub><mi>W</mi><mi>k</mi></msub><mo>⋅</mo><msub><mi>X</mi><mi>k</mi></msub><mo>⋅</mo><msup><mi>e</mi><mrow><mi>i</mi><mn>2</mn><mi>π</mi><mi>k</mi><mi>n</mi><mi>/</mi><mi>N</mi></mrow></msup></mrow><annotation encoding="application/x-tex">
@@ -710,8 +710,8 @@ W_k = \left\{ \begin{array}{cl}
 </annotation></semantics></math>
 Visually:</p>
 <figure class="python">
-<img src="generated/pandocplot16514232093866695677.png" class="image" alt="Top: Noisy signal with the pure signal shown in comparison. Middle: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of \omega=10. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. Bottom: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal with the pure signal shown in comparison. <strong>Middle</strong>: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\omega=10</annotation></semantics></math>. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. <strong>Bottom</strong>: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (<a href="generated/pandocplot16514232093866695677.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot4380831558592582114.png" class="image" alt="Top: Noisy signal with the pure signal shown in comparison. Middle: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of \omega=10. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. Bottom: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal with the pure signal shown in comparison. <strong>Middle</strong>: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\omega=10</annotation></semantics></math>. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. <strong>Bottom</strong>: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (<a href="generated/pandocplot4380831558592582114.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The lesson here is that filtering signals using a discretized integral transform (like the discrete Fourier transform) consists in:</p>
 <ol type="1">
@@ -723,8 +723,8 @@ Visually:</p>
 <p>Discrete wavelet transforms are a class of discrete transforms which decomposes signals into a sum of wavelets. While the complex exponential functions which make up the Fourier transform are localized in frequency but infinite in space, wavelets are localized in both time space and frequency space.</p>
 <p>In order to generate the basis wavelets, the original wavelet is stretched. This is akin to the Fourier transform, where the sine/cosine basis functions are ‘stretched’ by decreasing their frequency. In technical terms, the amount of ‘stretch’ is called the <strong>level</strong>. For example, the discrete wavelet transform using the <code>db4</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> wavelet up to level 5 is the decomposition of a signal into the following wavelets:</p>
 <figure class="python">
-<img src="generated/pandocplot6990348680171478896.png" class="image" alt="Five of the db4 basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (Source code)" />
-<figcaption aria-hidden="true">Five of the <code>db4</code> basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (<a href="generated/pandocplot6990348680171478896.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot18263083262410385897.png" class="image" alt="Five of the db4 basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (Source code)" />
+<figcaption aria-hidden="true">Five of the <code>db4</code> basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (<a href="generated/pandocplot18263083262410385897.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In practice, discrete wavelet transforms are expressed as two transforms per level. This means that a discrete wavelet transform of level 1 gives back two sets of coefficients. One set of coefficient contains the low-frequency components of the signal, and are usually called the <em>approximate coefficients</em>. The other set of coefficients contains the high-frequency components of the signal, and are usually called the <em>detail coefficients</em>. A wavelet transform of level 2 is done by taking the approximate coefficients of level 1, and transforming them using a stretched wavelet into two sets of coefficients: the approximate coefficients of level 2, and the detail coefficients of level 2. Therefore, a signal transformed using a wavelet transform of level <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> has <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> sets of coefficients: the approximate and detail coefficients of level <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, and the detail coefficients of levels <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">N-1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">N-2</annotation></semantics></math>, …, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>.</p>
 <h2 class="title is-2" id="filtering-using-the-discrete-wavelet-transform">Filtering using the discrete wavelet transform</h2>
@@ -735,19 +735,19 @@ Visually:</p>
 </annotation></semantics></math></p>
 <p>Visually:</p>
 <figure class="python">
-<img src="generated/pandocplot11205455165116676194.png" class="image" alt="Top: Example signal with added synthetic noise. Bottom: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Example signal with added synthetic noise. <strong>Bottom</strong>: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (<a href="generated/pandocplot11205455165116676194.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot12402400414989607879.png" class="image" alt="Top: Example signal with added synthetic noise. Bottom: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Example signal with added synthetic noise. <strong>Bottom</strong>: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (<a href="generated/pandocplot12402400414989607879.src.html">Source code</a>)</figcaption>
 </figure>
 <p>This example shows a common situation: realistic noise whose frequency components overlap with the signal we’re trying to isolate. We wouldn’t be able to use filtering techniques based on the Fourier transform.</p>
 <p>Now let’s look at a particular discrete wavelet transform, with the underlying wavelet <code>sym17</code>. Decomposing the noisy signal up to level 3, we get four components:</p>
 <figure class="python">
-<img src="generated/pandocplot18429196077837909023.png" class="image" alt="All coefficients from a discrete wavelet transform up to level 3 with wavelet sym17. (Source code)" />
-<figcaption aria-hidden="true">All coefficients from a discrete wavelet transform up to level 3 with wavelet <code>sym17</code>. (<a href="generated/pandocplot18429196077837909023.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot6689717904058551068.png" class="image" alt="All coefficients from a discrete wavelet transform up to level 3 with wavelet sym17. (Source code)" />
+<figcaption aria-hidden="true">All coefficients from a discrete wavelet transform up to level 3 with wavelet <code>sym17</code>. (<a href="generated/pandocplot6689717904058551068.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Looks like the approximate coefficients at level 3 contain all the information we’re looking for. Let’s set all detail coefficients to 0, and invert the transform:</p>
 <figure class="python">
-<img src="generated/pandocplot6127349031887225015.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot6127349031887225015.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16966313198117337012.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot16966313198117337012.src.html">Source code</a>)</figcaption>
 </figure>
 <p>That’s looking pretty good! Not perfect of course, which I expected because we’re using real data here.</p>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
@@ -820,8 +820,8 @@ Visually:</p>
 <h3 class="title is-3" id="potential-solutions-as-a-decision-graph">Potential solutions as a decision graph</h3>
 <p>How else can we express the number of combinations? Think of building a solution, instead of searching for one. We may want to start by assigning a driver to car 1. For each possible decision here, we’ll assign a driver to the second car next, then passengers. The possibilities look like this:</p>
 <figure class="python">
-<img src="generated/pandocplot18224521120962782481.png" class="image" alt="Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (Source code)" />
-<figcaption aria-hidden="true">Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (<a href="generated/pandocplot18224521120962782481.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot3937027101373261906.png" class="image" alt="Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (Source code)" />
+<figcaption aria-hidden="true">Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (<a href="generated/pandocplot3937027101373261906.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In the figure above, no one is assigned at the start. Then, we assign the first driver (out of three choices). Then, we need to assign a second driver, of which there are only two remaining. Each of the 6 passengers are then assigned. A potential solution (i.e. a assignment between people and cars) is represented by a path in the decision tree. Three possibilities are shown as examples.</p>
 <p>This way of thinking about solutions reminds me strongly of the <a href="https://en.wikipedia.org/wiki/Many-worlds_interpretation">Everett interpretation of quantum mechanics</a>, also known as the <em>many-worlds interpretation</em> or the <em>multiverse interpretation</em>. The three potential assignments are three universes that split from the same starting point. Enumerating all possible solutions to our example problem consists in crawling the decision tree, or crawling the multiverse of possibilities.</p>
@@ -1161,14 +1161,14 @@ Visually:</p>
 </updated>
     <summary type="html"><![CDATA[<p>Ultrafast electron diffraction involves the analysis of <em>diffraction patterns</em>. Here is an example diffraction pattern for a thin (&lt;100nm) flake of graphite<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <figure class="python">
-<img src="generated/pandocplot3012530427581460854.png" class="image" alt="Diffraction pattern of graphite (Source code)" />
-<figcaption aria-hidden="true">Diffraction pattern of graphite (<a href="generated/pandocplot3012530427581460854.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14984986905735599799.png" class="image" alt="Diffraction pattern of graphite (Source code)" />
+<figcaption aria-hidden="true">Diffraction pattern of graphite (<a href="generated/pandocplot14984986905735599799.src.html">Source code</a>)</figcaption>
 </figure>
 <p>A diffraction pattern is effectively the intensity of the Fourier transform. Given that crystals like graphite are well-ordered, the diffraction peaks (i.e. Fourier components) are very large. You can see that the diffraction pattern is six-fold symmetric; that’s because the atoms in graphite arrange themselves in a honeycomb pattern, which is also six-fold symmetric. In these experiments, the fundamental Fourier component is so strong that we need to block it. That’s what that black <em>beam-block</em> is about.</p>
 <p>There are crystals that are not as well-ordered as graphite. Think of a powder made of many small crystallites, each being about 50nm x 50nm x 50nm. Diffraction electrons through a sample like that results in a kind of average of all possible diffraction patterns. Here’s an example with polycrystalline Chromium:</p>
 <figure class="python">
-<img src="generated/pandocplot14161707752663129345.png" class="image" alt="Diffraction pattern of polycrystalline Chromium (Source code)" />
-<figcaption aria-hidden="true">Diffraction pattern of polycrystalline Chromium (<a href="generated/pandocplot14161707752663129345.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16266849044785217570.png" class="image" alt="Diffraction pattern of polycrystalline Chromium (Source code)" />
+<figcaption aria-hidden="true">Diffraction pattern of polycrystalline Chromium (<a href="generated/pandocplot16266849044785217570.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Each ring in the above pattern pattern corresponds to a Fourier component. Notice again how symmetric the pattern is; the material itself is symmetric enough that the fundamental Fourier component needs to be blocked.</p>
 <p>For my work on <a href="https://github.com/LaurentRDC/iris-ued">iris-ued</a>, a data analysis package for ultrafast electron scattering, I needed to find a reliable, automatic way to get the center of such diffraction patterns to get rid of the manual work required now. So let’s see how!</p>
@@ -1176,13 +1176,13 @@ Visually:</p>
 <p>A first naive attempt might start with the <em>center-of-mass</em>, i.e. the average of pixel positions weighted by their intensity. Since intensity is symmetric about the center, the <em>center-of-mass</em> should coincide with the actual physical center of the image.</p>
 <p>Good news, <a href="https://docs.scipy.org/doc/scipy/reference/ndimage.html#multidimensional-image-processing-scipy-ndimage">scipy’s <code>ndimage</code> module</a> exports such a function: <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.center_of_mass.html#scipy.ndimage.center_of_mass"><code>center_of_mass</code></a>. Let’s try it:</p>
 <figure class="python">
-<img src="generated/pandocplot4382677703533863771.png" class="image" alt="Demonstration of using scipy.ndimage.center_of_mass to find the center of diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of using <code>scipy.ndimage.center_of_mass</code> to find the center of diffraction patterns. (<a href="generated/pandocplot4382677703533863771.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16752477837634100088.png" class="image" alt="Demonstration of using scipy.ndimage.center_of_mass to find the center of diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of using <code>scipy.ndimage.center_of_mass</code> to find the center of diffraction patterns. (<a href="generated/pandocplot16752477837634100088.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Not bad! Especially in the first image, really not a bad first try. But I’m looking for something <em>pixel-perfect</em>. Intuitively, the beam-block in each image should mess with the calculation of the center of mass. Let’s define the following areas that we would like to ignore:</p>
 <figure class="python">
-<img src="generated/pandocplot5402504050944864374.png" class="image" alt="Areas that are bright are defined as being masked (Source code)" />
-<figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot5402504050944864374.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot4396052407199282587.png" class="image" alt="Areas that are bright are defined as being masked (Source code)" />
+<figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot4396052407199282587.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Masks are generally defined as boolean arrays with True (or 1) where pixels are valid, and False (or 0) where pixels are invalid. Therefore, we should ignore the weight of masked pixels. <code>scipy.ndimage.center_of_mass</code> does not support this feature; we need an extension of <code>center_of_mass</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> center_of_mass_masked(im, mask):</span>
@@ -1194,8 +1194,8 @@ Visually:</p>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> r, c</span></code></pre></div>
 <p>This is effectively an average of the row and column coordinates (<code>rr</code> and <code>cc</code>) weighted by the image intensity. The trick here is that <code>mask.astype(im.dtype)</code> is 0 where pixels are “invalid”; therefore they don’t count in the average! Let’s look at the result:</p>
 <figure class="python">
-<img src="generated/pandocplot1954218757689397032.png" class="image" alt="Demonstration of using center_of_mass_masked (see above) to find the center of diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of using <code>center_of_mass_masked</code> (see above) to find the center of diffraction patterns. (<a href="generated/pandocplot1954218757689397032.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14343999887317795181.png" class="image" alt="Demonstration of using center_of_mass_masked (see above) to find the center of diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of using <code>center_of_mass_masked</code> (see above) to find the center of diffraction patterns. (<a href="generated/pandocplot14343999887317795181.src.html">Source code</a>)</figcaption>
 </figure>
 <p>I’m not sure if it’s looking better, honestly. But at least we have an approximate center! That’s a good starting point that feeds in to the next step.</p>
 <h2 class="title is-2" id="friedel-pairs-and-radial-inversion-symmetry">Friedel pairs and radial inversion symmetry</h2>
@@ -1205,40 +1205,40 @@ Visually:</p>
 </blockquote>
 <p>Friedel pairs are peaks related by inversion through the center of the diffraction pattern. The existence of these pairs is guaranteed by crystal symmetry. For polycrystalline patterns, Friedel pairs are averaged into rings; rings are always inversion-symmetric about their centers. Here’s an example of two Friedel pairs:</p>
 <figure class="python">
-<img src="generated/pandocplot18253979055719347481.png" class="image" alt="Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (Source code)" />
-<figcaption aria-hidden="true">Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (<a href="generated/pandocplot18253979055719347481.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot2702854760294445826.png" class="image" alt="Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (Source code)" />
+<figcaption aria-hidden="true">Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (<a href="generated/pandocplot2702854760294445826.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The algorithm by Liu was meant for single-crystal diffraction patterns with well-defined peaks, and not so much for rings. However, we can distill Liu’s idea into a new, more general approach. If the approximate center coincides with the actual center of the image, then the image should be invariant under radial-inversion with respect to the approximate center. Said another way: if the image <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math> is defined on polar coordinates <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(r, \theta)</annotation></semantics></math>, then the center maximizes correlation between <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I(r, \theta)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>−</mo><mi>r</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I(-r, \theta)</annotation></semantics></math>. Thankfully, computing the masked correlation between images <a href="/posts/mnxc.html">is something I’ve worked on before</a>!</p>
 <p>Let’s look at what radial inversion looks like. There are ways to do it with interpolation, e.g. <a href="https://scikit-image.org/docs/stable/api/skimage.transform.html#warp">scikit-image’s <code>warp</code> function</a>. However, in my testing, this is incredibly slow compared to what I will show you. A faster approach is to consider that if the image was centered on the array, then radial inversion is really flipping the direction of the array axes; that is, if the image array <code>I</code> has size (128, 128), and the center is at (64, 64), the radial inverse of <code>I</code> is <code>I[::-1, ::-1]</code> (numpy) / <code>flip(flip(I, 1), 2)</code> (MATLAB) / <code>I[end:-1:1,end:-1:1]</code> (Julia). Another important note is that if the approximate center of the image is far from the center of the array, the overlap between the image and its radial inverse is limited. Consider this:</p>
 <figure class="python">
-<img src="generated/pandocplot17593316938677013141.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot17593316938677013141.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot9911019333325395130.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot9911019333325395130.src.html">Source code</a>)</figcaption>
 </figure>
 <p>If we cropped out the bright areas around the frame, then the approximate center found would coincide with the center of the array; then, radial inversion is very fast.</p>
 <figure class="python">
-<img src="generated/pandocplot11362520944862135144.png" class="image" alt="Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (<a href="generated/pandocplot11362520944862135144.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot11367846076647821.png" class="image" alt="Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (<a href="generated/pandocplot11367846076647821.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Now, especially for the right column of images, it’s pretty clear that the approximate center wasn’t perfect. The <em>correction</em> to the approximate center is can be calculated with the masked normalized cross-correlation<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
 <figure class="python">
-<img src="generated/pandocplot244423791329530845.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot244423791329530845.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16777817598731895834.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot16777817598731895834.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The cross-correlation in the bottom right corner (zoomed by 2x) shows that the true center is the approximate center we found earlier, corrected by the small shift (white arrow)! For single-crystal diffraction patterns, the resulting is even more striking:</p>
 <figure class="python">
-<img src="generated/pandocplot9330261641525732696.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot9330261641525732696.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot3573535930999786689.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot3573535930999786689.src.html">Source code</a>)</figcaption>
 </figure>
 <p>We can put the two steps together and determine a pixel-perfect center:</p>
 <figure class="python">
-<img src="generated/pandocplot1260332358214592272.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot1260332358214592272.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot1965523308818604957.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot1965523308818604957.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="bonus-low-quality-diffraction">Bonus: low-quality diffraction</h2>
 <p>Here’s a fun consequence: the technique works also for diffraction patterns that are pretty crappy and very far off center, provided that the asymmetry in the background is taken care-of:</p>
 <figure class="python">
-<img src="generated/pandocplot7022146531103843802.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot7022146531103843802.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot4567440637263454083.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot4567440637263454083.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, we have determined a robust way to compute the center of a diffraction pattern without any parameters, by making use of a strong invariant: radial inversion symmetry. My favourite part: this method admits no free parameters!</p>
@@ -1262,7 +1262,7 @@ Visually:</p>
 </updated>
     <summary type="html"><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
 <figure class="python">
-<img src="generated/pandocplot11701062483453091969.png" class="image" />
+<img src="generated/pandocplot11728863598101774678.png" class="image" />
 </figure>
 <p>Matplotlib is a plotting library for python, historically inspired by the plotting capabilities of MATLAB. You can take a look at the various <a href="https://matplotlib.org/gallery/index.html">examples</a> on their website. One thing that is not immediately obvious is that you can use Matplotlib to also draw shapes! In this sense, Matplotlib becomes a graphic design library.</p>
 <p>(You can see the exact source code for the images below by clicking on the link in the caption)</p>
@@ -1322,8 +1322,8 @@ Visually:</p>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x,y), radius<span class="op">=</span>radius)</span></code></pre></div>
 <p>Here’s what it looks like so far:</p>
 <figure class="python">
-<img src="generated/pandocplot17276650817721750394.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot17276650817721750394.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot680478570873504779.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot680478570873504779.src.html">Source code</a>)</figcaption>
 </figure>
 <h3 class="title is-3" id="color">Color</h3>
 <p>The figure above has the wrong dimension, but you get the idea. Let’s color the hexagons appropriately. In the banner, the color of the hexagons is based on the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“inferno” colormap</a>. The color radiates away from the bottom left corner:</p>
@@ -1349,8 +1349,8 @@ Visually:</p>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>Here’s the result:</p>
 <figure class="python">
-<img src="generated/pandocplot87656670273778394.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot87656670273778394.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot12202715781188448163.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot12202715781188448163.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Because of rounding errors of the hexagon dimensions, there is some visible spacing between the hexagons. To get rid of it, we draw the hexagons a bit larger (0.2 millimeters):</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
@@ -1379,13 +1379,13 @@ Visually:</p>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>We arrive at the final result:</p>
 <figure class="python">
-<img src="generated/pandocplot11239578649724822038.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot11239578649724822038.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14717074132251726111.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot14717074132251726111.src.html">Source code</a>)</figcaption>
 </figure>
 <p>You can imagine adapting this approach to different tilings, and different colors schemes. Here’s a final example using squares and the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“cool” colormap</a>:</p>
 <figure class="python">
-<img src="generated/pandocplot13873111378649624085.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot13873111378649624085.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14126521728338505630.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot14126521728338505630.src.html">Source code</a>)</figcaption>
 </figure>]]></summary>
 </entry>
 <entry>
@@ -1402,8 +1402,8 @@ Visually:</p>
 </annotation></semantics></math></p>
 <p>For example, if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>=</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_1 = I_2</annotation></semantics></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>⋆</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_1 \star I_2</annotation></semantics></math> has its maximum at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">(u,v) =</annotation></semantics></math> (0,0). What happens if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>I</mi><mn>1</mn></msub><annotation encoding="application/x-tex">I_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>I</mi><mn>2</mn></msub><annotation encoding="application/x-tex">I_2</annotation></semantics></math> are shifted from each other? Let’s see:</p>
 <figure class="python">
-<img src="generated/pandocplot15499111724966621276.png" class="image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" />
-<figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/pandocplot15499111724966621276.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot3222433666429288201.png" class="image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" />
+<figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/pandocplot3222433666429288201.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In the above example, the cross-correlation is maximal at (50, 0), which is exactly the translation required to <em>shift back</em> the second image to match the first one. Finding the translation between images is then a simple matter of determining the glocal maximum of the cross-correlation. This operation is so useful that it is implemented in the Python library <a href="https://scikit-image.org">scikit-image</a> as <a href="https://scikit-image.org/docs/dev/api/skimage.registration.html?highlight=phase#skimage.registration.phase_cross_correlation"><code>skimage.feature.phase_cross_correlation</code></a>.</p>
 <p>It turns out that in my field of research, image registration can be crucial to correct experimental data. My primary research tool is <a href="http://www.physics.mcgill.ca/siwicklab">ultrafast electron diffraction</a>. Without knowing the details, you can think of this technique as a kind of microscope. A single image from one of our experiments looks like this:</p>
@@ -1414,8 +1414,8 @@ Visually:</p>
 <p>Most of the electron beam is unperturbed by the sample; this is why we use a metal beam-block (seen as a black rod in the image above) to prevent the electrons from damaging our apparatus.</p>
 <p>Our experiments are synthesized from hundreds of gigabytes of images like the one above, and it may take up to 72h (!) to take all the images we need. Over the course of this time, the electron beam may shift in a way that moves the image, but <em>not the beam-block</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Heres’s what I mean:</p>
 <figure class="python">
-<img src="generated/pandocplot12959182197921854250.png" class="image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" />
-<figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/pandocplot12959182197921854250.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14924381111311157891.png" class="image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" />
+<figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/pandocplot14924381111311157891.src.html">Source code</a>)</figcaption>
 </figure>
 <p>This does not fly. We need to be able to compare images together, and shifts by more than 1px are problematic. We need to correct for this shift, for every image, with respect to the first one. However, we are also in a bind, because unlike the example above, the images are not completely shifted; one part of them, the beam-block, is <em>static</em>, while the image behind it shifts.</p>
 <p>The crux of the problem is this: the cross-correlation between images gives us the shift between them. However, it is not immediately obvious how to tell the cross-correlation operation to ignore <em>certain parts</em> of the image. Is there some kind of operation, similar to the cross-correlation, that allows to mask parts of the images we want to ignore?</p>
@@ -1423,8 +1423,8 @@ Visually:</p>
 <hr>
 <p>In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation — and its associated registration function — in our ultrafast electron diffraction toolkit, <a href="https://scikit-ued.rtfd.io">scikit-ued</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Here’s an example of it in action:</p>
 <figure class="python">
-<img src="generated/pandocplot17947095758610589515.png" class="image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" />
-<figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot17947095758610589515.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14840299674099066548.png" class="image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" />
+<figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot14840299674099066548.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="contributing-to-scikit-image">Contributing to scikit-image</h2>
 <p>However, since this tool could see use in a more general setting, I decided to contribute it to <a href="https://scikit-image.org/">scikit-image</a>:</p>
