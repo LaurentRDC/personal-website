@@ -56,11 +56,11 @@ title: About me
 
 ## Volunteering
 
-* Summer 2023 | [__Haskell Summer of Code__](https://summer.haskell.org/) | Mentor
+* May 2023 - Nov 2023 | [__Haskell Summer of Code__](https://summer.haskell.org/) | Mentor
 
     Haskell Summer of Code is a program to encourage students to contribute to the Haskell community by proposing ideas and implementing them over a summer.
 
-    This year, I'm mentoring a student who is focused on decoupling the standard Haskell documentation tool, [Haddock](https://haskell-haddock.readthedocs.io/), from the internals of the Glasgow Haskell Compiler.
+    I mentored a student focused on decoupling the standard Haskell documentation tool, [Haddock](https://haskell-haddock.readthedocs.io/), from the internals of the Glasgow Haskell Compiler.
     
     <p></p>
 
