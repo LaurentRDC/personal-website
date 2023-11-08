@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
       with:
         # We need to fetch the whole history for the automatic 'last-updated'
         # functionality works as expected
@@ -46,24 +46,24 @@ jobs:
         cabal user-config update -f -a "executable-stripping: True"
 
     - name: Cache cabal work
-      uses: actions/cache@v2
+      uses: actions/cache@v3
       with:
         path: |
           dist-newstyle
           ${{ steps.setup-haskell.outputs.cabal-store }}
         key: ${{ runner.os }}-${{ hashFiles('cabal.*') }}-cabal-install
 
-    - uses: actions/setup-python@v2
+    - uses: actions/setup-python@v4
       with:
         python-version: '3.10'
 
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       name: Cache Python build artifacts
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
-    - uses: actions/cache@v2
+    - uses: actions/cache@v3
       name: Cache Rust build artifacts
       with:
         path: |
@@ -90,7 +90,7 @@ jobs:
         unzip bulma-${{ env.bulma-version }}.zip -d sass
 
     - name: Compile CSS from SCSS files
-      uses: gha-utilities/sass-build@v0.4.7
+      uses: gha-utilities/sass-build@v0.5.1
       with:
         source: sass/style.scss
         destination: css/style.css
