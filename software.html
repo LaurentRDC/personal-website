@@ -241,12 +241,16 @@
 </a></p>
 <p>Series implemented in the <code>javelin</code> package are a hybrid between arrays and associative maps.</p>
 <p>Like <code>containers</code>’s <code>Map</code>, <code>Series</code> support efficient:</p>
-<pre><code>* random access by key ( $\mathcal{O}(\log n)$ );
-* slice by key ( $\mathcal{O}(\log n)$ );</code></pre>
+<ul>
+<li>random access by key ( <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>log</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(\log n)</annotation></semantics></math> );</li>
+<li>slice by key ( <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>log</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(\log n)</annotation></semantics></math> );</li>
+</ul>
 <p>Like <code>vectors</code>’s <code>Vector</code>, <code>Series</code> support efficient:</p>
-<pre><code>* random access by integer index ( $\mathcal{O}(1)$ );
-* slice by integer index ( $\mathcal{O}(1)$ );
-* numerical operations as fast as contiguous arrays;</code></pre>
+<ul>
+<li>random access by integer index ( <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(1)</annotation></semantics></math> );</li>
+<li>slice by integer index ( <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(1)</annotation></semantics></math> );</li>
+<li>numerical operations as fast as contiguous arrays;</li>
+</ul>
         </p>
     </div>
     <!-- 
