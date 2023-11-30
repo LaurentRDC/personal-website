@@ -12,11 +12,11 @@ Series implemented in the `javelin` package are a hybrid between arrays and asso
 
 Like `containers`'s `Map`, `Series` support efficient:
 
-    * random access by key ( $\mathcal{O}(\log n)$ );
-    * slice by key ( $\mathcal{O}(\log n)$ );
+* random access by key ( $\mathcal{O}(\log n)$ );
+* slice by key ( $\mathcal{O}(\log n)$ );
 
 Like `vectors`'s `Vector`, `Series` support efficient:
 
-    * random access by integer index ( $\mathcal{O}(1)$ );
-    * slice by integer index ( $\mathcal{O}(1)$ );
-    * numerical operations as fast as contiguous arrays;
+* random access by integer index ( $\mathcal{O}(1)$ );
+* slice by integer index ( $\mathcal{O}(1)$ );
+* numerical operations as fast as contiguous arrays;
