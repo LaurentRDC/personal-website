@@ -64,7 +64,7 @@ title: About me
     
     <p></p>
 
-* August 2022 - | [__Haskell Foundation__](https://haskell.foundation/) | Technical Working Group member
+* August 2022 - Jan 2024 | [__Haskell Foundation__](https://haskell.foundation/) | Technical Working Group member
 
     The Haskell Foundation Technical Working Group discusses [community proposals](https://github.com/haskellfoundation/tech-proposals/blob/main/proposals/PROPOSALS.md) based on their potential positive impact on the whole Haskell community.
 
