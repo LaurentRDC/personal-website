@@ -46,29 +46,39 @@ There are many other integral transforms, such as:
 * The Radon transform (for which I cannot write down a kernel) which is used to analyze [computed tomography data](https://scikit-image.org/docs/stable/auto_examples/transform/plot_radon_transform.html). 
 
 So why are integral transforms interesting? Well, depending on the function $f(t)$ you want to transform, you might end up with a representation of $f$ in the transformed space, $T \left[ f\right] (s)$, which has nice properties! Re-using the Fourier transform for a simple, consider a function made up of two well-defined frequencies:
+
 $$
     f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}
 $$
+
 The representation of $f(t)$ in frequency space -- the Fourier transform of $f$, $F\left[ f\right](\omega)$ -- is very simple:
+
 $$
     F\left[ f\right](\omega) = \sqrt{2 \pi} \left[ \delta(\omega - 2) + \delta(\omega - 5) \right]
 $$
+
 The Fourier transform of $f$ is perfectly localized in frequency space, being zero everywhere except at $\omega=2$ and $\omega=5$. Functions composed of infinite waves (like the example above) always have the nice property of being localized in frequency space, which makes it easy to manipulate them... like filtering some of their components away!
 
 ### Discretization
 
 It is much more efficient to use discretized versions of integral transforms on computers. Loosely speaking, given a discrete signal composed of $N$ terms $x_0$, ..., $x_{N-1}$:
+
 $$
     T\left[ f \right](k) = \sum_n x_n \cdot K(n, k)
 $$
+
 i.e. the integral is now a finite sum. For example, the discrete Fourier transform of the signal $x_n$, $X_k$, can be written as:
+
 $$
     X_k = \sum_n x_n \cdot e^{-i 2 \pi k n / N}
 $$
+
 and its inverse becomes:
+
 $$
     x_n = \frac{1}{N}\sum_k X_k \cdot e^{i 2 \pi k n / N}
 $$
+
 This is the definition used by [numpy](https://numpy.org/doc/stable/reference/routines.fft.html#module-numpy.fft), for example. Let's use this definition to compute the discrete Fourier transform of $f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}$:
 
 ```{.python .matplotlib caption="**Top**: Signal which is composed of two natural frequencies. **Bottom**: Discrete Fourier transform of the top signal, showing two natural frequencies."}
@@ -104,9 +114,11 @@ for freq in [2, 5]:
 ## Using the discrete Fourier transform to filter noise
 
 Let's add some noise to our signal and see how we can use the discrete Fourier transform to filter it away. The discrete Fourier transform is most effective if your noise has some nice properties in frequency space. For example, consider high-frequency noise:
+
 $$
     N(t) = \sum_{\omega=20}^{50} \sin(\omega t + \phi_{\omega})
 $$
+
 where $\phi_\omega$ are random phases, one for each frequency component of the noise. While the signal looks very noisy, it's very obvious in frequency-space what is noise and what is signal:
 ```{.python .matplotlib caption="**Top**: Noisy signal (red) with the pure signal shown in comparison. **Bottom**: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space."}
 import numpy as np
@@ -154,16 +166,20 @@ ax_w.set_ylim([ymin, ymax])
 ```
 
 The basics of filtering is as follows: set the transform of a signal to 0 in regions which are thought to be undesirable. In the case of the Fourier transform, this is known as a *band-pass filter*; frequency components of a particular frequency *band* are passed-through unchanged, and frequency components outside of this band are zeroed. Special names are given to band-pass filters with no lower bound (low-pass filter) and no upper bound (high-pass filter). We can express this filtering as a window function $W_k$ in the inverse discrete Fourier transform:
+
 $$
     x_{n}^{\text{filtered}} = \frac{1}{N}\sum_k W_k \cdot X_k \cdot e^{i 2 \pi k n / N}
 $$
+
 In the case of the plot above, we want to apply a low-pass filter with a cutoff at $\omega=10$. That is:
+
 $$
 W_k = \left\{ \begin{array}{cl}
     1 & : \ |k| \leq 10 \\
     0 & : \ |k| > 10
 \end{array} \right.
 $$
+
 Visually:
 
 ```{.python .matplotlib caption="**Top**: Noisy signal with the pure signal shown in comparison. **Middle**: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of $\omega=10$. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. **Bottom**: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges."}
@@ -288,6 +304,7 @@ In practice, discrete wavelet transforms are expressed as two transforms per lev
 The discrete Fourier transform excels at filtering away noise which has nice properties in frequency space. This is isn't always the case in practice; for example, noise may have frequency components which overlap with the signal we're looking for. This was the case in my research on ultrafast electron diffraction of polycrystalline samples[^baseline] [^vo2], where the 'noise' was a trendline which moved over time, and whose frequency components overlapped with diffraction pattern we were trying to isolate.
 
 As an example, let's use [real diffraction data](/files/wavelet-filter/diffraction.csv) and we'll pretend this is a time signal, to keep the units familiar. We'll take a look at some really annoying noise: normally-distributed white noise drawn from this distribution[^bias]:
+
 $$
     P(x) = \frac{1}{\sqrt{2 \pi}} \exp{-\frac{(x + 1/2)^2}{2}}
 $$
