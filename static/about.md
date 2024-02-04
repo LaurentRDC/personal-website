@@ -7,10 +7,9 @@ title: About me
 * August 2021 - | [__SocïVolta__](http://socivolta.com/) | Quantitative Research
 
     My role at SocïVolta involves multiple tasks and research subjects, including:
-     * Trading strategy design, including prediction of power arbitrage using time-series analysis and machine learning techniques;
+     * Trading strategy design, including prediction of power arbitrage using time-series analysis and machine learning techniques ([related blog post](/posts/typesafe-tradingstrats.html));
      * Portfolio optimization and backtesting, including design and implementation of high-performance strategy evaluation infrastructure ([related blog post](/posts/rolling-stats.html));
      * High-performance, real-time, global optimization of resource allocations ([related blog post](/posts/multiverse.html)).
-    
     <p></p>
 
 * December 2020 - April 2021 | __Department of Chemistry, University of Toronto__ | Data Engineer
