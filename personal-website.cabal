@@ -1,9 +1,10 @@
+cabal-version:       3.0
 name:                personal-website
 version:             1.4.2
 -- synopsis:
 -- description:
 homepage:            https://laurentrdc.xyz
-license:             BSD3
+license:             BSD-3-Clause
 license-file:        LICENSE
 author:              Laurent P. René de Cotret
 maintainer:          Laurent P. René de Cotret
@@ -11,7 +12,6 @@ copyright:           2018-present Laurent P. René de Cotret
 category:            Web
 build-type:          Simple
 extra-source-files:  README.md
-cabal-version:       >=1.10
 
 executable personal-website
   hs-source-dirs:      src
@@ -50,29 +50,23 @@ executable multiverse
   hs-source-dirs:      files
   main-is:             multiverse.hs
   default-language:    Haskell2010
-  ghc-options:         -Wall
-                       -Wcompat
-                       -Widentities
-                       -Wincomplete-uni-patterns
-                       -Wincomplete-record-updates
-                       -Wredundant-constraints
-                       -Wmissing-export-lists
-                       -Wpartial-fields
-  build-depends:       base >= 4.14 && < 5,
+  build-depends:       base >=4.14 && <5,
                        containers
 
 library rolling
   hs-source-dirs:      files/rolling-stats
   default-language:    GHC2021
-  ghc-options:         -Wall
-                       -Wcompat
-                       -Widentities
-                       -Wincomplete-uni-patterns
-                       -Wincomplete-record-updates
-                       -Wredundant-constraints
-                       -Wmissing-export-lists
-                       -Wpartial-fields
   exposed-modules:     Rolling
-  build-depends:       base >= 4.14 && < 5,
+  build-depends:       base >=4.14 && <5,
                        statistics,
                        vector
+
+library trading-strats
+  hs-source-dirs:      files/trading-strats
+  default-language:    GHC2021
+  exposed-modules:     TradingStrats
+  build-depends:       base       >=4.14 && <5
+                     , containers >= 0.6 && <0.8
+                     , javelin   ^>=0.1 
+                     , pipes      >=4.3  && <5
+                     , time      ^>=1.12
