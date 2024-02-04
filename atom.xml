@@ -8,9 +8,215 @@
         <name>Laurent P. René de Cotret</name>
         
     </author>
-    <updated>2023-05-07
+    <updated>2024-02-04
 </updated>
     <entry>
+    <title>Trading strategies with typed features using Haskell and type families</title>
+    <link href="https://laurentrdc.xyz//posts/typesafe-tradingstrats.html" />
+    <id>https://laurentrdc.xyz//posts/typesafe-tradingstrats.html</id>
+    <published>2024-02-04T00:00:00Z</published>
+    <updated>2024-02-04
+</updated>
+    <summary type="html"><![CDATA[<p>I work in the business of algorithmic power trading, which is the automated trading of various power-related products in regulated <a href="https://en.wikipedia.org/wiki/Electricity_market">electricity markets</a>. Products include short-term inter-jurisdiction arbitrage, financial transmission rights, and more.</p>
+<p>This year, my employer is expanding its trading operations to a new class of products. Since there is no overlap between this new work and our current operations, I got to design a technology stack most suited for the task. This technology stack includes Haskell, most importantly because wrong or unexpected trading decisions can (and have) cost us dearly.</p>
+<p>In this blog post, I want to show you the basics of how we designed the framework in which to express trading strategies.</p>
+<h2 class="title is-2" id="the-fundamentals-of-trading-strategies">The fundamentals of trading strategies</h2>
+<p>The fundamental pieces of trading operations are <em>strategies</em>. In algorithmic trading, strategies are computer programs that decide what to trade, and how to trade it, at any given moment.</p>
+<p>Let’s take the example of a simple trading strategy that is only concerned with <a href="https://www.nasdaq.com/market-activity/stocks/aapl">AAPL stock</a>. The current stock price is about 190 USD today; our example strategy is defined thusly:</p>
+<ul>
+<li>If the AAPL price rises above 200, sell our holdings (if we have any);</li>
+<li>If the AAPL price falls below 180, buy 10 shares;</li>
+</ul>
+<p>In this case, the result of this strategy is some signal to buy or sell AAPL stock. We can run our strategy in a loop:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Control.Monad</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Action</span> <span class="ot">=</span> <span class="dt">Buy</span> <span class="dt">Int</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Sell</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Hold</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Price</span> <span class="ot">=</span> <span class="dt">Double</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> Control.Monad.forever <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    aaplPrice <span class="ot">&lt;-</span> fetchMostRecentPrice</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> action <span class="ot">=</span> myStrategy aaplPrice</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    executeMarketAction action</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ot">        myStrategy ::</span> <span class="dt">Price</span> <span class="ot">-&gt;</span> <span class="dt">Action</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        myStrategy aapl_price</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> aapl_price <span class="op">&gt;</span> <span class="dv">200</span> <span class="ot">=</span> <span class="dt">Sell</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> aapl_price <span class="op">&lt;</span> <span class="dv">180</span> <span class="ot">=</span> <span class="dt">Buy</span> <span class="dv">10</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="fu">otherwise</span>        <span class="ot">=</span> <span class="dt">Hold</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ot">        fetchMostRecentPrice ::</span> <span class="dt">IO</span> <span class="dt">Price</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        fetchMostRecentPrice <span class="ot">=</span> (<span class="op">...</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ot">        executeMarketAction ::</span> <span class="dt">Action</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        execureMarketAction <span class="ot">=</span> (<span class="op">...</span>)</span></code></pre></div>
+<p>and boom, you have a simple trading system!</p>
+<p>Once you have a good idea for a strategy, you should test it on historical data. This is called <em>backtesting</em>. Backtesting strategies is, by definition, much more computationally intensive than live trading, since you are evaluating your strategy on much more data. We often backtest strategies on 5-10 years’ worth of data when it makes sense, and sometimes more.</p>
+<p>I will also note that it is easiest to have strategies that can run in various contexts (including backtesting and live operations) if the strategy is <em>pure</em> (in the <a href="https://en.wikipedia.org/w/index.php?title=Pure_function&amp;oldid=1192610707">mathematical sense</a>). It is in the quest for purity and performance that we decided to implement the trading system for a new asset class in Haskell.</p>
+<h2 class="title is-2" id="trading-strategies-in-haskell">Trading strategies in Haskell</h2>
+<p>For the simplicity of presentation, we will only consider strategies that involve prices. The simplest such strategies are strategies which depend on the <em>most recent</em> price:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Strategy</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> {<span class="ot"> runStrategy ::</span> <span class="dt">Price</span> <span class="ot">-&gt;</span> <span class="dt">Action</span> }</span></code></pre></div>
+<p><code>Strategy</code> is a type of functions, from the most recent <code>Price</code> known to some market action. This is only re-packaging the example above.</p>
+<p>Let’s build a backtesting framework. There are two parts here:</p>
+<ul>
+<li>determine historical market actions;</li>
+<li>simulate the effects of market actions.</li>
+</ul>
+<p>In practice, the two parts of backtesting are handled simultaneously. However, for simplicity, I will only consider the first part here.</p>
+<p>The nature of this problem is well-suited to streaming approaches; I will use <a href="https://hackage.haskell.org/package/pipes"><code>pipes</code></a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- From the `time` package</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Time</span>     ( <span class="dt">UTCTime</span> )</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- From the `pipes` package</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Pipes</span>         ( <span class="dt">Producer</span>, (&gt;-&gt;) )</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Pipes</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Pipes.Prelude</span> <span class="kw">as</span> <span class="dt">Pipes</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- | From a stream of input features, produce a stream</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- of output &#39;Market&#39; actions </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestStrategy ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">=&gt;</span> <span class="dt">Strategy</span> r</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m () <span class="co">-- ^ stream of timestamped AAPL prices</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>backtestStrategy strat prices </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span>   prices </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, f) <span class="ot">-&gt;</span> (k, runStrategy strat f)) </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> simulateMarketActions</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">-- The following is out-of-scope</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">BacktestResults</span> <span class="ot">=</span> <span class="dt">MkBacktestResults</span> (<span class="op">...</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="ot">simulateMarketActions ::</span> <span class="dt">Consumer</span> (<span class="dt">UTCTime</span>, <span class="dt">Action</span>) m <span class="dt">BacktestResults</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>simulateMarketActions <span class="ot">=</span> (<span class="op">...</span>)</span></code></pre></div>
+<h2 class="title is-2" id="more-expressive-strategies">More expressive strategies</h2>
+<p>I have a problem with the above definition of <code>Strategy</code>: I’m limited to strategies based on the single, most recent <code>Price</code>. What if I had a good idea for a strategy which involves the last 10 price values? Our <code>Strategy</code> type is not expressive enough: it only takes one type of <em>feature</em>, while we want to support a wide range of features.</p>
+<p>I will define a <code>Strategy</code> type which removes restrictions on the input feature:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Strategy</span> r </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> {<span class="ot"> runStrategy ::</span> r <span class="ot">-&gt;</span> <span class="dt">Action</span> }</span></code></pre></div>
+<p>with the understanding that the data of type <code>r</code> is somehow <em>derived</em> from prices.</p>
+<p>What are some features derived from prices, that we might be interested in?
+* Price history, e.g. most recent N ticks;
+* Price aggregations, e.g. average of most recent M ticks;
+* <a href="/posts/rolling-stats.html">Rolling aggregations</a>, e.g. N-tick history of the averages of M ticks;</p>
+<p>Every conceptual feature described above has some free parameters. We don’t want to have separate strategies like <code>Strategy PriceHistoryForPast10Ticks</code> and <code>Strategy PriceHistoryForPast20Ticks</code>. More specifically, for every feature of type <code>r</code>, there is a type of parameters <code>p</code> which describes the parameters of <code>r</code>.</p>
+<p>For example<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `javelin` pacakge</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Series</span> ( <span class="dt">Series</span> )</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">NumTicks</span> </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkNumTicks</span> {<span class="ot"> numTicks ::</span> <span class="dt">Int</span> }</span></code></pre></div>
+<h2 class="title is-2" id="typed-features-and-their-parametrization">Typed features and their parametrization</h2>
+<p>We could list all possible features in a big sum type:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Feature</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">FPrice</span> <span class="dt">Price</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">FPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">FAveragePrice</span> <span class="dt">Price</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> (<span class="op">...</span>)</span></code></pre></div>
+<p>However, it’s not possible to control what features go in what strategy. We can do better.</p>
+<p>We want to be able to link the types <code>PriceHistory</code> and <code>NumTicks</code> such that they are used together when backtesting, to ensure type safety. This is the domain of <a href="https://wiki.haskell.org/GHC/Type_families">indexed type families</a>, or type families for short. We will amend our <code>Feature</code> typeclass and <code>backtestStrategy</code> function to take into account feature parametrization:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Feature</span> r <span class="kw">where</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- For every instances `r` of `Feature`,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- there is an associated type `Parameters r` which the user</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- needs to specify. See examples below.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> r</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">Parameters</span> r</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, r) m ()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestStrategy ::</span> (<span class="dt">Feature</span> r, <span class="dt">Monad</span> m) </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">=&gt;</span> <span class="dt">Strategy</span> r</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Parameters</span> r</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m ()</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>backtestStrategy strat params prices </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span>   deriveFeature params prices </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, feature) <span class="ot">-&gt;</span> (k, runStrategy strat feature)) </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> simulateMarketActions</span></code></pre></div>
+<p>Let’s look at two example instances of <code>Feature</code>. The simplest is the basic feature or <code>Price</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Feature</span> <span class="dt">Price</span> <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The `Price` feature has no free parameters</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> <span class="dt">Price</span> <span class="ot">=</span> ()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">NoParameters</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    deriveFeatures _ prices <span class="ot">=</span> prices</span></code></pre></div>
+<p>This is easy because there are no parameters. What about looking at the price history?</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">NumTicks</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkNumTicks</span> {<span class="ot"> numTicks ::</span> <span class="dt">Int</span> }</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Feature</span> <span class="dt">PriceHistory</span> <span class="kw">where</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> <span class="dt">PriceHistory</span> <span class="ot">=</span> <span class="dt">NumTicks</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">NumTicks</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">PriceHistory</span>) m ()</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    deriveFeature (<span class="dt">MkPriceHistoryParameters</span> numTicks) prices</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> prices <span class="op">&gt;-&gt;</span> accumulate numTicks </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                 <span class="op">&gt;-&gt;</span> Pipes.map (\xs <span class="ot">-&gt;</span> (<span class="fu">maximum</span> <span class="op">$</span> Series.index xs, <span class="dt">MkPriceHistory</span> xs))</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">where</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>            <span class="co">-- out of scope, see end of blog post for link to source</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="ot">            accumulate ::</span> <span class="dt">Functor</span> m </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">=&gt;</span> <span class="dt">Int</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">-&gt;</span> <span class="dt">Pipe</span> (<span class="dt">UTCTime</span>, a) (<span class="dt">Series</span> <span class="dt">UTCTime</span> a) m () </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            accumulate <span class="ot">=</span> (<span class="op">...</span>) </span></code></pre></div>
+<p>Finally, as an example of the power of this approach, we’ll create a strategy which combines two features.</p>
+<p>First, we’ll extend the <code>Feature</code> class to combine two features <code>a</code> and <code>b</code> into one <code>(a, b)</code> feature:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">Feature</span> a, <span class="dt">Feature</span> b) <span class="ot">=&gt;</span> <span class="dt">Feature</span> (a, b) <span class="kw">where</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> (a, b) <span class="ot">=</span> (<span class="dt">Parameters</span> a, <span class="dt">Parameters</span> b)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">Parameters</span> (a, b)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m ()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, (a, b)) m ()</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    deriveFeature (paramsA, paramsB) prices </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> Pipes.zipWith (\(k,a) (_, b) <span class="ot">-&gt;</span> (k, (a, b))) </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                        (deriveFeature paramsA prices) </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                        (deriveFeature paramsB prices)</span></code></pre></div>
+<p>Second, we’ll define a simple strategy that compares the most recent price against the average price of the last 10 ticks:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Series</span> ( fold, mean )</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ot">finalStrategy ::</span> <span class="dt">Strategy</span> (<span class="dt">PriceHistory</span>, <span class="dt">Price</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>finalStrategy </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> <span class="op">$</span> \(<span class="dt">MkPriceHistory</span> history, price) </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> <span class="kw">let</span> avgPrice <span class="ot">=</span> fold mean history</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            <span class="kw">in</span> <span class="kw">case</span> price <span class="ot">`compare`</span> avgPrice <span class="kw">of</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="dt">Sell</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="dt">Buy</span> <span class="dv">10</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">Hold</span></span></code></pre></div>
+<p>It is trivial to backtest this strategy like so:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestFinalStrategy ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                      <span class="ot">=&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m () </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                      <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>backtestFinalStrategy <span class="ot">=</span> backtestStrategy finalStrategy ( <span class="dt">MkNumTicks</span> <span class="dv">10</span>, () ) </span></code></pre></div>
+<p>and voilà!</p>
+<h2 class="title is-2" id="conclusion">Conclusion</h2>
+<p>In this post, I have shown you how to define trading strategies with typed feature parametrization, which is a neat use of type families.</p>
+<p><em>All code is available in this <a href="/files/trading-strats/TradingStrats.hs">Haskell module</a>.</em></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>If you are unfamiliar with <code>pipes</code>, you should check out its <a href="https://hackage.haskell.org/package/pipes-4.3.16/docs/Pipes-Tutorial.html">tutorial</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>We are storing the price history in a <code>Series</code>, which comes from the <a href="hackage.haskell.org/package/javelin"><code>javelin</code> package</a> that I created specifically for this work.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>]]></summary>
+</entry>
+<entry>
     <title>The algebraic structure of a trading stop-loss system</title>
     <link href="https://laurentrdc.xyz//posts/algebra-stoploss.html" />
     <id>https://laurentrdc.xyz//posts/algebra-stoploss.html</id>
@@ -364,13 +570,13 @@
 <span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert identity of &amp; annihilates with respect to |</span></span>
 <span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (zero <span class="op">|</span> a) <span class="op">==</span> zero <span class="cf">for</span> a <span class="kw">in</span> Signal)</span></code></pre></div>
 <p>and there we have it! This design of a trading stop-loss system is an example of commutative semirings. This fact does absolutely nothing in the practical sense; I’m just happy to have spotted this structure more than 10 years after seeing it in undergrad.</p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>I’m actually not involved in trading securities at all, but I think intuition about stock markets is more common<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>I’ll be using Python in this post because it was a requirement of the implementation, but know that I’m doing this under protest.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</aside>]]></summary>
+</section>]]></summary>
 </entry>
 <entry>
     <title>Efficient rolling statistics</title>
@@ -388,8 +594,8 @@
 <div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.5</span>, <span class="fl">1.5</span>]</span></code></pre></div>
 <p>Rolling operations such as the rolling mean tremendously useful at my work. When working with time-series, for example, the rolling mean may be a good indicator to include as part of machine learning feature engineering or trading strategy design. Here’s an example of using the rolling average price of AAPL stock as an indicator:</p>
 <figure class="python">
-<img src="generated/pandocplot16495654872120024391.png" class="image" alt="Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (Source code)" />
-<figcaption aria-hidden="true">Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (<a href="generated/pandocplot16495654872120024391.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot2663062559337425579.png" class="image" alt="Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (Source code)" />
+<figcaption aria-hidden="true">Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (<a href="generated/pandocplot2663062559337425579.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The problem is that rolling operations can be rather slow if implemented improperly. In this post, I’ll show you how to implement efficient rolling statistics using a method based on <em>recurrence relations</em>.</p>
 <p>In principle, a general rolling function for lists might have the following type signature:</p>
@@ -612,12 +818,12 @@ S(X) = \frac{\bar{X}}{\sigma_X}
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this blog post, I’ve shown you a recipe to design rolling statistics algorithms which are efficient (i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n)</annotation></semantics></math>) based on recurrence relations. Efficient rolling statistics as implemented in this post are an essential part of backtesting software, which is software to test trading strategies.</p>
 <p><em>All code is available in this <a href="/files/rolling-stats/Rolling.hs">Haskell module</a>.</em></p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>William F. Sharpe. <em>Mutual Fund Performance</em>. Journal of Business, <strong>31</strong> (1966). <a href="https://doi.org/10.1086/294846">DOI: 10.1086/294846</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</aside>]]></summary>
+</section>]]></summary>
 </entry>
 <entry>
     <title>Filtering noise with discrete wavelet transforms</title>
@@ -684,8 +890,8 @@ S(X) = \frac{\bar{X}}{\sigma_X}
 </annotation></semantics></math></p>
 <p>This is the definition used by <a href="https://numpy.org/doc/stable/reference/routines.fft.html#module-numpy.fft">numpy</a>, for example. Let’s use this definition to compute the discrete Fourier transform of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≡</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>i</mi><mspace width="0.222em"></mspace><mn>2</mn><mi>t</mi></mrow></msup><mo>+</mo><msup><mi>e</mi><mrow><mo>−</mo><mi>i</mi><mspace width="0.222em"></mspace><mn>5</mn><mi>t</mi></mrow></msup></mrow><annotation encoding="application/x-tex">f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}</annotation></semantics></math>:</p>
 <figure class="python">
-<img src="generated/pandocplot10016942825544372365.png" class="image" alt="Top: Signal which is composed of two natural frequencies. Bottom: Discrete Fourier transform of the top signal, showing two natural frequencies. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Signal which is composed of two natural frequencies. <strong>Bottom</strong>: Discrete Fourier transform of the top signal, showing two natural frequencies. (<a href="generated/pandocplot10016942825544372365.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot395041910647196993.png" class="image" alt="Top: Signal which is composed of two natural frequencies. Bottom: Discrete Fourier transform of the top signal, showing two natural frequencies. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Signal which is composed of two natural frequencies. <strong>Bottom</strong>: Discrete Fourier transform of the top signal, showing two natural frequencies. (<a href="generated/pandocplot395041910647196993.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="using-the-discrete-fourier-transform-to-filter-noise">Using the discrete Fourier transform to filter noise</h2>
 <p>Let’s add some noise to our signal and see how we can use the discrete Fourier transform to filter it away. The discrete Fourier transform is most effective if your noise has some nice properties in frequency space. For example, consider high-frequency noise:</p>
@@ -694,8 +900,8 @@ S(X) = \frac{\bar{X}}{\sigma_X}
 </annotation></semantics></math></p>
 <p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>ϕ</mi><mi>ω</mi></msub><annotation encoding="application/x-tex">\phi_\omega</annotation></semantics></math> are random phases, one for each frequency component of the noise. While the signal looks very noisy, it’s very obvious in frequency-space what is noise and what is signal:</p>
 <figure class="python">
-<img src="generated/pandocplot14234629799862466461.png" class="image" alt="Top: Noisy signal (red) with the pure signal shown in comparison. Bottom: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal (red) with the pure signal shown in comparison. <strong>Bottom</strong>: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (<a href="generated/pandocplot14234629799862466461.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot8610643281583420029.png" class="image" alt="Top: Noisy signal (red) with the pure signal shown in comparison. Bottom: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal (red) with the pure signal shown in comparison. <strong>Bottom</strong>: Discrete Fourier transform of the noisy signal shows that noise is confined to a specific region of frequency space. (<a href="generated/pandocplot8610643281583420029.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The basics of filtering is as follows: set the transform of a signal to 0 in regions which are thought to be undesirable. In the case of the Fourier transform, this is known as a <em>band-pass filter</em>; frequency components of a particular frequency <em>band</em> are passed-through unchanged, and frequency components outside of this band are zeroed. Special names are given to band-pass filters with no lower bound (low-pass filter) and no upper bound (high-pass filter). We can express this filtering as a window function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>W</mi><mi>k</mi></msub><annotation encoding="application/x-tex">W_k</annotation></semantics></math> in the inverse discrete Fourier transform:</p>
 <p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>x</mi><mi>n</mi><mtext mathvariant="normal">filtered</mtext></msubsup><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munder><mo>∑</mo><mi>k</mi></munder><msub><mi>W</mi><mi>k</mi></msub><mo>⋅</mo><msub><mi>X</mi><mi>k</mi></msub><mo>⋅</mo><msup><mi>e</mi><mrow><mi>i</mi><mn>2</mn><mi>π</mi><mi>k</mi><mi>n</mi><mi>/</mi><mi>N</mi></mrow></msup></mrow><annotation encoding="application/x-tex">
@@ -710,8 +916,8 @@ W_k = \left\{ \begin{array}{cl}
 </annotation></semantics></math></p>
 <p>Visually:</p>
 <figure class="python">
-<img src="generated/pandocplot4380831558592582114.png" class="image" alt="Top: Noisy signal with the pure signal shown in comparison. Middle: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of \omega=10. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. Bottom: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal with the pure signal shown in comparison. <strong>Middle</strong>: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\omega=10</annotation></semantics></math>. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. <strong>Bottom</strong>: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (<a href="generated/pandocplot4380831558592582114.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot12711409738464190542.png" class="image" alt="Top: Noisy signal with the pure signal shown in comparison. Middle: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of \omega=10. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. Bottom: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Noisy signal with the pure signal shown in comparison. <strong>Middle</strong>: Discrete Fourier transform of the noisy signal. The band of our band-pass filter is shown, with a cutoff of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>ω</mi><mo>=</mo><mn>10</mn></mrow><annotation encoding="application/x-tex">\omega=10</annotation></semantics></math>. All Fourier components in the zeroed region are set to 0 before performing the inverse discrete Fourier transform. <strong>Bottom</strong>: Comparison between the filtered signal and the pure signal. The only (small) deviations can be observed at the edges. (<a href="generated/pandocplot12711409738464190542.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The lesson here is that filtering signals using a discretized integral transform (like the discrete Fourier transform) consists in:</p>
 <ol type="1">
@@ -723,8 +929,8 @@ W_k = \left\{ \begin{array}{cl}
 <p>Discrete wavelet transforms are a class of discrete transforms which decomposes signals into a sum of wavelets. While the complex exponential functions which make up the Fourier transform are localized in frequency but infinite in space, wavelets are localized in both time space and frequency space.</p>
 <p>In order to generate the basis wavelets, the original wavelet is stretched. This is akin to the Fourier transform, where the sine/cosine basis functions are ‘stretched’ by decreasing their frequency. In technical terms, the amount of ‘stretch’ is called the <strong>level</strong>. For example, the discrete wavelet transform using the <code>db4</code><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a> wavelet up to level 5 is the decomposition of a signal into the following wavelets:</p>
 <figure class="python">
-<img src="generated/pandocplot18263083262410385897.png" class="image" alt="Five of the db4 basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (Source code)" />
-<figcaption aria-hidden="true">Five of the <code>db4</code> basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (<a href="generated/pandocplot18263083262410385897.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot10863938112183758785.png" class="image" alt="Five of the db4 basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (Source code)" />
+<figcaption aria-hidden="true">Five of the <code>db4</code> basis wavelets shown. As the level increases, the wavelet is stretched such that it can represent lower-frequency components of a signal. (<a href="generated/pandocplot10863938112183758785.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In practice, discrete wavelet transforms are expressed as two transforms per level. This means that a discrete wavelet transform of level 1 gives back two sets of coefficients. One set of coefficient contains the low-frequency components of the signal, and are usually called the <em>approximate coefficients</em>. The other set of coefficients contains the high-frequency components of the signal, and are usually called the <em>detail coefficients</em>. A wavelet transform of level 2 is done by taking the approximate coefficients of level 1, and transforming them using a stretched wavelet into two sets of coefficients: the approximate coefficients of level 2, and the detail coefficients of level 2. Therefore, a signal transformed using a wavelet transform of level <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> has <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> sets of coefficients: the approximate and detail coefficients of level <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, and the detail coefficients of levels <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">N-1</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>−</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">N-2</annotation></semantics></math>, …, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>1</mn><annotation encoding="application/x-tex">1</annotation></semantics></math>.</p>
 <h2 class="title is-2" id="filtering-using-the-discrete-wavelet-transform">Filtering using the discrete wavelet transform</h2>
@@ -735,25 +941,25 @@ W_k = \left\{ \begin{array}{cl}
 </annotation></semantics></math></p>
 <p>Visually:</p>
 <figure class="python">
-<img src="generated/pandocplot12402400414989607879.png" class="image" alt="Top: Example signal with added synthetic noise. Bottom: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top</strong>: Example signal with added synthetic noise. <strong>Bottom</strong>: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (<a href="generated/pandocplot12402400414989607879.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16558655949438844511.png" class="image" alt="Top: Example signal with added synthetic noise. Bottom: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top</strong>: Example signal with added synthetic noise. <strong>Bottom</strong>: Frequency spectrum of both the pure signal and the noise, showing overlap. This figure shows that filtering techniques based on the Fourier transform would not help in filtering the noise in this signal. (<a href="generated/pandocplot16558655949438844511.src.html">Source code</a>)</figcaption>
 </figure>
 <p>This example shows a common situation: realistic noise whose frequency components overlap with the signal we’re trying to isolate. We wouldn’t be able to use filtering techniques based on the Fourier transform.</p>
 <p>Now let’s look at a particular discrete wavelet transform, with the underlying wavelet <code>sym17</code>. Decomposing the noisy signal up to level 3, we get four components:</p>
 <figure class="python">
-<img src="generated/pandocplot6689717904058551068.png" class="image" alt="All coefficients from a discrete wavelet transform up to level 3 with wavelet sym17. (Source code)" />
-<figcaption aria-hidden="true">All coefficients from a discrete wavelet transform up to level 3 with wavelet <code>sym17</code>. (<a href="generated/pandocplot6689717904058551068.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot15446231831202313568.png" class="image" alt="All coefficients from a discrete wavelet transform up to level 3 with wavelet sym17. (Source code)" />
+<figcaption aria-hidden="true">All coefficients from a discrete wavelet transform up to level 3 with wavelet <code>sym17</code>. (<a href="generated/pandocplot15446231831202313568.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Looks like the approximate coefficients at level 3 contain all the information we’re looking for. Let’s set all detail coefficients to 0, and invert the transform:</p>
 <figure class="python">
-<img src="generated/pandocplot16966313198117337012.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot16966313198117337012.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16418971415539598602.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot16418971415539598602.src.html">Source code</a>)</figcaption>
 </figure>
 <p>That’s looking pretty good! Not perfect of course, which I expected because we’re using real data here.</p>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, I’ve tried to give some of the intuition behind filtering signals using discrete wavelet transforms as an analogy to filtering with the discrete Fourier transform.</p>
 <p>This was only a basic explanation. There is so much more to wavelet transforms. There are many classes of wavelets with different properties, some of which<a href="#fn8" class="footnote-ref" id="fnref8" role="doc-noteref"><sup>8</sup></a> are very useful when dealing with higher-dimensional data (e.g. images and videos). If you’re dealing with noisy data, it won’t hurt to try and see if wavelets will help you understand it!</p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p><strong>L. P. René de Cotret</strong> and B. J. Siwick, <em>A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform</em>, Struct. Dyn. <strong>4</strong> (2017) <a href="http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518">DOI:10.1063/1.4972518</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -765,7 +971,7 @@ W_k = \left\{ \begin{array}{cl}
 <li id="fn7"><p>Note that this distribution contains a bias of -<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">1/2</annotation></semantics></math>, which is useful in order to introduce low-frequencies in the noise which overlap with the spectrum of the signal.<a href="#fnref7" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn8"><p>N. G. Kingsbury, <em>The dual-tree complex wavelet transform: a new technique for shift invariance and directional filters</em>, IEEE Digital Signal Processing Workshop, DSP <strong>98</strong> (1998)<a href="#fnref8" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</aside>]]></summary>
+</section>]]></summary>
 </entry>
 <entry>
     <title>Chesterton's fence and why I'm not sold on the blockchain</title>
@@ -790,13 +996,13 @@ W_k = \left\{ \begin{array}{cl}
 <p><strong>Performance</strong> is another major downside of decentralization. As an example, Bitcoin’s throughput has never reached more than <a href="https://blockchair.com/bitcoin/charts/transactions-per-second">6 transactions per second</a> as of the time of writing. By contract, the electronic payment network VisaNet (which powers Visa credit card) can process up to <a href="https://usa.visa.com/about-visa/visanet.html">76 000 transactions per second</a>.</p>
 <p>Until blockchain enthusiasts understand the advantages of centralization presented above, I don’t think cryptocurrencies will become mainstream.</p>
 <p><em>This post was inspired by the <a href="https://rationalreminder.ca/podcast/crypto8">Tim O’Reilly interview on the Rational Reminder podcast</a></em>.</p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>S. Nakamoto, <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> (2008). <a href="https://bitcoin.org/bitcoin.pdf">Link to PDF</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>G. K. Chesterton, <em>The Thing: Why I Am a Catholic</em>, chapter 4 (1929).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</aside>]]></summary>
+</section>]]></summary>
 </entry>
 <entry>
     <title>Exploring the multiverse of possibilities all at once using monads</title>
@@ -820,8 +1026,8 @@ W_k = \left\{ \begin{array}{cl}
 <h3 class="title is-3" id="potential-solutions-as-a-decision-graph">Potential solutions as a decision graph</h3>
 <p>How else can we express the number of combinations? Think of building a solution, instead of searching for one. We may want to start by assigning a driver to car 1. For each possible decision here, we’ll assign a driver to the second car next, then passengers. The possibilities look like this:</p>
 <figure class="python">
-<img src="generated/pandocplot3937027101373261906.png" class="image" alt="Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (Source code)" />
-<figcaption aria-hidden="true">Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (<a href="generated/pandocplot3937027101373261906.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot13230274893507146974.png" class="image" alt="Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (Source code)" />
+<figcaption aria-hidden="true">Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (<a href="generated/pandocplot13230274893507146974.src.html">Source code</a>)</figcaption>
 </figure>
 <p>In the figure above, no one is assigned at the start. Then, we assign the first driver (out of three choices). Then, we need to assign a second driver, of which there are only two remaining. Each of the 6 passengers are then assigned. A potential solution (i.e. a assignment between people and cars) is represented by a path in the decision tree. Three possibilities are shown as examples.</p>
 <p>This way of thinking about solutions reminds me strongly of the <a href="https://en.wikipedia.org/wiki/Many-worlds_interpretation">Everett interpretation of quantum mechanics</a>, also known as the <em>many-worlds interpretation</em> or the <em>multiverse interpretation</em>. The three potential assignments are three universes that split from the same starting point. Enumerating all possible solutions to our example problem consists in crawling the decision tree, or crawling the multiverse of possibilities.</p>
@@ -921,13 +1127,13 @@ W_k = \left\{ \begin{array}{cl}
 <p>Although I’m not using Haskell at work<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, I expect that something similar will need to be built in the near future to speed up our global optimization problem. The specific problem we are tackling has many more constraints than the example presented in this post. It’s easier to generate a list of solutions, most of which are unsuitable, and filter the solutions one by one. There is a fixed computational cost associated with generating and checking a solution, and so reducing the set of possible solutions is even more important.</p>
 <p>This post was partly inspired by the legendary blog post <a href="https://aphyr.com/posts/342-typing-the-technical-interview">Typing the technical interview</a></p>
 <p><em>A self-contained Haskell source file containing all code from this post is <a href="/files/multiverse.hs">available for download here</a></em></p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>This is why some people like to thing of monads as types that support flatMap.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Boss, if you’re reading this, please let me use Haskell :).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</aside>]]></summary>
+</section>]]></summary>
 </entry>
 <entry>
     <title>Can you make heterogeneous lists in Haskell? Sure — as long as your intent is clear</title>
@@ -1144,13 +1350,13 @@ W_k = \left\{ \begin{array}{cl}
 <p>The comprehensive exam is inherently about making students’ experience more focused on their research area. This is appealing from students point-of-view: why should they have to go out of their way to stay aware about classical mechanics, something which they might never use? The comprehensive exam (in the format that I have described above) streamlines the requirements for graduation.</p>
 <p>The graduate student experience is about much more than the resulting dissertation. We want our students to be more than just experts in their narrow fields; we also want them to be ready to contribute to society beyond their immediate expertise. Does the prelim ensure that this is the case? Of course not. But removing the prelim sends the wrong message about what it means to graduate with a PhD.</p>
 <p>On a personal note, the prelim made me review all of my undergraduate studies. I purchased the Feynman Lectures on Physics and read all three volumes. With a Masters’ degree under my belt, I was able to appreciate my learnings under a new light, even though I haven’t used most of it since then. While I cannot say that the exam was fun, the studying experience was definitely one of the highlights of my PhD.</p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>Other institutions might call it the qualifying examination.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn2"><p>Again, this might have other names at other institutions.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</aside>]]></summary>
+</section>]]></summary>
 </entry>
 <entry>
     <title>Harnessing symmetry to find the center of a diffraction pattern</title>
@@ -1161,14 +1367,14 @@ W_k = \left\{ \begin{array}{cl}
 </updated>
     <summary type="html"><![CDATA[<p>Ultrafast electron diffraction involves the analysis of <em>diffraction patterns</em>. Here is an example diffraction pattern for a thin (&lt;100nm) flake of graphite<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
 <figure class="python">
-<img src="generated/pandocplot14984986905735599799.png" class="image" alt="Diffraction pattern of graphite (Source code)" />
-<figcaption aria-hidden="true">Diffraction pattern of graphite (<a href="generated/pandocplot14984986905735599799.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot16407986955046809309.png" class="image" alt="Diffraction pattern of graphite (Source code)" />
+<figcaption aria-hidden="true">Diffraction pattern of graphite (<a href="generated/pandocplot16407986955046809309.src.html">Source code</a>)</figcaption>
 </figure>
 <p>A diffraction pattern is effectively the intensity of the Fourier transform. Given that crystals like graphite are well-ordered, the diffraction peaks (i.e. Fourier components) are very large. You can see that the diffraction pattern is six-fold symmetric; that’s because the atoms in graphite arrange themselves in a honeycomb pattern, which is also six-fold symmetric. In these experiments, the fundamental Fourier component is so strong that we need to block it. That’s what that black <em>beam-block</em> is about.</p>
 <p>There are crystals that are not as well-ordered as graphite. Think of a powder made of many small crystallites, each being about 50nm x 50nm x 50nm. Diffraction electrons through a sample like that results in a kind of average of all possible diffraction patterns. Here’s an example with polycrystalline Chromium:</p>
 <figure class="python">
-<img src="generated/pandocplot16266849044785217570.png" class="image" alt="Diffraction pattern of polycrystalline Chromium (Source code)" />
-<figcaption aria-hidden="true">Diffraction pattern of polycrystalline Chromium (<a href="generated/pandocplot16266849044785217570.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot11834164942394741352.png" class="image" alt="Diffraction pattern of polycrystalline Chromium (Source code)" />
+<figcaption aria-hidden="true">Diffraction pattern of polycrystalline Chromium (<a href="generated/pandocplot11834164942394741352.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Each ring in the above pattern pattern corresponds to a Fourier component. Notice again how symmetric the pattern is; the material itself is symmetric enough that the fundamental Fourier component needs to be blocked.</p>
 <p>For my work on <a href="https://github.com/LaurentRDC/iris-ued">iris-ued</a>, a data analysis package for ultrafast electron scattering, I needed to find a reliable, automatic way to get the center of such diffraction patterns to get rid of the manual work required now. So let’s see how!</p>
@@ -1176,13 +1382,13 @@ W_k = \left\{ \begin{array}{cl}
 <p>A first naive attempt might start with the <em>center-of-mass</em>, i.e. the average of pixel positions weighted by their intensity. Since intensity is symmetric about the center, the <em>center-of-mass</em> should coincide with the actual physical center of the image.</p>
 <p>Good news, <a href="https://docs.scipy.org/doc/scipy/reference/ndimage.html#multidimensional-image-processing-scipy-ndimage">scipy’s <code>ndimage</code> module</a> exports such a function: <a href="https://docs.scipy.org/doc/scipy/reference/generated/scipy.ndimage.center_of_mass.html#scipy.ndimage.center_of_mass"><code>center_of_mass</code></a>. Let’s try it:</p>
 <figure class="python">
-<img src="generated/pandocplot16752477837634100088.png" class="image" alt="Demonstration of using scipy.ndimage.center_of_mass to find the center of diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of using <code>scipy.ndimage.center_of_mass</code> to find the center of diffraction patterns. (<a href="generated/pandocplot16752477837634100088.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot1667959575768520574.png" class="image" alt="Demonstration of using scipy.ndimage.center_of_mass to find the center of diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of using <code>scipy.ndimage.center_of_mass</code> to find the center of diffraction patterns. (<a href="generated/pandocplot1667959575768520574.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Not bad! Especially in the first image, really not a bad first try. But I’m looking for something <em>pixel-perfect</em>. Intuitively, the beam-block in each image should mess with the calculation of the center of mass. Let’s define the following areas that we would like to ignore:</p>
 <figure class="python">
-<img src="generated/pandocplot4396052407199282587.png" class="image" alt="Areas that are bright are defined as being masked (Source code)" />
-<figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot4396052407199282587.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot4735078654767922249.png" class="image" alt="Areas that are bright are defined as being masked (Source code)" />
+<figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot4735078654767922249.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Masks are generally defined as boolean arrays with True (or 1) where pixels are valid, and False (or 0) where pixels are invalid. Therefore, we should ignore the weight of masked pixels. <code>scipy.ndimage.center_of_mass</code> does not support this feature; we need an extension of <code>center_of_mass</code>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> center_of_mass_masked(im, mask):</span>
@@ -1194,8 +1400,8 @@ W_k = \left\{ \begin{array}{cl}
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> r, c</span></code></pre></div>
 <p>This is effectively an average of the row and column coordinates (<code>rr</code> and <code>cc</code>) weighted by the image intensity. The trick here is that <code>mask.astype(im.dtype)</code> is 0 where pixels are “invalid”; therefore they don’t count in the average! Let’s look at the result:</p>
 <figure class="python">
-<img src="generated/pandocplot14343999887317795181.png" class="image" alt="Demonstration of using center_of_mass_masked (see above) to find the center of diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of using <code>center_of_mass_masked</code> (see above) to find the center of diffraction patterns. (<a href="generated/pandocplot14343999887317795181.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot14336084377109333759.png" class="image" alt="Demonstration of using center_of_mass_masked (see above) to find the center of diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of using <code>center_of_mass_masked</code> (see above) to find the center of diffraction patterns. (<a href="generated/pandocplot14336084377109333759.src.html">Source code</a>)</figcaption>
 </figure>
 <p>I’m not sure if it’s looking better, honestly. But at least we have an approximate center! That’s a good starting point that feeds in to the next step.</p>
 <h2 class="title is-2" id="friedel-pairs-and-radial-inversion-symmetry">Friedel pairs and radial inversion symmetry</h2>
@@ -1205,45 +1411,45 @@ W_k = \left\{ \begin{array}{cl}
 </blockquote>
 <p>Friedel pairs are peaks related by inversion through the center of the diffraction pattern. The existence of these pairs is guaranteed by crystal symmetry. For polycrystalline patterns, Friedel pairs are averaged into rings; rings are always inversion-symmetric about their centers. Here’s an example of two Friedel pairs:</p>
 <figure class="python">
-<img src="generated/pandocplot2702854760294445826.png" class="image" alt="Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (Source code)" />
-<figcaption aria-hidden="true">Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (<a href="generated/pandocplot2702854760294445826.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot15382267629067459244.png" class="image" alt="Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (Source code)" />
+<figcaption aria-hidden="true">Example of two Friedel pairs: white circles form pair 1, while red circles form pair 2. (<a href="generated/pandocplot15382267629067459244.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The algorithm by Liu was meant for single-crystal diffraction patterns with well-defined peaks, and not so much for rings. However, we can distill Liu’s idea into a new, more general approach. If the approximate center coincides with the actual center of the image, then the image should be invariant under radial-inversion with respect to the approximate center. Said another way: if the image <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math> is defined on polar coordinates <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(r, \theta)</annotation></semantics></math>, then the center maximizes correlation between <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>r</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I(r, \theta)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>I</mi><mrow><mo stretchy="true" form="prefix">(</mo><mo>−</mo><mi>r</mi><mo>,</mo><mi>θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I(-r, \theta)</annotation></semantics></math>. Thankfully, computing the masked correlation between images <a href="/posts/mnxc.html">is something I’ve worked on before</a>!</p>
 <p>Let’s look at what radial inversion looks like. There are ways to do it with interpolation, e.g. <a href="https://scikit-image.org/docs/stable/api/skimage.transform.html#warp">scikit-image’s <code>warp</code> function</a>. However, in my testing, this is incredibly slow compared to what I will show you. A faster approach is to consider that if the image was centered on the array, then radial inversion is really flipping the direction of the array axes; that is, if the image array <code>I</code> has size (128, 128), and the center is at (64, 64), the radial inverse of <code>I</code> is <code>I[::-1, ::-1]</code> (numpy) / <code>flip(flip(I, 1), 2)</code> (MATLAB) / <code>I[end:-1:1,end:-1:1]</code> (Julia). Another important note is that if the approximate center of the image is far from the center of the array, the overlap between the image and its radial inverse is limited. Consider this:</p>
 <figure class="python">
-<img src="generated/pandocplot9911019333325395130.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot9911019333325395130.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot1961031318055165406.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot1961031318055165406.src.html">Source code</a>)</figcaption>
 </figure>
 <p>If we cropped out the bright areas around the frame, then the approximate center found would coincide with the center of the array; then, radial inversion is very fast.</p>
 <figure class="python">
-<img src="generated/pandocplot11367846076647821.png" class="image" alt="Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (Source code)" />
-<figcaption aria-hidden="true">Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (<a href="generated/pandocplot11367846076647821.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot8743857930548947589.png" class="image" alt="Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (Source code)" />
+<figcaption aria-hidden="true">Demonstration of what parts of the image to crop so that the image center coincides with the center of the array. (<a href="generated/pandocplot8743857930548947589.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Now, especially for the right column of images, it’s pretty clear that the approximate center wasn’t perfect. The <em>correction</em> to the approximate center is can be calculated with the masked normalized cross-correlation<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a> <a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>:</p>
 <figure class="python">
-<img src="generated/pandocplot16777817598731895834.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot16777817598731895834.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot2319474466254168232.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot2319474466254168232.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The cross-correlation in the bottom right corner (zoomed by 2x) shows that the true center is the approximate center we found earlier, corrected by the small shift (white arrow)! For single-crystal diffraction patterns, the resulting is even more striking:</p>
 <figure class="python">
-<img src="generated/pandocplot3573535930999786689.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
-<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot3573535930999786689.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot1726683243490169223.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
+<figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot1726683243490169223.src.html">Source code</a>)</figcaption>
 </figure>
 <p>We can put the two steps together and determine a pixel-perfect center:</p>
 <figure class="python">
-<img src="generated/pandocplot1965523308818604957.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot1965523308818604957.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot3546507009219627247.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot3546507009219627247.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="bonus-low-quality-diffraction">Bonus: low-quality diffraction</h2>
 <p>Here’s a fun consequence: the technique works also for diffraction patterns that are pretty crappy and very far off center, provided that the asymmetry in the background is taken care-of:</p>
 <figure class="python">
-<img src="generated/pandocplot4567440637263454083.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot4567440637263454083.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot5985114495207016739.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot5985114495207016739.src.html">Source code</a>)</figcaption>
 </figure>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, we have determined a robust way to compute the center of a diffraction pattern without any parameters, by making use of a strong invariant: radial inversion symmetry. My favourite part: this method admits no free parameters!</p>
 <p>If you want to make use of this, <a href="https://scikit-ued.readthedocs.io/en/master/functions/skued.autocenter.html#skued.autocenter">take a look at <code>autocenter</code></a>, a new function that has been added to <a href="https://github.com/LaurentRDC/scikit-ued">scikit-ued</a>.</p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>L.P. René de Cotret <em>et al</em>, <em>Time- and momentum-resolved phonon population dynamics with ultrafast electron diffuse scattering</em>, Phys. Rev. B <strong>100</strong> (2019) <a href="https://journals.aps.org/prb/abstract/10.1103/PhysRevB.100.214115">DOI: 10.1103/PhysRevB.100.214115</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1251,7 +1457,7 @@ W_k = \left\{ \begin{array}{cl}
 <li id="fn3"><p>Dirk Padfield. <em>Masked object registration in the Fourier domain</em>. IEEE Transactions on Image Processing, <strong>21</strong>(5):2706–2718, 2012. <a href="https://doi.org/10.1109/TIP.2011.2181402">DOI: 10.1109/TIP.2011.2181402</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</aside>]]></summary>
+</section>]]></summary>
 </entry>
 <entry>
     <title>Matplotlib for graphic design</title>
@@ -1262,7 +1468,7 @@ W_k = \left\{ \begin{array}{cl}
 </updated>
     <summary type="html"><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
 <figure class="python">
-<img src="generated/pandocplot11728863598101774678.png" class="image" />
+<img src="generated/pandocplot8435081802292104938.png" class="image" />
 </figure>
 <p>Matplotlib is a plotting library for python, historically inspired by the plotting capabilities of MATLAB. You can take a look at the various <a href="https://matplotlib.org/gallery/index.html">examples</a> on their website. One thing that is not immediately obvious is that you can use Matplotlib to also draw shapes! In this sense, Matplotlib becomes a graphic design library.</p>
 <p>(You can see the exact source code for the images below by clicking on the link in the caption)</p>
@@ -1322,8 +1528,8 @@ W_k = \left\{ \begin{array}{cl}
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x,y), radius<span class="op">=</span>radius)</span></code></pre></div>
 <p>Here’s what it looks like so far:</p>
 <figure class="python">
-<img src="generated/pandocplot680478570873504779.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot680478570873504779.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot18162489574201175085.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot18162489574201175085.src.html">Source code</a>)</figcaption>
 </figure>
 <h3 class="title is-3" id="color">Color</h3>
 <p>The figure above has the wrong dimension, but you get the idea. Let’s color the hexagons appropriately. In the banner, the color of the hexagons is based on the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“inferno” colormap</a>. The color radiates away from the bottom left corner:</p>
@@ -1349,8 +1555,8 @@ W_k = \left\{ \begin{array}{cl}
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>Here’s the result:</p>
 <figure class="python">
-<img src="generated/pandocplot12202715781188448163.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot12202715781188448163.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot15443822931844191463.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot15443822931844191463.src.html">Source code</a>)</figcaption>
 </figure>
 <p>Because of rounding errors of the hexagon dimensions, there is some visible spacing between the hexagons. To get rid of it, we draw the hexagons a bit larger (0.2 millimeters):</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
@@ -1379,70 +1585,14 @@ W_k = \left\{ \begin{array}{cl}
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
 <p>We arrive at the final result:</p>
 <figure class="python">
-<img src="generated/pandocplot14717074132251726111.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot14717074132251726111.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot8424652414310781347.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot8424652414310781347.src.html">Source code</a>)</figcaption>
 </figure>
 <p>You can imagine adapting this approach to different tilings, and different colors schemes. Here’s a final example using squares and the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“cool” colormap</a>:</p>
 <figure class="python">
-<img src="generated/pandocplot14126521728338505630.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot14126521728338505630.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot11558943667775819420.png" class="image" alt=" (Source code)" />
+<figcaption aria-hidden="true"> (<a href="generated/pandocplot11558943667775819420.src.html">Source code</a>)</figcaption>
 </figure>]]></summary>
-</entry>
-<entry>
-    <title>The masked normalized cross-correlation and its application to image registration</title>
-    <link href="https://laurentrdc.xyz//posts/mnxc.html" />
-    <id>https://laurentrdc.xyz//posts/mnxc.html</id>
-    <published>2019-04-30T00:00:00Z</published>
-    <updated>2022-02-20
-</updated>
-    <summary type="html"><![CDATA[<p>Image registration consists in determinining the most likely transformation between two images — most importantly translation, which is what I am most concerned with.</p>
-<p>How can we detect the translation between two otherwise similar image? This is an application of <strong>cross-correlation</strong>. The cross-correlation of two images is the degree of similitude between images for every possible translation between them. Mathematically, given grayscale images as discrete functions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I_1(i,j)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">I_2(i,j)</annotation></semantics></math>, their cross-correlation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>⋆</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_1 \star I_2</annotation></semantics></math> is defined as:
-<math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>I</mi><mn>1</mn></msub><mo>⋆</mo><msub><mi>I</mi><mn>2</mn></msub><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≡</mo><munder><mo>∑</mo><mrow><mi>i</mi><mo>,</mo><mi>j</mi></mrow></munder><msub><mi>I</mi><mn>1</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><msub><mi>I</mi><mn>2</mn></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>i</mi><mo>−</mo><mi>u</mi><mo>,</mo><mi>j</mi><mo>−</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
-    (I_1 \star I_2)(u, v) \equiv \sum_{i,j} I_1(i, j) \cdot I_2(i - u, j - v)
-</annotation></semantics></math></p>
-<p>For example, if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>=</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_1 = I_2</annotation></semantics></math>, then <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>I</mi><mn>1</mn></msub><mo>⋆</mo><msub><mi>I</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">I_1 \star I_2</annotation></semantics></math> has its maximum at <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mi>u</mi><mo>,</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo></mrow><annotation encoding="application/x-tex">(u,v) =</annotation></semantics></math> (0,0). What happens if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>I</mi><mn>1</mn></msub><annotation encoding="application/x-tex">I_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>I</mi><mn>2</mn></msub><annotation encoding="application/x-tex">I_2</annotation></semantics></math> are shifted from each other? Let’s see:</p>
-<figure class="python">
-<img src="generated/pandocplot3222433666429288201.png" class="image" alt="The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (Source code)" />
-<figcaption aria-hidden="true">The cross-correlation between shifted images exhibits a global maxima at the location corresponding to relative translation. (<a href="generated/pandocplot3222433666429288201.src.html">Source code</a>)</figcaption>
-</figure>
-<p>In the above example, the cross-correlation is maximal at (50, 0), which is exactly the translation required to <em>shift back</em> the second image to match the first one. Finding the translation between images is then a simple matter of determining the glocal maximum of the cross-correlation. This operation is so useful that it is implemented in the Python library <a href="https://scikit-image.org">scikit-image</a> as <a href="https://scikit-image.org/docs/dev/api/skimage.registration.html?highlight=phase#skimage.registration.phase_cross_correlation"><code>skimage.feature.phase_cross_correlation</code></a>.</p>
-<p>It turns out that in my field of research, image registration can be crucial to correct experimental data. My primary research tool is <a href="http://www.physics.mcgill.ca/siwicklab">ultrafast electron diffraction</a>. Without knowing the details, you can think of this technique as a kind of microscope. A single image from one of our experiments looks like this:</p>
-<figure>
-<img src="/images/mnxc/Cr_1.png" class="image" alt="An electron diffraction pattern of polycrystalline chromium." />
-<figcaption aria-hidden="true">An electron diffraction pattern of polycrystalline chromium.</figcaption>
-</figure>
-<p>Most of the electron beam is unperturbed by the sample; this is why we use a metal beam-block (seen as a black rod in the image above) to prevent the electrons from damaging our apparatus.</p>
-<p>Our experiments are synthesized from hundreds of gigabytes of images like the one above, and it may take up to 72h (!) to take all the images we need. Over the course of this time, the electron beam may shift in a way that moves the image, but <em>not the beam-block</em><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Heres’s what I mean:</p>
-<figure class="python">
-<img src="generated/pandocplot14924381111311157891.png" class="image" alt="Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (Source code)" />
-<figcaption aria-hidden="true">Here is the difference between two equivalent images, acquired a few hours apart. The shift between them is evident in the third panel. (<a href="generated/pandocplot14924381111311157891.src.html">Source code</a>)</figcaption>
-</figure>
-<p>This does not fly. We need to be able to compare images together, and shifts by more than 1px are problematic. We need to correct for this shift, for every image, with respect to the first one. However, we are also in a bind, because unlike the example above, the images are not completely shifted; one part of them, the beam-block, is <em>static</em>, while the image behind it shifts.</p>
-<p>The crux of the problem is this: the cross-correlation between images gives us the shift between them. However, it is not immediately obvious how to tell the cross-correlation operation to ignore <em>certain parts</em> of the image. Is there some kind of operation, similar to the cross-correlation, that allows to mask parts of the images we want to ignore?</p>
-<p>Thanks to the work of Dr. Dirk Padfield<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> <a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, we now know that such an operation exists: the <strong>masked normalized cross-correlation</strong>. <a href="https://doi.org/10.1109/TIP.2011.2181402">In his 2012 article</a>, he explains the procedure and performance of this method to register images with masks. One such example is the registration of ultrasound images; <a href="/images/mnxc/criminal.png">unfortunately, showing you the figure from the article would cost me 450 $US</a>, so you’ll have to go look at it yourselves.</p>
-<hr>
-<p>In order to fix our registration problem, then, I implemented the masked normalized cross-correlation operation — and its associated registration function — in our ultrafast electron diffraction toolkit, <a href="https://scikit-ued.rtfd.io">scikit-ued</a><a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>. Here’s an example of it in action:</p>
-<figure class="python">
-<img src="generated/pandocplot14840299674099066548.png" class="image" alt="Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (Source code)" />
-<figcaption aria-hidden="true">Using the masked-normalized cross-correlation to align two diffraction patterns of polycrystalline chromium. The mask shown tells the algorithm to ignore the beam-block of both images. (<a href="generated/pandocplot14840299674099066548.src.html">Source code</a>)</figcaption>
-</figure>
-<h2 class="title is-2" id="contributing-to-scikit-image">Contributing to scikit-image</h2>
-<p>However, since this tool could see use in a more general setting, I decided to contribute it to <a href="https://scikit-image.org/">scikit-image</a>:</p>
-<ol type="1">
-<li>My contribution starts by bringing up the subject via a GitHub issue (<a href="https://github.com/scikit-image/scikit-image/issues/3330">issue #3330</a>).</li>
-<li>I forked scikit-image and integrated the code and tests from scikit-ued to scikit-image. The changes are visible in the <a href="https://github.com/scikit-image/scikit-image/pull/3334">pull request #3334</a>.</li>
-<li>Finally, some documentation improvements and an additional gallery example were added in <a href="https://github.com/scikit-image/scikit-image/pull/3528">pull request #3528</a>.</li>
-</ol>
-<p>In the end, <strong>a new function has been added, <a href="https://scikit-image.org/docs/stable/api/skimage.registration.html#skimage.registration.phase_cross_correlation"><code>skimage.registration.phase_cross_correlation</code></a></strong> (previously <code>skimage.feature.masked_register_translation</code>).</p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr />
-<ol>
-<li id="fn1"><p>Technically, the rotation of the electron beam about its source will also move the shadow of the beam-block. However, because the beam-block is much closer to the electron source, the effect is imperceptible.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>Dirk Padfield. <em>Masked object registration in the Fourier domain</em>. IEEE Transactions on Image Processing, <strong>21</strong>(5):2706–2718, 2012. <a href="https://doi.org/10.1109/TIP.2011.2181402">DOI: 10.1109/TIP.2011.2181402</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn3"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn4"><p>L. P. René de Cotret et al, <em>An open-source software ecosystem for the interactive exploration of ultrafast electron scattering data</em>, Advanced Structural and Chemical Imaging <strong>4</strong>:11 (2018) <a href="https://ascimaging.springeropen.com/articles/10.1186/s40679-018-0060-y">DOI:10.1186/s40679-018-0060-y</a>. This publication is open-access<i class="ai ai-open-access"></i> .<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</aside>]]></summary>
 </entry>
 
 </feed>

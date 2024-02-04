@@ -1,0 +1,415 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            Trading strategies with typed features using Haskell and type families - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        Trading strategies with typed features using Haskell and type families
+                    </h1>
+                    <h3>
+                        Posted on 2024-02-04. 
+                    </h3>
+                    <h3>
+                        Estimated reading time of 12 min.
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurent-p-ren%C3%A9-de-cotret-ph-d-296b38152/">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>I work in the business of algorithmic power trading, which is the automated trading of various power-related products in regulated <a href="https://en.wikipedia.org/wiki/Electricity_market">electricity markets</a>. Products include short-term inter-jurisdiction arbitrage, financial transmission rights, and more.</p>
+<p>This year, my employer is expanding its trading operations to a new class of products. Since there is no overlap between this new work and our current operations, I got to design a technology stack most suited for the task. This technology stack includes Haskell, most importantly because wrong or unexpected trading decisions can (and have) cost us dearly.</p>
+<p>In this blog post, I want to show you the basics of how we designed the framework in which to express trading strategies.</p>
+<h2 class="title is-2" id="the-fundamentals-of-trading-strategies">The fundamentals of trading strategies</h2>
+<p>The fundamental pieces of trading operations are <em>strategies</em>. In algorithmic trading, strategies are computer programs that decide what to trade, and how to trade it, at any given moment.</p>
+<p>Let’s take the example of a simple trading strategy that is only concerned with <a href="https://www.nasdaq.com/market-activity/stocks/aapl">AAPL stock</a>. The current stock price is about 190 USD today; our example strategy is defined thusly:</p>
+<ul>
+<li>If the AAPL price rises above 200, sell our holdings (if we have any);</li>
+<li>If the AAPL price falls below 180, buy 10 shares;</li>
+</ul>
+<p>In this case, the result of this strategy is some signal to buy or sell AAPL stock. We can run our strategy in a loop:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Control.Monad</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Action</span> <span class="ot">=</span> <span class="dt">Buy</span> <span class="dt">Int</span> </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Sell</span> </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Hold</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Price</span> <span class="ot">=</span> <span class="dt">Double</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> Control.Monad.forever <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    aaplPrice <span class="ot">&lt;-</span> fetchMostRecentPrice</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> action <span class="ot">=</span> myStrategy aaplPrice</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    executeMarketAction action</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="ot">        myStrategy ::</span> <span class="dt">Price</span> <span class="ot">-&gt;</span> <span class="dt">Action</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        myStrategy aapl_price</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> aapl_price <span class="op">&gt;</span> <span class="dv">200</span> <span class="ot">=</span> <span class="dt">Sell</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> aapl_price <span class="op">&lt;</span> <span class="dv">180</span> <span class="ot">=</span> <span class="dt">Buy</span> <span class="dv">10</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="fu">otherwise</span>        <span class="ot">=</span> <span class="dt">Hold</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="ot">        fetchMostRecentPrice ::</span> <span class="dt">IO</span> <span class="dt">Price</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>        fetchMostRecentPrice <span class="ot">=</span> (<span class="op">...</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="ot">        executeMarketAction ::</span> <span class="dt">Action</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>        execureMarketAction <span class="ot">=</span> (<span class="op">...</span>)</span></code></pre></div>
+<p>and boom, you have a simple trading system!</p>
+<p>Once you have a good idea for a strategy, you should test it on historical data. This is called <em>backtesting</em>. Backtesting strategies is, by definition, much more computationally intensive than live trading, since you are evaluating your strategy on much more data. We often backtest strategies on 5-10 years’ worth of data when it makes sense, and sometimes more.</p>
+<p>I will also note that it is easiest to have strategies that can run in various contexts (including backtesting and live operations) if the strategy is <em>pure</em> (in the <a href="https://en.wikipedia.org/w/index.php?title=Pure_function&amp;oldid=1192610707">mathematical sense</a>). It is in the quest for purity and performance that we decided to implement the trading system for a new asset class in Haskell.</p>
+<h2 class="title is-2" id="trading-strategies-in-haskell">Trading strategies in Haskell</h2>
+<p>For the simplicity of presentation, we will only consider strategies that involve prices. The simplest such strategies are strategies which depend on the <em>most recent</em> price:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Strategy</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> {<span class="ot"> runStrategy ::</span> <span class="dt">Price</span> <span class="ot">-&gt;</span> <span class="dt">Action</span> }</span></code></pre></div>
+<p><code>Strategy</code> is a type of functions, from the most recent <code>Price</code> known to some market action. This is only re-packaging the example above.</p>
+<p>Let’s build a backtesting framework. There are two parts here:</p>
+<ul>
+<li>determine historical market actions;</li>
+<li>simulate the effects of market actions.</li>
+</ul>
+<p>In practice, the two parts of backtesting are handled simultaneously. However, for simplicity, I will only consider the first part here.</p>
+<p>The nature of this problem is well-suited to streaming approaches; I will use <a href="https://hackage.haskell.org/package/pipes"><code>pipes</code></a><a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- From the `time` package</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Time</span>     ( <span class="dt">UTCTime</span> )</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- From the `pipes` package</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Pipes</span>         ( <span class="dt">Producer</span>, (&gt;-&gt;) )</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Pipes</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Pipes.Prelude</span> <span class="kw">as</span> <span class="dt">Pipes</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- | From a stream of input features, produce a stream</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- of output 'Market' actions </span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestStrategy ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">=&gt;</span> <span class="dt">Strategy</span> r</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m () <span class="co">-- ^ stream of timestamped AAPL prices</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>backtestStrategy strat prices </span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span>   prices </span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, f) <span class="ot">-&gt;</span> (k, runStrategy strat f)) </span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> simulateMarketActions</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">-- The following is out-of-scope</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">BacktestResults</span> <span class="ot">=</span> <span class="dt">MkBacktestResults</span> (<span class="op">...</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="ot">simulateMarketActions ::</span> <span class="dt">Consumer</span> (<span class="dt">UTCTime</span>, <span class="dt">Action</span>) m <span class="dt">BacktestResults</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>simulateMarketActions <span class="ot">=</span> (<span class="op">...</span>)</span></code></pre></div>
+<h2 class="title is-2" id="more-expressive-strategies">More expressive strategies</h2>
+<p>I have a problem with the above definition of <code>Strategy</code>: I’m limited to strategies based on the single, most recent <code>Price</code>. What if I had a good idea for a strategy which involves the last 10 price values? Our <code>Strategy</code> type is not expressive enough: it only takes one type of <em>feature</em>, while we want to support a wide range of features.</p>
+<p>I will define a <code>Strategy</code> type which removes restrictions on the input feature:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Strategy</span> r </span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> {<span class="ot"> runStrategy ::</span> r <span class="ot">-&gt;</span> <span class="dt">Action</span> }</span></code></pre></div>
+<p>with the understanding that the data of type <code>r</code> is somehow <em>derived</em> from prices.</p>
+<p>What are some features derived from prices, that we might be interested in?
+* Price history, e.g. most recent N ticks;
+* Price aggregations, e.g. average of most recent M ticks;
+* <a href="../posts/rolling-stats.html">Rolling aggregations</a>, e.g. N-tick history of the averages of M ticks;</p>
+<p>Every conceptual feature described above has some free parameters. We don’t want to have separate strategies like <code>Strategy PriceHistoryForPast10Ticks</code> and <code>Strategy PriceHistoryForPast20Ticks</code>. More specifically, for every feature of type <code>r</code>, there is a type of parameters <code>p</code> which describes the parameters of <code>r</code>.</p>
+<p>For example<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `javelin` pacakge</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Series</span> ( <span class="dt">Series</span> )</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">NumTicks</span> </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkNumTicks</span> {<span class="ot"> numTicks ::</span> <span class="dt">Int</span> }</span></code></pre></div>
+<h2 class="title is-2" id="typed-features-and-their-parametrization">Typed features and their parametrization</h2>
+<p>We could list all possible features in a big sum type:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Feature</span> </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">FPrice</span> <span class="dt">Price</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">FPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">FAveragePrice</span> <span class="dt">Price</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> (<span class="op">...</span>)</span></code></pre></div>
+<p>However, it’s not possible to control what features go in what strategy. We can do better.</p>
+<p>We want to be able to link the types <code>PriceHistory</code> and <code>NumTicks</code> such that they are used together when backtesting, to ensure type safety. This is the domain of <a href="https://wiki.haskell.org/GHC/Type_families">indexed type families</a>, or type families for short. We will amend our <code>Feature</code> typeclass and <code>backtestStrategy</code> function to take into account feature parametrization:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Feature</span> r <span class="kw">where</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- For every instances `r` of `Feature`,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- there is an associated type `Parameters r` which the user</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- needs to specify. See examples below.</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> r</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">Parameters</span> r</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, r) m ()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestStrategy ::</span> (<span class="dt">Feature</span> r, <span class="dt">Monad</span> m) </span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">=&gt;</span> <span class="dt">Strategy</span> r</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Parameters</span> r</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m ()</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>backtestStrategy strat params prices </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span>   deriveFeature params prices </span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, feature) <span class="ot">-&gt;</span> (k, runStrategy strat feature)) </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> simulateMarketActions</span></code></pre></div>
+<p>Let’s look at two example instances of <code>Feature</code>. The simplest is the basic feature or <code>Price</code>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Feature</span> <span class="dt">Price</span> <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The `Price` feature has no free parameters</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> <span class="dt">Price</span> <span class="ot">=</span> ()</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">NoParameters</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    deriveFeatures _ prices <span class="ot">=</span> prices</span></code></pre></div>
+<p>This is easy because there are no parameters. What about looking at the price history?</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">NumTicks</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkNumTicks</span> {<span class="ot"> numTicks ::</span> <span class="dt">Int</span> }</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Feature</span> <span class="dt">PriceHistory</span> <span class="kw">where</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> <span class="dt">PriceHistory</span> <span class="ot">=</span> <span class="dt">NumTicks</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">NumTicks</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">PriceHistory</span>) m ()</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    deriveFeature (<span class="dt">MkPriceHistoryParameters</span> numTicks) prices</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> prices <span class="op">&gt;-&gt;</span> accumulate numTicks </span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                 <span class="op">&gt;-&gt;</span> Pipes.map (\xs <span class="ot">-&gt;</span> (<span class="fu">maximum</span> <span class="op">$</span> Series.index xs, <span class="dt">MkPriceHistory</span> xs))</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">where</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>            <span class="co">-- out of scope, see end of blog post for link to source</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="ot">            accumulate ::</span> <span class="dt">Functor</span> m </span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">=&gt;</span> <span class="dt">Int</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">-&gt;</span> <span class="dt">Pipe</span> (<span class="dt">UTCTime</span>, a) (<span class="dt">Series</span> <span class="dt">UTCTime</span> a) m () </span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            accumulate <span class="ot">=</span> (<span class="op">...</span>) </span></code></pre></div>
+<p>Finally, as an example of the power of this approach, we’ll create a strategy which combines two features.</p>
+<p>First, we’ll extend the <code>Feature</code> class to combine two features <code>a</code> and <code>b</code> into one <code>(a, b)</code> feature:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">Feature</span> a, <span class="dt">Feature</span> b) <span class="ot">=&gt;</span> <span class="dt">Feature</span> (a, b) <span class="kw">where</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> (a, b) <span class="ot">=</span> (<span class="dt">Parameters</span> a, <span class="dt">Parameters</span> b)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">Parameters</span> (a, b)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m ()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, (a, b)) m ()</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    deriveFeature (paramsA, paramsB) prices </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> Pipes.zipWith (\(k,a) (_, b) <span class="ot">-&gt;</span> (k, (a, b))) </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                        (deriveFeature paramsA prices) </span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                        (deriveFeature paramsB prices)</span></code></pre></div>
+<p>Second, we’ll define a simple strategy that compares the most recent price against the average price of the last 10 ticks:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Series</span> ( fold, mean )</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ot">finalStrategy ::</span> <span class="dt">Strategy</span> (<span class="dt">PriceHistory</span>, <span class="dt">Price</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>finalStrategy </span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> <span class="op">$</span> \(<span class="dt">MkPriceHistory</span> history, price) </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> <span class="kw">let</span> avgPrice <span class="ot">=</span> fold mean history</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            <span class="kw">in</span> <span class="kw">case</span> price <span class="ot">`compare`</span> avgPrice <span class="kw">of</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="dt">Sell</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="dt">Buy</span> <span class="dv">10</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">Hold</span></span></code></pre></div>
+<p>It is trivial to backtest this strategy like so:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestFinalStrategy ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                      <span class="ot">=&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m () </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                      <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>backtestFinalStrategy <span class="ot">=</span> backtestStrategy finalStrategy ( <span class="dt">MkNumTicks</span> <span class="dv">10</span>, () ) </span></code></pre></div>
+<p>and voilà!</p>
+<h2 class="title is-2" id="conclusion">Conclusion</h2>
+<p>In this post, I have shown you how to define trading strategies with typed feature parametrization, which is a neat use of type families.</p>
+<p><em>All code is available in this <a href="../files/trading-strats/TradingStrats.hs">Haskell module</a>.</em></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>If you are unfamiliar with <code>pipes</code>, you should check out its <a href="https://hackage.haskell.org/package/pipes-4.3.16/docs/Pipes-Tutorial.html">tutorial</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>We are storing the price history in a <code>Series</code>, which comes from the <a href="hackage.haskell.org/package/javelin"><code>javelin</code> package</a> that I created specifically for this work.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurent-p-ren%C3%A9-de-cotret-ph-d-296b38152/">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2024-02-04. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>

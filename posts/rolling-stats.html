@@ -137,8 +137,8 @@
 <div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.5</span>, <span class="fl">1.5</span>]</span></code></pre></div>
 <p>Rolling operations such as the rolling mean tremendously useful at my work. When working with time-series, for example, the rolling mean may be a good indicator to include as part of machine learning feature engineering or trading strategy design. Here’s an example of using the rolling average price of AAPL stock as an indicator:</p>
 <figure class="python">
-<img src="generated/pandocplot16495654872120024391.png" class="image" alt="Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (Source code)" />
-<figcaption aria-hidden="true">Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (<a href="generated/pandocplot16495654872120024391.src.html">Source code</a>)</figcaption>
+<img src="generated/pandocplot2663062559337425579.png" class="image" alt="Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (Source code)" />
+<figcaption aria-hidden="true">Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (<a href="generated/pandocplot2663062559337425579.src.html">Source code</a>)</figcaption>
 </figure>
 <p>The problem is that rolling operations can be rather slow if implemented improperly. In this post, I’ll show you how to implement efficient rolling statistics using a method based on <em>recurrence relations</em>.</p>
 <p>In principle, a general rolling function for lists might have the following type signature:</p>
@@ -361,12 +361,12 @@ S(X) = \frac{\bar{X}}{\sigma_X}
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this blog post, I’ve shown you a recipe to design rolling statistics algorithms which are efficient (i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n)</annotation></semantics></math>) based on recurrence relations. Efficient rolling statistics as implemented in this post are an essential part of backtesting software, which is software to test trading strategies.</p>
 <p><em>All code is available in this <a href="../files/rolling-stats/Rolling.hs">Haskell module</a>.</em></p>
-<aside id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
 <li id="fn1"><p>William F. Sharpe. <em>Mutual Fund Performance</em>. Journal of Business, <strong>31</strong> (1966). <a href="https://doi.org/10.1086/294846">DOI: 10.1086/294846</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
-</aside>
+</section>
                 </div>
             </div>
         </div>

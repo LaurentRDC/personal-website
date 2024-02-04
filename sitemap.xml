@@ -31,7 +31,7 @@
 
   <url>
     <loc>https://laurentrdc.xyz//about.html</loc>
-    <lastmod>2024-02-02
+    <lastmod>2024-02-04
 </lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
@@ -56,6 +56,14 @@
   <url>
     <loc>https://laurentrdc.xyz//publications.html</loc>
     <lastmod>2022-06-07
+</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://laurentrdc.xyz//posts/typesafe-tradingstrats.html</loc>
+    <lastmod>2024-02-04
 </lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
