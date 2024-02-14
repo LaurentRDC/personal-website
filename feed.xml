@@ -7,7 +7,7 @@
         <description><![CDATA[My personal blog on science, math, programming, and other interests.]]></description>
         <atom:link href="https://laurentrdc.xyz/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>2024-02-04
+        <lastBuildDate>2024-02-14
 </lastBuildDate>
         <item>
     <title>Trading strategies with typed features using Haskell and type families</title>
@@ -137,15 +137,17 @@
 <span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, feature) <span class="ot">-&gt;</span> (k, runStrategy strat feature)) </span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> simulateMarketActions</span></code></pre></div>
 <p>Let’s look at two example instances of <code>Feature</code>. The simplest is the basic feature or <code>Price</code>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Feature</span> <span class="dt">Price</span> <span class="kw">where</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The `Price` feature has no free parameters</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> <span class="dt">Price</span> <span class="ot">=</span> ()</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">NoParameters</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    deriveFeatures _ prices <span class="ot">=</span> prices</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">NoParameters</span> <span class="ot">=</span> ()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Feature</span> <span class="dt">Price</span> <span class="kw">where</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The `Price` feature has no free parameters</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> <span class="dt">Price</span> <span class="ot">=</span> <span class="dt">NoParameters</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">NoParameters</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    deriveFeatures _ prices <span class="ot">=</span> prices</span></code></pre></div>
 <p>This is easy because there are no parameters. What about looking at the price history?</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
