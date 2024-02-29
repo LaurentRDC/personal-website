@@ -35,7 +35,7 @@ Of course, the prelim is only one of the requirements on the way to earn a docto
 
 The prelim serves as a way to ensure that all PhD students have a certain level of competence in all historical areas of Physics. Evaluating students for admission to the Physics department is inherently hard because it is difficult to compare academic records from different institutions across the world. 
 
-Earning a PhD makes you an expert in a narrow subject. Passing the prelim indicates that students have a baseline knowledge across all historical Physics discipline.
+Earning a PhD makes you an expert in a narrow subject. Passing the prelim indicates that students have a baseline knowledge across all historical Physics disciplines.
 
 ### Proposed alternative: the comprehensive examination
 
