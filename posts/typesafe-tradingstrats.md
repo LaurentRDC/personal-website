@@ -181,9 +181,11 @@ backtestStrategy strat params prices
 Let's look at two example instances of `Feature`. The simplest is the basic feature or `Price`:
 
 ```haskell
+type NoParameters = ()
+
 instance Feature Price where
     -- The `Price` feature has no free parameters
-    type Parameters Price = ()
+    type Parameters Price = NoParameters
 
     deriveFeature :: Monad m 
                   => NoParameters
