@@ -77,13 +77,14 @@ schema = [
 
 socialLinks :: [SocialLink]
 socialLinks = [
-      ("fas fa-envelope",      "/email.html",                                                                "e-mail")
-    , ("fab fa-github",        "https://github.com/LaurentRDC",                                              "GitHub")
-    , ("fab fa-linkedin",      "https://www.linkedin.com/in/laurent-p-ren%C3%A9-de-cotret-ph-d-296b38152/",  "LinkedIn")
-    , ("ai ai-researchgate",   "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret",                "ResearchGate")
-    , ("ai ai-orcid",          "https://orcid.org/0000-0002-1464-2739",                                      "OrcID")
-    , ("ai ai-google-scholar", "https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en",                "Google Scholar")
+      ("fas fa-envelope",      "/email.html",                                                 "e-mail")
+    , ("fab fa-github",        "https://github.com/LaurentRDC",                               "GitHub")
+    , ("fab fa-linkedin",      "https://www.linkedin.com/in/laurentrdc",                      "LinkedIn")
+    , ("ai ai-researchgate",   "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret", "ResearchGate")
+    , ("ai ai-orcid",          "https://orcid.org/0000-0002-1464-2739",                       "OrcID")
+    , ("ai ai-google-scholar", "https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en", "Google Scholar")
     ]
+
 
 feedLinks :: [SocialLink]
 feedLinks = [
