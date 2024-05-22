@@ -4,6 +4,14 @@ title: About me
 
 ## Employment
 
+* December 2023 - | [__Powerweave__](https://powerweave.io) | Co-founder & CEO
+
+    Powerweave is a technology company operating at the intersection of power infrastructure, technology, and finance. 
+
+    We are working relentlessly to bring the concept of local electricity markets to North America. See our website for more information.
+    
+    <p></p>
+
 * August 2021 - | [__SocïVolta__](http://socivolta.com/) | Quantitative Research
 
     My role at SocïVolta involves multiple tasks and research subjects, including:
