@@ -8,7 +8,7 @@ title: About me
 
     Powerweave is a technology company operating at the intersection of power infrastructure, technology, and finance. 
 
-    We are working relentlessly to bring the concept of local electricity markets to North America. See our website for more information.
+    We are working relentlessly to bring the concept of local electricity markets to North America. [See this blog post for more information](/posts/powerweave-launch.html).
     
     <p></p>
 
