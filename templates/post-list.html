@@ -24,7 +24,9 @@
                                 because there's no easy way to check for equality between publication
                                 date ($date$) and the updated date
                             -->
-                            <em>$updatedMessage$</em>
+                            $if(updatedMessage)$
+                                <em>$updatedMessage$</em>
+                            $endif$
                         </p>
                     </div>
                 </div>

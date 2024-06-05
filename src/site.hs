@@ -47,6 +47,7 @@ import           Data.Time.Clock                 (getCurrentTime, utctDay)
 import           Feed                            (feedConfiguration)
 import           ReadingTimeFilter               (readingTimeFilter)
 
+
 -- | syntax highlighting style to use throughout
 syntaxHighlightingStyle :: Style
 syntaxHighlightingStyle = kate
@@ -259,15 +260,11 @@ lastUpdatedViaGit fp = do
     (ec, out, _) <- readProcess (shell $ "git log --follow --date=format:\"%Y-%m-%d\" --format=\"%ad\" -- " <> fp <> " | head -1" )
     case ec of
         ExitFailure _ -> return Nothing 
-        ExitSuccess -> return . Just . TL.unpack . TL.decodeUtf8 $ out
-
--- | Check when a file was first added to the git history
-addedToGit :: FilePath -> IO (Maybe String)
-addedToGit fp = do
-    (ec, out, _) <- readProcess (shell $ "git log --follow --date=format:\"%Y-%m-%d\" --format=\"%ad\" -- " <> fp <> " | tail -1" )
-    case ec of
-        ExitFailure _ -> return Nothing 
-        ExitSuccess -> return . Just . TL.unpack . TL.decodeUtf8 $ out
+        ExitSuccess -> return . Just 
+                              . TL.unpack 
+                              . TL.strip -- Very important, to remove newlines
+                              . TL.decodeUtf8 
+                              $ out
 
 -- | Field which provides the "last-updated" variable for items, which 
 -- provides the date of the most recent git commit which modifies a file.
@@ -283,14 +280,17 @@ lastUpdatedField = field "updated" $ \(Item ident _) -> unsafeCompiler $ do
 -- provides the date of the most recent git commit which modifies a file.
 -- Note that this context will be unavailable for generated pages
 updatedMessageField :: Context String
-updatedMessageField = field "updatedMessage" $ \(Item ident _) -> unsafeCompiler $ do
-    lastUpdated <- lastUpdatedViaGit (toFilePath ident)
-    created     <- addedToGit        (toFilePath ident)
-    if lastUpdated == created
-        then pure mempty
-        else case lastUpdated of 
-                Nothing -> pure mempty
-                Just dt -> return $ "Last updated on " <> filter (not . isSpace) dt <> "."
+updatedMessageField = field "updatedMessage" $ \(Item ident _) -> do
+    meta     <- getMetadata ident
+    unsafeCompiler $ do
+        lastUpdated <- lastUpdatedViaGit (toFilePath ident)
+        
+        let created = lookupString "date" meta
+        if lastUpdated == created
+            then pure mempty
+            else case lastUpdated of 
+                    Nothing -> pure mempty
+                    Just dt -> return $ "Last updated on " <> filter (not . isSpace) dt <> "."
 
 
 -- Pandoc compiler which also provides the Pandoc metadata as template context
