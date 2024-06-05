@@ -8,9 +8,63 @@
         <name>Laurent P. René de Cotret</name>
         
     </author>
-    <updated>2024-02-14
+    <updated>2024-06-05
 </updated>
     <entry>
+    <title>Starting a new adventure with Powerweave</title>
+    <link href="https://laurentrdc.xyz//posts/powerweave-launch.html" />
+    <id>https://laurentrdc.xyz//posts/powerweave-launch.html</id>
+    <published>2024-06-05T00:00:00Z</published>
+    <updated>2024-06-05
+</updated>
+    <summary type="html"><![CDATA[<p>I co-founded <a href="https://powerweave.io">Powerweave</a> with <a href="https://www.linkedin.com/in/mathilde-mounier-005320170/">Mathilde Mounier</a>. We have been working nights and weekends for the better part of a year. Today, I can reveal it publicly.</p>
+<p>Starting a business is something that I have been thinking about since finishing graduate school. <a href="/about.html">My academic expertise</a> could not be turned into a business outright (<a href="https://www.linkedin.com/company/e-ray-scientific-inc/">although ex-colleagues are trying!</a>), but my skills in mathematics, software engineering, and computer science have a broader applicability.</p>
+<p>Mathilde and I want to act on the climate emergency. As simple citizens, our actions have a limited effect. However, by starting the right business, we can create a movement which has a tangible impact. I am positively inclined towards technology startups specifically because of the growth curve. This means that if everything goes right, Powerweave could change the world.</p>
+<p>For many reasons, including the push towards sustainable energy and the increasing demand for energy due to a resurgence of artificial intelligence progress, power grid infrastructure is under tremendous stress, and technologies are evolving rapidly to address this. The space is fertile ground for innovators that seek to help the world in a concrete way.
+In order to get some both startup and industry experience, I joined SocïVolta, a technology startup that operates at the intersection of financial markets and the North American power grid. This is also where I met Mathilde. We both gained invaluable insights into how the North American power infrastructure works – and where its weaknesses are.</p>
+<p>In this post, I will describe current power infrastructure, how Powerweave helps, and what’s next for us.</p>
+<h3 class="title is-3" id="what-is-the-north-american-power-grid">What is the North American power grid?</h3>
+<p>The <em>power grid</em> is an electrical network which can be categorized into three broad levels:</p>
+<ul>
+<li>Generation: power stations, which are often far from population centers;</li>
+<li>Transmission: long-distance electrical transmission lines connecting power stations to population centers;</li>
+<li>Distribution: network of low-voltage transmission to homes and businesses.</li>
+</ul>
+<p>There are places in North America where all three levels are controlled by a single entity (e.g. Hydro-Québec). But increasingly, different entities own and operate different levels of the power grid.</p>
+<p>What is the provenance of the electricity that powers your screen right now? It might not be from closest power station. The provenance of your electricity depends on lots of factors, including who else wants electricity right now, and who is currently generating electricity. Sometimes, it is better to use a power source far from you, but that takes a path which is relatively unused.</p>
+<p>Most people want cheap electricity. Getting you the cheapest power every second of the year requires <strong>coordination between all operating entities on the power grid</strong>. The modern way to coordinate the behavior of the power grid at all levels are so-called <em>wholesale electricity markets</em>. At wholesale electricity markets, power station owners, transmission line owners, and energy service providers come together to enter auctions to determine the geographical price of electricity. While the details of such auctions are far beyond the scope of this blog post, the important bit is that power auctions answer the following two questions:</p>
+<ol type="1">
+<li>Where does the energy produced by a power station get consumed?</li>
+<li>What is the cost of this energy at every node in the power grid?</li>
+</ol>
+<p>Wholesale electricity markets have been shown to increase competition and lower electricity rates, as well as integrate renewable energy resources more effectively. That is why you see them popping up more and more across the world. <a href="https://energy.ec.europa.eu/topics/markets-and-consumers/market-legislation/electricity-market-design_en">The European Union even codified it into law in 2019</a>.</p>
+<h3 class="title is-3" id="local-electricity-distribution">Local electricity distribution</h3>
+<p>Let’s zoom in on the last level, where Powerweave operates: local electricity distribution.</p>
+<p>It used to be that local distribution of electricity was squarely in one direction: homes and businesses would only consume electricity. With the advent of rooftop solar panels and home batteries, <strong>this is no longer true</strong>. Homes and businesses can act as spontaneous, small power stations called <em>distributed energy resources</em>.</p>
+<p>One one hand, we should encourage individuals and businesses to produce their own energy and even export it back to the grid at certain times. Electricity consumption per capita is increasing rapidly, which is stressing power infrastructure. Individuals and businesses that produce and consume energy, <em>prosumers</em>, invest in power infrastructure so that the utilities don’t have to – a concept known as <em>virtual infrastructure upgrades</em>. The alternative is that energy service providers (e.g. utilities) invest in infrastructure, in which case <em>all rate-payers</em> split the bill.</p>
+<p>On the other hand, energy service providers are either not ready, or unwilling, to absorb spontaneous extra energy from prosumers. From an electricity distributor point-of-view, it would be much better for electricity to be consumed close to where it is generated (<em>community self-consumption</em>).</p>
+<p>At the local distribution level, what is now needed is <strong>coordination between all rate-payers in a community</strong>. Does this problem remind you of something?</p>
+<h3 class="title is-3" id="so-what-is-powerweave">So what is Powerweave?</h3>
+<p>Powerweave operates a platform that coordinates all rate-payers in a community. It solves the problem of incentivizing rate-payers to invest in power infrastructure and to be more energy efficient when the power grid needs it the most, while also ensuring community self-consumption.</p>
+<p>The Powerweave platform is centered around local <em>power auctions</em>, or <em>local electricity markets</em>. For each community, auctions are conducted at regular intervals (usually 5 minutes). Just like wholesale power markets, each auction covers a period of electricity consumption/generation in the near future:</p>
+<p><img src="/images/powerweave-launch/pw-auction-structure.png" class="image" /></p>
+<p>The time between an auction ending, and its corresponding billing period starting, is the <em>action period</em>. This is a period during which rate-payers <em>know</em> how much power will cost, but they still have influence over how much power they consume or generate.</p>
+<p>I cannot stress enough how the existence of the action period is key to Powerweave. Consider this example.</p>
+<blockquote>
+<p>I am charging my electric car, which will require quite a bit of power (10kW) over the next 8 hours. I participate in the next power auction, where I bid for 10kW of power. However, when closing the auction, I am only cleared to draw 4kW of solar power from a few neighbors at a reasonable price; the shortfall (6kW) will be covered by my utility at a higher price, since the grid is under stress right now. Knowing this in advance, I can slow down or pause charging my vehicle until I can get a better overall energy price.</p>
+</blockquote>
+<p>This example is the foundation of Powerweave. As a rate-payer, I minimized my electricity bill and used clean sustainable power. My utility incentivized me to be more energy efficient when it mattered, and saved on infrastructure costs. Win-win!</p>
+<p>However, as you can imagine, constantly participating in auctions and adjusting power consumption/generation (day and night!) is unrealistic for most people. Therefore, <strong>Powerweave automates all of this</strong>.</p>
+<p>On the auction side, Powerweave can trade on behalf of rate-payers. Using statistical and machine-learning models trained on historical consumption and generation data, as well as external data such as weather forecasts, Powerweave can place bids and offers for power to achieve goals set by each rate-payer, such as minimizing energy costs, or minimizing carbon emissions. These models are tireless and self-adjusting; you never need to participate in auctions directly if you don’t want to.</p>
+<p>On the pricing response side, Powerweave integrates with third-parties (e.g. smartphone notifications, electric vehicle charging systems, smart thermostats) to automatically adjust your load or generation profile.</p>
+<p>Our technology is unique in North America (<a href="https://www.brooklyn.energy/">although related technologies have been trialed in the past</a>). Powerweave can legally operate in about 10 US states (including New York and California), with more states potentially opening up soon. Powerweave probably could not have operated even just 5 years ago. We exist at the edge of regulations; this is a great opportunity to influence US-wide reforms on local energy coordination.</p>
+<h3 class="title is-3" id="the-near-future">The near future</h3>
+<p>Mathilde and I have completed an early technology demonstration, to show that Powerweave’s offering can indeed be realized. We are using a lot of cool technology, which I hope to share with you soon!</p>
+<p>Right now, we are focused on partnering with one energy service provider (utility, community choice aggregation, or independent microgrid) to run a pilot project. This will demonstrate that our technology is beneficial, and give confidence to less-technologically-inclined energy service providers (which are most of them) that Powerweave can help them.</p>
+<p>If you can help us connect with decision makers at energy service providers, <a href="mailto:laurent@powerweave.io">I would love to hear from you</a>. Getting the first contact with potential partners is difficult because of the lack of trust; being introduced by someone else helps tremendously.</p>
+<p>We hope to grow the team soon as well. If you are interested in Powerweave’s mission, <a href="https://www.linkedin.com/company/powerweaveinc">be sure to follow us on LinkedIn</a>!</p>]]></summary>
+</entry>
+<entry>
     <title>Trading strategies with typed features using Haskell and type families</title>
     <link href="https://laurentrdc.xyz//posts/typesafe-tradingstrats.html" />
     <id>https://laurentrdc.xyz//posts/typesafe-tradingstrats.html</id>
@@ -1460,141 +1514,6 @@ W_k = \left\{ \begin{array}{cl}
 <li id="fn4"><p>Dirk Padfield. <em>Masked FFT registration</em>. Prov. Computer Vision and Pattern Recognition. pp 2918-2925 (2010). <a href="https://doi.org/10.1109/CVPR.2010.5540032">DOI:10.1109/CVPR.2010.5540032</a><a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
-</entry>
-<entry>
-    <title>Matplotlib for graphic design</title>
-    <link href="https://laurentrdc.xyz//posts/banner.html" />
-    <id>https://laurentrdc.xyz//posts/banner.html</id>
-    <published>2020-11-03T00:00:00Z</published>
-    <updated>2020-11-05
-</updated>
-    <summary type="html"><![CDATA[<p>In this post, I will show you how I generated the banner for this website using <a href="https://matplotlib.org/">Matplotlib</a>. In case it disappears in the future, here is an image of it:</p>
-<figure class="python">
-<img src="generated/pandocplot8435081802292104938.png" class="image" />
-</figure>
-<p>Matplotlib is a plotting library for python, historically inspired by the plotting capabilities of MATLAB. You can take a look at the various <a href="https://matplotlib.org/gallery/index.html">examples</a> on their website. One thing that is not immediately obvious is that you can use Matplotlib to also draw shapes! In this sense, Matplotlib becomes a graphic design library.</p>
-<p>(You can see the exact source code for the images below by clicking on the link in the caption)</p>
-<h3 class="title is-3" id="basic-shapes">Basic shapes</h3>
-<p>Let’s start at the beginning: drawing a single hexagon.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.patches <span class="im">as</span> patches</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&quot;w&quot;</span>):</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius,</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;k&quot;</span>,</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
-<p>Using the function, we can draw a tiling of hexagons. Let’s first set-up our plot:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Note that Matplotlib figure size is (width, height) in INCHES...</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># We want it to be 100mm x 100mm</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>mm_to_in <span class="op">=</span> <span class="fl">0.03937008</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>figure, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>,<span class="dv">1</span>, figsize<span class="op">=</span>(<span class="dv">100</span> <span class="op">*</span> mm_to_in, <span class="dv">100</span><span class="op">*</span>mm_to_in))</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Hide as much of the axis borders/margins as possible</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>ax.axis(<span class="st">&quot;off&quot;</span>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>plt.subplots_adjust(top<span class="op">=</span><span class="dv">1</span>, bottom<span class="op">=</span><span class="dv">0</span>, left<span class="op">=</span><span class="dv">0</span>, right<span class="op">=</span><span class="dv">1</span>)</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>ax.set_xlim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>ax.set_ylim([<span class="dv">0</span>, <span class="dv">100</span>])</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Hexagon radius in mm</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>radius <span class="op">=</span> <span class="dv">4</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Dimensions of the bounding box of the hexagons</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>width <span class="op">=</span> math.sqrt(<span class="dv">3</span>) <span class="op">*</span> radius</span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>height <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> radius</span></code></pre></div>
-<h3 class="title is-3" id="tiling">Tiling</h3>
-<p>We note that a tiling of <em>regular</em> hexagons requires a different offset for every row. If you imagine rows being numbered starting at 0, hexagons in rows with odd indices need to be offset by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><msqrt><mn>3</mn></msqrt><mn>2</mn></mfrac><mi>r</mi></mrow><annotation encoding="application/x-tex">\frac{\sqrt{3}}{2} r</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>r</mi><annotation encoding="application/x-tex">r</annotation></semantics></math> is the radius (or distance from the center to vertex). To find the centers of the hexagons, the following loop does the trick:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> itertools</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>centers <span class="op">=</span> <span class="bu">list</span>()</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> offset_x, offset_y <span class="kw">in</span> [(<span class="dv">0</span>, <span class="dv">0</span>), (width <span class="op">/</span> <span class="dv">2</span>, (<span class="dv">3</span> <span class="op">/</span> <span class="dv">2</span>) <span class="op">*</span> radius)]:</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    rows    <span class="op">=</span> np.arange(start<span class="op">=</span>offset_x, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span>width)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    columns <span class="op">=</span> np.arange(start<span class="op">=</span>offset_y, stop<span class="op">=</span><span class="dv">105</span>, step<span class="op">=</span><span class="dv">3</span> <span class="op">*</span> radius)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> x, y <span class="kw">in</span> itertools.product(rows, columns):</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        centers.append( (x,y) )</span></code></pre></div>
-<p>Once we know about the centers of the hexagons, we can place them one-by-one:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x,y), radius<span class="op">=</span>radius)</span></code></pre></div>
-<p>Here’s what it looks like so far:</p>
-<figure class="python">
-<img src="generated/pandocplot18162489574201175085.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot18162489574201175085.src.html">Source code</a>)</figcaption>
-</figure>
-<h3 class="title is-3" id="color">Color</h3>
-<p>The figure above has the wrong dimension, but you get the idea. Let’s color the hexagons appropriately. In the banner, the color of the hexagons is based on the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“inferno” colormap</a>. The color radiates away from the bottom left corner:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>, <span class="co">#note: edgecolor=None is actually the default value!</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> plt.get_cmap(<span class="st">&#39;inferno&#39;</span>)</span>
-<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># radius away from bottom left corner</span></span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proportional to the distance of the top right corner</span></span>
-<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># i.e. 0 &lt; r &lt; 1</span></span>
-<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
-<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
-<p>Here’s the result:</p>
-<figure class="python">
-<img src="generated/pandocplot15443822931844191463.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot15443822931844191463.src.html">Source code</a>)</figcaption>
-</figure>
-<p>Because of rounding errors of the hexagon dimensions, there is some visible spacing between the hexagons. To get rid of it, we draw the hexagons a bit larger (0.2 millimeters):</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> draw_hexagon(ax, center, radius, color<span class="op">=</span><span class="st">&#39;w&#39;</span>):</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    ax.add_patch(</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        mpatches.RegularPolygon(</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>            xy<span class="op">=</span>center,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>            numVertices<span class="op">=</span><span class="dv">6</span>,</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>            radius<span class="op">=</span>radius <span class="op">+</span> <span class="fl">0.2</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            facecolor<span class="op">=</span>color,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            edgecolor<span class="op">=</span><span class="st">&quot;none&quot;</span>,</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            orientation<span class="op">=</span><span class="dv">0</span>,</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>            fill<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        )</span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    )</span></code></pre></div>
-<h3 class="title is-3" id="a-bit-of-randomness">A bit of randomness</h3>
-<p>For a light touch of whimsy, I like to make the color fluctuate a little:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>colormap <span class="op">=</span> plt.get_cmap(<span class="st">&#39;inferno&#39;</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (x,y) <span class="kw">in</span> centers:</span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># radius away from bottom left corner</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># proportional to the distance of the top right corner</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># i.e. 0 &lt; r &lt; 1</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> math.hypot(x, y) <span class="op">/</span> math.hypot(<span class="dv">100</span>, <span class="dv">100</span>)</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    r <span class="op">+=</span> random.gauss(<span class="dv">0</span>, <span class="fl">0.01</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    draw_hexagon(ax, center<span class="op">=</span>(x, y), radius<span class="op">=</span>radius, color<span class="op">=</span>colormap(r))</span></code></pre></div>
-<p>We arrive at the final result:</p>
-<figure class="python">
-<img src="generated/pandocplot8424652414310781347.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot8424652414310781347.src.html">Source code</a>)</figcaption>
-</figure>
-<p>You can imagine adapting this approach to different tilings, and different colors schemes. Here’s a final example using squares and the <a href="https://matplotlib.org/tutorials/colors/colormaps.html">“cool” colormap</a>:</p>
-<figure class="python">
-<img src="generated/pandocplot11558943667775819420.png" class="image" alt=" (Source code)" />
-<figcaption aria-hidden="true"> (<a href="generated/pandocplot11558943667775819420.src.html">Source code</a>)</figcaption>
-</figure>]]></summary>
 </entry>
 
 </feed>
