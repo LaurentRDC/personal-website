@@ -7,7 +7,7 @@ withtoc: yes
 
 All experimental data contains noise. Distinguishing between measurement and noise is an important component of any data analysis pipeline. However, different noise-filtering techniques are suited to different categories of noise.
 
-In this post, I'll show you a class of filtering technique, based on discrete wavelet transforms, which is suited to noise that cannot be filtered away with more traditional techniques -- such as ones that rely on the Fourier transform. This has been important in my past research[^baseline] [^vo2], and I hope that this can help you too.
+In this post, I'll show you a class of filtering techniques, based on discrete wavelet transforms, which is suited to noise that cannot be filtered away with more traditional techniques -- such as ones that rely on the Fourier transform. This has been important in my past research[^baseline] [^vo2], and I hope that this can help you too.
 
 [^baseline]: __L. P. René de Cotret__ and B. J. Siwick, _A general method for baseline-removal in ultrafast electron powder diffraction data using the dual-tree complex wavelet transform_, Struct. Dyn. __4__ (2017) [DOI:10.1063/1.4972518](http://scitation.aip.org/content/aca/journal/sdy/4/4/10.1063/1.4972518)
 
@@ -15,13 +15,13 @@ In this post, I'll show you a class of filtering technique, based on discrete wa
 
 ## Integral transforms
 
-A large category of filtering techniques are based on *integral transforms*. Broadly speaking, an integral transform $T$ is an operation that is performed on a function $f$ and builds a function $T\left[ f\right]$ which is defined on a variable $s$, such that:
+A large category of filtering techniques are based on *integral transforms*. Broadly speaking, an integral transform $T$ is an operation that is performed on a function $f$, and builds a new function $T\left[ f\right]$ which is defined on a variable $s$, such that:
 
 $$
     T\left[ f \right](s) = \int dt ~ f(t) \cdot K(t, s)
 $$
 
-Here, $K$ (for kernel) is a function which "selects" which parts of $f(t)$ are important as a fixed $s$. Note that for an integral transform to be useful as a filter, we'll need the ability to invert the transformation, i.e. there exists an inverse kernel $K^{-1}(s, t)$ such that:
+Here, $K$ (for kernel) is a function which "selects" which parts of $f(t)$ are important at a fixed $s$. Note that for an integral transform to be useful as a filter, we'll need the ability to invert the transformation, i.e. there exists an inverse kernel $K^{-1}(s, t)$ such that:
 
 $$
     f(t) = \int ds ~ \left( T \left[ f\right] (s) \right) \cdot K^{-1}(s,t)
@@ -41,9 +41,9 @@ $$
 
 There are many other integral transforms, such as:
 
-* The Laplace transform ($K(t, s) \equiv e^{- s t}$) which is useful to solve linear ordinary differential equations;
+* The Laplace transform ($K(t, s) \equiv e^{- s t}$), which is useful to solve linear ordinary differential equations;
 * The Legendre transforms ($K_n(t, s) \equiv P_n(s)$, where $P_n$ is the n^th^ [Legendre polynomial](https://en.wikipedia.org/wiki/Legendre_polynomials)) which is used to solve for electron motion in hydrogen atoms;
-* The Radon transform (for which I cannot write down a kernel) which is used to analyze [computed tomography data](https://scikit-image.org/docs/stable/auto_examples/transform/plot_radon_transform.html). 
+* The Radon transform (for which I cannot write down a kernel), which is used to analyze [computed tomography data](https://scikit-image.org/docs/stable/auto_examples/transform/plot_radon_transform.html). 
 
 So why are integral transforms interesting? Well, depending on the function $f(t)$ you want to transform, you might end up with a representation of $f$ in the transformed space, $T \left[ f\right] (s)$, which has nice properties! Re-using the Fourier transform for a simple, consider a function made up of two well-defined frequencies:
 
@@ -79,7 +79,7 @@ $$
     x_n = \frac{1}{N}\sum_k X_k \cdot e^{i 2 \pi k n / N}
 $$
 
-This is the definition used by [numpy](https://numpy.org/doc/stable/reference/routines.fft.html#module-numpy.fft), for example. Let's use this definition to compute the discrete Fourier transform of $f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}$:
+This is the definition used by [numpy](https://numpy.org/doc/stable/reference/routines.fft.html#module-numpy.fft). Let's use this definition to compute the discrete Fourier transform of $f(t) \equiv e^{-i ~ 2t} + e^{-i ~ 5t}$:
 
 ```{.python .matplotlib caption="**Top**: Signal which is composed of two natural frequencies. **Bottom**: Discrete Fourier transform of the top signal, showing two natural frequencies."}
 import numpy as np
@@ -303,7 +303,7 @@ In practice, discrete wavelet transforms are expressed as two transforms per lev
 
 The discrete Fourier transform excels at filtering away noise which has nice properties in frequency space. This is isn't always the case in practice; for example, noise may have frequency components which overlap with the signal we're looking for. This was the case in my research on ultrafast electron diffraction of polycrystalline samples[^baseline] [^vo2], where the 'noise' was a trendline which moved over time, and whose frequency components overlapped with diffraction pattern we were trying to isolate.
 
-As an example, let's use [real diffraction data](/files/wavelet-filter/diffraction.csv) and we'll pretend this is a time signal, to keep the units familiar. We'll take a look at some really annoying noise: normally-distributed white noise drawn from this distribution[^bias]:
+As an example, let's use [real electron diffraction data](/files/wavelet-filter/diffraction.csv) and we'll pretend this is a time signal, to keep the units familiar. We'll take a look at some really annoying noise: normally-distributed white noise drawn from this distribution[^bias]:
 
 $$
     P(x) = \frac{1}{\sqrt{2 \pi}} \exp{-\frac{(x + 1/2)^2}{2}}

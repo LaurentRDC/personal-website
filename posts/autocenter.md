@@ -321,12 +321,11 @@ ax4.text(
     x=0.05, y=0.95, s="2x", transform=ax4.transAxes, ha="left", va="top", color="w"
 )
 
-shift = phase_cross_correlation(
+shift, *_ = phase_cross_correlation(
     reference_image=im,
     moving_image=im_r,
     reference_mask=mask,
     moving_mask=mask_r,
-    return_error=False,
 )
 
 ax4.arrow(
@@ -401,12 +400,11 @@ ax4.text(
     x=0.05, y=0.95, s="2x", transform=ax4.transAxes, ha="left", va="top", color="w"
 )
 
-shift = phase_cross_correlation(
+shift, *_ = phase_cross_correlation(
     reference_image=im,
     moving_image=im_r,
     reference_mask=mask,
     moving_mask=mask_r,
-    return_error=False,
 )
 
 ax4.arrow(
