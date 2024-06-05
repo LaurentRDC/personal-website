@@ -135,27 +135,26 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } .display
 <span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span><span class="fl">0.05</span>, y<span class="op">=</span><span class="fl">0.95</span>, s<span class="op">=</span><span class="st">&quot;2x&quot;</span>, transform<span class="op">=</span>ax4.transAxes, ha<span class="op">=</span><span class="st">&quot;left&quot;</span>, va<span class="op">=</span><span class="st">&quot;top&quot;</span>, color<span class="op">=</span><span class="st">&quot;w&quot;</span></span>
 <span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>)</span>
 <span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>shift <span class="op">=</span> phase_cross_correlation(</span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>shift, <span class="op">*</span>_ <span class="op">=</span> phase_cross_correlation(</span>
 <span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>    reference_image<span class="op">=</span>im,</span>
 <span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>    moving_image<span class="op">=</span>im_r,</span>
 <span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>    reference_mask<span class="op">=</span>mask,</span>
 <span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a>    moving_mask<span class="op">=</span>mask_r,</span>
-<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>    return_error<span class="op">=</span><span class="va">False</span>,</span>
-<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>ax4.arrow(</span>
-<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>xcorr_zoomed.shape[<span class="dv">1</span>] <span class="op">/</span> <span class="dv">2</span>,</span>
-<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>xcorr_zoomed.shape[<span class="dv">0</span>] <span class="op">/</span> <span class="dv">2</span>,</span>
-<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    dx<span class="op">=</span>shift[<span class="dv">1</span>],</span>
-<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>    dy<span class="op">=</span>shift[<span class="dv">0</span>],</span>
-<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">&quot;w&quot;</span>,</span>
-<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    length_includes_head<span class="op">=</span><span class="va">True</span>,</span>
-<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>    head_width<span class="op">=</span><span class="dv">10</span>,</span>
-<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> (ax1, ax2, ax3, ax4):</span>
-<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">&quot;off&quot;</span>)</span>
-<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code></pre></div>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>ax4.arrow(</span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>    x<span class="op">=</span>xcorr_zoomed.shape[<span class="dv">1</span>] <span class="op">/</span> <span class="dv">2</span>,</span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a>    y<span class="op">=</span>xcorr_zoomed.shape[<span class="dv">0</span>] <span class="op">/</span> <span class="dv">2</span>,</span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>    dx<span class="op">=</span>shift[<span class="dv">1</span>],</span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>    dy<span class="op">=</span>shift[<span class="dv">0</span>],</span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>    color<span class="op">=</span><span class="st">&quot;w&quot;</span>,</span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a>    length_includes_head<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>    head_width<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> ax <span class="kw">in</span> (ax1, ax2, ax3, ax4):</span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>    ax.axis(<span class="st">&quot;off&quot;</span>)</span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span></code></pre></div>
 <a href="https://github.com/LaurentRDC/pandoc-plot">Click here to see how this plot was generated.</a>
 </body>
 </html>
