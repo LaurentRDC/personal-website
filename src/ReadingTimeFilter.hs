@@ -3,19 +3,22 @@ module ReadingTimeFilter (
       readingTimeFilter
 ) where
 
-import           Data.Map                 (insert)
-import           Data.Monoid              (Sum(..))
+import           Data.Map                 ( insert )
+import           Data.Monoid              ( Sum(..) )
 import qualified Data.Text                as T
-import           Text.Pandoc.Definition   (Pandoc(..), Block(..), Caption(..), Inline(..), Meta(..), MetaValue(..))
-import           Text.Pandoc.Walk         (query)
+import           Text.Pandoc.Definition   ( Pandoc(..), Block(..), Caption(..), Inline(..), Meta(..), MetaValue(..) )
+import           Text.Pandoc.Walk         ( query )
 
-import           Text.Printf              (printf)
+import           Text.Printf              ( printf)
+
 
 -- | Page reading time in minutes
 type ReadingTime = Double
 
+
 -- | Number of words in a document
 type WordCount = Sum Int 
+
 
 wordCount :: Pandoc -> WordCount
 wordCount = query wordCountBlock
@@ -67,6 +70,7 @@ readingTime = (/ wordsPerMinute) . realToFrac . getSum . wordCount
         -- M. Brysbaert, How many words do we read per minute? A review and meta-analysis of reading rate,
         -- Journal of Memory and Language (2009) vol 109. DOI: 10.1016/j.jml.2019.104047
         wordsPerMinute = 238
+
 
 -- | Reads a document and inserts the estimated reading time in minutes
 -- in the metadata, under the key "reading-time"

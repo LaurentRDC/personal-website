@@ -1,9 +1,7 @@
--- RSS Feed configuration
-module Feed (
-    feedConfiguration
-) where
+module Feed (feedConfiguration) where
 
 import           Hakyll (FeedConfiguration (..))
+
 
 feedConfiguration :: FeedConfiguration
 feedConfiguration = FeedConfiguration

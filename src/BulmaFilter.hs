@@ -4,9 +4,9 @@ module BulmaFilter (
     bulmaTransform
 ) where
 
-import           Data.Text              (pack)
-import           Text.Pandoc.Definition (Block (..), Inline (..), Pandoc)
-import           Text.Pandoc.Walk       (walk)
+import           Data.Text              ( pack )
+import           Text.Pandoc.Definition ( Block (..), Inline (..), Pandoc )
+import           Text.Pandoc.Walk       ( walk )
 
 
 -- | Transform (or filter) to format heading to Bulma's heading classes.
@@ -37,11 +37,13 @@ toBulmaImage x = x
 bulmaHeadingTransform :: Pandoc -> Pandoc
 bulmaHeadingTransform = walk toBulmaHeading
 
+
 -- Take images and add the bulma "image" class to it
 -- Markdown : ![](images/wtv.jpg)
 -- Html     : <img src="images/wtv.jpg" class = "image"/>
 bulmaImagesTransform :: Pandoc -> Pandoc
 bulmaImagesTransform = walk toBulmaImage
+
 
 -- Combination of all transforms
 bulmaTransform :: Pandoc -> Pandoc

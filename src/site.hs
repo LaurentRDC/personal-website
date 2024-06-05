@@ -1,13 +1,13 @@
---------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
 
-import Control.Monad                    (forM_)
-import Data.Maybe                       (fromMaybe)
-import Hakyll
-import Hakyll.Images                    ( loadImage
-                                        , compressJpgCompiler
-                                        , ensureFitCompiler
-                                        )
+import           Control.Monad                   ( forM_ )
+import           Data.Functor                    ( (<&>) )
+import           Data.Maybe                      ( fromMaybe )
+import           Hakyll
+import           Hakyll.Images                   ( loadImage
+                                                 , compressJpgCompiler
+                                                 , ensureFitCompiler
+                                                 )
 
 -- Hakyll can trip on characters like apostrophes
 -- https://github.com/jaspervdj/hakyll/issues/109
@@ -15,13 +15,13 @@ import qualified GHC.IO.Encoding                 as E
 
 import           Text.Pandoc.Definition
 import           Text.Pandoc.Extensions
-import           Text.Pandoc.Filter.Plot         (plotFilter)
+import           Text.Pandoc.Filter.Plot         ( plotFilter )
 import qualified Text.Pandoc.Filter.Plot         as P
-import           Text.Pandoc.Highlighting        (Style, styleToCss, kate)
+import           Text.Pandoc.Highlighting        ( Style, styleToCss, kate )
 import           Text.Pandoc.Options
 import qualified Text.Pandoc.Templates           as Template
 
-import           Data.Char                       (isSpace)
+import           Data.Char                       ( isSpace )
 import qualified Data.ByteString                 as B
 import qualified Data.Map.Strict                 as M
 
@@ -30,27 +30,27 @@ import qualified Data.Text.Encoding              as T
 import qualified Data.Text.Lazy                  as TL
 import qualified Data.Text.Lazy.Encoding         as TL
 
-import           System.FilePath                 ((</>))
+import           System.FilePath                 ( (</>) )
 
-import           System.Process.Typed            (ExitCode(..), readProcess, shell)
+import           System.Process.Typed            ( ExitCode(..), readProcess, shell )
 
-import           Text.Blaze.Html.Renderer.String (renderHtml)
+import           Text.Blaze.Html.Renderer.String ( renderHtml )
 import qualified Text.Blaze.Html.Renderer.Pretty as Pretty
 
-import           BulmaFilter                     (bulmaTransform)
-import           Template                        (mkDefaultTemplate,
-                                                  tocTemplate)
+import           BulmaFilter                     ( bulmaTransform)
+import           Template                        ( mkDefaultTemplate, tocTemplate )
 
-import           Data.Time.Calendar              (showGregorian)
-import           Data.Time.Clock                 (getCurrentTime, utctDay)
+import           Data.Time.Calendar              ( showGregorian )
+import           Data.Time.Clock                 ( getCurrentTime, utctDay )
 
-import           Feed                            (feedConfiguration)
-import           ReadingTimeFilter               (readingTimeFilter)
+import           Feed                            ( feedConfiguration )
+import           ReadingTimeFilter               ( readingTimeFilter )
 
 
 -- | syntax highlighting style to use throughout
 syntaxHighlightingStyle :: Style
 syntaxHighlightingStyle = kate
+
 
 -- We match images down to two levels
 -- Images/* and images/*/**
@@ -61,6 +61,7 @@ nonJpgImages = (     "images/*/**"
                 ) .&&. complement jpgImages
 generatedContent = "generated/**"
 
+
 --------------------------------------------------------------------------------
 -- | Site configuration
 conf :: Configuration
@@ -69,15 +70,14 @@ conf = defaultConfiguration
         , providerDirectory = "."
         }
 
+
 renderTemplate :: IO B.ByteString
 renderTemplate = do
-    today <- getCurrentTime >>= return . showGregorian . utctDay
+    today <- getCurrentTime <&> (showGregorian . utctDay)
     let template = mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
-    return template
-        -- We need to go through Text because of utf8-encoding
-        >>= return . T.encodeUtf8 . T.pack . Pretty.renderHtml
-        
---------------------------------------------------------------------------------
+    return (T.encodeUtf8 . T.pack . Pretty.renderHtml $ template)
+
+
 main :: IO ()
 main = do
     -- Hakyll can trip on characters like apostrophes
@@ -92,15 +92,15 @@ main = do
 
     -- We generate the default template
     -- The template has a marking showing on what date was the page generated
-    renderTemplate 
-        >>= B.writeFile ("templates" </> "default.html") 
+    renderTemplate
+        >>= B.writeFile ("templates" </> "default.html")
         >> putStrLn "  Generated templates/default.html"
 
     hakyllWith conf $ do
-            
+
         --------------------------------------------------------------------------------
         -- A lot of things can be compied directly
-        forM_ ["files/*", "files/*/**", "fonts/*", "js/*", nonJpgImages] $ 
+        forM_ ["files/*", "files/*/**", "fonts/*", "js/*", nonJpgImages] $
             \pattern ->
                 match pattern $ do
                     route idRoute
@@ -114,7 +114,7 @@ main = do
                 -- Coffee table pictures are pretty large, so
                 -- I resize them so they fit in 1920x1080px
                 >>= ensureFitCompiler 1920 1080
-        
+
         match generatedContent $ do
             route generatedRoute
             compile copyFileCompiler
@@ -122,12 +122,12 @@ main = do
         match "css/*" $ do
             route   idRoute
             compile compressCssCompiler
-        
+
         --------------------------------------------------------------------------------
         -- These are static pages, like the "about" page
         -- Note that /static/index.html is a special case and is handled below
         match "static/*.md" $ do
-            route $ (setExtension "html") `composeRoutes` staticRoute
+            route $ setExtension "html" `composeRoutes` staticRoute
             compile $ pandocCompiler_ plotConfig
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
                 >>= relativizeUrls
@@ -136,7 +136,8 @@ main = do
         -- Compile projects page
         -- We need to compile each project individually first
         -- If this is not done, we cannot use the metadata in HTML templates
-        match ("projects/**.md") $ compile $ pandocCompiler_ plotConfig >>= relativizeUrls
+        match "projects/**.md" 
+            $ compile $ pandocCompiler_ plotConfig >>= relativizeUrls
 
         create ["software.html"] $ do
             route idRoute
@@ -169,8 +170,7 @@ main = do
                 --       See for example here:
                 --            https://github.com/jaspervdj/hakyll/issues/643
                 (metaCtx, doc) <- pandocCompilerWithMeta plotConfig
-                return doc
-                    >>= saveSnapshot "content"  -- Saved content for RSS feed
+                saveSnapshot "content" doc -- Saved content for RSS feed
                     >>= loadAndApplyTemplate "templates/default.html" (postCtx <> metaCtx)
                     >>= relativizeUrls
 
@@ -184,10 +184,10 @@ main = do
                 route idRoute
                 compile $ do
                     let feedCtx = postCtx <> bodyField "description"
-                    posts <- fmap (take 10) . recentFirst =<< 
+                    posts <- fmap (take 10) . recentFirst =<<
                         loadAllSnapshots "posts/*" "content"
                     renderFunc feedConfiguration feedCtx posts
-        
+
         --------------------------------------------------------------------------------
         -- Create a page containing all posts
         create ["archive.html"] $ do
@@ -209,7 +209,7 @@ main = do
         match "static/index.html" $ do
             route staticRoute
             compile $ do
-                posts <- pure . take 10 =<< recentFirst =<< loadAll "posts/*"
+                posts <- take 10 <$> (recentFirst =<< loadAll "posts/*")
                 let indexCtx =
                         listField "posts" postCtx (return posts) <>
                         defaultContext
@@ -241,7 +241,7 @@ main = do
         match "templates/*" $ compile templateCompiler
 
 
---------------------------------------------------------------------------------
+
 postCtx :: Context String
 postCtx = mconcat [ defaultContext
                   , constField "root" "https://laurentrdc.xyz/"
@@ -251,7 +251,7 @@ postCtx = mconcat [ defaultContext
                   -- to compare dates, we need to construct an updated message field
                   -- separately.
                   , updatedMessageField
-                  ] 
+                  ]
 
 
 -- | Check when a file was last updated, based on the git history
@@ -259,12 +259,13 @@ lastUpdatedViaGit :: FilePath -> IO (Maybe String)
 lastUpdatedViaGit fp = do
     (ec, out, _) <- readProcess (shell $ "git log --follow --date=format:\"%Y-%m-%d\" --format=\"%ad\" -- " <> fp <> " | head -1" )
     case ec of
-        ExitFailure _ -> return Nothing 
-        ExitSuccess -> return . Just 
-                              . TL.unpack 
+        ExitFailure _ -> return Nothing
+        ExitSuccess -> return . Just
+                              . TL.unpack
                               . TL.strip -- Very important, to remove newlines
-                              . TL.decodeUtf8 
+                              . TL.decodeUtf8
                               $ out
+
 
 -- | Field which provides the "last-updated" variable for items, which 
 -- provides the date of the most recent git commit which modifies a file.
@@ -272,9 +273,10 @@ lastUpdatedViaGit fp = do
 lastUpdatedField :: Context String
 lastUpdatedField = field "updated" $ \(Item ident _) -> unsafeCompiler $ do
     lastUpdated <- lastUpdatedViaGit (toFilePath ident)
-    case lastUpdated of 
+    case lastUpdated of
         Nothing -> return "<unknown>"
         Just dt -> return dt
+
 
 -- | Field which provides the "updatedMessage" variable for items, which 
 -- provides the date of the most recent git commit which modifies a file.
@@ -284,11 +286,11 @@ updatedMessageField = field "updatedMessage" $ \(Item ident _) -> do
     meta     <- getMetadata ident
     unsafeCompiler $ do
         lastUpdated <- lastUpdatedViaGit (toFilePath ident)
-        
+
         let created = lookupString "date" meta
         if lastUpdated == created
             then pure mempty
-            else case lastUpdated of 
+            else case lastUpdated of
                     Nothing -> pure mempty
                     Just dt -> return $ "Last updated on " <> filter (not . isSpace) dt <> "."
 
@@ -300,7 +302,7 @@ pandocCompilerWithMeta :: P.Configuration -> Compiler (Context String, Item Stri
 pandocCompilerWithMeta config = do
     let readerOptions = defaultHakyllReaderOptions
 
-    doc <- traverse (unsafeCompiler . transforms) =<< readPandocWith readerOptions =<< getResourceBody 
+    doc <- traverse (unsafeCompiler . transforms) =<< readPandocWith readerOptions =<< getResourceBody
 
     let Pandoc meta _ = itemBody doc
         metaCtx = M.foldMapWithKey extractMeta (unMeta meta)
@@ -308,7 +310,7 @@ pandocCompilerWithMeta config = do
     ident <- getUnderlying
     toc <- getMetadataField ident "withtoc"
     tocDepth <- getMetadataField ident "tocdepth"
-    template <- unsafeCompiler $ (either error id) <$> 
+    template <- unsafeCompiler $ either error id <$>
                     Template.compileTemplate mempty (T.pack . renderHtml $ tocTemplate)
 
     let extensions = defaultPandocExtensions
@@ -339,15 +341,17 @@ pandocCompilerWithMeta config = do
             where
                 mkField = field (T.unpack name) . const . return
 
+
 -- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 pandocCompiler_ :: P.Configuration        -- ^ Pandoc-plot configuration
                 -> Compiler (Item String)
 pandocCompiler_ = fmap snd . pandocCompilerWithMeta
 
+
 -- Pandoc extensions used by the compiler
 defaultPandocExtensions :: Extensions
-defaultPandocExtensions = 
-    let extensions = [ 
+defaultPandocExtensions =
+    let extensions = [
             -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
             -- Math extensions
               Ext_tex_math_dollars
@@ -370,9 +374,11 @@ defaultPandocExtensions =
 
     in foldr enableExtension defaultExtensions extensions
 
+
 -- Move content from static/ folder to base folder
 staticRoute :: Routes
-staticRoute = (gsubRoute "static/" (const ""))
+staticRoute = gsubRoute "static/" (const "")
+
 
 -- Move generated posts from posts/generated to generated/
 generatedRoute :: Routes

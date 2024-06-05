@@ -1,55 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 
-module Template ( mkDefaultTemplate
-                     , tocTemplate
-                     ) where
+module Template ( mkDefaultTemplate, tocTemplate ) where
 
-import           Control.Monad               (forM_)
+import           Control.Monad               ( forM_ )
 
-import           Data.List                   (intersperse)
+import           Data.List                   ( intersperse )
 
-import Text.Blaze.Html5 as H
-    ( Html,
-      toHtml,
-      a,
-      body,
-      div,
-      docTypeHtml,
-      footer,
-      h1,
-      h2,
-      h3,
-      head,
-      i,
-      img,
-      link,
-      meta,
-      nav,
-      p,
-      script,
-      section,
-      span,
-      strong,
-      title,
-      ToMarkup(toMarkup),
-      ToValue(toValue),
-      (!),
-      AttributeValue )
-import Text.Blaze.Html5.Attributes as A
-    ( alt,
-      charset,
-      class_,
-      content,
-      href,
-      httpEquiv,
-      id,
-      name,
-      onclick,
-      rel,
-      src,
-      style,
-      target,
-      type_ )
+import           Text.Blaze.Html5            as H
+import           Text.Blaze.Html5.Attributes as A
 
 fontAwesomeURL, academiconsURL, fontURL :: AttributeValue
 fontAwesomeURL = "https://use.fontawesome.com/releases/v5.15.1/css/all.css"
@@ -66,40 +24,37 @@ type Schema = [NavigationLink]
 
 
 schema :: Schema
-schema = [
-      Link "/index.html"        "Home"
-    , Link "/software.html"     "Software"
-    , Link "/publications.html" "Publications"
-    , Link "/about.html"        "About me"
-    , Link "/archive.html"      "All blog posts"
-    ]
+schema = [ Link "/index.html"        "Home"
+         , Link "/software.html"     "Software"
+         , Link "/publications.html" "Publications"
+         , Link "/about.html"        "About me"
+         , Link "/archive.html"      "All blog posts"
+         ]
 
 
 socialLinks :: [SocialLink]
-socialLinks = [
-      ("fas fa-envelope",      "/email.html",                                                 "e-mail")
-    , ("fab fa-github",        "https://github.com/LaurentRDC",                               "GitHub")
-    , ("fab fa-linkedin",      "https://www.linkedin.com/in/laurentrdc",                      "LinkedIn")
-    , ("ai ai-researchgate",   "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret", "ResearchGate")
-    , ("ai ai-orcid",          "https://orcid.org/0000-0002-1464-2739",                       "OrcID")
-    , ("ai ai-google-scholar", "https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en", "Google Scholar")
-    ]
+socialLinks = [ ("fas fa-envelope",      "/email.html",                                                 "e-mail")
+              , ("fab fa-github",        "https://github.com/LaurentRDC",                               "GitHub")
+              , ("fab fa-linkedin",      "https://www.linkedin.com/in/laurentrdc",                      "LinkedIn")
+              , ("ai ai-researchgate",   "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret", "ResearchGate")
+              , ("ai ai-orcid",          "https://orcid.org/0000-0002-1464-2739",                       "OrcID")
+              , ("ai ai-google-scholar", "https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en", "Google Scholar")
+              ]
 
 
 feedLinks :: [SocialLink]
-feedLinks = [
-      ("fas fa-rss",  "/feed.xml", "RSS feed")
-    , ("fas fa-atom", "/atom.xml", "Atom feed")
-    ]
+feedLinks = [ ("fas fa-rss",  "/feed.xml", "RSS feed")
+            , ("fas fa-atom", "/atom.xml", "Atom feed")
+            ]
 
 
 styleSheets :: [AttributeValue]
-styleSheets =
-    [ "/css/syntax.css"
-    , "/css/style.css"
-    , fontAwesomeURL
-    , academiconsURL
-    ]
+styleSheets = [ "/css/syntax.css"
+              , "/css/style.css"
+              , fontAwesomeURL
+              , academiconsURL
+              ]
+
 
 defaultHead :: H.Html
 defaultHead = H.head $ do
@@ -120,22 +75,23 @@ defaultHead = H.head $ do
     -- Bulma helpers
     H.script ! type_ "text/javascript" ! src "/js/navbar-onclick.js" $ mempty
 
+
 -- Note that the top-level class is extended via sass to have
 -- a background image.
 navigationBar :: H.Html
-navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
+navigationBar = H.section ! class_ "hero-with-background is-dark" $ do
     --------------------------------------------------------------------------
     H.div ! class_ "hero-head" $
         H.nav ! class_ "navbar is-transparent" $
             H.div ! class_ "container" $ do
                 H.div ! class_ "navbar-brand" $ do
-                    H.a ! class_ "navbar-item has-text-light" ! href "/index.html" $ H.strong $ "Laurent P. René de Cotret"
+                    H.a ! class_ "navbar-item has-text-light" ! href "/index.html" $ H.strong "Laurent P. René de Cotret"
 
                     -- toggleBurger function defined in navbar-onclick.js
                     H.span ! class_ "navbar-burger burger has-text-light" ! A.id "burger" ! A.onclick "toggleBurger()"$ do
-                        H.span $ mempty
-                        H.span $ mempty
-                        H.span $ mempty
+                        H.span mempty
+                        H.span mempty
+                        H.span mempty
 
                 H.div ! class_ "navbar-menu" ! A.id "navbarMenu" $
                     H.div ! class_ "navbar-end" $
@@ -145,8 +101,8 @@ navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
         H.div ! class_ "container has-text-centered" $ do
             H.h1 ! class_ "title has-text-light" $
                 "$title$"
-            H.h3 $ "$if(date)$Posted on $date$. $endif$$if(updatedMessage)$$updatedMessage$$endif$"
-            H.h3 $ "$if(reading-time)$Estimated reading time of $reading-time$ min.$endif$"
+            H.h3 "$if(date)$Posted on $date$. $endif$$if(updatedMessage)$$updatedMessage$$endif$"
+            H.h3 "$if(reading-time)$Estimated reading time of $reading-time$ min.$endif$"
     --------------------------------------------------------------------------
     H.div ! class_ "hero-foot" $
         H.div ! class_ "navbar is-transparent" $
@@ -160,12 +116,13 @@ navigationBar = H.section ! class_ ("hero-with-background is-dark") $ do
         renderLink (Link url title_) = H.a ! class_ "navbar-item" ! href (toValue url) $ toMarkup title_
 
         -- Generate an icon + anchor
-        mkSocialLink (icon, link_, name_) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link_) $ do
-            H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon) $ mempty
-            toMarkup $ name_
+        mkSocialLink (icon', link_, name_) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link_) $ do
+            H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon') $ mempty
+            toMarkup name_
+
 
 defaultFooter :: String -> H.Html
-defaultFooter s = H.footer ! class_ "footer" $
+defaultFooter s' = H.footer ! class_ "footer" $
     H.div ! class_ "content has-text-centered" $ do
         -- List all socials links
         -- This is important because on mobile, the hero-foot disappears
@@ -175,10 +132,10 @@ defaultFooter s = H.footer ! class_ "footer" $
 
         -- Message and disclaimer
         H.p ! class_ "is-small" $ mconcat
-                    [ H.toHtml s
+                    [ H.toHtml s'
                     , "This website was created using free and open-source technologies. "
                     , "You can learn more about how this website is generated "
-                    , (H.a ! href "/about-site.html" $ "here")
+                    , H.a ! href "/about-site.html" $ "here"
                     , "."
                     ]
         H.a ! rel "license" ! href "http://creativecommons.org/licenses/by-sa/4.0/" $ 
@@ -186,14 +143,15 @@ defaultFooter s = H.footer ! class_ "footer" $
                   ! A.style "border-width:0" 
                   ! src "/images/cc-by-sa.svg"
     where
-        renderLink (icon, link_, name_) = do
-            H.span ! class_ "icon" $ H.i ! class_ (toValue icon) $ mempty
+        renderLink (icon', link_, name_) = do
+            H.span ! class_ "icon" $ H.i ! class_ (toValue icon') $ mempty
             H.a ! target "_blank" ! href (toValue link_) $ toMarkup name_
+
 
 -- | Full default template
 -- The templateFooter will be adorned with the message @s@
 mkDefaultTemplate :: String -> H.Html
-mkDefaultTemplate s = H.docTypeHtml $ do
+mkDefaultTemplate s' = H.docTypeHtml $ do
     defaultHead
     H.body $ do
         navigationBar
@@ -205,14 +163,14 @@ mkDefaultTemplate s = H.docTypeHtml $ do
                 H.div ! class_ "content" $
                     "$body$"
 
-        defaultFooter s
+        defaultFooter s'
+
 
 -- Wrap the content of a page with a table of content
 tocTemplate :: H.Html
 tocTemplate = do
     H.div ! class_ "message is-link" $
         H.div ! class_ "message-body" $ do
-            H.h2 $ "On this page"
-            H.p $ "$toc$"
-
+            H.h2 "On this page"
+            H.p "$toc$"
     "$body$"
