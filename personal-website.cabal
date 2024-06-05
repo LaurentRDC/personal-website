@@ -17,9 +17,11 @@ executable personal-website
   hs-source-dirs:      src
   main-is:             site.hs
   default-language:    Haskell2010
-  ghc-options:         -threaded 
-                       -with-rtsopts=-N
-                       -Wall
+  -- We are not using multicore behavior
+  -- due to non-deterministic errors that can arise due to locks
+  -- on file reading. This is as of Hakyll version 4.16.2.0;
+  -- this problem may be resolved in the future.
+  ghc-options:         -Wall
                        -Wcompat
                        -Widentities
                        -Wincomplete-uni-patterns

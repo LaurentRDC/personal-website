@@ -102,15 +102,11 @@ jobs:
     # Need to build twice because in the first build,
     # pandoc-plot creates files which are then routed
     # appropriately in the second build.
-    # Also, we're disabling multicore behavior (+RTS -N1)
-    # due to non-deterministic errors that can arise due to locks
-    # on file reading. This is as of Hakyll version 4.16.2.0;
-    # this problem may be resolved in the future.
     - name: Build website
       run: |
-        personal-website clean +RTS -N1
-        personal-website build +RTS -N1
-        personal-website build +RTS -N1
+        personal-website clean
+        personal-website build
+        personal-website build
   
     - name: Minify CSS and HTML
       run: |
