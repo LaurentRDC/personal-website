@@ -15,184 +15,161 @@
 
   <url>
     <loc>https://laurentrdc.xyz//404.html</loc>
-    <lastmod>2020-12-01
-</lastmod>
+    <lastmod>2020-12-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//about-site.html</loc>
-    <lastmod>2023-03-23
-</lastmod>
+    <lastmod>2023-03-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//about.html</loc>
-    <lastmod>2024-06-05
-</lastmod>
+    <lastmod>2024-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//email.html</loc>
-    <lastmod>2023-06-01
-</lastmod>
+    <lastmod>2023-06-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//index.html</loc>
-    <lastmod>2024-05-22
-</lastmod>
+    <lastmod>2024-05-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//publications.html</loc>
-    <lastmod>2022-06-07
-</lastmod>
+    <lastmod>2022-06-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/powerweave-launch.html</loc>
-    <lastmod>2024-06-05
-</lastmod>
+    <lastmod>2024-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/typesafe-tradingstrats.html</loc>
-    <lastmod>2024-02-14
-</lastmod>
+    <lastmod>2024-02-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/algebra-stoploss.html</loc>
-    <lastmod>2023-05-07
-</lastmod>
+    <lastmod>2023-05-07</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/rolling-stats.html</loc>
-    <lastmod>2023-07-17
-</lastmod>
+    <lastmod>2023-07-17</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/wavelet-filtering.html</loc>
-    <lastmod>2024-06-05
-</lastmod>
+    <lastmod>2024-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/chesterton.html</loc>
-    <lastmod>2022-08-02
-</lastmod>
+    <lastmod>2022-08-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/multiverse.html</loc>
-    <lastmod>2023-03-30
-</lastmod>
+    <lastmod>2023-03-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/existential.html</loc>
-    <lastmod>2022-07-06
-</lastmod>
+    <lastmod>2022-07-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/prelim.html</loc>
-    <lastmod>2024-02-29
-</lastmod>
+    <lastmod>2024-02-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/autocenter.html</loc>
-    <lastmod>2024-06-05
-</lastmod>
+    <lastmod>2024-06-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/banner.html</loc>
-    <lastmod>2020-11-05
-</lastmod>
+    <lastmod>2020-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/mnxc.html</loc>
-    <lastmod>2022-02-20
-</lastmod>
+    <lastmod>2022-02-20</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/two-temp-model.html</loc>
-    <lastmod>2021-12-14
-</lastmod>
+    <lastmod>2021-12-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/bulma-pandoc-filter.html</loc>
-    <lastmod>2018-10-08
-</lastmod>
+    <lastmod>2018-10-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/coffee-table.html</loc>
-    <lastmod>2023-03-23
-</lastmod>
+    <lastmod>2023-03-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/making-this-website.html</loc>
-    <lastmod>2021-12-14
-</lastmod>
+    <lastmod>2021-12-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/genesis.html</loc>
-    <lastmod>2020-05-22
-</lastmod>
+    <lastmod>2020-05-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
