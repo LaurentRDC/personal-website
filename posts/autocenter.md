@@ -64,7 +64,7 @@ for im, ax in zip([im1, im2], [ax1, ax2]):
 plt.tight_layout()
 ```
 
-Not bad! Especially in the first image, really not a bad first try. But I'm looking for something *pixel-perfect*. Intuitively, the beam-block in each image should mess with the calculation of the center of mass. Let's define the following areas that we would like to ignore:
+Not bad! Especially in the first image, really not a bad first try. But I'm looking for something [~~pixel-perfect~~ much closer](https://github.com/LaurentRDC/scikit-ued/issues/45). Intuitively, the beam-block in each image should mess with the calculation of the center of mass. Let's define the following areas that we would like to ignore:
 
 ```{.python .matplotlib caption="Areas that are bright are defined as being masked"}
 from skued import diffread
@@ -422,7 +422,7 @@ for ax in (ax1, ax2, ax3, ax4):
 plt.tight_layout()
 ```
 
-We can put the two steps together and determine a pixel-perfect center:
+We can put the two steps together:
 
 ```{.python .matplotlib}
 from skued import diffread, autocenter
