@@ -1426,7 +1426,7 @@ W_k = \left\{ \begin{array}{cl}
 <img src="generated/pandocplot1667959575768520574.png" class="image" alt="Demonstration of using scipy.ndimage.center_of_mass to find the center of diffraction patterns. (Source code)" />
 <figcaption aria-hidden="true">Demonstration of using <code>scipy.ndimage.center_of_mass</code> to find the center of diffraction patterns. (<a href="generated/pandocplot1667959575768520574.src.html">Source code</a>)</figcaption>
 </figure>
-<p>Not bad! Especially in the first image, really not a bad first try. But I’m looking for something <em>pixel-perfect</em>. Intuitively, the beam-block in each image should mess with the calculation of the center of mass. Let’s define the following areas that we would like to ignore:</p>
+<p>Not bad! Especially in the first image, really not a bad first try. But I’m looking for something <sub>pixel-perfect</sub> <a href="https://github.com/LaurentRDC/scikit-ued/issues/45">much closer</a>. Intuitively, the beam-block in each image should mess with the calculation of the center of mass. Let’s define the following areas that we would like to ignore:</p>
 <figure class="python">
 <img src="generated/pandocplot4735078654767922249.png" class="image" alt="Areas that are bright are defined as being masked (Source code)" />
 <figcaption aria-hidden="true">Areas that are bright are defined as being masked (<a href="generated/pandocplot4735078654767922249.src.html">Source code</a>)</figcaption>
@@ -1476,7 +1476,7 @@ W_k = \left\{ \begin{array}{cl}
 <img src="generated/pandocplot16988996072336003203.png" class="image" alt="Top left: diffraction pattern. Top right: radially-inverted diffraction pattern about an approximate center. Bottom left: masked normalized cross-correlation between the two diffraction patterns. Bottom right: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (Source code)" />
 <figcaption aria-hidden="true"><strong>Top left</strong>: diffraction pattern. <strong>Top right</strong>: radially-inverted diffraction pattern about an approximate center. <strong>Bottom left</strong>: masked normalized cross-correlation between the two diffraction patterns. <strong>Bottom right</strong>: 2x zoom on the cross-correlation shows the translation mismatch between the diffraction patterns. (<a href="generated/pandocplot16988996072336003203.src.html">Source code</a>)</figcaption>
 </figure>
-<p>We can put the two steps together and determine a pixel-perfect center:</p>
+<p>We can put the two steps together:</p>
 <figure class="python">
 <img src="generated/pandocplot3546507009219627247.png" class="image" alt=" (Source code)" />
 <figcaption aria-hidden="true"> (<a href="generated/pandocplot3546507009219627247.src.html">Source code</a>)</figcaption>
