@@ -106,13 +106,6 @@ jobs:
         personal-website clean
         personal-website build
         personal-website build
-  
-    - name: Minify CSS and HTML
-      run: |
-        rustup update stable && rustup default stable
-        cd tools 
-        cargo build --bin minifier
-        ./target/debug/minifier ../_rendered
         
     - name: Check internal links
       run: |
