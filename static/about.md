@@ -27,7 +27,7 @@ title: About me
 
     <p></p>
 
-* July 2015 - July 2017 | __NASA Jet Propulsion Laboratory__ | Software Architect
+* July 2015 - July 2017 | __NASA Jet Propulsion Laboratory__ | Software Engineer
 
     Design and implementation of real-time holographic reconstruction pipeline for the [Submersible Holographic Astrobiology Microscope with Ultraresolution (SHAMU) project](https://www.caltech.edu/about/news/building-microscope-search-signs-life-other-worlds-48555), in collaboration with the California Institute of Technology and the University of Washington.
     <p></p>
