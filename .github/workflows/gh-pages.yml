@@ -63,15 +63,6 @@ jobs:
         path: ~/.cache/pip
         key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
 
-    - uses: actions/cache@v3
-      name: Cache Rust build artifacts
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          tools/target
-        key: ${{ runner.os }}-v2-${{ hashFiles('tools/Cargo.lock') }}
-
     - name: Build site compiler
       run: |
         cabal install -j --disable-optimization
