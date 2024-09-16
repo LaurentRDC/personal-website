@@ -19,13 +19,21 @@
 
 
 <h2 class="title is-2">General purpose software</h2>
-$for(general)$
-    $partial("templates/project.html")$
-    <br>
-$endfor$
+<div class="columns is-multiline">
+    $for(general)$
+        <div class="column is-half">
+            $partial("templates/project.html")$
+            <br>
+        </div>
+    $endfor$
+</div>
 
 <h2 class="title is-2">Scientific software</h2>
-$for(scientific)$
-    $partial("templates/project.html")$
-    <br>
-$endfor$
+<div class="columns is-multiline">
+    $for(scientific)$
+        <div class="column is-half">
+            $partial("templates/project.html")$
+            <br>
+        </div>
+    $endfor$
+</div>

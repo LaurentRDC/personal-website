@@ -1,5 +1,6 @@
 ---
 name: crystals
+location: LaurentRDC/crystals
 description: Data structures for crystallography
 repository: https://github.com/LaurentRDC/crystals
 ---

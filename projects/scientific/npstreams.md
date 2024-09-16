@@ -1,5 +1,6 @@
 ---
 name: npstreams
+location: LaurentRDC/npstreams
 description: Streaming operations on NumPy arrays
 repository: https://github.com/LaurentRDC/npstreams
 ---

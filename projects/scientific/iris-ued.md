@@ -1,5 +1,6 @@
 ---
 name: iris-ued
+location: LaurentRDC/iris-ued
 description: Interactive exploration of ultrafast electron scattering data
 repository: https://github.com/LaurentRDC/iris-ued
 ---

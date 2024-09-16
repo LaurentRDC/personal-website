@@ -1,5 +1,6 @@
 ---
 name: pandoc-plot
+location: LaurentRDC/pandoc-plot
 description: A Pandoc filter to generate figures directly in documents, using your plotting toolkit of choice
 repository: https://github.com/LaurentRDC/pandoc-plot
 ---
