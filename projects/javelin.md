@@ -4,7 +4,7 @@ description: A Haskell implementation of series, or one-dimensional labeled arra
 repository: https://github.com/LaurentRDC/javelin
 ---
 
-<a href="http://hackage.haskell.org/package/pandoc-plot" target="_blank">
+<a href="http://hackage.haskell.org/package/javelin" target="_blank">
     <img src="https://img.shields.io/hackage/v/javelin.svg">
 </a>
 
