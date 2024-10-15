@@ -4,11 +4,13 @@ title: About me
 
 ## Employment
 
-* December 2023 - | [__Powerweave__](https://powerweave.io) | Co-founder & CEO
+* Oct 2023 - | [__Powerweave__](https://powerweave.io) | Co-founder & CEO
 
     Powerweave is a technology company operating at the intersection of power infrastructure, technology, and finance. 
 
     We are working relentlessly to bring the concept of local electricity markets to North America. [See this blog post for more information](/posts/powerweave-launch.html).
+
+    Initially, we tried to develop an operating system for microgrids (called Radiant Microgrid), pivoting to Powerweave in April 2024 and revealing ourselves June 2024.
     
     <p></p>
 
