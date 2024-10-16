@@ -4,12 +4,12 @@
     go directly to the GitHub repository.
 </p>
 <div class="columns is-multiline">
-    $for(general)$
+    $for(scientific)$
         <div class="column is-half">
             $partial("templates/github-card.html")$
         </div>
     $endfor$
-    $for(scientific)$
+    $for(general)$
         <div class="column is-half">
             $partial("templates/github-card.html")$
         </div>
@@ -17,10 +17,9 @@
 </div>
 <p class="has-text-centered">GitHub cards provided by <a href="https://gh-card.dev/">gh-card</a>.</p>
 
-
-<h2 class="title is-2">General purpose software</h2>
+<h2 class="title is-2">Scientific software</h2>
 <div class="columns is-multiline">
-    $for(general)$
+    $for(scientific)$
         <div class="column is-half">
             $partial("templates/project.html")$
             <br>
@@ -28,9 +27,9 @@
     $endfor$
 </div>
 
-<h2 class="title is-2">Scientific software</h2>
+<h2 class="title is-2">General purpose software</h2>
 <div class="columns is-multiline">
-    $for(scientific)$
+    $for(general)$
         <div class="column is-half">
             $partial("templates/project.html")$
             <br>
