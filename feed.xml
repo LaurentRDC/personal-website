@@ -7,7 +7,7 @@
         <description><![CDATA[My personal blog on science, math, programming, and other interests.]]></description>
         <atom:link href="https://laurentrdc.xyz/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>2024-06-06</lastBuildDate>
+        <lastBuildDate>2024-10-22</lastBuildDate>
         <item>
     <title>Starting a new adventure with Powerweave</title>
     <link>https://laurentrdc.xyz//posts/powerweave-launch.html</link>
@@ -57,7 +57,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <p>Right now, we are focused on partnering with one energy service provider (utility, community choice aggregation, or independent microgrid) to run a pilot project. This will demonstrate that our technology is beneficial, and give confidence to less-technologically-inclined energy service providers (which are most of them) that Powerweave can help them.</p>
 <p>If you can help us connect with decision makers at energy service providers, <a href="mailto:laurent@powerweave.io">I would love to hear from you</a>. Getting the first contact with potential partners is difficult; being introduced by someone else helps tremendously.</p>
 <p>We hope to grow the team soon as well. If you are interested in Powerweave’s mission, <a href="https://www.linkedin.com/company/powerweaveinc">be sure to follow us on LinkedIn</a>!</p>]]></description>
-    <pubDate>Wed, 05 Jun 2024 00:00:00 UT</pubDate>
+    <pubDate>Fri, 05 Apr 2024 00:00:00 UT</pubDate>
     <guid>https://laurentrdc.xyz//posts/powerweave-launch.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
