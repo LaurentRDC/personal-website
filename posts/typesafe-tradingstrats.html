@@ -65,7 +65,7 @@
                         Trading strategies with typed features using Haskell and type families
                     </h1>
                     <h3>
-                        Posted on 2024-02-04. Last updated on 2024-02-14.
+                        Posted on 2024-02-04. Last updated on 2024-10-22.
                     </h3>
                     <h3>
                         Estimated reading time of 12 min.
@@ -209,10 +209,12 @@
 <div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Strategy</span> r </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> {<span class="ot"> runStrategy ::</span> r <span class="ot">-&gt;</span> <span class="dt">Action</span> }</span></code></pre></div>
 <p>with the understanding that the data of type <code>r</code> is somehow <em>derived</em> from prices.</p>
-<p>What are some features derived from prices, that we might be interested in?
-* Price history, e.g. most recent N ticks;
-* Price aggregations, e.g. average of most recent M ticks;
-* <a href="../posts/rolling-stats.html">Rolling aggregations</a>, e.g. N-tick history of the averages of M ticks;</p>
+<p>What are some features derived from prices, that we might be interested in?</p>
+<ul>
+<li>Price history, e.g. most recent N ticks;</li>
+<li>Price aggregations, e.g. average of most recent M ticks;</li>
+<li><a href="../posts/rolling-stats.html">Rolling aggregations</a>, e.g. N-tick history of the averages of M ticks;</li>
+</ul>
 <p>Every conceptual feature described above has some free parameters. We don’t want to have separate strategies like <code>Strategy PriceHistoryForPast10Ticks</code> and <code>Strategy PriceHistoryForPast20Ticks</code>. More specifically, for every feature of type <code>r</code>, there is a type of parameters <code>p</code> which describes the parameters of <code>r</code>.</p>
 <p>For example<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `javelin` pacakge</span></span>
