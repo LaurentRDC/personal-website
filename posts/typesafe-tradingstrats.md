@@ -118,6 +118,7 @@ newtype Strategy r
 with the understanding that the data of type `r` is somehow *derived* from prices. 
 
 What are some features derived from prices, that we might be interested in?
+
 * Price history, e.g. most recent N ticks;
 * Price aggregations, e.g. average of most recent M ticks;
 * [Rolling aggregations](/posts/rolling-stats.html), e.g. N-tick history of the averages of M ticks;
