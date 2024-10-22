@@ -1,6 +1,6 @@
 ---
 title: Starting a new adventure with Powerweave
-date: 2024-06-05
+date: 2024-04-05
 summary: I started a business, Powerweave. In this post, I explain what Powerweave is and why it is important to me.
 ---
 
