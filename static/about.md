@@ -4,22 +4,22 @@ title: About me
 
 ## Employment
 
-* Oct 2023 - | [__Powerweave__](https://powerweave.io) | Co-founder & CEO
-
-    Powerweave is a technology company operating at the intersection of power infrastructure, technology, and finance. 
-
-    We are working relentlessly to bring the concept of local electricity markets to North America. [See this blog post for more information](/posts/powerweave-launch.html).
-
-    Initially, we tried to develop an operating system for microgrids (called Radiant Microgrid), pivoting to Powerweave in April 2024 and revealing ourselves June 2024.
-    
-    <p></p>
-
 * August 2021 - | [__SocïVolta__](http://socivolta.com/) | Quantitative Research
 
     My role at SocïVolta involves multiple tasks and research subjects, including:
+
      * Trading strategy design, including prediction of power arbitrage using time-series analysis and machine learning techniques ([related blog post](/posts/typesafe-tradingstrats.html));
+     * Design and implementation of a proprietary domain-specific language for expressing trading strategies;
      * Portfolio optimization and backtesting, including design and implementation of high-performance strategy evaluation infrastructure ([related blog post](/posts/rolling-stats.html));
      * High-performance, real-time, global optimization of resource allocations ([related blog post](/posts/multiverse.html)).
+    
+    <p></p>
+
+* Oct 2023 - Oct 2024 | [__Powerweave__](https://powerweave.io) | Co-founder & CEO
+
+    Powerweave is a technology company operating at the intersection of power infrastructure, technology, and finance. [See this blog post for more information](/posts/powerweave-launch.html).
+
+    Initially, we tried to develop an operating system for microgrids (called Radiant Microgrid), pivoting to Powerweave in April 2024 and coming out of stealth in June 2024.
     
     <p></p>
 
