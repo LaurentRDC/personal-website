@@ -31,6 +31,18 @@ toBulmaImage (Image attrs xs target) = Image newAttrs xs target
 toBulmaImage x = x
 
 
+-- Recolors inline code (e.g. variable bames) that has links
+-- We have a special case whereby if the code is wrapped in a link,
+-- we want the link color to show, rather than dark text color.
+--
+-- I don't know how to do this with Bulma
+inlineLinkedCodeColor :: Inline -> Inline
+inlineLinkedCodeColor (Link linkAttrs [Code codeAttrs txt] target) =
+    let (identifier, classes, keyvals) = codeAttrs
+     in (Link linkAttrs [Code (identifier, classes <> ["has-text-link"] , keyvals) txt] target)
+inlineLinkedCodeColor x = x
+
+
 -- ! Transform (or filter) to format heading to Bulma's heading classes.
 -- Markdown: ## Title
 -- HTML    : <h2 class="title is-2">Title</h2>
@@ -47,4 +59,4 @@ bulmaImagesTransform = walk toBulmaImage
 
 -- Combination of all transforms
 bulmaTransform :: Pandoc -> Pandoc
-bulmaTransform = bulmaHeadingTransform . bulmaImagesTransform
+bulmaTransform = walk bulmaHeadingTransform . bulmaImagesTransform . walk inlineLinkedCodeColor

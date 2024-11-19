@@ -7,9 +7,11 @@
 @import "./bulma/sass/utilities/functions.sass";
 
 $purple: #600983;
+$black: #000000;
 
 $link: $purple;
 $link-invert: findColorInvert($purple);
+$code: $black;
 
 // Disable full-hd mode so that the layout is never above ~1350px wide
 // mode readable this way
@@ -17,6 +19,11 @@ $fullhd-enabled: false;
 
 // Import only what you need from Bulma
 @import "./bulma/bulma.sass";
+
+// Underline links
+a[href] {
+  text-decoration: underline;
+}
 
 $navbar-breakpoint: $tablet;
 
@@ -27,3 +34,4 @@ $navbar-breakpoint: $tablet;
   background-image: url('../images/banner.svg');
   background-size: cover;
 }
+
