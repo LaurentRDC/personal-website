@@ -203,7 +203,7 @@
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>printPlayerList <span class="ot">=</span> forM_ playerRegistry <span class="fu">print</span>        </span></code></pre></div>
 <p>but this is quite clunky. It also doesn’t scale well to cases where we have a lot more types!</p>
 <h2 class="title is-2" id="enter-existential-quantification">Enter existential quantification</h2>
-<p>The latest version of the Haskell language (Haskell 2010) is somewhat dated at this point. However, the Glasgow Haskell Compiler supports <a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts.html">language extensions</a> at the cost of portability. Turns out that the <a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/existential_quantification.html#existentially-quantified-data-constructors"><code>ExistentialQuantification</code></a> language extension can help us with this problem.</p>
+<p>The latest version of the Haskell language (Haskell 2010) is somewhat dated at this point. However, the Glasgow Haskell Compiler supports <a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts.html">language extensions</a> at the cost of portability. Turns out that the <a href="https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/existential_quantification.html#existentially-quantified-data-constructors"><code class="has-text-link">ExistentialQuantification</code></a> language extension can help us with this problem.</p>
 <p>We turn on the extension at the top of our module:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE ExistentialQuantification #-}</span></span></code></pre></div>
 <p>and create an existential datatype:</p>
@@ -367,7 +367,7 @@
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2024-11-17. 
+                    Page generated on 2024-11-19. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">

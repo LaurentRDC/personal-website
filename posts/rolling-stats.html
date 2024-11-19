@@ -177,7 +177,7 @@
 </annotation></semantics></math></p>
 <p>This is the recurrence relation of the rolling average with a window of length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>. It tells us that for every term of the rolling average series <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math>, we only need to involve two terms of the original series <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>, regardless of the window. Awesome!</p>
 <h4 class="title is-4" id="haskell-implementation">Haskell implementation</h4>
-<p>Let’s implement this in Haskell. We’ll use the <a href="https://hackage.haskell.org/package/vector"><code>vector</code></a> library which is much faster than lists for numerical calculations like this, and comes with some combinators which make it pretty easy to implement the rolling mean. Regular users of <code>vector</code> will notice that the recurrence relation above fits the <code>scanl</code> use-case. If you’re unfamiliar, <code>scanl</code> is a function which looks like this:</p>
+<p>Let’s implement this in Haskell. We’ll use the <a href="https://hackage.haskell.org/package/vector"><code class="has-text-link">vector</code></a> library which is much faster than lists for numerical calculations like this, and comes with some combinators which make it pretty easy to implement the rolling mean. Regular users of <code>vector</code> will notice that the recurrence relation above fits the <code>scanl</code> use-case. If you’re unfamiliar, <code>scanl</code> is a function which looks like this:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scanl</span><span class="ot"> ::</span> (b <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> b) <span class="co">-- ^ Combination function</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> b             <span class="co">-- ^ Starting value</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> <span class="dt">Vector</span> a      <span class="co">-- ^ Input</span></span>
@@ -439,7 +439,7 @@ S(X) = \frac{\bar{X}}{\sigma_X}
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2024-11-17. 
+                    Page generated on 2024-11-19. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">
