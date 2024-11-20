@@ -62,6 +62,11 @@ jobs:
       with:
         path: ~/.cache/pip
         key: ${{ runner.os }}-${{ hashFiles('requirements.txt') }}
+    
+    # We ensure that code used in posts still compile
+    - name: Build all modules
+      run: |
+        cabal build all -j --disable-optimization
 
     - name: Build site compiler
       run: |
