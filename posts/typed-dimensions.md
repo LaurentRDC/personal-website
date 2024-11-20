@@ -11,7 +11,7 @@ Until the end of undergraduate school, this was mostly done by hand. Optimizing 
 However, there were instances when numerical tools had to be used, rather than analytical ones. This occurred, for example, when replacing models of the physical world with measurements from the physical world in experimental physics classes. By the end of my B.Sc., [the need to take measurements, transform them, and report results was made much simpler by using a computer](/files/ugrad_project.pdf).
 
 Fast forward to graduate school, and the amount of measurements (and their complexity) require the use of some of the most powerful computers I have ever used, even to this day. When implementing numerical routines, I had to pore over the equations (translated to computer expression) countless times, to ensure that they were correctly applied. Most importantly, __all units needed to be carefully checked by hand__. Small mistakes went unnoticed and wasted valuable resources. 
-Take a look at [one of the computations](https://github.com/LaurentRDC/dissertation/blob/7fb658306b6c7dd1b4c8b983ad5f6d8fb91bcdb1/figures/graphite/eph-coupling.py#L56) from my Ph. D. dissertation ([PDF](/files/dissertation), [Git repository](https://github.com/LaurentRDC/dissertation)):
+Take a look at [one of the computations](https://github.com/LaurentRDC/dissertation/blob/7fb658306b6c7dd1b4c8b983ad5f6d8fb91bcdb1/figures/graphite/eph-coupling.py#L56) from my Ph. D. dissertation ([PDF](/files/dissertation.pdf), [Git repository](https://github.com/LaurentRDC/dissertation)):
 
 ```python
 from scipy.constants import physical_constants
