@@ -3,7 +3,9 @@ name: Compile SASS
 on:
   push:
     branches: [master]
-    paths: ["sass/style.scss"]
+    paths: 
+      - "sass/style.scss"
+      - ".github/workflows/compile-sass.yml"
         
 
 jobs:
@@ -13,6 +15,11 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
+    - name: Set-up git
+      run: |
+        git config user.name "GitHub Actions"
+        git config user.email "<>"
         
     - name: Download Bulma CSS
       env:
