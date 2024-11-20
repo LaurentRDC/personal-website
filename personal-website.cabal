@@ -13,24 +13,27 @@ category:            Web
 build-type:          Simple
 extra-source-files:  README.md
 
+common common
+    default-language:    GHC2024
+    ghc-options:         -Wall
+                         -Wcompat
+                         -Widentities
+                         -Wincomplete-uni-patterns
+                         -Wincomplete-record-updates
+                         -Wredundant-constraints
+                         -fhide-source-paths
+                         -Wmissing-export-lists
+                         -Wpartial-fields
+                         -Wunused-packages
+
 executable personal-website
+  import:              common
   hs-source-dirs:      src
   main-is:             site.hs
-  default-language:    GHC2024
   -- We are not using multicore behavior
   -- due to non-deterministic errors that can arise due to locks
   -- on file reading. This is as of Hakyll version 4.16.2.0;
   -- this problem may be resolved in the future.
-  ghc-options:         -Wall
-                       -Wcompat
-                       -Widentities
-                       -Wincomplete-uni-patterns
-                       -Wincomplete-record-updates
-                       -Wredundant-constraints
-                       -fhide-source-paths
-                       -Wmissing-export-lists
-                       -Wpartial-fields
-                       -Wunused-packages
   build-depends:       base >= 4.14 && < 5,
                        containers >=0.6 && <0.8,
                        filepath,
@@ -48,26 +51,35 @@ executable personal-website
   other-modules:       Template, BulmaFilter, Feed, ReadingTimeFilter
 
 executable multiverse
+  import:              common
   hs-source-dirs:      files
   main-is:             multiverse.hs
-  default-language:    GHC2024
   build-depends:       base >=4.14 && <5,
                        containers
 
 library rolling
+  import:              common
   hs-source-dirs:      files/rolling-stats
-  default-language:    GHC2024
   exposed-modules:     Rolling
   build-depends:       base >=4.14 && <5,
                        statistics,
                        vector
 
 library trading-strats
+  import:              common
   hs-source-dirs:      files/trading-strats
-  default-language:    GHC2024
   exposed-modules:     TradingStrats
   build-depends:       base       >=4.14 && <5
                      , containers >=0.6 && <0.8
                      , javelin   ^>=0.1 
                      , pipes      >=4.3  && <5
                      , time      ^>=1.12
+
+library typed-dimensions
+  import:              common
+  hs-source-dirs:      files/typed-dimensions
+  exposed-modules:     TypedDimensions.Typed
+                       TypedDimensions.Untyped
+  build-depends:       base         >=4.14 && <5
+                     , dimensional ^>= 1.6
+                     , numtype-dk  ^>=0.5
