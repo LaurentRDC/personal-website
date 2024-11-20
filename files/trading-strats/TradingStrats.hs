@@ -1,4 +1,5 @@
 {-# LANGUAGE TypeFamilies #-}
+{-# OPTIONS_GHC -Wno-unused-top-binds #-}
 --  _____               _ _               __ _             _       
 -- /__   \_ __ __ _  __| (_)_ __   __ _  / _\ |_ _ __ __ _| |_ ___ 
 --   / /\/ '__/ _` |/ _` | | '_ \ / _` | \ \| __| '__/ _` | __/ __|
@@ -7,11 +8,9 @@
 --                                |___/                   
 module TradingStrats () where
 
-import           Data.Map.Strict   ( Map )
 import qualified Data.Map.Strict   as Map
 import           Data.Series       ( Series )
 import qualified Data.Series       as Series
-import qualified Data.Series.Index as Index
 import           Data.Time         ( UTCTime )
 import           Pipes             ( Pipe, Producer, (>->) )
 import qualified Pipes
