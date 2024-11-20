@@ -3,6 +3,10 @@ name: GH-Pages
 on:
   push:
     branches: [master]
+    paths-ignore:
+      # Sass files are compiled in a separate workflow, which then commits changes.
+      # These changes will trigger THIS workflow if needed.
+      - "sass/*/**"
   schedule:
     # Build the website twice a week, to keep it up-to-date
     # and keep the cache warm.
@@ -76,19 +80,6 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements.txt
-        
-    - name: Download Bulma CSS
-      env:
-        bulma-version: 0.9.3
-      run: |
-        wget -c https://github.com/jgthms/bulma/releases/download/${{ env.bulma-version }}/bulma-${{ env.bulma-version }}.zip 
-        unzip bulma-${{ env.bulma-version }}.zip -d sass
-
-    - name: Compile CSS from SCSS files
-      uses: gha-utilities/sass-build@v0.5.1
-      with:
-        source: sass/style.scss
-        destination: css/style.css
     
     - name: Generate banner
       run: |

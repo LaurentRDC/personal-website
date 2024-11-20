@@ -1,0 +1,39 @@
+name: Compile SASS
+
+on:
+  push:
+    branches: [master]
+    paths: ["sass/style.scss"]
+        
+
+jobs:
+  build-and-deploy:
+    if: contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+        
+    - name: Download Bulma CSS
+      env:
+        bulma-version: 0.9.3
+      run: |
+        wget -c https://github.com/jgthms/bulma/releases/download/${{ env.bulma-version }}/bulma-${{ env.bulma-version }}.zip 
+        unzip bulma-${{ env.bulma-version }}.zip -d sass
+
+    - name: Compile CSS from SCSS files
+      uses: gha-utilities/sass-build@v0.5.1
+      with:
+        source: sass/style.scss
+        destination: css/style.css
+
+    - name: Commit changes if any
+      run: |
+        git add css/style.css
+        git add css/style.css.map
+
+        if [ -n "$(git status --porcelain)" ];
+        then
+          git commit --message "Updated stylesheet"
+          git push origin ${{ github.ref_name }}
+        fi
