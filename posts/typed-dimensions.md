@@ -52,9 +52,11 @@ Using the symbols associated with these base dimensions, we can express any dime
 
 Why are dimensions important? [There are mathematical rules associated with combining numbers with dimensions](https://en.wikipedia.org/w/index.php?title=Dimensional_analysis&oldid=1254137729#Mathematical_properties):
 
-* Two quantities with dimensions $D_1$ and $D_2$ can only be added or subtracted if (and only if) $D_1 \equiv D_2$. For example, it does not make sense to add a length to a mass.
+* Two quantities with dimensions $D_1$ and $D_2$ can only be added or subtracted if $D_1 \equiv D_2$. For example, it does not make sense to add a length to a mass[^intensive].
 
 * Any two quantities with dimensions $D_1$ and $D_2$ can be multiplied or divided, in which case the resulting dimension follows the usual rules of arithmetic. For example:
+
+[^intensive]: [As pointed out on Hacker News](https://news.ycombinator.com/item?id=42202834#42213927), this is necessary but not sufficient. For example, intensive dimensions (such as thermodynamic temperature) cannot be meaningfully added together.
 
 $$
 \begin{align}
