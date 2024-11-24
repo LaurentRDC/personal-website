@@ -99,7 +99,7 @@ Scientists take measurements of quantities, and run scientific computations to g
 
 People's first contact with computational unit systems may come from [`pint`](https://github.com/hgrecco/pint), a Python library to manipulate quantities. While `pint` is better than nothing, it does not guarantee correctness at runtime due to Python's dynamic nature.
 
-Instead, I prefer the [`dimensional`](https://github.com/bjornbm/dimensional/) package, a Haskell library that guarantees correctness by ensuring type-safe dimensions at compile-time. Other tools exist for other languages -- for example, [F# famously includes units of measure](https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/units-of-measure) as a first-party feature.
+Instead, I prefer the [`dimensional`](https://github.com/bjornbm/dimensional/) package, a Haskell library created by [Björn Buckwalter](https://github.com/bjornbm) that guarantees correctness by ensuring type-safe dimensions at compile-time. Other tools exist for other languages -- for example, [F# famously includes units of measure](https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/units-of-measure) as a first-party feature.
 
 We will work by example to compute the [Maxwell-Boltzmann distribution](https://en.wikipedia.org/w/index.php?title=Maxwell%E2%80%93Boltzmann_distribution&oldid=1255523817). This is the distribution of velocities of identical particles of mass $m$, given some thermodynamic temperature $T$:
 
@@ -230,6 +230,7 @@ maxwellBoltzmannDist mass temp velocity
     * exp ( negate (mass * velocity ^ pos2) / (_2 * pi * boltzmannConstant * temp) )
 ```
 
+<a name="interactive-example"></a>
 We can compute the result of `maxwellBoltzmannDist` in any compatible unit. We will do this for a gas of diatomic nitrogen. In an interactive Haskell session:
 
 ```haskell
@@ -254,6 +255,39 @@ ghci>
 ghci> (maxwellBoltzmannDist n2_mass room_temperature velocity) /~ ((hour / nauticalMile) ^ pos3)
 5.041390507268275e-12
 ```
+
+## Design and tradeoffs
+
+_This section was added on Nov. 24th, 2024 following discussions on [Hacker News](https://news.ycombinator.com/item?id=42202834) and the [Haskell Discourse](https://discourse.haskell.org/t/blog-post-scientific-computing-with-confidence-using-typed-dimensions/10767?u=laurentrdc)_
+
+There are many other software packages that support some level of type-safe computational unit systems such as [mp-units for C++](https://github.com/mpusz/mp-units), [Physics::Measure and Physics::Unit for Raku](https://raku.land/zef:librasteve/Physics::Measure), [Unitful for Julia](https://github.com/PainterQubits/Unitful.jl), [Physical for Swift](https://github.com/hyperjeff/Physical), and more. There's even an entire programming language designed around it called [Numbat](https://github.com/sharkdp/numbat). So what can we learn from `dimensional`'s design, and importantly, its tradeoffs?
+
+#### Beyond checking to inference of dimensions
+
+One key feature of `dimensional` is that it does not only _check validity_, but also __infers__ the dimensions of expressions at compile-time. Take for example, consider the question "What is the type (`:t`) of 1 meter divided by 1 second?":
+
+```haskell
+ghci> :t (1 *~ meter) / (1 *~ second)
+Quantity (Dim Pos1 Zero Neg1 Zero Zero Zero Zero) Double
+```
+
+If you read the documentation for [`Dimension`](https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#t:Dimension), you will notice that `(Dim Pos1 Zero Neg1 Zero Zero Zero Zero)` is the dimension of velocity (also known as [`DVelocity`](https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Quantities.html#t:DVelocity)).
+
+This means that the compiler becomes a helpful assistant, rather than simply telling you when you are wrong.
+
+#### Compile-time dimensions, runtime units
+
+Another key design of `dimensional` is that the dimensions are typed, but units are runtime values. This has important advantage, but also one major drawback.
+
+The important advantage is flexibility: programs written using `dimensional` accept a wide variety of inputs whose dimensions are equivalent. Since values' dimensions are known at compile-time, we can be guaranteed that values will be convertible to base units at runtime. You can see this in [the usage of `maxwellBoltzmannDist` above](#interactive-example), where I varied the input units without issues, even mixing SI units like `kelvin` and non-SI units like `degreeRankine`.
+
+This flexibility comes with a performance cost: each quantity is now composed of two values, the magnitude and the unit, which means that that mathematical operations will be slower. For performance-sensitive code, I recommend validating inputs using `dimensional`, and converting to raw `Double` using [`(/~)`](https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#v:-47--126-) before compute-heavy operations. 
+
+#### Non-extensibility
+
+`dimensional` is limited to the 7 physical dimensions by design. However, other libraries such as [units](https://hackage.haskell.org/package/units), allow the creation of extensible unit systems, not limited to physical dimensions.
+
+The lack of extensibility is not an inherent design choice, but rather an implementation choice. This may change in the future.
 
 ## Conclusion
 
