@@ -125,8 +125,9 @@ main = do
 
         --------------------------------------------------------------------------------
         -- These are static pages, like the "about" page
-        -- Note that /static/index.html is a special case and is handled below
-        match "static/*.md" $ do
+        -- Note that /static/index.html is a special case and is handled below,
+        -- just like 404.md
+        match ("static/*.md" .&&. complement "static/404.md") $ do
             route $ setExtension "html" `composeRoutes` staticRoute
             compile $ pandocCompiler_ plotConfig
                 >>= loadAndApplyTemplate "templates/default.html" defaultContext
@@ -218,6 +219,15 @@ main = do
                     >>= applyAsTemplate indexCtx
                     >>= loadAndApplyTemplate "templates/default.html" indexCtx
                     >>= relativizeUrls
+
+        --------------------------------------------------------------------------------
+        -- Generate the home page, including recent blog posts
+        match "static/404.md" $ do
+            route $ setExtension "html" `composeRoutes` staticRoute
+            compile $ pandocCompiler
+                >>= loadAndApplyTemplate "templates/default.html" defaultContext
+                -- We don't relativize the URLs for the 404 page such that
+                -- links like <root>/wtf/wtf.html link to the right CSS
 
         --------------------------------------------------------------------------------
         -- Create a sitemap for easier search engine integration
