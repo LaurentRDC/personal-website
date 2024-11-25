@@ -131,9 +131,11 @@ For example[^javelin]:
 -- from the `javelin` package
 import Data.Series ( Series )
 
+-- Feature I may want to use in a strategy
 newtype PriceHistory 
     = MkPriceHistory (Series UTCTime Price)
 
+-- Parameters that may affect the featyre `PriceHistory`
 data NumTicks 
     = MkNumTicks { numTicks :: Int }
 ```
@@ -152,13 +154,13 @@ data Feature
     | (...)
 ```
 
-However, it's not possible to control what features go in what strategy. We can do better.
+However, it's rather cumbersome to create a strategy to experiment with new features. We can do better.
 
-We want to be able to link the types `PriceHistory` and `NumTicks` such that they are used together when backtesting, to ensure type safety. This is the domain of [indexed type families](https://wiki.haskell.org/GHC/Type_families), or type families for short. We will amend our `Feature` typeclass and `backtestStrategy` function to take into account feature parametrization:
+We want to be able to link the types `PriceHistory` and `NumTicks` such that they are used together when backtesting, to ensure type safety. This is the domain of [indexed type families](https://wiki.haskell.org/GHC/Type_families), or type families for short. We will amend our `Feature` type to become a typeclass, and upgrade `backtestStrategy` function to take into account feature parametrization:
 
 ```haskell
 class Feature r where
-    -- For every instances `r` of `Feature`,
+    -- For every instance `r` of `Feature`,
     -- there is an associated type `Parameters r` which the user
     -- needs to specify. See examples below.
     type Parameters r
@@ -269,6 +271,6 @@ and voilà!
 
 ## Conclusion
 
-In this post, I have shown you how to define trading strategies with typed feature parametrization, which is a neat use of type families.
+In this post, I have shown you how to define trading strategies with typed feature parametrization, which is a neat use of type families. It takes advantage of the Haskell type system for type safety AND extensibility to easily create new features.
 
 *All code is available in this [Haskell module](/files/trading-strats/TradingStrats.hs).*
