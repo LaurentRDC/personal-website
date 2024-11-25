@@ -51,18 +51,18 @@ jobs:
         cabal user-config update -f -a "executable-stripping: True"
 
     - name: Cache cabal work
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: |
           dist-newstyle
           ${{ steps.setup-haskell.outputs.cabal-store }}
         key: ${{ runner.os }}-${{ hashFiles('cabal.*') }}-cabal-install
 
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    - uses: actions/cache@v3
+    - uses: actions/cache@v4
       name: Cache Python build artifacts
       with:
         path: ~/.cache/pip
@@ -102,7 +102,7 @@ jobs:
         personal-website check --internal-links
 
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@v4.4.3
+      uses: JamesIves/github-pages-deploy-action@v4.6.9
       with:
         branch: gh-pages
         folder: _rendered

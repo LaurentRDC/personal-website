@@ -76,8 +76,8 @@ renderTemplate = do
     today <- getCurrentTime <&> (showGregorian . utctDay)
     analyticsTag <- getAnalyticsTagFromEnv
     case analyticsTag of
-        Nothing -> putStrLn "No analytics tag found in environment."
-        Just _  -> putStrLn "Analytics tag found in environment."
+        Nothing -> putStrLn "  No analytics tag found in environment."
+        Just _  -> putStrLn "  Analytics tag found in environment."
     let template = mkDefaultTemplate analyticsTag (mconcat ["Page generated on ", today, ". "])
     return (T.encodeUtf8 . T.pack . Pretty.renderHtml $ template)
 
