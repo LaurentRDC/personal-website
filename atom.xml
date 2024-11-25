@@ -269,7 +269,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
     <link href="https://laurentrdc.xyz//posts/typesafe-tradingstrats.html" />
     <id>https://laurentrdc.xyz//posts/typesafe-tradingstrats.html</id>
     <published>2024-02-04T00:00:00Z</published>
-    <updated>2024-10-22</updated>
+    <updated>2024-11-25</updated>
     <summary type="html"><![CDATA[<p>I work in the business of algorithmic power trading, which is the automated trading of various power-related products in regulated <a href="https://en.wikipedia.org/wiki/Electricity_market">electricity markets</a>. Products include short-term inter-jurisdiction arbitrage, financial transmission rights, and more.</p>
 <p>This year, my employer is expanding its trading operations to a new class of products. Since there is no overlap between this new work and our current operations, I got to design a technology stack most suited for the task. This technology stack includes Haskell, most importantly because wrong or unexpected trading decisions can (and have) cost us dearly.</p>
 <p>In this blog post, I want to show you the basics of how we designed the framework in which to express trading strategies.</p>
@@ -359,14 +359,16 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 </ul>
 <p>Every conceptual feature described above has some free parameters. We don’t want to have separate strategies like <code>Strategy PriceHistoryForPast10Ticks</code> and <code>Strategy PriceHistoryForPast20Ticks</code>. More specifically, for every feature of type <code>r</code>, there is a type of parameters <code>p</code> which describes the parameters of <code>r</code>.</p>
 <p>For example<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `javelin` pacakge</span></span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `javelin` package</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Series</span> ( <span class="dt">Series</span> )</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">NumTicks</span> </span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkNumTicks</span> {<span class="ot"> numTicks ::</span> <span class="dt">Int</span> }</span></code></pre></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Feature I may want to use in a strategy</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- Parameters that may affect the featyre `PriceHistory`</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">NumTicks</span> </span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkNumTicks</span> {<span class="ot"> numTicks ::</span> <span class="dt">Int</span> }</span></code></pre></div>
 <h2 class="title is-2" id="typed-features-and-their-parametrization">Typed features and their parametrization</h2>
 <p>We could list all possible features in a big sum type:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Feature</span> </span>
@@ -374,10 +376,10 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">FPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">FAveragePrice</span> <span class="dt">Price</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> (<span class="op">...</span>)</span></code></pre></div>
-<p>However, it’s not possible to control what features go in what strategy. We can do better.</p>
-<p>We want to be able to link the types <code>PriceHistory</code> and <code>NumTicks</code> such that they are used together when backtesting, to ensure type safety. This is the domain of <a href="https://wiki.haskell.org/GHC/Type_families">indexed type families</a>, or type families for short. We will amend our <code>Feature</code> typeclass and <code>backtestStrategy</code> function to take into account feature parametrization:</p>
+<p>However, it’s rather cumbersome to create a strategy to experiment with new features. We can do better.</p>
+<p>We want to be able to link the types <code>PriceHistory</code> and <code>NumTicks</code> such that they are used together when backtesting, to ensure type safety. This is the domain of <a href="https://wiki.haskell.org/GHC/Type_families">indexed type families</a>, or type families for short. We will amend our <code>Feature</code> type to become a typeclass, and upgrade <code>backtestStrategy</code> function to take into account feature parametrization:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">Feature</span> r <span class="kw">where</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- For every instances `r` of `Feature`,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- For every instance `r` of `Feature`,</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- there is an associated type `Parameters r` which the user</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- needs to specify. See examples below.</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> r</span>
@@ -463,7 +465,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>backtestFinalStrategy <span class="ot">=</span> backtestStrategy finalStrategy ( <span class="dt">MkNumTicks</span> <span class="dv">10</span>, () ) </span></code></pre></div>
 <p>and voilà!</p>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
-<p>In this post, I have shown you how to define trading strategies with typed feature parametrization, which is a neat use of type families.</p>
+<p>In this post, I have shown you how to define trading strategies with typed feature parametrization, which is a neat use of type families. It takes advantage of the Haskell type system for type safety AND extensibility to easily create new features.</p>
 <p><em>All code is available in this <a href="/files/trading-strats/TradingStrats.hs">Haskell module</a>.</em></p>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
