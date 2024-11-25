@@ -128,7 +128,7 @@ Every conceptual feature described above has some free parameters. We don't want
 For example[^javelin]:
 
 ```haskell
--- from the `javelin` pacakge
+-- from the `javelin` package
 import Data.Series ( Series )
 
 newtype PriceHistory 
