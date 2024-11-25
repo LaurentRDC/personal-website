@@ -94,6 +94,8 @@ jobs:
         personal-website clean
         personal-website build
         personal-website build
+      env:
+        ANALYTICSTAG: ${{ secrets.ANALYTICSTAG }}
         
     - name: Check internal links
       run: |

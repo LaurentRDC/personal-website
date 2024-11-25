@@ -1,11 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DerivingVia #-}
 
-module Template ( mkDefaultTemplate, tocTemplate ) where
+module Template ( mkDefaultTemplate, tocTemplate, getAnalyticsTagFromEnv ) where
 
 import           Control.Monad               ( forM_ )
 
 import           Data.List                   ( intersperse )
+import           Data.Text                   ( Text )
+import qualified Data.Text                   ( pack )
 
+import qualified System.Environment          ( lookupEnv )
 import           Text.Blaze.Html5            as H
 import           Text.Blaze.Html5.Attributes as A
 
@@ -56,8 +60,15 @@ styleSheets = [ "/css/syntax.css"
               ]
 
 
-defaultHead :: H.Html
-defaultHead = H.head $ do
+defaultHead :: Maybe AnalyticsTag -> H.Html
+defaultHead mTag = H.head $ do
+
+    -- I only optionally include analytics. Locally, I don't care, in which case
+    -- the `AnalyticsTag` can be set to @Nothing@.
+    case mTag of
+        Nothing -> pure ()
+        Just tag -> analytics tag
+
     H.meta ! charset "utf-8"
     H.meta ! name "viewport" ! content "width=device-width, initial-scale=1"
     -- Opting out of Google FLoC
@@ -74,6 +85,32 @@ defaultHead = H.head $ do
     H.link ! rel "stylesheet" ! type_ "font" ! href fontURL
     -- Bulma helpers
     H.script ! type_ "text/javascript" ! src "/js/navbar-onclick.js" $ mempty
+
+
+newtype AnalyticsTag 
+    = MkAnalyticsTag Text
+    deriving Eq
+    deriving Show via Text
+
+
+-- Script provided by Google, where the tag itself will be pulled from an environment variable. 
+analytics :: AnalyticsTag -> H.Html
+analytics (MkAnalyticsTag tag) = do
+    H.script ! A.async mempty
+             ! A.src (H.toValue $ "https://www.googletagmanager.com/gtag/js?id=" <> tag)
+             $ mempty
+    H.script $ preEscapedText 
+             $ mconcat [ "window.dataLayer = window.dataLayer || []; "
+                       , "function gtag(){dataLayer.push(arguments);} "
+                       , "gtag('js', new Date()); "
+                       , "gtag('config', '" <> tag <> "');"
+                       ]
+
+-- Analytics from the environment. This environment variable is usually only set
+-- in GitHub Actions.
+getAnalyticsTagFromEnv :: IO (Maybe AnalyticsTag)
+getAnalyticsTagFromEnv = do
+    fmap (MkAnalyticsTag . Data.Text.pack) <$> System.Environment.lookupEnv "ANALYTICSTAG"
 
 
 -- Note that the top-level class is extended via sass to have
@@ -150,9 +187,11 @@ defaultFooter s' = H.footer ! class_ "footer" $
 
 -- | Full default template
 -- The templateFooter will be adorned with the message @s@
-mkDefaultTemplate :: String -> H.Html
-mkDefaultTemplate s' = H.docTypeHtml $ do
-    defaultHead
+mkDefaultTemplate :: Maybe AnalyticsTag 
+                  -> String 
+                  -> H.Html
+mkDefaultTemplate analyticsTag s' = H.docTypeHtml $ do
+    defaultHead analyticsTag
     H.body $ do
         navigationBar
         H.div ! class_ "section" $

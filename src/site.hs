@@ -38,7 +38,7 @@ import           Text.Blaze.Html.Renderer.String ( renderHtml )
 import qualified Text.Blaze.Html.Renderer.Pretty as Pretty
 
 import           BulmaFilter                     ( bulmaTransform)
-import           Template                        ( mkDefaultTemplate, tocTemplate )
+import           Template                        ( mkDefaultTemplate, tocTemplate, getAnalyticsTagFromEnv )
 
 import           Data.Time.Calendar              ( showGregorian )
 import           Data.Time.Clock                 ( getCurrentTime, utctDay )
@@ -74,7 +74,11 @@ conf = defaultConfiguration
 renderTemplate :: IO B.ByteString
 renderTemplate = do
     today <- getCurrentTime <&> (showGregorian . utctDay)
-    let template = mkDefaultTemplate (mconcat ["Page generated on ", today, ". "])
+    analyticsTag <- getAnalyticsTagFromEnv
+    case analyticsTag of
+        Nothing -> putStrLn "No analytics tag found in environment."
+        Just _  -> putStrLn "Analytics tag found in environment."
+    let template = mkDefaultTemplate analyticsTag (mconcat ["Page generated on ", today, ". "])
     return (T.encodeUtf8 . T.pack . Pretty.renderHtml $ template)
 
 
