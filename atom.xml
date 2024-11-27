@@ -8,13 +8,13 @@
         <name>Laurent P. René de Cotret</name>
         
     </author>
-    <updated>2024-11-24</updated>
+    <updated>2024-11-27</updated>
     <entry>
     <title>Scientific computing with confidence using typed dimensions</title>
     <link href="https://laurentrdc.xyz//posts/typed-dimensions.html" />
     <id>https://laurentrdc.xyz//posts/typed-dimensions.html</id>
     <published>2024-11-20T00:00:00Z</published>
-    <updated>2024-11-24</updated>
+    <updated>2024-11-27</updated>
     <summary type="html"><![CDATA[<p>I have performed non-trivial scientific calculations, in <a href="/about.html">university and beyond</a>, for almost 15 years.</p>
 <p>Until the end of undergraduate school, this was mostly done by hand. Optimizing the <a href="https://en.wikipedia.org/wiki/Brachistochrone_curve">trajectory of a heavy ball</a> or solving the <a href="https://en.wikipedia.org/wiki/Heat_equation">heat equation</a> are problems with analytical solutions, and thus can be solved with pen(cil) and paper.</p>
 <p>However, there were instances when numerical tools had to be used, rather than analytical ones. This occurred, for example, when replacing models of the physical world with measurements from the physical world in experimental physics classes. By the end of my B.Sc., <a href="/files/ugrad_project.pdf">the need to take measurements, transform them, and report results was made much simpler by using a computer</a>.</p>
@@ -202,7 +202,7 @@ We can compute the result of <code>maxwellBoltzmannDist</code> in any compatible
 <p>This was a whirlwind tour of <code>dimensional</code> with a practical example. If this was your first introduction to typed dimensions in Haskell, do not be alarmed – I bounced off of it the first time.</p>
 <p>As mentioned, software design is about trade-off. Using <code>dimensional</code> is complex, but it isn’t complicated<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>; it makes you address the complexity of dimensions and units up-front, rather than hoping for the best. Sometimes this doesn’t make sense, but for critical calculations, there is nothing like typed dimensions.</p>
 <p>I am now a <a href="https://github.com/bjornbm/dimensional/">maintainer of <code>dimensional</code> on GitHub</a>, and <strong>I want nothing more than to help people use typed dimensions</strong> (when it makes sense). If you have any feedback, for example missing features or lacking documentation, <a href="https://github.com/bjornbm/dimensional/issues">feel free to raise an issue</a>!</p>
-<p><em>Code available in <a href="/files/typed-dimensions/TypedDimensions/Typed.hs">Haskell module</a>.</em></p>
+<p><em>Code available in <a href="/files/typed-dimensions/TypedDimensions/Typed">Haskell module</a>.</em></p>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
@@ -269,7 +269,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
     <link href="https://laurentrdc.xyz//posts/typesafe-tradingstrats.html" />
     <id>https://laurentrdc.xyz//posts/typesafe-tradingstrats.html</id>
     <published>2024-02-04T00:00:00Z</published>
-    <updated>2024-11-25</updated>
+    <updated>2024-11-27</updated>
     <summary type="html"><![CDATA[<p>I work in the business of algorithmic power trading, which is the automated trading of various power-related products in regulated <a href="https://en.wikipedia.org/wiki/Electricity_market">electricity markets</a>. Products include short-term inter-jurisdiction arbitrage, financial transmission rights, and more.</p>
 <p>This year, my employer is expanding its trading operations to a new class of products. Since there is no overlap between this new work and our current operations, I got to design a technology stack most suited for the task. This technology stack includes Haskell, most importantly because wrong or unexpected trading decisions can (and have) cost us dearly.</p>
 <p>In this blog post, I want to show you the basics of how we designed the framework in which to express trading strategies.</p>
@@ -466,7 +466,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <p>and voilà!</p>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, I have shown you how to define trading strategies with typed feature parametrization, which is a neat use of type families. It takes advantage of the Haskell type system for type safety AND extensibility to easily create new features.</p>
-<p><em>All code is available in this <a href="/files/trading-strats/TradingStrats.hs">Haskell module</a>.</em></p>
+<p><em>All code is available in this <a href="/files/trading-strats/TradingStrats">Haskell module</a>.</em></p>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
@@ -841,7 +841,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
     <link href="https://laurentrdc.xyz//posts/rolling-stats.html" />
     <id>https://laurentrdc.xyz//posts/rolling-stats.html</id>
     <published>2023-03-23T00:00:00Z</published>
-    <updated>2023-07-17</updated>
+    <updated>2024-11-27</updated>
     <summary type="html"><![CDATA[<p>In the context of an array, rolling operations are operations on a set of values which are computed at each index of the array based on a subset of values in the array. A common rolling operation is the rolling mean, also known as the moving average.</p>
 <p>The best way to understand is to see it in action. Consider the following list:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>]</span></code></pre></div>
@@ -1074,7 +1074,7 @@ S(X) = \frac{\bar{X}}{\sigma_X}
 <span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>       <span class="kw">in</span> Vector.replicate (window <span class="op">-</span> <span class="dv">1</span>) <span class="dv">0</span> <span class="op">&lt;&gt;</span> Vector.zipWith (<span class="op">/</span>) (Vector.drop window ms) std</span></code></pre></div>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this blog post, I’ve shown you a recipe to design rolling statistics algorithms which are efficient (i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n)</annotation></semantics></math>) based on recurrence relations. Efficient rolling statistics as implemented in this post are an essential part of backtesting software, which is software to test trading strategies.</p>
-<p><em>All code is available in this <a href="/files/rolling-stats/Rolling.hs">Haskell module</a>.</em></p>
+<p><em>All code is available in this <a href="/files/rolling-stats/Rolling">Haskell module</a>.</em></p>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
@@ -1264,7 +1264,7 @@ W_k = \left\{ \begin{array}{cl}
     <link href="https://laurentrdc.xyz//posts/multiverse.html" />
     <id>https://laurentrdc.xyz//posts/multiverse.html</id>
     <published>2022-03-02T00:00:00Z</published>
-    <updated>2023-03-30</updated>
+    <updated>2024-11-27</updated>
     <summary type="html"><![CDATA[<p>I’m working on a global optimization problem these days. Unlike local optimization problems, e.g. what you would solve using least-square minimization, global optimization inevitably involves exhaustively evaluating all <em>possible</em> solutions and choosing the best one. As you can imagine, global optimization is much more computationally-intensive than local optimization, due to the size of the set of potential solutions. Speeding up a global optimization problem involves reducing the set of possible solution to a minimum, based on the specifics of the problem.</p>
 <p>In this post, I’ll show you how to <em>build</em> the minimal set of possible solutions to an optimization problem, instead of searching for solutions in a larger space. As we’ll see, only viable solutions are ever considered. This will be done by splitting the computations into multiple universes whenever a choice is presented to us, such that we traverse the multiverse of possibilities all at once.</p>
 <h3 class="title is-3" id="an-example-problem">An example problem</h3>
@@ -1380,7 +1380,7 @@ W_k = \left\{ \begin{array}{cl}
 <p>What I’ve shown you today is how to structure computations in such a way that you are exploring the multiverse of possibilities all at once. The seasoned Haskell programmer will have recognized that the <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> instances of <code>Possibilities</code> are just like lists!</p>
 <p>Although I’m not using Haskell at work<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, I expect that something similar will need to be built in the near future to speed up our global optimization problem. The specific problem we are tackling has many more constraints than the example presented in this post. It’s easier to generate a list of solutions, most of which are unsuitable, and filter the solutions one by one. There is a fixed computational cost associated with generating and checking a solution, and so reducing the set of possible solutions is even more important.</p>
 <p>This post was partly inspired by the legendary blog post <a href="https://aphyr.com/posts/342-typing-the-technical-interview">Typing the technical interview</a></p>
-<p><em>A self-contained Haskell source file containing all code from this post is <a href="/files/multiverse.hs">available for download here</a></em></p>
+<p><em>A self-contained Haskell source file containing all code from this post is <a href="/files/multiverse">available for download here</a></em></p>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
