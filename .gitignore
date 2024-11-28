@@ -20,7 +20,6 @@ cabal.sandbox.config
 .stack-work/
 _cache/
 _rendered/
-posts/drafts/
 
 ### Python ###
 __pycache__/
@@ -40,5 +39,3 @@ css/syntax.css
 generated/*
 templates/default.html
 
-# Rust
-tools/target/

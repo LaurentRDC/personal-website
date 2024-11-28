@@ -8,6 +8,8 @@ on:
       # These changes will trigger THIS workflow if needed.
       - "sass/*/**"
       - ".github/workflows/compile-sass.yml"
+      # Some files shouldn't impact the deployed website
+      - "posts/drafts/*"      
   schedule:
     # Build the website twice a week, to keep it up-to-date
     # and keep the cache warm.
