@@ -4,9 +4,9 @@ title: About me
 
 ## Employment
 
-* August 2021 - | [__SocïVolta__](http://socivolta.com/) | Quantitative Research
+* August 2021 - January 2025 | [__SocïVolta__](http://socivolta.com/) | Quantitative Research
 
-    My role at SocïVolta involves multiple tasks and research subjects, including:
+    My role at SocïVolta involved multiple tasks and research subjects, including:
 
      * Trading strategy design, including prediction of power arbitrage using time-series analysis and machine learning techniques ([related blog post](/posts/typesafe-tradingstrats.html));
      * Design and implementation of a proprietary domain-specific language for expressing trading strategies;
