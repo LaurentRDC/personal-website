@@ -83,3 +83,11 @@ library typed-dimensions
   build-depends:       base         >=4.14 && <5
                      , dimensional ^>= 1.6
                      , numtype-dk  ^>=0.5
+
+library hkt-generics
+  import:              common
+  hs-source-dirs:      posts
+  other-modules:       HKTGenerics
+  build-depends:       base >=4.14 && <5
+                     , vector
+  ghc-options:         -Wno-missing-export-lists
