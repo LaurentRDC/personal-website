@@ -306,7 +306,7 @@ instance FromRows Address
         
 data Store f
     = MkStore { storeName    :: Column f String
-              , storeAddress :: Column f Address
+              , storeAddress :: Address f
               }
     deriving (Generic)
 
