@@ -210,7 +210,7 @@ How about nesting dataframes types? Consider this:</p>
 <span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        </span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Store</span> f</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStore</span> {<span class="ot"> storeName    ::</span> <span class="dt">Column</span> f <span class="dt">String</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>              ,<span class="ot"> storeAddress ::</span> <span class="dt">Column</span> f <span class="dt">Address</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>              ,<span class="ot"> storeAddress ::</span> <span class="dt">Address</span> f</span>
 <span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>              }</span>
 <span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> (<span class="dt">Generic</span>)</span>
 <span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
