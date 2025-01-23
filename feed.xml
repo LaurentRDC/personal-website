@@ -7,11 +7,11 @@
         <description><![CDATA[My personal blog on science, math, programming, and other interests.]]></description>
         <atom:link href="https://laurentrdc.xyz/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>2025-01-22</lastBuildDate>
+        <lastBuildDate>2025-01-23</lastBuildDate>
         <item>
     <title>Modeling dataframes in Haskell using higher-kinded types</title>
     <link>https://laurentrdc.xyz//posts/HKTGenerics.html</link>
-    <description><![CDATA[<p><em>Note: this document is a literate Haskell module!</em></p>
+    <description><![CDATA[<p><em>Featured in <a href="https://haskellweekly.news/issue/456.html">Haskell Weekly issue 456</a></em></p>
 <p>I am a firm believer in the purely functional programming approach, embodied by the Haskell programming language. While the Haskell
 community is not huge, it is large enough that I can work on most domains.</p>
 <p>Most domains, but not all; data science remains hard to work on in Haskell. Since data science grew out not from software engineering,
@@ -220,6 +220,7 @@ How about nesting dataframes types? Consider this:</p>
 <span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>              }</span>
 <span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> (<span class="dt">Generic</span>)</span></code></pre></div>
 <p>I haven’t figured out how to do this yet, but it would be desirable.</p>
+<p><em>This document is a literate Haskell module!</em></p>
 <section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
 <hr />
 <ol>
