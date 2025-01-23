@@ -4,7 +4,7 @@ date: 2025-01-22
 summary: This post is an exploration of the type-level shenanigans that can be used to model dataframes in Haskell. I also show how to combine higher-kinded types with Haskell's automatic derivation mechanism
 ---
 
-*Note: this document is a literate Haskell module!*
+*Featured in [Haskell Weekly issue 456](https://haskellweekly.news/issue/456.html)*
 
 I am a firm believer in the purely functional programming approach, embodied by the Haskell programming language. While the Haskell 
 community is not huge, it is large enough that I can work on most domains.
@@ -326,4 +326,5 @@ data Store f
 \end{code}
 
 I haven't figured out how to do this yet, but it would be desirable.
- 
+
+*This document is a literate Haskell module!*
