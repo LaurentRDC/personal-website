@@ -4,6 +4,10 @@ title: About me
 
 ## Employment
 
+* February 2025 - | [__Bitnomial__](https://bitnomial.com/) | Senior Software Engineer
+    
+    <p></p>
+
 * August 2021 - January 2025 | [__SocïVolta__](http://socivolta.com/) | Quantitative Research
 
     My role at SocïVolta involved multiple tasks and research subjects, including:
