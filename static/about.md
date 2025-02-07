@@ -5,6 +5,9 @@ title: About me
 ## Employment
 
 * February 2025 - | [__Bitnomial__](https://bitnomial.com/) | Senior Software Engineer
+
+    Bitnomial operates a commodity derivatives exchange, headquartered in Chicago, and regulated by the [Commodity Futures Trading Commission](https://www.cftc.gov/). 
+    Bitnomial also operates a clearing firm for customers to easily access the Bitnomial Exchange, and a clearinghouse for clearing firms active on its exchange.
     
     <p></p>
 
