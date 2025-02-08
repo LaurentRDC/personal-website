@@ -7,7 +7,7 @@
         <description><![CDATA[My personal blog on science, math, programming, and other interests.]]></description>
         <atom:link href="https://laurentrdc.xyz/feed.xml" rel="self"
                    type="application/rss+xml" />
-        <lastBuildDate>2025-01-23</lastBuildDate>
+        <lastBuildDate>2025-02-08</lastBuildDate>
         <item>
     <title>Modeling dataframes in Haskell using higher-kinded types</title>
     <link>https://laurentrdc.xyz//posts/HKTGenerics.html</link>

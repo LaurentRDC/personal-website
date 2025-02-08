@@ -8,13 +8,13 @@
         <name>Laurent P. René de Cotret</name>
         
     </author>
-    <updated>2025-01-23</updated>
+    <updated>2025-02-08</updated>
     <entry>
     <title>Modeling dataframes in Haskell using higher-kinded types</title>
     <link href="https://laurentrdc.xyz//posts/HKTGenerics.html" />
     <id>https://laurentrdc.xyz//posts/HKTGenerics.html</id>
     <published>2025-01-22T00:00:00Z</published>
-    <updated>2025-01-23</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p><em>Featured in <a href="https://haskellweekly.news/issue/456.html">Haskell Weekly issue 456</a></em></p>
 <p>I am a firm believer in the purely functional programming approach, embodied by the Haskell programming language. While the Haskell
 community is not huge, it is large enough that I can work on most domains.</p>
@@ -237,7 +237,7 @@ How about nesting dataframes types? Consider this:</p>
     <link href="https://laurentrdc.xyz//posts/typed-dimensions.html" />
     <id>https://laurentrdc.xyz//posts/typed-dimensions.html</id>
     <published>2024-11-20T00:00:00Z</published>
-    <updated>2024-11-24</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p>I have performed non-trivial scientific calculations, in <a href="/about.html">university and beyond</a>, for almost 15 years.</p>
 <p>Until the end of undergraduate school, this was mostly done by hand. Optimizing the <a href="https://en.wikipedia.org/wiki/Brachistochrone_curve">trajectory of a heavy ball</a> or solving the <a href="https://en.wikipedia.org/wiki/Heat_equation">heat equation</a> are problems with analytical solutions, and thus can be solved with pen(cil) and paper.</p>
 <p>However, there were instances when numerical tools had to be used, rather than analytical ones. This occurred, for example, when replacing models of the physical world with measurements from the physical world in experimental physics classes. By the end of my B.Sc., <a href="/files/ugrad_project.pdf">the need to take measurements, transform them, and report results was made much simpler by using a computer</a>.</p>
@@ -439,7 +439,7 @@ We can compute the result of <code>maxwellBoltzmannDist</code> in any compatible
     <link href="https://laurentrdc.xyz//posts/powerweave-launch.html" />
     <id>https://laurentrdc.xyz//posts/powerweave-launch.html</id>
     <published>2024-04-05T00:00:00Z</published>
-    <updated>2024-10-22</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p>I co-founded <a href="https://powerweave.io">Powerweave</a> with <a href="https://www.linkedin.com/in/mathilde-mounier-005320170/">Mathilde Mounier</a>. We have been working nights and weekends for the better part of a year. Today, I can reveal it publicly.</p>
 <p>Starting a business is something that I have been thinking about since finishing graduate school. <a href="/about.html">My academic expertise</a> could not be turned into a business outright (<a href="https://www.linkedin.com/company/e-ray-scientific-inc/">although ex-colleagues are trying!</a>), but my skills in mathematics, software engineering, and computer science have a broader applicability.</p>
 <p>Mathilde and I want to act on the climate emergency. As simple citizens, our actions have a limited effect. However, by starting the right business, we can create a movement which has a tangible impact. I am positively inclined towards technology startups specifically because of the growth curve. This means that if everything goes right, Powerweave could change the world.</p>
@@ -492,7 +492,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
     <link href="https://laurentrdc.xyz//posts/typesafe-tradingstrats.html" />
     <id>https://laurentrdc.xyz//posts/typesafe-tradingstrats.html</id>
     <published>2024-02-04T00:00:00Z</published>
-    <updated>2024-11-25</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p>I work in the business of algorithmic power trading, which is the automated trading of various power-related products in regulated <a href="https://en.wikipedia.org/wiki/Electricity_market">electricity markets</a>. Products include short-term inter-jurisdiction arbitrage, financial transmission rights, and more.</p>
 <p>This year, my employer is expanding its trading operations to a new class of products. Since there is no overlap between this new work and our current operations, I got to design a technology stack most suited for the task. This technology stack includes Haskell, most importantly because wrong or unexpected trading decisions can (and have) cost us dearly.</p>
 <p>In this blog post, I want to show you the basics of how we designed the framework in which to express trading strategies.</p>
@@ -703,7 +703,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
     <link href="https://laurentrdc.xyz//posts/algebra-stoploss.html" />
     <id>https://laurentrdc.xyz//posts/algebra-stoploss.html</id>
     <published>2023-05-07T00:00:00Z</published>
-    <updated>2023-05-07</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p>I was once an undergraduate student in a joint Mathematics &amp; Physics program. Some of the math courses, namely group theory and algebra, remained very abstract to me throughout my education. There is some group theory in the description of symmetries of physical systems; but being an experimentalist, I didn’t use more than 5% of what I learned in my undergrad during my PhD.</p>
 <p>However, in the course of my work now in finance, I had the pleasure of discovering that I was actually working with an algebraic structure. This post describes how that happened.</p>
 <hr />
@@ -1064,7 +1064,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
     <link href="https://laurentrdc.xyz//posts/rolling-stats.html" />
     <id>https://laurentrdc.xyz//posts/rolling-stats.html</id>
     <published>2023-03-23T00:00:00Z</published>
-    <updated>2023-07-17</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p>In the context of an array, rolling operations are operations on a set of values which are computed at each index of the array based on a subset of values in the array. A common rolling operation is the rolling mean, also known as the moving average.</p>
 <p>The best way to understand is to see it in action. Consider the following list:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>]</span></code></pre></div>
@@ -1310,7 +1310,7 @@ S(X) = \frac{\bar{X}}{\sigma_X}
     <link href="https://laurentrdc.xyz//posts/wavelet-filtering.html" />
     <id>https://laurentrdc.xyz//posts/wavelet-filtering.html</id>
     <published>2022-11-23T00:00:00Z</published>
-    <updated>2024-06-05</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<div class="message is-link"><div class="message-body"><h2>On this page</h2><p><ul>
 <li><a href="#integral-transforms" id="toc-integral-transforms">Integral transforms</a>
 <ul>
@@ -1457,7 +1457,7 @@ W_k = \left\{ \begin{array}{cl}
     <link href="https://laurentrdc.xyz//posts/chesterton.html" />
     <id>https://laurentrdc.xyz//posts/chesterton.html</id>
     <published>2022-08-02T00:00:00Z</published>
-    <updated>2022-08-02</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p>The key technological advances which brought Bitcoin to life are the blockchain and its associated proof-of-work consensus algorithm. The Bitcoin whitepaper<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is very clear on its purpose:</p>
 <blockquote>
 <p>A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution. Digital signatures provide part of the solution, but the main benefits are lost if a trusted third party is still required to prevent double-spending.</p>
@@ -1487,7 +1487,7 @@ W_k = \left\{ \begin{array}{cl}
     <link href="https://laurentrdc.xyz//posts/multiverse.html" />
     <id>https://laurentrdc.xyz//posts/multiverse.html</id>
     <published>2022-03-02T00:00:00Z</published>
-    <updated>2023-03-30</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p>I’m working on a global optimization problem these days. Unlike local optimization problems, e.g. what you would solve using least-square minimization, global optimization inevitably involves exhaustively evaluating all <em>possible</em> solutions and choosing the best one. As you can imagine, global optimization is much more computationally-intensive than local optimization, due to the size of the set of potential solutions. Speeding up a global optimization problem involves reducing the set of possible solution to a minimum, based on the specifics of the problem.</p>
 <p>In this post, I’ll show you how to <em>build</em> the minimal set of possible solutions to an optimization problem, instead of searching for solutions in a larger space. As we’ll see, only viable solutions are ever considered. This will be done by splitting the computations into multiple universes whenever a choice is presented to us, such that we traverse the multiverse of possibilities all at once.</p>
 <h3 class="title is-3" id="an-example-problem">An example problem</h3>
@@ -1617,7 +1617,7 @@ W_k = \left\{ \begin{array}{cl}
     <link href="https://laurentrdc.xyz//posts/existential.html" />
     <id>https://laurentrdc.xyz//posts/existential.html</id>
     <published>2021-09-26T00:00:00Z</published>
-    <updated>2022-07-06</updated>
+    <updated>2025-02-08</updated>
     <summary type="html"><![CDATA[<p><em>Featured in <a href="https://haskellweekly.news/issue/283.html">Haskell Weekly issue 283</a></em></p>
 <p>Sometimes, Haskell’s type system seems a bit restrictive compared to dynamic languages like Python. The most obvious example is the heterogenous list:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="co"># Python</span></span>
