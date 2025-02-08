@@ -2,6 +2,7 @@
 title: Starting a new adventure with Powerweave
 date: 2024-04-05
 summary: I started a business, Powerweave. In this post, I explain what Powerweave is and why it is important to me.
+tags: personal
 ---
 
 I co-founded [Powerweave](https://powerweave.io) with [Mathilde Mounier](https://www.linkedin.com/in/mathilde-mounier-005320170/). We have been working nights and weekends for the better part of a year. Today, I can reveal it publicly.

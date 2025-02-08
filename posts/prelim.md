@@ -2,6 +2,7 @@
 title: In defence of the PhD prelim exam
 date: 2021-06-12
 summary: The department of Physics at McGill University still requires PhD students to pass the old-school prelim exam. That may change in the near future. Here's why I think we should keep it.
+tags: science, personal
 ---
 
 In the [department of Physics](http://www.physics.mcgill.ca) at McGill University, there are a few requirements for graduation in the PhD program. One of these requirements is to pass the *preliminary examination*, or prelim for short, at the end of the first year[^quals]. This type of examination is becoming rarer across North America. The Physics department has been discussing the modernization of the prelim, either by changing its format or removing it entirely.

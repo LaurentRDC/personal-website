@@ -2,6 +2,7 @@
 title: Trading strategies with typed features using Haskell and type families
 date: 2024-02-04
 summary: In this blog post, I show you the basics of defining typed features in trading strategies using Haskell.
+tags: haskell, finance
 ---
 
 I work in the business of algorithmic power trading, which is the automated trading of various power-related products in regulated [electricity markets](https://en.wikipedia.org/wiki/Electricity_market). Products include short-term inter-jurisdiction arbitrage, financial transmission rights, and more. 

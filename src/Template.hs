@@ -28,35 +28,35 @@ type Schema = [NavigationLink]
 
 schema :: Schema
 schema =
-  [ Link "/index.html" "Home",
-    Link "/software.html" "Software",
-    Link "/publications.html" "Publications",
-    Link "/about.html" "About me",
-    Link "/archive.html" "All blog posts"
+  [ Link "/index.html" "Home"
+  , Link "/software.html" "Software"
+  , Link "/publications.html" "Publications"
+  , Link "/about.html" "About me"
+  , Link "/archive.html" "All blog posts"
   ]
 
 socialLinks :: [SocialLink]
 socialLinks =
-  [ ("fas fa-envelope", "/email.html", "e-mail"),
-    ("fab fa-github", "https://github.com/LaurentRDC", "GitHub"),
-    ("fab fa-linkedin", "https://www.linkedin.com/in/laurentrdc", "LinkedIn"),
-    ("ai ai-researchgate", "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret", "ResearchGate"),
-    ("ai ai-orcid", "https://orcid.org/0000-0002-1464-2739", "OrcID"),
-    ("ai ai-google-scholar", "https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en", "Google Scholar")
+  [ ("fas fa-envelope", "/email.html", "e-mail")
+  , ("fab fa-github", "https://github.com/LaurentRDC", "GitHub")
+  , ("fab fa-linkedin", "https://www.linkedin.com/in/laurentrdc", "LinkedIn")
+  , ("ai ai-researchgate", "https://www.researchgate.net/profile/Laurent_Rene_De_Cotret", "ResearchGate")
+  , ("ai ai-orcid", "https://orcid.org/0000-0002-1464-2739", "OrcID")
+  , ("ai ai-google-scholar", "https://scholar.google.ca/citations?user=pXFhwioAAAAJ&hl=en", "Google Scholar")
   ]
 
 feedLinks :: [SocialLink]
 feedLinks =
-  [ ("fas fa-rss", "/feed.xml", "RSS feed"),
-    ("fas fa-atom", "/atom.xml", "Atom feed")
+  [ ("fas fa-rss", "/feed.xml", "RSS feed")
+  , ("fas fa-atom", "/atom.xml", "Atom feed")
   ]
 
 styleSheets :: [AttributeValue]
 styleSheets =
-  [ "/css/syntax.css",
-    "/css/style.css",
-    fontAwesomeURL,
-    academiconsURL
+  [ "/css/syntax.css"
+  , "/css/style.css"
+  , fontAwesomeURL
+  , academiconsURL
   ]
 
 defaultHead :: Maybe AnalyticsTag -> H.Html
@@ -99,10 +99,10 @@ analytics (MkAnalyticsTag tag) = do
   H.script $
     preEscapedText $
       mconcat
-        [ "window.dataLayer = window.dataLayer || []; ",
-          "function gtag(){dataLayer.push(arguments);} ",
-          "gtag('js', new Date()); ",
-          "gtag('config', '" <> tag <> "');"
+        [ "window.dataLayer = window.dataLayer || []; "
+        , "function gtag(){dataLayer.push(arguments);} "
+        , "gtag('js', new Date()); "
+        , "gtag('config', '" <> tag <> "');"
         ]
 
 -- Analytics from the environment. This environment variable is usually only set
@@ -136,8 +136,15 @@ navigationBar = H.section ! class_ "hero-with-background is-dark" $ do
     H.div ! class_ "container has-text-centered" $ do
       H.h1 ! class_ "title has-text-light" $
         "$title$"
-      H.h3 "$if(date)$Posted on $date$. $endif$$if(updatedMessage)$$updatedMessage$$endif$"
-      H.h3 "$if(reading-time)$Estimated reading time of $reading-time$ min.$endif$"
+      H.h3 $ ifVar "date" "Posted on $date$. " <> ifVar "updatedMessage" "updatedMessage"
+      H.h3 $ ifVar "reading-time" "Estimated reading time of $reading-time$ min."
+      H.h3 $
+        ifVar "tags" $
+          ( H.span ! A.class_ "icon has-text-link" $
+              H.i ! A.class_ "fas fa-tag" $
+                mempty
+          )
+            <> " Tags: $tags$"
   --------------------------------------------------------------------------
   H.div ! class_ "hero-foot" $
     H.div ! class_ "navbar is-transparent" $
@@ -145,14 +152,14 @@ navigationBar = H.section ! class_ "hero-with-background is-dark" $ do
         H.div ! class_ "navbar-menu" $
           H.div ! class_ "navbar-start" $
             forM_ socialLinks mkSocialLink
-  where
-    renderLink :: NavigationLink -> Html
-    renderLink (Link url title_) = H.a ! class_ "navbar-item" ! href (toValue url) $ toMarkup title_
+ where
+  renderLink :: NavigationLink -> Html
+  renderLink (Link url title_) = H.a ! class_ "navbar-item" ! href (toValue url) $ toMarkup title_
 
-    -- Generate an icon + anchor
-    mkSocialLink (icon', link_, name_) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link_) $ do
-      H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon') $ mempty
-      toMarkup name_
+  -- Generate an icon + anchor
+  mkSocialLink (icon', link_, name_) = H.a ! class_ "navbar-item has-text-light" ! target "_blank" ! href (toValue link_) $ do
+    H.span ! class_ "icon is-medium" $ H.i ! class_ (toValue icon') $ mempty
+    toMarkup name_
 
 defaultFooter :: String -> H.Html
 defaultFooter s' = H.footer ! class_ "footer" $
@@ -166,24 +173,25 @@ defaultFooter s' = H.footer ! class_ "footer" $
     -- Message and disclaimer
     H.p ! class_ "is-small" $
       mconcat
-        [ H.toHtml s',
-          "This website was created using free and open-source technologies. ",
-          "You can learn more about how this website is generated ",
-          H.a ! href "/about-site.html" $ "here",
-          "."
+        [ H.toHtml s'
+        , "This website was created using free and open-source technologies. "
+        , "You can learn more about how this website is generated "
+        , H.a ! href "/about-site.html" $ "here"
+        , "."
         ]
     H.a ! rel "license" ! href "http://creativecommons.org/licenses/by-sa/4.0/" $
       H.img
         ! alt "Creative Commons License"
         ! A.style "border-width:0"
         ! src "/images/cc-by-sa.svg"
-  where
-    renderLink (icon', link_, name_) = do
-      H.span ! class_ "icon" $ H.i ! class_ (toValue icon') $ mempty
-      H.a ! target "_blank" ! href (toValue link_) $ toMarkup name_
+ where
+  renderLink (icon', link_, name_) = do
+    H.span ! class_ "icon" $ H.i ! class_ (toValue icon') $ mempty
+    H.a ! target "_blank" ! href (toValue link_) $ toMarkup name_
 
--- | Full default template
--- The templateFooter will be adorned with the message @s@
+{- | Full default template
+The templateFooter will be adorned with the message @s@
+-}
 mkDefaultTemplate ::
   Maybe AnalyticsTag ->
   String ->
@@ -210,3 +218,12 @@ tocTemplate = do
       H.h2 "On this page"
       H.p "$toc$"
   "$body$"
+
+ifVar ::
+  -- | Template variable
+  Text ->
+  -- | Expression using template variable
+  Html ->
+  -- | Full expression
+  Markup
+ifVar v expr = mconcat [toMarkup $ "$if(" <> v <> ")$", expr, "$endif$"]

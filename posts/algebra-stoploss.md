@@ -2,6 +2,7 @@
 title: The algebraic structure of a trading stop-loss system
 date: 2023-05-07
 summary: I'm building a trading stop-loss system, and I have discovered that it forms a neat algebraic structure.
+tags: mathematics, finance, python
 ---
 
 I was once an undergraduate student in a joint Mathematics & Physics program. Some of the math courses, namely group theory and algebra, remained very abstract to me throughout my education. There is some group theory in the description of symmetries of physical systems; but being an experimentalist, I didn't use more than 5% of what I learned in my undergrad during my PhD.

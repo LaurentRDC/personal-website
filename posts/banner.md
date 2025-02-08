@@ -2,6 +2,7 @@
 title: Matplotlib for graphic design
 date: 2020-11-03
 summary: This short post shows how I generate the banner at the top of this website programmatically using Matplotlib.
+tags: personal
 ---
 
 In this post, I will show you how I generated the banner for this website using [Matplotlib](https://matplotlib.org/). In case it disappears in the future, here is an image of it:

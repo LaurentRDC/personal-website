@@ -2,6 +2,7 @@
 title: "When one temperature is not enough: the two-temperature model"
 date: 2019-04-03
 summary: What if we could prepare a system with two distinct temperatures? What would it look like?
+tags: science
 ---
 
 Temperature is a measure of the average kinetic energy of all particles in a system. An example of such as system is presented below:

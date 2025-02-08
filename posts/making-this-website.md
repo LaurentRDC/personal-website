@@ -2,6 +2,7 @@
 title: How this website is generated
 date: 2018-08-02
 summary: "In this post, I go over the process of generating this website using Hakyll and other tools."
+tags: meta
 ---
 
 In the hope that this page is useful to someone, I would like to explain how I generate this website.

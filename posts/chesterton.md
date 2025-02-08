@@ -2,6 +2,7 @@
 title: Chesterton's fence and why I'm not sold on the blockchain
 date: 2022-08-02
 summary: Chesterton's fence is a principle which says that we should understand why things are the way, before we try to push for change. Cryptocurrencies based on the blockchain haven't demonstrated that they understand the reason for centralization of the current payment networks.
+tags: cryptocurrencies, finance
 ---
 
 The key technological advances which brought Bitcoin to life are the blockchain and its associated proof-of-work consensus algorithm. The Bitcoin whitepaper[^bitcoin-whitepaper] is very clear on its purpose:

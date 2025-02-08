@@ -2,6 +2,7 @@
 title: Modeling dataframes in Haskell using higher-kinded types
 date: 2025-01-22
 summary: This post is an exploration of the type-level shenanigans that can be used to model dataframes in Haskell. I also show how to combine higher-kinded types with Haskell's automatic derivation mechanism
+tags: haskell, science
 ---
 
 *Featured in [Haskell Weekly issue 456](https://haskellweekly.news/issue/456.html)*

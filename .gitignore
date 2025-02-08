@@ -33,6 +33,9 @@ sass/*.bat
 WinSCP.exe
 WinSCP.ini
 
+# Python virtual environment
+pyenv/
+
 # Files automatically generated
 templates/default.html
 css/syntax.css

@@ -2,6 +2,7 @@
 title: Exploring the multiverse of possibilities all at once using monads
 date: 2022-03-02
 summary: I'm working on a global optimization problem, trying to reduce the size of the solution set as much as possible. In this post, I'll show you how to build computations involving choices, such that we traverse the multiverse of possibilities all at once. This post gives an intuition behind the list monad in Haskell.
+tags: haskell
 ---
 
 I'm working on a global optimization problem these days. Unlike local optimization problems, e.g. what you would solve using least-square minimization, global optimization inevitably involves exhaustively evaluating all *possible* solutions and choosing the best one. As you can imagine, global optimization is much more computationally-intensive than local optimization, due to the size of the set of potential solutions. Speeding up a global optimization problem involves reducing the set of possible solution to a minimum, based on the specifics of the problem.

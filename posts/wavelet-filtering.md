@@ -3,6 +3,7 @@ title: Filtering noise with discrete wavelet transforms
 date: 2022-11-23
 summary: Data is often noisy, containing a meaningful signal component as well as undesired perturbations. Many filtering techniques can be used to filter away noise. In this post, we'll see how to use discrete wavelet transforms to de-noise data. 
 withtoc: yes
+tags: science, mathematics, python
 ---
 
 All experimental data contains noise. Distinguishing between measurement and noise is an important component of any data analysis pipeline. However, different noise-filtering techniques are suited to different categories of noise.

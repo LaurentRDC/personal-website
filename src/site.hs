@@ -7,7 +7,9 @@ import BulmaFilter (bulmaTransform)
 import Control.Monad (forM_)
 import Data.ByteString qualified as B
 import Data.Char (isSpace)
+import Data.Function (on)
 import Data.Functor ((<&>))
+import Data.List qualified as List (intercalate, intersperse, sort)
 import Data.Map.Strict qualified as M
 import Data.Maybe (fromMaybe)
 import Data.Text qualified as T
@@ -19,17 +21,20 @@ import Data.Time.Clock (getCurrentTime, utctDay)
 import Feed (feedConfiguration)
 import GHC.IO.Encoding qualified as E
 import Hakyll
-import Hakyll.Images
-  ( compressJpgCompiler,
-    ensureFitCompiler,
-    loadImage,
-  )
+import Hakyll.Images (
+  compressJpgCompiler,
+  ensureFitCompiler,
+  loadImage,
+ )
 import ReadingTimeFilter (readingTimeFilter)
 import System.FilePath ((</>))
 import System.Process.Typed (ExitCode (..), readProcess, shell)
 import Template (getAnalyticsTagFromEnv, mkDefaultTemplate, tocTemplate)
 import Text.Blaze.Html.Renderer.Pretty qualified as Pretty
 import Text.Blaze.Html.Renderer.String (renderHtml)
+import Text.Blaze.Html5 ((!))
+import Text.Blaze.Html5 qualified as H
+import Text.Blaze.Html5.Attributes qualified as A
 import Text.Pandoc.Definition
 import Text.Pandoc.Extensions
 import Text.Pandoc.Filter.Plot (plotFilter)
@@ -44,14 +49,24 @@ syntaxHighlightingStyle = kate
 
 -- We match images down to two levels
 -- Images/* and images/*/**
-jpgImages, nonJpgImages, generatedContent :: Pattern
+jpgImages :: Pattern
 jpgImages = "images/*.jpg" .||. "images/*/**.jpg"
+
+nonJpgImages :: Pattern
 nonJpgImages =
   ( "images/*/**"
       .||. "images/*"
   )
     .&&. complement jpgImages
+
+generatedContent :: Pattern
 generatedContent = "generated/**"
+
+postsPattern :: Pattern
+postsPattern = "posts/*" .&&. complement "posts/drafts/*"
+
+tagsPattern :: Pattern
+tagsPattern = "tags/*.html"
 
 --------------------------------------------------------------------------------
 
@@ -59,8 +74,8 @@ generatedContent = "generated/**"
 conf :: Configuration
 conf =
   defaultConfiguration
-    { destinationDirectory = "_rendered",
-      providerDirectory = "."
+    { destinationDirectory = "_rendered"
+    , providerDirectory = "."
     }
 
 renderTemplate :: IO B.ByteString
@@ -145,10 +160,10 @@ main = do
 
         let projectsCtx =
               mconcat
-                [ listField "scientific" defaultContext (return scientific),
-                  listField "general" defaultContext (return general),
-                  constField "title" "Software projects",
-                  defaultContext
+                [ listField "scientific" defaultContext (return scientific)
+                , listField "general" defaultContext (return general)
+                , constField "title" "Software projects"
+                , defaultContext
                 ]
 
         makeItem ""
@@ -158,8 +173,14 @@ main = do
 
     --------------------------------------------------------------------------------
     -- Compile blog posts
-    -- Explicitly do not match the drafts
-    match ("posts/*" .&&. complement "posts/drafts/*") $ do
+
+    tags <-
+      -- We are sorting tags because the order determines the presentation
+      -- of the tags on the archive page
+      sortTagsBy (compare `on` fst)
+        <$> buildTags postsPattern (fromCapture tagsPattern)
+
+    match postsPattern $ do
       route $ setExtension "html"
       compile $ do
         -- This weird compilation action is structured so that we can extract the reading time
@@ -169,20 +190,40 @@ main = do
         --            https://github.com/jaspervdj/hakyll/issues/643
         (metaCtx, doc) <- pandocCompilerWithMeta plotConfig
         saveSnapshot "content" doc -- Saved content for RSS feed
-          >>= loadAndApplyTemplate "templates/default.html" (postCtx <> metaCtx)
+          >>= loadAndApplyTemplate "templates/default.html" (postCtx tags <> metaCtx)
+          >>= relativizeUrls
+
+    --------------------------------------------------------------------------------
+    -- Compile tag pages
+    tagsRules tags $ \tag pattern -> do
+      let title = mconcat ["Posts tagged \"", tag, "\""]
+      route idRoute
+      compile $ do
+        posts <- recentFirst =<< loadAll pattern
+        let ctx =
+              mconcat
+                [ constField "title" title
+                , constField "tag" tag
+                , listField "posts" (postCtx tags) (pure posts)
+                , defaultContext
+                ]
+
+        makeItem ""
+          >>= loadAndApplyTemplate "templates/tag.html" ctx
+          >>= loadAndApplyTemplate "templates/default.html" ctx
           >>= relativizeUrls
 
     --------------------------------------------------------------------------------
     -- Create RSS feed and Atom feeds
     -- See https://jaspervdj.be/hakyll/tutorials/05-snapshots-feeds.html
     forM_
-      [ ("feed.xml", renderRss),
-        ("atom.xml", renderAtom)
+      [ ("feed.xml", renderRss)
+      , ("atom.xml", renderAtom)
       ]
       $ \(name, renderFunc) -> create [name] $ do
         route idRoute
         compile $ do
-          let feedCtx = postCtx <> bodyField "description"
+          let feedCtx = postCtx tags <> bodyField "description"
           posts <-
             fmap (take 10) . recentFirst
               =<< loadAllSnapshots "posts/*" "content"
@@ -195,9 +236,12 @@ main = do
       compile $ do
         posts <- recentFirst =<< loadAll "posts/*"
         let archiveCtx =
-              listField "posts" postCtx (return posts)
-                <> constField "title" "All blog posts"
-                <> defaultContext
+              mconcat
+                [ listField "posts" (postCtx tags) (return posts)
+                , constField "title" "All blog posts"
+                , tagCloudField' "tag-cloud" tags
+                , defaultContext
+                ]
 
         makeItem ""
           >>= loadAndApplyTemplate "templates/archive.html" archiveCtx
@@ -211,7 +255,7 @@ main = do
       compile $ do
         posts <- take 10 <$> (recentFirst =<< loadAll "posts/*")
         let indexCtx =
-              listField "posts" postCtx (return posts)
+              listField "posts" (postCtx tags) (return posts)
                 <> defaultContext
 
         getResourceBody
@@ -235,14 +279,15 @@ main = do
     create ["sitemap.xml"] $ do
       route idRoute
       compile $ do
-        -- Gather all announcements
+        -- Gather all posts
         posts <- recentFirst =<< loadAll "posts/*"
         -- Gather all other pages
         pages <- loadAll (fromGlob "static/**")
-        let allPages = pages <> posts
+        tagPages <- loadAll "tags/*"
+        let allPages = pages <> posts <> tagPages
             sitemapCtx =
               constField "root" "https://laurentrdc.xyz/"
-                <> listField "pages" postCtx (return allPages)
+                <> listField "pages" (postCtx tags) (return allPages)
 
         makeItem ("" :: String)
           >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
@@ -250,17 +295,23 @@ main = do
     --------------------------------------------------------------------------------
     match "templates/*" $ compile templateCompiler
 
-postCtx :: Context String
-postCtx =
+postCtx :: Tags -> Context String
+postCtx tags =
   mconcat
-    [ defaultContext,
-      constField "root" "https://laurentrdc.xyz/",
-      dateField "date" "%Y-%m-%d",
-      lastUpdatedField,
-      -- Because the template language isn't powerful enough
+    [ constField "root" "https://laurentrdc.xyz/"
+    , dateField "date" "%Y-%m-%d"
+    , tagsFieldWith
+        (fmap List.sort . getTags) -- sort for presentation
+        simpleRenderLink
+        ((mconcat . List.intersperse ", "))
+        "tags"
+        tags
+    , lastUpdatedField
+    , -- Because the template language isn't powerful enough
       -- to compare dates, we need to construct an updated message field
       -- separately.
       updatedMessageField
+    , defaultContext
     ]
 
 -- | Check when a file was last updated, based on the git history
@@ -277,9 +328,10 @@ lastUpdatedViaGit fp = do
         . TL.decodeUtf8
         $ out
 
--- | Field which provides the "last-updated" variable for items, which
--- provides the date of the most recent git commit which modifies a file.
--- Note that this context will be unavailable for generated pages
+{- | Field which provides the "last-updated" variable for items, which
+provides the date of the most recent git commit which modifies a file.
+Note that this context will be unavailable for generated pages
+-}
 lastUpdatedField :: Context String
 lastUpdatedField = field "updated" $ \(Item ident _) -> unsafeCompiler $ do
   lastUpdated <- lastUpdatedViaGit (toFilePath ident)
@@ -287,9 +339,10 @@ lastUpdatedField = field "updated" $ \(Item ident _) -> unsafeCompiler $ do
     Nothing -> return "<unknown>"
     Just dt -> return dt
 
--- | Field which provides the "updatedMessage" variable for items, which
--- provides the date of the most recent git commit which modifies a file.
--- Note that this context will be unavailable for generated pages
+{- | Field which provides the "updatedMessage" variable for items, which
+provides the date of the most recent git commit which modifies a file.
+Note that this context will be unavailable for generated pages
+-}
 updatedMessageField :: Context String
 updatedMessageField = field "updatedMessage" $ \(Item ident _) -> do
   meta <- getMetadata ident
@@ -327,31 +380,31 @@ pandocCompilerWithMeta config = do
       writerOptions = case toc of
         Just _ ->
           defaultHakyllWriterOptions
-            { writerExtensions = extensions,
-              writerHTMLMathMethod = MathML,
-              writerHighlightStyle = Just syntaxHighlightingStyle,
-              writerTableOfContents = True,
-              writerTOCDepth = read (fromMaybe "3" tocDepth) :: Int,
-              writerTemplate = Just template
+            { writerExtensions = extensions
+            , writerHTMLMathMethod = MathML
+            , writerHighlightStyle = Just syntaxHighlightingStyle
+            , writerTableOfContents = True
+            , writerTOCDepth = read (fromMaybe "3" tocDepth) :: Int
+            , writerTemplate = Just template
             }
         Nothing ->
           defaultHakyllWriterOptions
-            { writerExtensions = extensions,
-              writerHTMLMathMethod = MathML,
-              writerHighlightStyle = Just syntaxHighlightingStyle
+            { writerExtensions = extensions
+            , writerHTMLMathMethod = MathML
+            , writerHighlightStyle = Just syntaxHighlightingStyle
             }
 
   return (metaCtx, writePandocWith writerOptions doc)
-  where
-    transforms doc = bulmaTransform . readingTimeFilter <$> plotFilter config (Just "HTML") doc
+ where
+  transforms doc = bulmaTransform . readingTimeFilter <$> plotFilter config (Just "HTML") doc
 
-    extractMeta :: T.Text -> MetaValue -> Context String
-    extractMeta name metavalue =
-      case metavalue of
-        MetaString txt -> mkField $ T.unpack txt
-        _ -> mempty
-      where
-        mkField = field (T.unpack name) . const . return
+  extractMeta :: T.Text -> MetaValue -> Context String
+  extractMeta name metavalue =
+    case metavalue of
+      MetaString txt -> mkField $ T.unpack txt
+      _ -> mempty
+   where
+    mkField = field (T.unpack name) . const . return
 
 -- | Allow math display, code highlighting, table-of-content, and Pandoc filters
 pandocCompiler_ ::
@@ -366,21 +419,21 @@ defaultPandocExtensions =
   let extensions =
         [ -- Pandoc Extensions: http://pandoc.org/MANUAL.html#extensions
           -- Math extensions
-          Ext_tex_math_dollars,
-          Ext_tex_math_double_backslash,
-          Ext_latex_macros,
-          -- Code extensions
-          Ext_fenced_code_blocks,
-          Ext_backtick_code_blocks,
-          Ext_fenced_code_attributes,
-          Ext_inline_code_attributes, -- Inline code attributes (e.g. `<$>`{.haskell})
-          -- Markdown extensions
-          Ext_implicit_header_references, -- We also allow implicit header references (instead of inserting <a> tags)
-          Ext_definition_lists, -- Definition lists based on PHP Markdown
-          Ext_yaml_metadata_block, -- Allow metadata to be speficied by YAML syntax
-          Ext_superscript, -- Superscripts (2^10^ is 1024)
-          Ext_subscript, -- Subscripts (H~2~O is water)
-          Ext_footnotes -- Footnotes ([^1]: Here is a footnote)
+          Ext_tex_math_dollars
+        , Ext_tex_math_double_backslash
+        , Ext_latex_macros
+        , -- Code extensions
+          Ext_fenced_code_blocks
+        , Ext_backtick_code_blocks
+        , Ext_fenced_code_attributes
+        , Ext_inline_code_attributes -- Inline code attributes (e.g. `<$>`{.haskell})
+        -- Markdown extensions
+        , Ext_implicit_header_references -- We also allow implicit header references (instead of inserting <a> tags)
+        , Ext_definition_lists -- Definition lists based on PHP Markdown
+        , Ext_yaml_metadata_block -- Allow metadata to be speficied by YAML syntax
+        , Ext_superscript -- Superscripts (2^10^ is 1024)
+        , Ext_subscript -- Subscripts (H~2~O is water)
+        , Ext_footnotes -- Footnotes ([^1]: Here is a footnote)
         ]
       defaultExtensions = writerExtensions defaultHakyllWriterOptions
    in foldr enableExtension defaultExtensions extensions
@@ -392,3 +445,33 @@ staticRoute = gsubRoute "static/" (const "")
 -- Move generated posts from posts/generated to generated/
 generatedRoute :: Routes
 generatedRoute = gsubRoute "generated/" (const "posts/generated/")
+
+{- | Modification of `tagCloudField`, to render each link
+in a Bulma "column"
+-}
+tagCloudField' ::
+  -- | Destination key
+  String ->
+  -- | Input tags
+  Tags ->
+  -- | Context
+  Context a
+tagCloudField' key =
+  tagCloudFieldWith
+    key
+    (\_ _ tag url _ _ _ -> makeLink tag url)
+    (List.intercalate " ")
+    100
+    100
+ where
+  -- The link creation function below ASSUMES that the
+  -- tag is surrounded by a <div class="columns"> ... </div> tag
+  -- See here:
+  --  https://bulma.io/documentation/columns/responsiveness/
+  makeLink :: (String -> String -> String)
+  makeLink tag url =
+    renderHtml $
+      H.a ! A.href (H.toValue url) $
+        H.div ! A.class_ "column" $
+          H.p ! A.class_ "has-text-centered has-text-weight-bold" $
+            mconcat [H.span ! A.class_ "icon has-text-link" $ H.i ! A.class_ "fas fa-tag" $ mempty, " ", H.toHtml tag]

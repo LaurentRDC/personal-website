@@ -2,6 +2,7 @@
 title: Genesis
 date: 2018-08-01
 summary: This is the first post of my blog, where I test new features.
+tags: meta
 ---
 
 This is the first post of my blog, where I can test new features.

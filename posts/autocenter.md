@@ -2,6 +2,7 @@
 title: Harnessing symmetry to find the center of a diffraction pattern
 date: 2021-01-23
 summary: Diffraction patterns are very symmetric; how hard can it be to find its center?
+tags: science, python
 ---
 
 Ultrafast electron diffraction involves the analysis of *diffraction patterns*. Here is an example diffraction pattern for a thin (<100nm) flake of graphite[^1]:

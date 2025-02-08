@@ -2,6 +2,7 @@
 title: Scientific computing with confidence using typed dimensions
 date: 2024-11-20
 summary: I defer to my computer to check the validity of my scientific computations. In this post, I will describe typed dimensions, and showcase the software package that makes it possible.
+tags: science, haskell
 ---
 
 I have performed non-trivial scientific calculations, in [university and beyond](/about.html), for almost 15 years.

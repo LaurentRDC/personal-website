@@ -2,6 +2,7 @@
 title: Efficient rolling statistics
 date: 2023-03-23
 summary: This post shows how to design efficient rolling statistics routine based on recurrence relations, as well as implementations in Haskell.
+tags: haskell, mathematics, finance
 ---
 
 In the context of an array, rolling operations are operations on a set of values which are computed at each index of the array based on a subset of values in the array. A common rolling operation is the rolling mean, also known as the moving average.
