@@ -136,7 +136,7 @@ navigationBar = H.section ! class_ "hero-with-background is-dark" $ do
     H.div ! class_ "container has-text-centered" $ do
       H.h1 ! class_ "title has-text-light" $
         "$title$"
-      H.h3 $ ifVar "date" "Posted on $date$. " <> ifVar "updatedMessage" "updatedMessage"
+      H.h3 $ ifVar "date" "Posted on $date$. " <> ifVar "updatedMessage" "$updatedMessage$"
       H.h3 $ ifVar "reading-time" "Estimated reading time of $reading-time$ min."
       H.h3 $
         ifVar "tags" $
