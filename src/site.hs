@@ -63,7 +63,10 @@ generatedContent :: Pattern
 generatedContent = "generated/**"
 
 postsPattern :: Pattern
-postsPattern = "posts/*" .&&. complement "posts/drafts/*"
+postsPattern = "posts/*" .&&. complement draftsPattern
+
+draftsPattern :: Pattern
+draftsPattern = "posts/drafts/*"
 
 tagsPattern :: Pattern
 tagsPattern = "tags/*.html"
@@ -191,6 +194,24 @@ main = do
         (metaCtx, doc) <- pandocCompilerWithMeta plotConfig
         saveSnapshot "content" doc -- Saved content for RSS feed
           >>= loadAndApplyTemplate "templates/default.html" (postCtx tags <> metaCtx)
+          >>= relativizeUrls
+
+
+    --------------------------------------------------------------------------------
+    -- Compile draft blog posts
+    --
+    -- I want to be able to read them (to see how they are rendered, for example),
+    -- but without them being linked anywhere.
+    match draftsPattern $ do
+      route $ setExtension "html"
+      compile $ do
+        -- This weird compilation action is structured so that we can extract the reading time
+        -- from the document, and use it in a context
+        -- TODO: include Pandoc metainformation to implement reading-time filter
+        --       See for example here:
+        --            https://github.com/jaspervdj/hakyll/issues/643
+        (metaCtx, doc) <- pandocCompilerWithMeta plotConfig
+        loadAndApplyTemplate "templates/default.html" (postCtx tags <> metaCtx) doc
           >>= relativizeUrls
 
     --------------------------------------------------------------------------------

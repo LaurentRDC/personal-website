@@ -2,6 +2,7 @@
 title: Design your own stealth aicraft using Yee's method
 date: 2024-12-01
 summary:
+tags:
 ---
 
 The idea here is to build software based on finite-difference time-domain (Yee's method), which allows to solve Maxwell's equations in time and space, to model the response of an aircraft to radar wave pulses.
@@ -20,7 +21,7 @@ Let's rip the bandaid off. Electromagnetic waves are described by a set of parti
 
 [^griffiths]: Readers interested in the derivation of these equations from prior experimental and theoretical work should consider reading the _de facto_ standard undergraduate textbook _Introduction to electrodynamics_ by David J. Griffiths.
 
-$$ 
+$$
 \begin{align}
     \nabla \cdot \textbf{D}(\textbf{r}, t)   &= \rho_f(\textbf{r}, t)
         &&& \text{Gauss' law}\\
@@ -75,8 +76,8 @@ In this particular post, however, I want to take a much more general approach to
 Time to numerically solve these equations by following , sometimes called the _finite-difference time-domain_ method. Consider a small simulation time step of value $\Delta t$. We consider the approximation to the derivative in the so-called _central difference_ scheme. Consider a general function $F$ of some one-dimensional variable $z$:
 
 $$
-    \frac{\partial \textbf{F}(z)}{\partial z} 
-        = \frac{ \textbf{F}(z + \Delta z) - \textbf{F}(z - \Delta z)}{2 \Delta z} 
+    \frac{\partial \textbf{F}(z)}{\partial z}
+        = \frac{ \textbf{F}(z + \Delta z) - \textbf{F}(z - \Delta z)}{2 \Delta z}
         + \mathcal{O}(\Delta z^2)
 $$
 
@@ -85,16 +86,16 @@ where $\mathcal{O}(\Delta z^2)$ is a collection of terms that are proportional t
 Discretizing the time derivative using the central difference scheme leads to the two update equations, one for the auxiliary magnetic field:
 
 $$
-    \textbf{H}(\textbf{r}, t + \tfrac{\delta t}{2}) 
-        = \textbf{H}(\textbf{r}, t - \tfrac{\delta t}{2}) 
+    \textbf{H}(\textbf{r}, t + \tfrac{\delta t}{2})
+        = \textbf{H}(\textbf{r}, t - \tfrac{\delta t}{2})
         - \frac{\delta t}{\mu(\textbf{r}, t)} \left( \nabla \times \textbf{E}(\textbf{r}, t) \right)
 $$
 
 and one for the electric field:
 
 $$
-    \textbf{E}(\textbf{r}, t + \delta t) 
-        = \textbf{E}(\textbf{r}, t) 
+    \textbf{E}(\textbf{r}, t + \delta t)
+        = \textbf{E}(\textbf{r}, t)
         + \frac{\delta t}{\epsilon(\textbf{r}, t)} \left( \nabla \times \textbf{H}(\textbf{r}, t + \tfrac{\delta t}{2}) \right)
 $$
 
@@ -109,8 +110,6 @@ $$
         \equiv \textbf{F}[i,j,k,n]
 $$
 
-### Discretizing the curl
-
 Discretizing the time derivative was rather straightforward. Now, it is time to discretize terms of the form
 
 $$
@@ -120,13 +119,13 @@ $$
 where $\textbf{A}$ is some vector field defined in three rectilinear dimensions. Recall the non-discretized definition:
 
 $$
-    \nabla \times \textbf{A}(\textbf{r}) 
+    \nabla \times \textbf{A}(\textbf{r})
         = \left( \frac{\partial A_z}{\partial y} -  \frac{\partial A_y}{\partial z} \right) \textbf{x}
         + \left( \frac{\partial A_x}{\partial z} -  \frac{\partial A_z}{\partial x} \right) \textbf{y}
         + \left( \frac{\partial A_y}{\partial x} -  \frac{\partial A_x}{\partial y} \right) \textbf{z}
 $$
 
-where $A_i$ is the component of $\textbf{A}$ in the $\textbf{i}$-direction. Again using the central difference scheme, we discretize the partial derivatives using a common step across all three dimensions, $\Delta$:
+where $A_i$ is the component of $\textbf{A}$ in the $\textbf{i}$-direction. Again using the central difference scheme, we discretize the partial derivatives using a common step size across all three dimensions, $\Delta$:
 
 $$
     \left( \nabla \times \textbf{A} \right)_x \approx
@@ -143,6 +142,72 @@ $$
         \frac{1}{2 \Delta} \left(A_y[i + \Delta,j,k] - A_y[i - \Delta,j,k] - A_x[i,j+ \Delta,k] + A_x[i,j - \Delta,k] \right)
 $$
 
-### Numerical stability
+The discretization of time, with step $\delta t$, is not independent of the discretization of space, with step $\Delta$ (TODO: discuss Courant number  https://en.wikipedia.org/wiki/Courant%E2%80%93Friedrichs%E2%80%93Lewy_condition)
 
-TODO: https://en.wikipedia.org/wiki/Courant%E2%80%93Friedrichs%E2%80%93Lewy_condition
+Finally, we arrive at the discretized update equations. To emphasize the discrete nature more obvious, and for easier porting to software later, we will separate the fields $\textbf{H}$ and $\textbf{E}$ each into three equations -- one per dimension -- and use square brackets for the $x$, $y$, $z$, and $t$ coordinate:
+
+$$
+\begin{align}
+H_x[i,j,k,n+\tfrac{\delta n}{2}]
+    &= H_x[i,j,k,n-\tfrac{\delta n}{2}]
+    &- \frac{\delta n}{\mu [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                E_z[i,j+\Delta, k,n]
+                - E_z[i,j-\Delta, k,n]
+                - E_y[i,j,k+\Delta,n]
+                + E_y[i,j,k-\Delta k,n]
+            \right) \\
+H_y[i,j,k,n+\tfrac{\delta n}{2}]
+    &= H_y[i,j,k,n-\tfrac{\delta n}{2}]
+    &- \frac{\delta n}{\mu [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                E_x[i,j,k + \Delta,n]
+                - E_x[i,j,k - \Delta,n]
+                - E_z[i + \Delta,j,k,n]
+                + E_z[i-\Delta,j,k,n]
+            \right) \\
+H_z[i,j,k,n+\tfrac{\delta n}{2}]
+    &= H_z[i,j,k,n-\tfrac{\delta n}{2}]
+    &- \frac{\delta n}{\mu [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                E_y[i + \Delta,j,k,n]
+                - E_y[i - \Delta,j,k,n]
+                - E_x[i,j+ \Delta,k,n]
+                + E_x[i,j - \Delta,k,n]
+            \right) \\
+E_x[i,j,k,n+\delta n]
+    &= E_x[i,j,k,n]
+    &+ \frac{\delta n}{\epsilon [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                H_z[i,j+\Delta, k,n+\tfrac{\delta n}{2}]
+                - H_z[i,j-\Delta, k,n+\tfrac{\delta n}{2}]
+                - H_y[i,j,k+\Delta,n+\tfrac{\delta n}{2}]
+                + H_y[i,j,k-\Delta k,n+\tfrac{\delta n}{2}]
+            \right) \\
+E_y[i,j,k,n+\delta n]
+    &= E_y[i,j,k,n]
+    &+ \frac{\delta n}{\epsilon [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                H_x[i,j,k + \Delta,n+\tfrac{\delta n}{2}]
+                - H_x[i,j,k - \Delta,n+\tfrac{\delta n}{2}]
+                - H_z[i + \Delta,j,k,n+\tfrac{\delta n}{2}]
+                + H_z[i-\Delta,j,k,n+\tfrac{\delta n}{2}]
+            \right) \\
+E_z[i,j,k,n+\delta n]
+    &= E_z[i,j,k,n]
+    &+ \frac{\delta n}{\epsilon [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                H_y[i + \Delta,j,k,n+\tfrac{\delta n}{2}]
+                - H_y[i - \Delta,j,k,n+\tfrac{\delta n}{2}]
+                - H_x[i,j+ \Delta,k,n+\tfrac{\delta n}{2}]
+                + H_x[i,j - \Delta,k,n+\tfrac{\delta n}{2}]
+            \right)
+\end{align}
+$$
+
