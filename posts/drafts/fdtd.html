@@ -1,0 +1,404 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z0NSFPKNBN">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Z0NSFPKNBN');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            Design your own stealth aicraft using Yee's method - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        Design your own stealth aicraft using Yee's method
+                    </h1>
+                    <h3>
+                        
+                        Posted on 2024-12-01. 
+                        
+                        
+                        Last updated on 2025-04-02.
+                        
+                    </h3>
+                    <h3>
+                        
+                        Estimated reading time of 6 min.
+                        
+                    </h3>
+                    <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: 
+                        
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>The idea here is to build software based on finite-difference time-domain (Yee’s method), which allows to solve Maxwell’s equations in time and space, to model the response of an aircraft to radar wave pulses.</p>
+<p>Connect this to my experience using terahertz pulses.</p>
+<p>Show the difference in response between basic shapes, culminating in the shape of the F-117 Nighthawk (which has a simple but effective shape)</p>
+<h2 class="title is-2" id="electrodynamics-primer">Electrodynamics primer</h2>
+<p>Electromagnetic waves, such as radar waves and light, are waves composed of two vector fields known as the <em>electric field</em> and <em>magnetic field</em>. This means that everywhere in the universe, there are two vectors <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\textbf{E}(\textbf{r}, t)</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐁</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\textbf{B}(\textbf{r}, t)</annotation></semantics></math> whose magnitudes and directions must be understood.</p>
+<p>All this to say: understanding the propagation of an electromagnetic wave <strong>requires</strong> to know 6 time-varying quantities: the electric field components <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>E</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><msub><mi>E</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><msub><mi>E</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\textbf{E}(\textbf{r}, t) = (E_x(t), E_y(t), E_z(t))</annotation></semantics></math> and the magnetic field components <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐁</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>B</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><msub><mi>B</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><msub><mi>B</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\textbf{B}(\textbf{r},t) = (B_x(t), B_y(t), B_z(t))</annotation></semantics></math>, over the space- and time-domain of our simulation. If you know these 6 quantities, you know everything.</p>
+<p>Let’s rip the bandaid off. Electromagnetic waves are described by a set of partial differential equations known as <a href="https://en.wikipedia.org/w/index.php?title=Maxwell%27s_equations&amp;oldid=1259490248">Maxwell’s equations</a>. When I said this blog post will be from first principles, the first principles are these equations<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mi>∇</mi><mo>⋅</mo><mtext mathvariant="bold">𝐃</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>ρ</mi><mi>f</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"></mtd><mtd columnalign="right" style="text-align: right"><mtext mathvariant="normal">Gauss’ law</mtext></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>∇</mi><mo>⋅</mo><mtext mathvariant="bold">𝐁</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mn>0</mn></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"></mtd><mtd columnalign="right" style="text-align: right"><mtext mathvariant="normal">Gauss’ law of magnetism</mtext></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>−</mi><mfrac><mrow><mi>∂</mi><mtext mathvariant="bold">𝐁</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>∂</mi><mi>t</mi></mrow></mfrac></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"></mtd><mtd columnalign="right" style="text-align: right"><mtext mathvariant="normal">Maxwell-Faraday’s law</mtext></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐇</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mtext mathvariant="bold">𝐉</mtext><mi>f</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mfrac><mrow><mi>∂</mi><mtext mathvariant="bold">𝐃</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>∂</mi><mi>t</mi></mrow></mfrac></mtd><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"></mtd><mtd columnalign="right" style="text-align: right"><mtext mathvariant="normal">Ampère-Maxwell’s law</mtext></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{align}
+    \nabla \cdot \textbf{D}(\textbf{r}, t)   &amp;= \rho_f(\textbf{r}, t)
+        &amp;&amp;&amp; \text{Gauss' law}\\
+    \nabla \cdot \textbf{B}(\textbf{r}, t)   &amp;= 0
+         &amp;&amp;&amp; \text{Gauss' law of magnetism} \\
+    \nabla \times \textbf{E}(\textbf{r}, t)   &amp;= -\frac{\partial \textbf{B}(\textbf{r}, t)  }{\partial t}
+        &amp;&amp;&amp; \text{Maxwell-Faraday's law}\\
+    \nabla \times \textbf{H}(\textbf{r}, t)   &amp;= \textbf{J}_f(\textbf{r}, t)   + \frac{\partial \textbf{D}(\textbf{r}, t)  }{\partial t}
+        &amp;&amp;&amp; \text{Amp\`ere-Maxwell's law}
+\end{align}
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐇</mtext><annotation encoding="application/x-tex">\textbf{H}</annotation></semantics></math> is the <em>auxiliary magnetic field</em>. We use a formulation using the auxiliary field <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐇</mtext><annotation encoding="application/x-tex">\textbf{H}</annotation></semantics></math> rather than the magnetic field <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐁</mtext><annotation encoding="application/x-tex">\textbf{B}</annotation></semantics></math> such that we only need to worry about the free current density <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mtext mathvariant="bold">𝐉</mtext><mi>f</mi></msub><annotation encoding="application/x-tex">\textbf{J}_f</annotation></semantics></math>, rather than the total current density.</p>
+<p>There are also the constitutive equations:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mtext mathvariant="bold">𝐃</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>ϵ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mtext mathvariant="bold">𝐉</mtext><mi>f</mi></msub><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>σ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mtext mathvariant="bold">𝐁</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>μ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐇</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>,</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mtext mathvariant="bold">𝐇</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{align}
+    \textbf{D}(\textbf{r}, t)   &amp;= \epsilon (\textbf{E}(\textbf{r}, t), \textbf{r}, t) \textbf{E}(\textbf{r}, t) \\
+    \textbf{J}_f(\textbf{r}, t) &amp;= \sigma (\textbf{E}(\textbf{r}, t), \textbf{r}, t) \textbf{E}(\textbf{r}, t) \\
+    \textbf{B}(\textbf{r}, t)   &amp;= \mu (\textbf{H}(\textbf{r}, t), \textbf{r}, t) \textbf{H}(\textbf{r}, t) \\
+\end{align}
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϵ</mi><annotation encoding="application/x-tex">\epsilon</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math> are the <em>permittivity</em>, <em>conductivity</em>, and <em>permeability</em>, respectively. These quantities are <strong>properties of materials</strong>, and as such are not considered unknown. Note that we do not assume any frequency-dependent response of materials; we consider time-dependence of material properties in the most general manner.</p>
+<p>Recall that our goal is to solve these equations over space (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐫</mtext><annotation encoding="application/x-tex">\textbf{r}</annotation></semantics></math>) and time (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math>) to get values of the electric field <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\textbf{E}(\textbf{r}, t)</annotation></semantics></math> and auxiliary magnetic field <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐇</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\textbf{H}(\textbf{r}, t)</annotation></semantics></math>. To this end, Gauss’s laws of electric and magnetic fluxes won’t be directly useful to us today (although they could be used to ensure the integrity of the computation). We will instead solve Faraday’s and Amp`ere’s laws iteratively, until some condition is met.</p>
+<p>We combine the equations above to get two coupled equations for <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐄</mtext><annotation encoding="application/x-tex">\textbf{E}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐇</mtext><annotation encoding="application/x-tex">\textbf{H}</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mfrac><mrow><mi>∂</mi><mtext mathvariant="bold">𝐄</mtext></mrow><mrow><mi>∂</mi><mi>t</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mn>1</mn><mi>ϵ</mi></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐇</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><mfrac><mrow><mi>∂</mi><mtext mathvariant="bold">𝐇</mtext></mrow><mrow><mi>∂</mi><mi>t</mi></mrow></mfrac></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>−</mi><mfrac><mn>1</mn><mi>μ</mi></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐄</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{align}
+    \frac{\partial \textbf{E}}{\partial{t}} &amp;= \frac{1}{\epsilon} \left( \nabla \times \textbf{H} \right) \\
+    \frac{\partial \textbf{H}}{\partial{t}} &amp;= -\frac{1}{\mu} \left( \nabla \times \textbf{E} \right) \\
+\end{align}
+</annotation></semantics></math></p>
+<p>subject to initial and boundary conditions.</p>
+<p>These equations can be solved in a multitude of ways, usually based on the structure of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>ϵ</mi><annotation encoding="application/x-tex">\epsilon</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>σ</mi><annotation encoding="application/x-tex">\sigma</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>μ</mi><annotation encoding="application/x-tex">\mu</annotation></semantics></math>, as well as boundary and initial conditions. For example, for a cavity composed of two planar mirrors with an initial standing wave can be solved analytically.</p>
+<p>In general, one should solve Maxwell’s equations by exploiting structures and symmetries as much as possible. This leads to more precise solutions that can be reached much quicker. There are instances, however, where many standard tools break down, and a more general approach must be taken. One such instance involves so-called <strong>broadband sources</strong>, the name given to pulses of light<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>.</p>
+<p>In this particular post, however, I want to take a much more general approach to demonstrate a computational technique, Yee’s method<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a>, which is broadly applicable.</p>
+<h2 class="title is-2" id="numerical-solution-using-yees-method">Numerical solution using Yee’s method</h2>
+<p>Time to numerically solve these equations by following , sometimes called the <em>finite-difference time-domain</em> method. Consider a small simulation time step of value <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\Delta t</annotation></semantics></math>. We consider the approximation to the derivative in the so-called <em>central difference</em> scheme. Consider a general function <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>F</mi><annotation encoding="application/x-tex">F</annotation></semantics></math> of some one-dimensional variable <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mfrac><mrow><mi>∂</mi><mtext mathvariant="bold">𝐅</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>z</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mi>∂</mi><mi>z</mi></mrow></mfrac><mo>=</mo><mfrac><mrow><mtext mathvariant="bold">𝐅</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>z</mi><mo>+</mo><mi>Δ</mi><mi>z</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mtext mathvariant="bold">𝐅</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mi>z</mi><mo>−</mo><mi>Δ</mi><mi>z</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><mrow><mn>2</mn><mi>Δ</mi><mi>z</mi></mrow></mfrac><mo>+</mo><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><msup><mi>z</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \frac{\partial \textbf{F}(z)}{\partial z}
+        = \frac{ \textbf{F}(z + \Delta z) - \textbf{F}(z - \Delta z)}{2 \Delta z}
+        + \mathcal{O}(\Delta z^2)
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>Δ</mi><msup><mi>z</mi><mn>2</mn></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(\Delta z^2)</annotation></semantics></math> is a collection of terms that are proportional to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><msup><mi>z</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\Delta z^2</annotation></semantics></math>. Since <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><mi>z</mi></mrow><annotation encoding="application/x-tex">\Delta z</annotation></semantics></math> will be chosen to be suitably small, we will be ignore terms proportional to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>Δ</mi><msup><mi>z</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\Delta z^2</annotation></semantics></math>.</p>
+<p>Discretizing the time derivative using the central difference scheme leads to the two update equations, one for the auxiliary magnetic field:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐇</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>t</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mtext mathvariant="bold">𝐇</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo>−</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>t</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>−</mo><mfrac><mrow><mi>δ</mi><mi>t</mi></mrow><mrow><mi>μ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \textbf{H}(\textbf{r}, t + \tfrac{\delta t}{2})
+        = \textbf{H}(\textbf{r}, t - \tfrac{\delta t}{2})
+        - \frac{\delta t}{\mu(\textbf{r}, t)} \left( \nabla \times \textbf{E}(\textbf{r}, t) \right)
+</annotation></semantics></math></p>
+<p>and one for the electric field:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo>+</mo><mi>δ</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mtext mathvariant="bold">𝐄</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>+</mo><mfrac><mrow><mi>δ</mi><mi>t</mi></mrow><mrow><mi>ϵ</mi><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐇</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>,</mo><mi>t</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>t</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \textbf{E}(\textbf{r}, t + \delta t)
+        = \textbf{E}(\textbf{r}, t)
+        + \frac{\delta t}{\epsilon(\textbf{r}, t)} \left( \nabla \times \textbf{H}(\textbf{r}, t + \tfrac{\delta t}{2}) \right)
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi>t</mi><mo>≡</mo><mn>2</mn><mi>Δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\delta t \equiv 2 \Delta t</annotation></semantics></math> is conventionally used. You will notice the <strong>leapfrog</strong> time quantization; the electric field update is offset by <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi>t</mi><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">\delta t/2</annotation></semantics></math> from the auxiliary magnetic field update. This scheme, and the space quantization scheme that will be presented below, are used to ensure that Gauss’ laws of electric and magnetic fluxes are respected<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a>.</p>
+<p>We also quantize space, such that the fields are defined on discrete positions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mtext mathvariant="bold">𝐫</mtext><mrow><mi>i</mi><mi>j</mi><mi>k</mi></mrow></msub><mo>=</mo><mi>i</mi><mi>Δ</mi><mspace width="0.222em"></mspace><mtext mathvariant="bold">𝐱</mtext><mo>+</mo><mi>j</mi><mi>Δ</mi><mspace width="0.222em"></mspace><mtext mathvariant="bold">𝐲</mtext><mo>+</mo><mi>k</mi><mi>Δ</mi><mspace width="0.222em"></mspace><mtext mathvariant="bold">𝐳</mtext></mrow><annotation encoding="application/x-tex">\textbf{r}_{ijk} = i \Delta ~ \textbf{x} +  j \Delta ~ \textbf{y} +  k \Delta ~ \textbf{z}</annotation></semantics></math>, where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐱</mtext><annotation encoding="application/x-tex">\textbf{x}</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐲</mtext><annotation encoding="application/x-tex">\textbf{y}</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐳</mtext><annotation encoding="application/x-tex">\textbf{z}</annotation></semantics></math> are unit vectors in the three dimensions, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math> are integer indices that span the size of the space we will investigate. We will switch to a different notation for discretized quantities:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext mathvariant="bold">𝐅</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo>=</mo><mi>i</mi><mi>Δ</mi><mspace width="0.222em"></mspace><mtext mathvariant="bold">𝐱</mtext><mo>+</mo><mi>j</mi><mi>Δ</mi><mspace width="0.222em"></mspace><mtext mathvariant="bold">𝐲</mtext><mo>+</mo><mi>k</mi><mi>Δ</mi><mspace width="0.222em"></mspace><mtext mathvariant="bold">𝐳</mtext><mo>,</mo><mi>t</mi><mo>=</mo><mi>n</mi><mi>δ</mi><mi>t</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>≡</mo><mtext mathvariant="bold">𝐅</mtext><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \textbf{F}(\textbf{r} = i \Delta ~ \textbf{x} +  j \Delta ~ \textbf{y} +  k \Delta ~ \textbf{z}, t = n \delta t)
+        \equiv \textbf{F}[i,j,k,n]
+</annotation></semantics></math></p>
+<p>Discretizing the time derivative was rather straightforward. Now, it is time to discretize terms of the form</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐀</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \nabla \times \textbf{A}(\textbf{r})
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐀</mtext><annotation encoding="application/x-tex">\textbf{A}</annotation></semantics></math> is some vector field defined in three rectilinear dimensions. Recall the non-discretized definition:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐀</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mtext mathvariant="bold">𝐫</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>∂</mi><msub><mi>A</mi><mi>z</mi></msub></mrow><mrow><mi>∂</mi><mi>y</mi></mrow></mfrac><mo>−</mo><mfrac><mrow><mi>∂</mi><msub><mi>A</mi><mi>y</mi></msub></mrow><mrow><mi>∂</mi><mi>z</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mtext mathvariant="bold">𝐱</mtext><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>∂</mi><msub><mi>A</mi><mi>x</mi></msub></mrow><mrow><mi>∂</mi><mi>z</mi></mrow></mfrac><mo>−</mo><mfrac><mrow><mi>∂</mi><msub><mi>A</mi><mi>z</mi></msub></mrow><mrow><mi>∂</mi><mi>x</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mtext mathvariant="bold">𝐲</mtext><mo>+</mo><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mrow><mi>∂</mi><msub><mi>A</mi><mi>y</mi></msub></mrow><mrow><mi>∂</mi><mi>x</mi></mrow></mfrac><mo>−</mo><mfrac><mrow><mi>∂</mi><msub><mi>A</mi><mi>x</mi></msub></mrow><mrow><mi>∂</mi><mi>y</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mtext mathvariant="bold">𝐳</mtext></mrow><annotation encoding="application/x-tex">
+    \nabla \times \textbf{A}(\textbf{r})
+        = \left( \frac{\partial A_z}{\partial y} -  \frac{\partial A_y}{\partial z} \right) \textbf{x}
+        + \left( \frac{\partial A_x}{\partial z} -  \frac{\partial A_z}{\partial x} \right) \textbf{y}
+        + \left( \frac{\partial A_y}{\partial x} -  \frac{\partial A_x}{\partial y} \right) \textbf{z}
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>A</mi><mi>i</mi></msub><annotation encoding="application/x-tex">A_i</annotation></semantics></math> is the component of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐀</mtext><annotation encoding="application/x-tex">\textbf{A}</annotation></semantics></math> in the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐢</mtext><annotation encoding="application/x-tex">\textbf{i}</annotation></semantics></math>-direction. Again using the central difference scheme, we discretize the partial derivatives using a common step size across all three dimensions, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Δ</mi><annotation encoding="application/x-tex">\Delta</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐀</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mi>x</mi></msub><mo>≈</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>A</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>A</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>A</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>+</mo><mi>Δ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>A</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>−</mo><mi>Δ</mi><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \left( \nabla \times \textbf{A} \right)_x \approx
+        \frac{1}{2 \Delta} \left( A_z[i,j+\Delta, k] - A_z[i,j-\Delta, k] - A_y[i,j,k+\Delta] + A_y[i,j,k-\Delta k] \right)
+</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐀</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mi>y</mi></msub><mo>≈</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>A</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>+</mo><mi>Δ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>A</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>−</mo><mi>Δ</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>A</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>A</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \left( \nabla \times \textbf{A} \right)_y \approx
+        \frac{1}{2 \Delta} \left( A_x[i,j,k + \Delta] - A_x[i,j,k - \Delta] - A_z[i + \Delta,j,k] + A_z[i-\Delta,j,k] \right)
+</annotation></semantics></math></p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mrow><mo stretchy="true" form="prefix">(</mo><mi>∇</mi><mo>×</mo><mtext mathvariant="bold">𝐀</mtext><mo stretchy="true" form="postfix">)</mo></mrow><mi>z</mi></msub><mo>≈</mo><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>A</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>A</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>A</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>A</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \left( \nabla \times \textbf{A} \right)_z \approx
+        \frac{1}{2 \Delta} \left(A_y[i + \Delta,j,k] - A_y[i - \Delta,j,k] - A_x[i,j+ \Delta,k] + A_x[i,j - \Delta,k] \right)
+</annotation></semantics></math></p>
+<p>The discretization of time, with step <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>δ</mi><mi>t</mi></mrow><annotation encoding="application/x-tex">\delta t</annotation></semantics></math>, is not independent of the discretization of space, with step <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Δ</mi><annotation encoding="application/x-tex">\Delta</annotation></semantics></math> (TODO: discuss Courant number https://en.wikipedia.org/wiki/Courant%E2%80%93Friedrichs%E2%80%93Lewy_condition)</p>
+<p>Finally, we arrive at the discretized update equations. To emphasize the discrete nature more obvious, and for easier porting to software later, we will separate the fields <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐇</mtext><annotation encoding="application/x-tex">\textbf{H}</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtext mathvariant="bold">𝐄</mtext><annotation encoding="application/x-tex">\textbf{E}</annotation></semantics></math> each into three equations – one per dimension – and use square brackets for the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>y</mi><annotation encoding="application/x-tex">y</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>z</mi><annotation encoding="application/x-tex">z</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>t</mi><annotation encoding="application/x-tex">t</annotation></semantics></math> coordinate:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>H</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>H</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>−</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="right" style="text-align: right"><mi>−</mi><mfrac><mrow><mi>δ</mi><mi>n</mi></mrow><mrow><mi>μ</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mfrac><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>E</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>E</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>E</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>E</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>−</mo><mi>Δ</mi><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>H</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>H</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>−</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="right" style="text-align: right"><mi>−</mi><mfrac><mrow><mi>δ</mi><mi>n</mi></mrow><mrow><mi>μ</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mfrac><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>E</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>E</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>E</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>E</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>H</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>H</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>−</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="right" style="text-align: right"><mi>−</mi><mfrac><mrow><mi>δ</mi><mi>n</mi></mrow><mrow><mi>μ</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mfrac><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>E</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>E</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>E</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>E</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>E</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mi>δ</mi><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>E</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="right" style="text-align: right"><mi>+</mi><mfrac><mrow><mi>δ</mi><mi>n</mi></mrow><mrow><mi>ϵ</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mfrac><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>H</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>H</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>H</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>H</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>−</mo><mi>Δ</mi><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>E</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mi>δ</mi><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>E</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="right" style="text-align: right"><mi>+</mi><mfrac><mrow><mi>δ</mi><mi>n</mi></mrow><mrow><mi>ϵ</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mfrac><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>H</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>H</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>H</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>H</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"><msub><mi>E</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mi>δ</mi><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msub><mi>E</mi><mi>z</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mtd><mtd columnalign="right" style="text-align: right"><mi>+</mi><mfrac><mrow><mi>δ</mi><mi>n</mi></mrow><mrow><mi>ϵ</mi><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow></mfrac><mfrac><mn>1</mn><mrow><mn>2</mn><mi>Δ</mi></mrow></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>H</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>H</mi><mi>y</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>j</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><msub><mi>H</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>+</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo>+</mo><msub><mi>H</mi><mi>x</mi></msub><mrow><mo stretchy="true" form="prefix">[</mo><mi>i</mi><mo>,</mo><mi>j</mi><mo>−</mo><mi>Δ</mi><mo>,</mo><mi>k</mi><mo>,</mo><mi>n</mi><mo>+</mo><mfrac displaystyle="false"><mrow><mi>δ</mi><mi>n</mi></mrow><mn>2</mn></mfrac><mo stretchy="true" form="postfix">]</mo></mrow><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{align}
+H_x[i,j,k,n+\tfrac{\delta n}{2}]
+    &amp;= H_x[i,j,k,n-\tfrac{\delta n}{2}]
+    &amp;- \frac{\delta n}{\mu [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                E_z[i,j+\Delta, k,n]
+                - E_z[i,j-\Delta, k,n]
+                - E_y[i,j,k+\Delta,n]
+                + E_y[i,j,k-\Delta k,n]
+            \right) \\
+H_y[i,j,k,n+\tfrac{\delta n}{2}]
+    &amp;= H_y[i,j,k,n-\tfrac{\delta n}{2}]
+    &amp;- \frac{\delta n}{\mu [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                E_x[i,j,k + \Delta,n]
+                - E_x[i,j,k - \Delta,n]
+                - E_z[i + \Delta,j,k,n]
+                + E_z[i-\Delta,j,k,n]
+            \right) \\
+H_z[i,j,k,n+\tfrac{\delta n}{2}]
+    &amp;= H_z[i,j,k,n-\tfrac{\delta n}{2}]
+    &amp;- \frac{\delta n}{\mu [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                E_y[i + \Delta,j,k,n]
+                - E_y[i - \Delta,j,k,n]
+                - E_x[i,j+ \Delta,k,n]
+                + E_x[i,j - \Delta,k,n]
+            \right) \\
+E_x[i,j,k,n+\delta n]
+    &amp;= E_x[i,j,k,n]
+    &amp;+ \frac{\delta n}{\epsilon [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                H_z[i,j+\Delta, k,n+\tfrac{\delta n}{2}]
+                - H_z[i,j-\Delta, k,n+\tfrac{\delta n}{2}]
+                - H_y[i,j,k+\Delta,n+\tfrac{\delta n}{2}]
+                + H_y[i,j,k-\Delta k,n+\tfrac{\delta n}{2}]
+            \right) \\
+E_y[i,j,k,n+\delta n]
+    &amp;= E_y[i,j,k,n]
+    &amp;+ \frac{\delta n}{\epsilon [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                H_x[i,j,k + \Delta,n+\tfrac{\delta n}{2}]
+                - H_x[i,j,k - \Delta,n+\tfrac{\delta n}{2}]
+                - H_z[i + \Delta,j,k,n+\tfrac{\delta n}{2}]
+                + H_z[i-\Delta,j,k,n+\tfrac{\delta n}{2}]
+            \right) \\
+E_z[i,j,k,n+\delta n]
+    &amp;= E_z[i,j,k,n]
+    &amp;+ \frac{\delta n}{\epsilon [i,j,k,n]}
+        \frac{1}{2 \Delta}
+            \left(
+                H_y[i + \Delta,j,k,n+\tfrac{\delta n}{2}]
+                - H_y[i - \Delta,j,k,n+\tfrac{\delta n}{2}]
+                - H_x[i,j+ \Delta,k,n+\tfrac{\delta n}{2}]
+                + H_x[i,j - \Delta,k,n+\tfrac{\delta n}{2}]
+            \right)
+\end{align}
+</annotation></semantics></math></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Readers interested in the derivation of these equations from prior experimental and theoretical work should consider reading the <em>de facto</em> standard undergraduate textbook <em>Introduction to electrodynamics</em> by David J. Griffiths.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Short pulses of light,<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>K. S. Yee, <em>Numerical solution of initial boundary value problems involving Maxwell’s equations in isotropic media</em>, IEEE Transactions on Antennas and Propagation <strong>14</strong> issue 3 (1966). <a href="https://doi.org/10.1109/TAP.1966.1138693">DOI:10.1109/TAP.1966.1138693</a><a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>I will keep the details light in this blog post, as there are many more rigorous treatments elsewhere. The value of this blog post is getting our hands dirty.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2025-04-02. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>
