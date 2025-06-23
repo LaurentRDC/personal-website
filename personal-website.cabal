@@ -14,7 +14,7 @@ build-type:          Simple
 extra-source-files:  README.md
 
 common common
-    default-language:    GHC2024
+    default-language:    GHC2021
     ghc-options:         -Wall
                          -Wcompat
                          -Widentities

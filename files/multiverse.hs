@@ -1,15 +1,16 @@
---               _  _    _                               _        
+--               _  _    _                               _
 --  _ __   _  _ | || |_ (_)__ __ ___  _ _  ___ ___      | |_   ___
 -- | '  \ | || || ||  _|| |\ V // -_)| '_|(_-// -_)  _  |   \ (_-/
 -- |_|_|_| \_._||_| \__||_| \_/ \___||_|  /__/\___| (_) |_||_|/__/
 --
 --
 -- Tested with GHC 9.0.1
+{-# OPTIONS_GHC -Wno-name-shadowing #-}
 import           Data.Set ( Set, (\\) ) -- from containers
 import qualified Data.Set as Set        -- from containers
 
 
-data Possibilities a 
+data Possibilities a
     = Possibilities [a]
     deriving Show
 
@@ -39,10 +40,10 @@ instance Applicative Possibilities where
 
 
 instance Monad Possibilities where
-    
+
     Possibilities ps >>= f = Possibilities $ concat [toList (f p) | p <- ps]
         where toList (Possibilities xs) = xs
- 
+
 
 data Person = Driver1    | Driver2    | Driver3
             | Passenger1 | Passenger2 | Passenger3
@@ -51,20 +52,20 @@ data Person = Driver1    | Driver2    | Driver3
 
 
 assignDriver :: Set Person -> Possibilities (Person, Set Person)
-assignDriver people = possibly [ (driver, Set.delete driver people) 
+assignDriver people = possibly [ (driver, Set.delete driver people)
                                | driver <- Set.toList $ people `Set.intersection` possibleDrivers
                                ]
     where possibleDrivers = Set.fromList [Driver1, Driver2, Driver3]
 
 
 assign3Passengers :: Set Person -> Possibilities (Set Person, Set Person)
-assign3Passengers people = possibly [ (passengers, people \\ passengers) 
+assign3Passengers people = possibly [ (passengers, people \\ passengers)
                                     | passengers <- Set.toList setsOf3
                                     ]
     where setsOf3 = Set.filter (\s -> length s == 3) $ Set.powerSet people
 
 
-data CarAssignment 
+data CarAssignment
     = CarAssignment { driver1        :: Person
                     , driver2        :: Person
                     , car1Passengers :: Set Person

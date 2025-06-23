@@ -9,7 +9,7 @@ import Data.ByteString qualified as B
 import Data.Char (isSpace)
 import Data.Function (on)
 import Data.Functor ((<&>))
-import Data.List qualified as List (intercalate, intersperse, sort)
+import Data.List qualified as List (intersperse, sort)
 import Data.Map.Strict qualified as M
 import Data.Maybe (fromMaybe)
 import Data.Text qualified as T
@@ -63,10 +63,10 @@ generatedContent :: Pattern
 generatedContent = "generated/**"
 
 postsPattern :: Pattern
-postsPattern = "posts/*" .&&. complement draftsPattern
+postsPattern = ("posts/*" .||. "posts/*/**") .&&. complement draftsPattern
 
 draftsPattern :: Pattern
-draftsPattern = "posts/drafts/*"
+draftsPattern = "posts/drafts/*" .||. "posts/drafts/*/**"
 
 tagsPattern :: Pattern
 tagsPattern = "tags/*.html"
@@ -196,7 +196,6 @@ main = do
           >>= loadAndApplyTemplate "templates/default.html" (postCtx tags <> metaCtx)
           >>= relativizeUrls
 
-
     --------------------------------------------------------------------------------
     -- Compile draft blog posts
     --
@@ -324,7 +323,7 @@ postCtx tags =
     , tagsFieldWith
         (fmap List.sort . getTags) -- sort for presentation
         simpleRenderLink
-        ((mconcat . List.intersperse ", "))
+        (mconcat . List.intersperse ", ")
         "tags"
         tags
     , lastUpdatedField
@@ -481,7 +480,7 @@ tagCloudField' key =
   tagCloudFieldWith
     key
     (\_ _ tag url _ _ _ -> makeLink tag url)
-    (List.intercalate " ")
+    unwords
     100
     100
  where
