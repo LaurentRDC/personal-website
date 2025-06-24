@@ -1,0 +1,361 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z0NSFPKNBN">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Z0NSFPKNBN');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            Exploring the multiverse of possibilities all at once using monads - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        Exploring the multiverse of possibilities all at once using monads
+                    </h1>
+                    <h3>
+                        
+                        Posted on 2022-03-02. 
+                        
+                        
+                        Last updated on 2025-02-08.
+                        
+                    </h3>
+                    <h3>
+                        
+                        Estimated reading time of 12 min.
+                        
+                    </h3>
+                    <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: <a title="All pages tagged 'haskell'." href="../tags/haskell.html" rel="tag">haskell</a>
+                        
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>I’m working on a global optimization problem these days. Unlike local optimization problems, e.g. what you would solve using least-square minimization, global optimization inevitably involves exhaustively evaluating all <em>possible</em> solutions and choosing the best one. As you can imagine, global optimization is much more computationally-intensive than local optimization, due to the size of the set of potential solutions. Speeding up a global optimization problem involves reducing the set of possible solution to a minimum, based on the specifics of the problem.</p>
+<p>In this post, I’ll show you how to <em>build</em> the minimal set of possible solutions to an optimization problem, instead of searching for solutions in a larger space. As we’ll see, only viable solutions are ever considered. This will be done by splitting the computations into multiple universes whenever a choice is presented to us, such that we traverse the multiverse of possibilities all at once.</p>
+<h3 class="title is-3" id="an-example-problem">An example problem</h3>
+<p>Let’s say we’ve got 8 friends going out for a drink, in two cars with four seats each. How many arrangements of people can we have? If we don’t care about where people sit in each car, the number of arrangements is the number of combinations of 4 people we can make from 8 people, since the remaining 4 people will go in the second car. For every configuration, there’s also a configuration which swaps the car. Therefore, there are:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mn>8</mn><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mn>2</mn><mo>=</mo><mfrac><mrow><mn>8</mn><mi>!</mi></mrow><mrow><mn>4</mn><mi>!</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>8</mn><mo>−</mo><mn>4</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>!</mi></mrow></mfrac><mo>×</mo><mn>2</mn><mo>=</mo><mn>140</mn></mrow><annotation encoding="application/x-tex">
+    \binom{8}{4} \times 2 = \frac{8!}{4!(8-4)!} \times 2 = 140
+</annotation></semantics></math></p>
+<p>possible combinations. If you’re not familiar with this notation, you can read <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mn>8</mn><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\binom{8}{4}</annotation></semantics></math> as <em>choose 4 people out of 8 people</em>, of which there are 70 possibilities (and then 70 other possibilities with the cars swapped). That means that if we wanted to optimize the distribution of people into the two cars – for example, if we wanted to group up the best friends together, or minimize the total weight of people in car1, or some other objective –, we would need to look at 140 solutions. This problem is purely combinatorial.</p>
+<p><em>Now let’s add some constraints</em>. Our 8 friends are coming back from the bar. Out of the 8 friends, 3 of them didn’t drink and are therefore allowed to drive. Thus, the number of possible arrangements of friends in the car has been reduced, as each car needs a driver. For one car, we need to select 1 driver out of 3, and 3 remaining passengers out of 7. However, the other car will need a driver, so really there are 6 passengers to choose from. Finally, for every arrangement there is a duplicate arrangement with the cars swapped. The number of possibilities is therefore:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mn>3</mn><mn>1</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mn>6</mn><mn>3</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mn>2</mn><mo>=</mo><mn>120</mn></mrow><annotation encoding="application/x-tex">
+    \binom{3}{1} \binom{6}{3} \times 2 = 120
+</annotation></semantics></math></p>
+<h3 class="title is-3" id="potential-solutions-as-a-decision-graph">Potential solutions as a decision graph</h3>
+<p>How else can we express the number of combinations? Think of building a solution, instead of searching for one. We may want to start by assigning a driver to car 1. For each possible decision here, we’ll assign a driver to the second car next, then passengers. The possibilities look like this:</p>
+<figure class="python">
+<img src="generated/pandocplot14596759384483224529.png" class="python image" alt="Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (Source code)" />
+<figcaption aria-hidden="true">Expressing the possibilities as a decision graph. Each layer represents a choice, and each trajectory from top to bottom represents a universe in which these choices were made. (<a href="generated/pandocplot14596759384483224529.src.html">Source code</a>)</figcaption>
+</figure>
+<p>In the figure above, no one is assigned at the start. Then, we assign the first driver (out of three choices). Then, we need to assign a second driver, of which there are only two remaining. Each of the 6 passengers are then assigned. A potential solution (i.e. a assignment between people and cars) is represented by a path in the decision tree. Three possibilities are shown as examples.</p>
+<p>This way of thinking about solutions reminds me strongly of the <a href="https://en.wikipedia.org/wiki/Many-worlds_interpretation">Everett interpretation of quantum mechanics</a>, also known as the <em>many-worlds interpretation</em> or the <em>multiverse interpretation</em>. The three potential assignments are three universes that split from the same starting point. Enumerating all possible solutions to our example problem consists in crawling the decision tree, or crawling the multiverse of possibilities.</p>
+<h3 class="title is-3" id="expressing-the-multiverse-of-solutions-in-haskell">Expressing the multiverse of solutions in Haskell</h3>
+<p>Based on the decision tree above, I want to run a computation which, when presented with choices, explores all possibilities all at once.</p>
+<p>Consider the following type constructor:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Possibilities</span> a <span class="ot">=</span> <span class="dt">Possibilities</span> [a]</span></code></pre></div>
+<p>A computation that returns a result <code>Possibilities a</code> represents all possible answers of final type <code>a</code>. For example, a computation can possibly have multiple answers might look like:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">possibly ::</span> [a] <span class="ot">-&gt;</span> <span class="dt">Possibilities</span> a</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>possibly xs <span class="ot">=</span> <span class="dt">Possibilities</span> xs</span></code></pre></div>
+<p>Alternatively, a computation which is <em>certain</em>, i.e. has a single possibility, is represented by:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">certainly ::</span> a <span class="ot">-&gt;</span> <span class="dt">Possibilities</span> a</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>certainly x <span class="ot">=</span> <span class="dt">Possibilities</span> [x] <span class="co">-- A single possibility = a certainty.</span></span></code></pre></div>
+<p><code>Possibilities</code> is basically a list, so we’ll start with a <code>Foldable</code> instance which is useful for counting the number of possibilities using <code>length</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Foldable</span> <span class="dt">Possibilities</span> <span class="kw">where</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">foldMap</span> m (<span class="dt">Possibilities</span> xs) <span class="ot">=</span> <span class="fu">foldMap</span> m xs</span></code></pre></div>
+<p><code>Possibilities</code> is a functor:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Functor</span> <span class="dt">Possibilities</span> <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">fmap</span> f (<span class="dt">Possibilities</span> ps) <span class="ot">=</span> <span class="dt">Possibilities</span> (<span class="fu">fmap</span> f ps)</span></code></pre></div>
+<p>The interesting tidbit starts with the <code>Applicative</code> instance. Combining possibilities should be combinatorial, e.g. combining the possibilities of 3 drivers and 6 passengers results in 18 possibilities.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Applicative</span> <span class="dt">Possibilities</span> <span class="kw">where</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pure</span> x <span class="ot">=</span> certainly x <span class="co">-- see above</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    (<span class="dt">Possibilities</span> fs) <span class="op">&lt;*&gt;</span> (<span class="dt">Possibilities</span> ps) <span class="ot">=</span> <span class="dt">Possibilities</span> [f p <span class="op">|</span> f <span class="ot">&lt;-</span> fs, p <span class="ot">&lt;-</span> ps]</span></code></pre></div>
+<p>Recall that the list comprehension notation is combinatorial, i.e. <code>[(n,m) | n &lt;- [1..3], m &lt;- [1..3]]</code> has 9 elements (<code>[(1,1),(1,2),(1,3),(2,1),(2,2),(2,3),(3,1),(3,2),(3,3)]</code>).</p>
+<p>Now for the crucial part of composing possibilities. We want past possibilities to influence future possibilities; we’ll need a monad instance. A monad instance means that if we start with multiple possibilities, and each possibility can results in multiple possibilities, the whole computation should produce multiple possibilities<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Monad</span> <span class="dt">Possibilities</span> <span class="kw">where</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">Possibilities</span> ps <span class="op">&gt;&gt;=</span> f <span class="ot">=</span> <span class="dt">Possibilities</span> <span class="op">$</span> <span class="fu">concat</span> [toList (f p) <span class="op">|</span> p <span class="ot">&lt;-</span> ps] <span class="co">-- concat :: [ [a] ] -&gt; [a]</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">where</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>            toList (<span class="dt">Possibilities</span> xs) <span class="ot">=</span> xs</span></code></pre></div>
+<p>Let’s define some helper datatypes and functions. We</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">{- </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">With the following imports:</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">import           Data.Set    (Set, (\\))</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">import qualified Data.Set as Set </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">-}</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- | All possible people which can be assigned to cars</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">People</span> <span class="ot">=</span> <span class="dt">Driver1</span>    <span class="op">|</span> <span class="dt">Driver2</span>    <span class="op">|</span> <span class="dt">Driver3</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Passenger1</span> <span class="op">|</span> <span class="dt">Passenger2</span> <span class="op">|</span> <span class="dt">Passenger3</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Passenger4</span> <span class="op">|</span> <span class="dt">Passenger5</span> <span class="op">|</span> <span class="dt">Passenger6</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> (<span class="dt">Bounded</span>, <span class="dt">Eq</span>, <span class="dt">Enum</span>)</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co">-- A car assignment consists in two cars, each with a driver, </span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="co">-- as well as passengers</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">CarAssignment</span> </span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">CarAssignment</span> {<span class="ot"> driver1        ::</span> <span class="dt">Person</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>                    ,<span class="ot"> driver2        ::</span> <span class="dt">Person</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>                    ,<span class="ot"> car1Passengers ::</span> <span class="dt">Set</span> <span class="dt">Person</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>                    ,<span class="ot"> car2Passengers ::</span> <span class="dt">Set</span> <span class="dt">Person</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>                    }</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> <span class="dt">Show</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="ot">allDrivers ::</span> <span class="dt">Set</span> <span class="dt">Person</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>allDrivers <span class="ot">=</span> Set.fromList [<span class="dt">Driver1</span>, <span class="dt">Driver2</span>, <span class="dt">Driver3</span>]</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="co">-- Pick a driver from an available group of people.</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co">-- Returns the assigned driver, and the remaining unassigned people</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a><span class="ot">assignDriver ::</span> <span class="dt">Set</span> <span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">Possibilities</span> (<span class="dt">Person</span>, <span class="dt">Set</span> <span class="dt">Person</span>)</span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>assignDriver people </span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> possibly [ (driver, Set.delete driver people) </span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>               <span class="op">|</span> driver <span class="ot">&lt;-</span> Set.toList <span class="op">$</span> people <span class="ot">`Set.intersection`</span> allDrivers</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>               ]</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co">-- Pick three passengers from an available group of people.</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="co">-- Returns the assigned passengers, and the remaining unassigned people</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a><span class="ot">assign3Passengers ::</span> <span class="dt">Set</span> <span class="dt">Person</span> <span class="ot">-&gt;</span> <span class="dt">Possibilities</span> (<span class="dt">Set</span> <span class="dt">Person</span>, <span class="dt">Set</span> <span class="dt">Person</span>)</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>assign3Passengers people <span class="ot">=</span> possibly [ (passengers, people \\ passengers) </span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>                                   <span class="op">|</span> passengers <span class="ot">&lt;-</span> setsOf3</span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>                                   ]</span>
+<span id="cb8-45"><a href="#cb8-45" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span> setsOf3 <span class="ot">=</span> <span class="fu">filter</span> (\s <span class="ot">-&gt;</span> <span class="fu">length</span> s <span class="op">==</span> <span class="dv">3</span>) <span class="op">$</span> Set.toList <span class="op">$</span> Set.powerSet people</span></code></pre></div>
+<p>Finally, we can express the multiverse of possible drivers-and-passengers assignments with great elegance. Behold:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">carAssignments ::</span> <span class="dt">Possibilities</span> <span class="dt">CarAssignment</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>carAssignments <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> everyone <span class="ot">=</span> Set.fromList <span class="op">$</span> <span class="fu">enumFromTo</span> <span class="fu">minBound</span> <span class="fu">maxBound</span> <span class="co">-- [Driver1, Driver2, ..., Passenger6]</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    (driver1, rest) <span class="ot">&lt;-</span> assignDriver everyone</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    (driver2, rest) <span class="ot">&lt;-</span> assignDriver rest</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    (car1Passengers, rest) <span class="ot">&lt;-</span> assign3Passengers rest</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    (car2Passengers, _)    <span class="ot">&lt;-</span> assign3Passengers rest</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="op">$</span> <span class="dt">CarAssignment</span> driver1 driver2 car1Passengers car2Passengers</span></code></pre></div>
+<p>Given the monad instance for <code>Possibilities</code>, the <code>return</code> function returns all possible possibilities. Let’s take a look at the size of the multiverse in this case:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">let</span> multiverse <span class="ot">=</span> carAssignments</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="fu">print</span> <span class="op">$</span> <span class="fu">length</span> multiverse</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="dv">120</span></span></code></pre></div>
+<p>Just as we had calculated by hand. Amazing!</p>
+<h3 class="title is-3" id="conclusion">Conclusion</h3>
+<p>What I’ve shown you today is how to structure computations in such a way that you are exploring the multiverse of possibilities all at once. The seasoned Haskell programmer will have recognized that the <code>Functor</code>, <code>Applicative</code>, and <code>Monad</code> instances of <code>Possibilities</code> are just like lists!</p>
+<p>Although I’m not using Haskell at work<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>, I expect that something similar will need to be built in the near future to speed up our global optimization problem. The specific problem we are tackling has many more constraints than the example presented in this post. It’s easier to generate a list of solutions, most of which are unsuitable, and filter the solutions one by one. There is a fixed computational cost associated with generating and checking a solution, and so reducing the set of possible solutions is even more important.</p>
+<p>This post was partly inspired by the legendary blog post <a href="https://aphyr.com/posts/342-typing-the-technical-interview">Typing the technical interview</a></p>
+<p><em>A self-contained Haskell source file containing all code from this post is <a href="../files/multiverse.hs">available for download here</a></em></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>This is why some people like to thing of monads as types that support flatMap.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Boss, if you’re reading this, please let me use Haskell :).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2025-06-24. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>

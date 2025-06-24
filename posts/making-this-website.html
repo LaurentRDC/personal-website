@@ -1,0 +1,368 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z0NSFPKNBN">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Z0NSFPKNBN');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            How this website is generated - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        How this website is generated
+                    </h1>
+                    <h3>
+                        
+                        Posted on 2018-08-02. 
+                        
+                        
+                        Last updated on 2025-02-08.
+                        
+                    </h3>
+                    <h3>
+                        
+                        Estimated reading time of 6 min.
+                        
+                    </h3>
+                    <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: <a title="All pages tagged 'meta'." href="../tags/meta.html" rel="tag">meta</a>
+                        
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>In the hope that this page is useful to someone, I would like to explain how I generate this website.</p>
+<h2 class="title is-2" id="static-website-generator">Static website generator</h2>
+<p>I am always looking for an excuse to play with Haskell, and so this website is generated using <a href="https://jaspervdj.be/hakyll/index.html">Hakyll</a>. Hakyll is a static website generator; website configuration is written in Haskell and content is written in Markdown. Hakyll then collects the content, applies templates to it (navigation bar, page footers, etc), and builds a static website in a separate folder. Deploying the website then simply consists in moving the files to the right place.</p>
+<p>I use <a href="https://docs.haskellstack.org/en/stable/README/"><code class="has-text-link">stack</code></a> to manage the project. <code>stack</code> even has a Hakyll template (<code>hakyll-template</code>).</p>
+<p>My <code>site.hs</code> configuration file is fairly standard, but I want to mention two modifications I have made that might help you as well.</p>
+<h3 class="title is-3" id="math-display-and-syntax-highlighting">Math display and syntax highlighting</h3>
+<p>This idea is borrowed from <a href="https://github.com/jdreaver/jdreaver.com/">JD Reaver</a></p>
+<p>By default, LaTeX-style math is not rendered properly when posts are consumed by Hakyll. We need to provide <code>pandoc</code> - the library that performs the Markdown-to-HTML translation - with a list of extensions to use.</p>
+<p>The same problem arises when trying to highlight code. Instead of using the default <code>pandocCompiler</code>, I use a slightly modified compiler that passes extra options to <code>pandoc</code>.</p>
+<p>The type signature of our new compiler <code>pandocCompiler_</code> is:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">pandocCompiler_ ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</span></code></pre></div>
+<p>Exactly the same signature as <code>pandocCompiler</code>, what did you expect? The first step is to collect the relevant <a href="http://hackage.haskell.org/package/pandoc-2.2.2.1/docs/Text-Pandoc-Extensions.html">Pandoc extensions</a>, which I have separated for clarity:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>pandocCompiler_ <span class="ot">=</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    mathExtensions <span class="ot">=</span> </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        [ <span class="dt">Ext_tex_math_dollars</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_tex_math_double_backslash</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_latex_macros</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    codeExtensions <span class="ot">=</span> </span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        [ <span class="dt">Ext_fenced_code_blocks</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_backtick_code_blocks</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_fenced_code_attributes</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>        ]</span></code></pre></div>
+<p>The math extensions allows me to write LaTeX code inclusing macros like <code>\begin{align} ... \end{align}</code>. The code extensions allow me to easily switch languages for code blocks.</p>
+<p>I then collect all the extensions:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>newExtensions <span class="ot">=</span> <span class="fu">foldr</span> enableExtension defaultExtensions (mathExtensions <span class="op">&lt;&gt;</span> codeExtensions)</span></code></pre></div>
+<p>Note the use of the <code>mappend</code> function (<code>&lt;&gt;</code>), which could be replaces with list concatenation <code>++</code>. We modify the Pandoc write options to include these extensions:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>defaultExtensions <span class="ot">=</span> writerExtensions defaultHakyllWriterOptions</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>writerOptions <span class="ot">=</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    defaultHakyllWriterOptions</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    { writerExtensions <span class="ot">=</span> newExtensions</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    , writerHTMLMathMethod <span class="ot">=</span> <span class="dt">MathJax</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    , writerHighlightStyle <span class="ot">=</span> <span class="dt">Just</span> syntaxHighlightingStyle</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    }</span></code></pre></div>
+<p>(Ignore the line <code>writerHighlightStyle = Just syntaxHighlightingStyle</code> for now, this is related to syntax highlighting.) Finally, we create a new compiler that takes those write options into account:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>pandocCompilerWith defaultHakyllReaderOptions writerOptions</span></code></pre></div>
+<p>The full code for this math-and-code compiler is below:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">pandocCompiler_ ::</span> <span class="dt">Compiler</span> (<span class="dt">Item</span> <span class="dt">String</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>pandocCompiler_ <span class="ot">=</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    mathExtensions <span class="ot">=</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        [ <span class="dt">Ext_tex_math_dollars</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_tex_math_double_backslash</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_latex_macros</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    codeExtensions <span class="ot">=</span> </span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        [ <span class="dt">Ext_fenced_code_blocks</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_backtick_code_blocks</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        , <span class="dt">Ext_fenced_code_attributes</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    newExtensions <span class="ot">=</span> <span class="fu">foldr</span> enableExtension defaultExtensions (mathExtensions <span class="op">&lt;&gt;</span> codeExtensions)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    defaultExtensions <span class="ot">=</span> writerExtensions defaultHakyllWriterOptions</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    writerOptions <span class="ot">=</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        defaultHakyllWriterOptions</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        { writerExtensions <span class="ot">=</span> newExtensions</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        , writerHTMLMathMethod <span class="ot">=</span> <span class="dt">MathJax</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>        , writerHighlightStyle <span class="ot">=</span> <span class="dt">Just</span> syntaxHighlightingStyle</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> pandocCompilerWith defaultHakyllReaderOptions writerOptions</span></code></pre></div>
+<p>All <code>pandocCompiler</code> function calls are replaced with <code>pandocCompiler_</code></p>
+<h3 class="title is-3" id="syntax-highlighting-style-as-css">Syntax highlighting style as CSS</h3>
+<p>Pandoc comes with <a href="http://hackage.haskell.org/package/pandoc-2.2.2.1/docs/Text-Pandoc-Highlighting.html">eight syntax highlighting styles</a>:</p>
+<ul>
+<li>pygments</li>
+<li>espresso</li>
+<li>zenburn</li>
+<li>tango</li>
+<li>kate</li>
+<li>monochrome</li>
+<li>breezeDark</li>
+<li>haddock</li>
+</ul>
+<p>For some reason, there was no difference between the different highlighting styles when generating my website. Therefore, I wanted to generate a CSS file for the style I want to use.</p>
+<p>First, I pinned the style I want to use:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">syntaxHighlightingStyle ::</span> <span class="dt">Style</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>syntaxHighlightingStyle <span class="ot">=</span> haddock</span></code></pre></div>
+<p>You will recognize the use of this in the above <code>pandocCompiler_</code>. Next, I want to generate CSS for this style with Pandoc and place it with all other CSS files for this website:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ot">generateSyntaxHighlightingCSS ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>generateSyntaxHighlightingCSS <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> css <span class="ot">=</span> styleToCss syntaxHighlightingStyle</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">writeFile</span> <span class="st">&quot;css/syntax.css&quot;</span> css</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> ()</span></code></pre></div>
+<p>The <code>syntax.css</code> file must be included in the HTML template:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">link</span><span class="ot"> rel</span><span class="op">=</span><span class="st">&quot;stylesheet&quot;</span><span class="ot"> type</span><span class="op">=</span><span class="st">&quot;text/css&quot;</span><span class="ot"> href</span><span class="op">=</span><span class="st">&quot;/css/syntax.css&quot;</span><span class="ot"> </span><span class="dt">/&gt;</span></span></code></pre></div>
+<p>Finally, before Hakyll does anything, I generate this styling file:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    generateSyntaxHighlightingCSS</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    hakyll <span class="op">$</span> <span class="kw">do</span> <span class="op">...</span></span></code></pre></div>
+<p>This way, changing the highlighting style is a simple matter of modifying <code>syntaxHighlightingStyle</code>. In the future, I will want to define my own <code>Style</code> (monokai).</p>
+<h2 class="title is-2" id="update-2018-08-05-generating-the-html-templates-using-blaze">Update 2018-08-05 : Generating the HTML templates using Blaze</h2>
+<p>Hakyll uses HTML templating to enforce consistent styling for all pages of this website. Handwriting HTML is error-prone; therefore, this website uses an HTML template generated using <a href="https://hackage.haskell.org/package/blaze-html"><code class="has-text-link">blaze-html</code></a>.</p>
+<p><code>blaze-html</code> is a domain-specific language - a library of Haskell functions that mimic HTML. For example, the following <code>blaze-html</code> code:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Text.Blaze.Html5</span> <span class="kw">as</span> <span class="dt">H</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ot">defaultMain ::</span> <span class="dt">H.Html</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>defaultMain <span class="ot">=</span> H.main <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    H.h1 <span class="st">&quot;$title$&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;$body$&quot;</span></span></code></pre></div>
+<p>will render to the following HTML:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">main</span><span class="dt">&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&lt;</span><span class="kw">h1</span><span class="dt">&gt;</span>$title$<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    $body$</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">main</span><span class="dt">&gt;</span></span></code></pre></div>
+<p>Note that in this case, <code>$title$</code> and <code>$body$</code> are placeholders that will be replaced with page content, like a blog post title and text. I generate the HTML template before Hakyll goes to work:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Generate the CSS required to to syntax highlighting</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> css <span class="ot">=</span> styleToCss syntaxHighlightingStyle</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">writeFile</span> <span class="st">&quot;css/syntax.css&quot;</span> css</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Generate the default HTML template</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> template <span class="ot">=</span> renderHtml mkDefaultTemplate</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    B.writeFile <span class="st">&quot;templates/default.html&quot;</span> template</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    hakyll <span class="op">$</span> <span class="kw">do</span> <span class="op">...</span></span></code></pre></div>
+<h2 class="title is-2" id="update-2018-09-12-using-a-pandoc-filter-to-abstract-away-bulma-quirks">Update 2018-09-12 : using a Pandoc filter to abstract away Bulma quirks</h2>
+<p>I recently upgraded the website to use the <a href="https://bulma.io">Bulma CSS Framework</a>. There are interesting quirks, like the requirement to have all heading be of a certain class:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 title --&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;title is-1&quot;</span><span class="dt">&gt;</span>Title<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-2 title --&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h2</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;title is-2&quot;</span><span class="dt">&gt;</span>Title<span class="dt">&lt;/</span><span class="kw">h2</span><span class="dt">&gt;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- Level-1 subtitle --&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">h1</span><span class="ot"> class</span><span class="op">=</span><span class="st">&quot;subtitle is-1&quot;</span><span class="dt">&gt;</span>Title<span class="dt">&lt;/</span><span class="kw">h1</span><span class="dt">&gt;</span></span></code></pre></div>
+<p>To modifying headings generated by Pandoc <em>a posteriori</em>, I wrote a Pandoc filter. <strong>The process is documented <a href="../posts/bulma-pandoc-filter.html">in this post</a></strong>.</p>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2025-06-24. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>

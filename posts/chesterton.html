@@ -1,0 +1,261 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z0NSFPKNBN">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Z0NSFPKNBN');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            Chesterton's fence and why I'm not sold on the blockchain - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        Chesterton's fence and why I'm not sold on the blockchain
+                    </h1>
+                    <h3>
+                        
+                        Posted on 2022-08-02. 
+                        
+                        
+                        Last updated on 2025-02-08.
+                        
+                    </h3>
+                    <h3>
+                        
+                        Estimated reading time of 3 min.
+                        
+                    </h3>
+                    <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: <a title="All pages tagged 'cryptocurrencies'." href="../tags/cryptocurrencies.html" rel="tag">cryptocurrencies</a>, <a title="All pages tagged 'finance'." href="../tags/finance.html" rel="tag">finance</a>
+                        
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>The key technological advances which brought Bitcoin to life are the blockchain and its associated proof-of-work consensus algorithm. The Bitcoin whitepaper<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is very clear on its purpose:</p>
+<blockquote>
+<p>A purely peer-to-peer version of electronic cash would allow online payments to be sent directly from one party to another without going through a financial institution. Digital signatures provide part of the solution, but the main benefits are lost if a trusted third party is still required to prevent double-spending.</p>
+</blockquote>
+<p>The <em>double-spending</em> problem to which Nakamoto refers is a unique challenge of digital cash implementations. Contrary to physical cash, which is difficult to copy, digital cash is but bytes; it can be trivially copied. Before Bitcoin, the most popular way to prevent double-spending has been to route all digital cash transactions on a particular network through a trusted entity which ensures that no double-spending occurs. This is how the credit card and Interac networks work, for example.</p>
+<p>The Bitcoin whitepaper brings a new solution to the double-spending problem, a solution designed to explicitly avoid centralized trusted entities.</p>
+<hr />
+<p>In software engineering, there is a principle that one should understand <em>why</em> something is the way it is, before trying to change it. This principle is known as <em>Chesterton’s fence</em><a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
+<blockquote>
+<p>There exists (…) a fence or gate erected across a road. The more modern type of reformer goes gaily up to it and says, ‘I don’t see the use of this; let us clear it away.’ To which the more intelligent type of reformer will do well to answer: ’If you don’t see the use of it, I certainly won’t let you clear it away. Go away and think. Then, when you can come back and tell me that you do see the use of it, I may allow you to destroy it.</p>
+</blockquote>
+<p>To me, the push towards decentralization is a case of Chesterton’s fence. No one wants to involve a third-party in every transactions, but it is this way for two main reasons: fraud management and performance (transaction throughput).</p>
+<p><strong>Fraud management</strong> is a weak point of an anonymous peer-to-peer network like Bitcoin. While I appreciate the desire for anonymity, this leads to the same behaviors which lead to the founding of the US Securities and Exchange Commission almost a hundred years ago. Decentralization also enabled the rise of ransomware, as it is now much harder to track the flow of money between anonymous, single-use cryptocurrency accounts.</p>
+<p><strong>Performance</strong> is another major downside of decentralization. As an example, Bitcoin’s throughput has never reached more than <a href="https://blockchair.com/bitcoin/charts/transactions-per-second">6 transactions per second</a> as of the time of writing. By contract, the electronic payment network VisaNet (which powers Visa credit card) can process up to <a href="https://usa.visa.com/about-visa/visanet.html">76 000 transactions per second</a>.</p>
+<p>Until blockchain enthusiasts understand the advantages of centralization presented above, I don’t think cryptocurrencies will become mainstream.</p>
+<p><em>This post was inspired by the <a href="https://rationalreminder.ca/podcast/crypto8">Tim O’Reilly interview on the Rational Reminder podcast</a></em>.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>S. Nakamoto, <em>Bitcoin: A Peer-to-Peer Electronic Cash System</em> (2008). <a href="https://bitcoin.org/bitcoin.pdf">Link to PDF</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>G. K. Chesterton, <em>The Thing: Why I Am a Catholic</em>, chapter 4 (1929).<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2025-06-24. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>

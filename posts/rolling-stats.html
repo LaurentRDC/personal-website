@@ -1,0 +1,477 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z0NSFPKNBN">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Z0NSFPKNBN');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            Efficient rolling statistics - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        Efficient rolling statistics
+                    </h1>
+                    <h3>
+                        
+                        Posted on 2023-03-23. 
+                        
+                        
+                        Last updated on 2025-02-08.
+                        
+                    </h3>
+                    <h3>
+                        
+                        Estimated reading time of 19 min.
+                        
+                    </h3>
+                    <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: <a title="All pages tagged 'finance'." href="../tags/finance.html" rel="tag">finance</a>, <a title="All pages tagged 'haskell'." href="../tags/haskell.html" rel="tag">haskell</a>, <a title="All pages tagged 'mathematics'." href="../tags/mathematics.html" rel="tag">mathematics</a>
+                        
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>In the context of an array, rolling operations are operations on a set of values which are computed at each index of the array based on a subset of values in the array. A common rolling operation is the rolling mean, also known as the moving average.</p>
+<p>The best way to understand is to see it in action. Consider the following list:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">3</span>, <span class="dv">2</span>, <span class="dv">1</span>]</span></code></pre></div>
+<p>The rolling average with a window size of 2 is:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>[ (<span class="dv">0</span> <span class="op">+</span> <span class="dv">0</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">1</span> <span class="op">+</span> <span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">2</span> <span class="op">+</span> <span class="dv">3</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">3</span> <span class="op">+</span> <span class="dv">4</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">4</span> <span class="op">+</span> <span class="dv">3</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">3</span> <span class="op">+</span> <span class="dv">2</span>)<span class="op">/</span><span class="dv">2</span>, (<span class="dv">2</span> <span class="op">+</span> <span class="dv">1</span>)<span class="op">/</span><span class="dv">2</span>]</span></code></pre></div>
+<p>or</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>[<span class="dv">0</span>, <span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="fl">2.5</span>, <span class="fl">3.5</span>, <span class="fl">3.5</span>, <span class="fl">2.5</span>, <span class="fl">1.5</span>]</span></code></pre></div>
+<p>Rolling operations such as the rolling mean tremendously useful at my work. When working with time-series, for example, the rolling mean may be a good indicator to include as part of machine learning feature engineering or trading strategy design. Here’s an example of using the rolling average price of AAPL stock as an indicator:</p>
+<figure class="python">
+<img src="generated/pandocplot4908169204670792543.png" class="python image" alt="Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (Source code)" />
+<figcaption aria-hidden="true">Closing price of AAPL stock (solid), with the rolling mean of the closing price using three different windows as an example of indicator (dashed). (<a href="generated/pandocplot4908169204670792543.src.html">Source code</a>)</figcaption>
+</figure>
+<p>The problem is that rolling operations can be rather slow if implemented improperly. In this post, I’ll show you how to implement efficient rolling statistics using a method based on <em>recurrence relations</em>.</p>
+<p>In principle, a general rolling function for lists might have the following type signature:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">rolling ::</span> <span class="dt">Int</span>        <span class="co">-- ^ Window length</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> ([a] <span class="ot">-&gt;</span> b) <span class="co">-- ^ Rolling function, e.g. the mean or the standard deviation</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> [a]        <span class="co">-- ^ An input list of values</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> [b]        <span class="co">-- ^ An output list of values</span></span></code></pre></div>
+<p>In this hypothetical scenario, the rolling function of type <code class="sourceCode haskell">[a] <span class="ot">-&gt;</span> b</code> receives a sublist of length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>, the window length. The problem is, if the input list has size <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>, and the window has length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>, the complexity of this operation is at best <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>⋅</mo><mi>M</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(N \cdot M)</annotation></semantics></math>. Even if you’re using a data structure which is more efficient than a list – an array, for example –, this is still inefficient.</p>
+<p>Let’s see how to make this operation <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(N)</annotation></semantics></math>, i.e. constant in the window length!</p>
+<h2 class="title is-2" id="recurrence-relations-and-the-rolling-average">Recurrence relations and the rolling average</h2>
+<p>The recipe for these algorithms involves constructing the <em>recurrence relation</em> of the operation. A recurrence relation is a way to describe a series by expressing how a term at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math> is related to the term at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">i-1</annotation></semantics></math>.</p>
+<p>Let proceed by example. Consider a series of values <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> like so:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mn>0</mn></msub><mo>,</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+    X = \left[ x_0, x_1, ...\right]
+</annotation></semantics></math></p>
+<p>We want to calculate the rolling average <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mover><mi>X</mi><mo accent="true">‾</mo></mover><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mn>0</mn></msub><mo>,</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mn>1</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">\bar{X} = \left[ \bar{x}_0, \bar{x}_1, ... \right]</annotation></semantics></math> of series <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> with a window length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>. The equation for the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math><sup>th</sup> term, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><annotation encoding="application/x-tex">\bar{x}_j</annotation></semantics></math> is given by:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><mo>∑</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>x</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \bar{x}_j = \frac{1}{N}\sum_{i=j - N + 1}^{N} x_i = \frac{1}{N} \sum \left[ x_{j - N + 1}, x_{j - N + 2}, ..., x_{j} \right]
+</annotation></semantics></math></p>
+<p>Now let’s look at the equation for the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mi>j</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(j-1)</annotation></semantics></math><sup>th</sup> term:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi></mrow><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></munderover><msub><mi>x</mi><mi>i</mi></msub><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><mo>∑</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi></mrow></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \bar{x}_{j-1} = \frac{1}{N}\sum_{i=j - N}^{j-1} x_i = \frac{1}{N} \sum \left[ x_{j - N}, x_{j - N + 1}, ..., x_{j-1} \right]
+</annotation></semantics></math></p>
+<p>Note the large overlap between the computation of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><annotation encoding="application/x-tex">\bar{x}_j</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\bar{x}_{j-1}</annotation></semantics></math>; in both cases, you need to sum up <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="true" form="postfix">]</mo></mrow><annotation encoding="application/x-tex">\left[ x_{j-N+1}, x_{j-N+2}, ..., x_{j-1} \right]</annotation></semantics></math></p>
+<p>Given that the overlap is very large, let’s take the difference between two consecutive terms, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><annotation encoding="application/x-tex">\bar{x}_j</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><annotation encoding="application/x-tex">\bar{x}_{j-1}</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><mo>∑</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>2</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>x</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow><mo>−</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><mo>∑</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi></mrow></msub><mo>,</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><mo>∑</mo><mrow><mo stretchy="true" form="prefix">[</mo><mi>−</mi><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi></mrow></msub><mo>+</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>2</mn></mrow></msub><mo>−</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>2</mn></mrow></msub><mo>+</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>+</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><msub><mi>x</mi><mi>j</mi></msub><mo stretchy="true" form="postfix">]</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>j</mi></msub><mo>−</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+    \bar{x}_j - \bar{x}_{j-1} &amp;= \frac{1}{N} \sum \left[ x_{j - N + 1}, x_{j - N + 2}, ..., x_j \right] - \frac{1}{N} \sum \left[ x_{j - N}, x_{j - N + 1}, ..., x_{j-1} \right] \\
+                              &amp;= \frac{1}{N} \sum \left[ -x_{j-N} + x_{j - N + 1} - x_{j - N + 1} + x_{j - N + 2} - x_{j - N + 2} + ... + x_{j-1} - x_{j-1} + x_j\right] \\
+                              &amp;= \frac{1}{N} ( x_{j} - x_{j - N} )
+\end{aligned}
+</annotation></semantics></math></p>
+<p>Rewriting a little:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><mo>=</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></msub><mo>+</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>j</mi></msub><mo>−</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi></mrow></msub><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \bar{x}_j = \bar{x}_{j-1} + \frac{1}{N} ( x_j - x_{j-N} )
+</annotation></semantics></math></p>
+<p>This is the recurrence relation of the rolling average with a window of length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>. It tells us that for every term of the rolling average series <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mover><mi>X</mi><mo accent="true">‾</mo></mover><annotation encoding="application/x-tex">\bar{X}</annotation></semantics></math>, we only need to involve two terms of the original series <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>, regardless of the window. Awesome!</p>
+<h4 class="title is-4" id="haskell-implementation">Haskell implementation</h4>
+<p>Let’s implement this in Haskell. We’ll use the <a href="https://hackage.haskell.org/package/vector"><code class="has-text-link">vector</code></a> library which is much faster than lists for numerical calculations like this, and comes with some combinators which make it pretty easy to implement the rolling mean. Regular users of <code>vector</code> will notice that the recurrence relation above fits the <code>scanl</code> use-case. If you’re unfamiliar, <code>scanl</code> is a function which looks like this:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">scanl</span><span class="ot"> ::</span> (b <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> b) <span class="co">-- ^ Combination function</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> b             <span class="co">-- ^ Starting value</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> <span class="dt">Vector</span> a      <span class="co">-- ^ Input</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>      <span class="ot">-&gt;</span> <span class="dt">Vector</span> b      <span class="co">-- ^ Output</span></span></code></pre></div>
+<p>For example:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="kw">import</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> Vector.scanl (<span class="op">+</span>) <span class="dv">0</span> (Vector.fromList [<span class="dv">1</span>, <span class="dv">4</span>, <span class="dv">7</span>, <span class="dv">10</span>])</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>[<span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">22</span>]</span></code></pre></div>
+<p>If we decompose the example:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>[    <span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>                 <span class="co">-- 1</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>,   (<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="dv">4</span>            <span class="co">-- 5</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>,  ((<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="dv">4</span>) <span class="op">+</span> <span class="dv">7</span>       <span class="co">-- 12</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>, (((<span class="dv">0</span> <span class="op">+</span> <span class="dv">1</span>) <span class="op">+</span> <span class="dv">4</span>) <span class="op">+</span> <span class="dv">7</span>) <span class="op">+</span> <span class="dv">10</span> <span class="co">-- 22</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>]</span></code></pre></div>
+<p>In this specific case, <code>Vector.scanl (+) 0</code> is the same as <code>numpy.cumsum</code> if you’re more familiar with Python. In general, <code>scanl</code> is an accumulation from left to right, where the “scanned” term at index <code>i</code> depends on the value of the input at indices <code>i</code> and the scanned term at <code>i-1</code>. This is perfect to represent recurrence relations. Note that in the case of the rolling mean recurrence relation, we’ll need access to the value at index <code>i</code> and <code>i - N</code>, where again <code>N</code> is the length of the window. The canonical way to operate on more than one array at once elementwise is the <code>zip*</code> family of functions.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `vector` library</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Vector</span> ( <span class="dt">Vector</span> )   </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Perform the rolling mean calculation on a vector.</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingMean ::</span> <span class="dt">Int</span>            <span class="co">-- ^ Window length</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span>  <span class="co">-- ^ Input series</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span>  </span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>rollingMean window vs</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="kw">let</span> w     <span class="ot">=</span> <span class="fu">fromIntegral</span> window </span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Starting point is the mean of the first complete window</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>          start <span class="ot">=</span> Vector.sum (Vector.take window vs) <span class="op">/</span> w</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Consider the recurrence relation mean[i] = mean[i-1] + (edge - lag)/w </span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- where w    = window length</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>          <span class="co">--       edge = vs[i]</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>          <span class="co">--       lag  = vs[i - w]</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>          edge <span class="ot">=</span> Vector.drop window vs</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>          lag  <span class="ot">=</span> Vector.take (Vector.length vs <span class="op">-</span> window) vs</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">-- mean[i] = mean[i-1] + diff, where diff is:</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>          diff <span class="ot">=</span> Vector.zipWith (\p n <span class="ot">-&gt;</span> (p <span class="op">-</span> n)<span class="op">/</span>w) edge lag</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The rolling mean for the elements at indices i &lt; window is set to 0</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>       <span class="kw">in</span> Vector.replicate (window <span class="op">-</span> <span class="dv">1</span>) <span class="dv">0</span> <span class="op">&lt;&gt;</span> Vector.scanl (<span class="op">+</span>) start diff</span></code></pre></div>
+<p>With this function, we can compute the rolling mean like so:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="kw">import</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> rollingMean <span class="dv">2</span> <span class="op">$</span> Vector.fromList [<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">3</span>,<span class="dv">4</span>,<span class="dv">5</span>]</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>[<span class="fl">0.0</span>,<span class="fl">1.5</span>,<span class="fl">2.5</span>,<span class="fl">3.5</span>,<span class="fl">4.5</span>]</span></code></pre></div>
+<h4 class="title is-4" id="complexity-analysis">Complexity analysis</h4>
+<p>Let’s say the window length is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> and the input array length is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>. The naive algorithm has complexity <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>⋅</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n \cdot N)</annotation></semantics></math>. On the other hand, <code>rollingMean</code> has a complexity of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>+</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n + N)</annotation></semantics></math>:</p>
+<ul>
+<li><code>Vector.sum</code> to compute <code>start</code> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(N)</annotation></semantics></math>;</li>
+<li><code>Vector.replicate (window - 1)</code> has order <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(N)</annotation></semantics></math></li>
+<li><code>Vector.drop</code> and <code>Vector.take</code> are both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(1)</annotation></semantics></math>;</li>
+<li><code>Vector.scanl</code> and <code>Vector.zipWith</code> are both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n)</annotation></semantics></math> (and in practice, these operations should get fused to a single pass);</li>
+</ul>
+<p>However, usually <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>&lt;</mo><mo>&lt;</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">N &lt;&lt; n</annotation></semantics></math>. For example, at work, we typically roll 10+ years of data with a window on the order of days / weeks. Therefore, we have that <code>rollingMean</code> scales linearly with the length of the input (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n)</annotation></semantics></math>)</p>
+<h2 class="title is-2" id="efficient-rolling-variance">Efficient rolling variance</h2>
+<p>Now that we’ve developed a procedure on how to determine an efficient rolling algorithm, let’s do it for the (unbiased) variance.</p>
+<p>Again, consider a series of values:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mn>0</mn></msub><mo>,</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+    X = \left[ x_0, x_1, ...\right]
+</annotation></semantics></math></p>
+<p>We want to calculate the rolling variance <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>σ</mi><mn>2</mn></msup><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\sigma^2(X)</annotation></semantics></math> of series <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math> with a window length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>. The equation for the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math><sup>th</sup> term, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msubsup><mi>σ</mi><mi>j</mi><mn>2</mn></msubsup><annotation encoding="application/x-tex">\sigma^2_j</annotation></semantics></math> is given by:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>j</mi><mn>2</mn></msubsup><mo>=</mo><mfrac><mn>1</mn><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mi>j</mi></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>=</mo><mfrac><mn>1</mn><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mo>∑</mo><mrow><mo stretchy="true" form="prefix">[</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo>,</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>j</mi></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+    \sigma^2_j = \frac{1}{N - 1}\sum_{i=j - N + 1}^{j} (x_i - \bar{x}_j)^2 = \frac{1}{N-1} \sum \left[ (x_{j - N + 1} - \bar{x}_j)^2, ..., (x_j - \bar{x}_j)^2 \right]
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>i</mi></msub><annotation encoding="application/x-tex">\bar{x}_i</annotation></semantics></math> is the rolling mean at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>i</mi><annotation encoding="application/x-tex">i</annotation></semantics></math>, just like in the previous section. Let’s simplify a bit by expanding the squares:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><msubsup><mi>σ</mi><mi>j</mi><mn>2</mn></msubsup></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mi>j</mi></munderover><msup><mrow><mo stretchy="true" form="prefix">(</mo><msub><mi>x</mi><mi>i</mi></msub><mo>−</mo><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><mo stretchy="true" form="postfix">)</mo></mrow><mn>2</mn></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi><mn>2</mn></msubsup><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mi>j</mi></munderover><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup><mo>−</mo><mn>2</mn><msub><mi>x</mi><mi>i</mi></msub><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+    (N - 1) ~ \sigma^2_j &amp;= \sum_{i=j-N+1}^{j} (x_i - \bar{x}_j)^2 \\
+                         &amp;= N\bar{x}^2_j + \sum_{i=j - N + 1}^{j} x^2_i - 2 x_i \bar{x}_j
+\end{aligned}
+</annotation></semantics></math></p>
+<p>We note here that <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mi>j</mi></msubsup><msub><mi>x</mi><mi>i</mi></msub><mo>≡</mo><mi>N</mi><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub></mrow><annotation encoding="application/x-tex">\sum_{i=j - N + 1}^{j} x_i \equiv N \bar{x}_j</annotation></semantics></math>, which allows to simplify the equation further:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mspace width="0.222em"></mspace><msubsup><mi>σ</mi><mi>j</mi><mn>2</mn></msubsup></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi><mn>2</mn></msubsup><mo>−</mo><mn>2</mn><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi><mn>2</mn></msubsup><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mi>j</mi></munderover><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>−</mi><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi><mn>2</mn></msubsup><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mi>j</mi></munderover><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+    (N - 1) ~ \sigma^2_j &amp;= N\bar{x}^2_j - 2 N \bar{x}^2_j + \sum_{i=j - N + 1}^{j} x^2_i  \\
+                         &amp;= -N\bar{x}^2_j + \sum_{i=j - N + 1}^{j} x^2_i 
+\end{aligned}
+</annotation></semantics></math></p>
+<p>This leads to the following difference between consecutive rolling unbiased variance terms:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo>−</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow><mrow><mo stretchy="true" form="prefix">(</mo><msubsup><mi>σ</mi><mi>j</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>σ</mi><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow><mn>2</mn></msubsup><mo>−</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi><mn>2</mn></msubsup><mo>+</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi><mo>+</mo><mn>1</mn></mrow><mi>j</mi></munderover><msubsup><mi>x</mi><mi>i</mi><mn>2</mn></msubsup><mo>−</mo><munderover><mo>∑</mo><mrow><mi>i</mi><mi>′</mi><mo>=</mo><mi>j</mi><mo>−</mo><mi>N</mi></mrow><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow></munderover><msubsup><mi>x</mi><mrow><mi>i</mi><mi>′</mi></mrow><mn>2</mn></msubsup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow><mn>2</mn></msubsup><mo>−</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>x</mi><mi>j</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi></mrow><mn>2</mn></msubsup></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{aligned}
+(N - 1) \left( \sigma^2_j - \sigma^2_{j-1} \right) &amp;= N\bar{x}^2_{j - 1} - N\bar{x}^2_j + \sum_{i=j - N + 1}^{j} x^2_i - \sum_{i'=j - N}^{j-1} x^2_{i'} \\
+                                                   &amp;= N\bar{x}^2_{j - 1} - N\bar{x}^2_j + x^2_j - x^2_{j-N}
+\end{aligned}
+</annotation></semantics></math></p>
+<p>and therefore, the recurrence relation:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msubsup><mi>σ</mi><mi>j</mi><mn>2</mn></msubsup><mo>=</mo><msubsup><mi>σ</mi><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow><mn>2</mn></msubsup><mo>+</mo><mfrac><mn>1</mn><mrow><mi>N</mi><mo>−</mo><mn>1</mn></mrow></mfrac><mrow><mo stretchy="true" form="prefix">[</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow><mn>2</mn></msubsup><mo>−</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>x</mi><mi>j</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi></mrow><mn>2</mn></msubsup><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">
+\sigma^2_j = \sigma^2_{j-1} + \frac{1}{N-1} \left[ N\bar{x}^2_{j - 1} - N\bar{x}^2_j + x^2_j - x^2_{j - N} \right] 
+</annotation></semantics></math></p>
+<p>This recurrence relation looks pretty similar to the rolling mean recurrence relation, with the added wrinkle that you need to know the rolling mean in advance.</p>
+<h4 class="title is-4" id="haskell-implementation-1">Haskell implementation</h4>
+<p>Let’s implement this in Haskell again. We can re-use our <code>rollingMean</code>. We’ll also need to compute the unbiased variance in the starting window; I’ll use the <code>statistics</code> library for brevity, but it’s easy to implement yourself if you care about minimizing dependencies.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `vector` library</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Vector</span> ( <span class="dt">Vector</span> )   </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `statistics` library</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Statistics.Sample</span> ( varianceUnbiased )</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingMean ::</span> <span class="dt">Int</span>          </span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>rollingMean <span class="ot">=</span> (<span class="op">...</span>)  <span class="co">-- see above</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- | Perform the rolling unbiased variance calculation on a vector.</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingVar ::</span> <span class="dt">Int</span>          </span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>           <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>           <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>rollingVar window vs</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="kw">let</span> start   <span class="ot">=</span> varianceUnbiased <span class="op">$</span> Vector.take window vs</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>          n       <span class="ot">=</span> <span class="fu">fromIntegral</span> window</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>          ms      <span class="ot">=</span> rollingMean window vs</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Rolling mean terms leading by N</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>          ms_edge <span class="ot">=</span> Vector.drop window ms</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Rolling mean terms leading by N - 1</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>          ms_lag  <span class="ot">=</span> Vector.drop (window <span class="op">-</span> <span class="dv">1</span>) ms</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Values leading by N</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>          xs_edge <span class="ot">=</span> Vector.drop window vs</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Values leading by 0</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>          xs_lag  <span class="ot">=</span> vs</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- Implementation of the recurrence relation, minus the previous term in the series</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- There's no way to make the following look nice, sorry.</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- N * \bar{x}^2_{N-1} - N * \bar{x}^2_{N} + x^2_N - x^2_0</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>          term xbar_nm1 xbar_n x_n x_0 <span class="ot">=</span> (n <span class="op">*</span> (xbar_nm1<span class="op">**</span><span class="dv">2</span>) <span class="op">-</span> n <span class="op">*</span> (xbar_n <span class="op">**</span> <span class="dv">2</span>) <span class="op">+</span> x_n<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> x_0<span class="op">**</span><span class="dv">2</span>)<span class="op">/</span>(n <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The rolling variance for the elements at indices i &lt; window is set to 0</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>       <span class="kw">in</span> Vector.replicate (window <span class="op">-</span> <span class="dv">1</span>) <span class="dv">0</span> <span class="op">&lt;&gt;</span> Vector.scanl (<span class="op">+</span>) start (Vector.zipWith4 term ms_lag ms_edge xs_edge xs_lag)</span></code></pre></div>
+<p>Note that it may be benificial to reformulate the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mrow><mi>j</mi><mo>−</mo><mn>1</mn></mrow><mn>2</mn></msubsup><mo>−</mo><mi>N</mi><msubsup><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi><mn>2</mn></msubsup><mo>+</mo><msubsup><mi>x</mi><mi>j</mi><mn>2</mn></msubsup><mo>−</mo><msubsup><mi>x</mi><mrow><mi>j</mi><mo>−</mo><mi>N</mi></mrow><mn>2</mn></msubsup></mrow><annotation encoding="application/x-tex">N\bar{x}^2_{j - 1} - N\bar{x}^2_j + x^2_j - x^2_{j - N}</annotation></semantics></math> part of the recurrence relation to optimize the <code>rollingVar</code> function. For example, is it faster to minimize the number of exponentiations, or multiplications? I do not know, and leave further optimizations aside.</p>
+<h4 class="title is-4" id="complexity-analysis-1">Complexity analysis</h4>
+<p>Again, let’s say the window length is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math> and the input array length is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>n</mi><annotation encoding="application/x-tex">n</annotation></semantics></math>. The naive algorithm still has complexity <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>⋅</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n \cdot N)</annotation></semantics></math>. On the other hand, <code>rollingVar</code> has a complexity of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo>+</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n + N)</annotation></semantics></math>:</p>
+<ul>
+<li><code>varianceUnbiased</code> to compute <code>start</code> is <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(N)</annotation></semantics></math>;</li>
+<li><code>Vector.replicate (window - 1)</code> has order <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>N</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(N)</annotation></semantics></math></li>
+<li><code>Vector.drop</code> and <code>Vector.take</code> are both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>1</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(1)</annotation></semantics></math>;</li>
+<li><code>Vector.scanl</code> and <code>Vector.zipWith4</code> are both <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n)</annotation></semantics></math> (and in practice, these operations should get fused to a single pass);</li>
+</ul>
+<p>Since usually <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi><mo>&lt;</mo><mo>&lt;</mo><mi>n</mi></mrow><annotation encoding="application/x-tex">N &lt;&lt; n</annotation></semantics></math>, as before, we have that <code>rollingVar</code> scales linearly with the length of the input (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n)</annotation></semantics></math>).</p>
+<h2 class="title is-2" id="bonus-rolling-sharpe-ratio">Bonus: rolling Sharpe ratio</h2>
+<p>The Sharpe ratio<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> is a common financial indicator of return on risk. Its definition is simple. Consider excess returns in a set <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>X</mi><annotation encoding="application/x-tex">X</annotation></semantics></math>. The Sharpe ratio <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">S(X)</annotation></semantics></math> of these excess returns is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>S</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>X</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><mfrac><mover><mi>X</mi><mo accent="true">‾</mo></mover><msub><mi>σ</mi><mi>X</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">
+S(X) = \frac{\bar{X}}{\sigma_X} 
+</annotation></semantics></math></p>
+<p>For ordered excess returns <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>X</mi><mo>=</mo><mrow><mo stretchy="true" form="prefix">[</mo><msub><mi>x</mi><mn>0</mn></msub><mo>,</mo><msub><mi>x</mi><mn>1</mn></msub><mo>,</mo><mi>.</mi><mi>.</mi><mi>.</mi><mo stretchy="true" form="postfix">]</mo></mrow></mrow><annotation encoding="application/x-tex">X = \left[ x_0, x_1, ... \right]</annotation></semantics></math>, the rolling Sharpe ratio at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math> is:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>S</mi><mi>j</mi></msub><mo>=</mo><mfrac><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><msub><mi>σ</mi><mi>j</mi></msub></mfrac></mrow><annotation encoding="application/x-tex">
+    S_j = \frac{\bar{x}_j}{\sigma_j}
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mover><mi>x</mi><mo accent="true">‾</mo></mover><mi>j</mi></msub><annotation encoding="application/x-tex">\bar{x}_j</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>σ</mi><mi>j</mi></msub><annotation encoding="application/x-tex">\sigma_j</annotation></semantics></math> are the rolling mean and standard deviation at index <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>j</mi><annotation encoding="application/x-tex">j</annotation></semantics></math>, respectively.</p>
+<p>Since the rolling variance requires knowledge of the rolling mean, we can easily compute the rolling Sharpe ratio by modifying the implementation of <code>rollingVariance</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `vector` library</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Data.Vector</span> ( <span class="dt">Vector</span> )   </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Vector</span> <span class="kw">as</span> <span class="dt">Vector</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- from the `statistics` library</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span>           <span class="dt">Statistics.Sample</span> ( varianceUnbiased )</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingMean ::</span> <span class="dt">Int</span>          </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>            <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>rollingMean <span class="ot">=</span> (<span class="op">...</span>)  <span class="co">-- see above</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="ot">rollingSharpe ::</span> <span class="dt">Int</span>          </span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>              <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>              <span class="ot">-&gt;</span> <span class="dt">Vector</span> <span class="dt">Double</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>rollingSharpe window vs</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="kw">let</span> start   <span class="ot">=</span> varianceUnbiased <span class="op">$</span> Vector.take window vs</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>          n       <span class="ot">=</span> <span class="fu">fromIntegral</span> window</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>          ms      <span class="ot">=</span> rollingMean window vs</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- The following expressions are taken from rollingVar</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>          ms_edge <span class="ot">=</span> Vector.drop window ms</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>          ms_lag  <span class="ot">=</span> Vector.drop (window <span class="op">-</span> <span class="dv">1</span>) ms</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>          xs_edge <span class="ot">=</span> Vector.drop window vs</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>          xs_lag  <span class="ot">=</span> vs</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>          term xbar_nm1 xbar_n x_n x_0 <span class="ot">=</span> (n <span class="op">*</span> (xbar_nm1<span class="op">**</span><span class="dv">2</span>) <span class="op">-</span> n <span class="op">*</span> (xbar_n <span class="op">**</span> <span class="dv">2</span>) <span class="op">+</span> x_n<span class="op">**</span><span class="dv">2</span> <span class="op">-</span> x_0<span class="op">**</span><span class="dv">2</span>)<span class="op">/</span>(n <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- standard deviation from variance</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>          std <span class="ot">=</span> <span class="fu">sqrt</span> <span class="op">&lt;$&gt;</span> Vector.scanl (<span class="op">+</span>) start (Vector.zipWith4 term ms_lag ms_edge xs_edge xs_lag)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The rolling Sharpe ratio for the elements at indices i &lt; window is set to 0</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>       <span class="kw">in</span> Vector.replicate (window <span class="op">-</span> <span class="dv">1</span>) <span class="dv">0</span> <span class="op">&lt;&gt;</span> Vector.zipWith (<span class="op">/</span>) (Vector.drop window ms) std</span></code></pre></div>
+<h2 class="title is-2" id="conclusion">Conclusion</h2>
+<p>In this blog post, I’ve shown you a recipe to design rolling statistics algorithms which are efficient (i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>𝒪</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>n</mi><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\mathcal{O}(n)</annotation></semantics></math>) based on recurrence relations. Efficient rolling statistics as implemented in this post are an essential part of backtesting software, which is software to test trading strategies.</p>
+<p><em>All code is available in this <a href="../files/rolling-stats/Rolling.hs">Haskell module</a>.</em></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>William F. Sharpe. <em>Mutual Fund Performance</em>. Journal of Business, <strong>31</strong> (1966). <a href="https://doi.org/10.1086/294846">DOI: 10.1086/294846</a><a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2025-06-24. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>

@@ -1,0 +1,433 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z0NSFPKNBN">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Z0NSFPKNBN');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            Scientific computing with confidence using typed dimensions - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        Scientific computing with confidence using typed dimensions
+                    </h1>
+                    <h3>
+                        
+                        Posted on 2024-11-20. 
+                        
+                        
+                        Last updated on 2025-02-08.
+                        
+                    </h3>
+                    <h3>
+                        
+                        Estimated reading time of 16 min.
+                        
+                    </h3>
+                    <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: <a title="All pages tagged 'haskell'." href="../tags/haskell.html" rel="tag">haskell</a>, <a title="All pages tagged 'science'." href="../tags/science.html" rel="tag">science</a>
+                        
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>I have performed non-trivial scientific calculations, in <a href="../about.html">university and beyond</a>, for almost 15 years.</p>
+<p>Until the end of undergraduate school, this was mostly done by hand. Optimizing the <a href="https://en.wikipedia.org/wiki/Brachistochrone_curve">trajectory of a heavy ball</a> or solving the <a href="https://en.wikipedia.org/wiki/Heat_equation">heat equation</a> are problems with analytical solutions, and thus can be solved with pen(cil) and paper.</p>
+<p>However, there were instances when numerical tools had to be used, rather than analytical ones. This occurred, for example, when replacing models of the physical world with measurements from the physical world in experimental physics classes. By the end of my B.Sc., <a href="../files/ugrad_project.pdf">the need to take measurements, transform them, and report results was made much simpler by using a computer</a>.</p>
+<p>Fast forward to graduate school, and the amount of measurements (and their complexity) require the use of some of the most powerful computers I have ever used, even to this day. When implementing numerical routines, I had to pore over the equations (translated to computer expression) countless times, to ensure that they were correctly applied. Most importantly, <strong>all units needed to be carefully checked by hand</strong>. Small mistakes went unnoticed and wasted valuable resources.
+Take a look at <a href="https://github.com/LaurentRDC/dissertation/blob/7fb658306b6c7dd1b4c8b983ad5f6d8fb91bcdb1/figures/graphite/eph-coupling.py#L56">one of the computations</a> from my Ph. D. dissertation (<a href="../files/dissertation.pdf">PDF</a>, <a href="https://github.com/LaurentRDC/dissertation">Git repository</a>):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.constants <span class="im">import</span> physical_constants</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> population(temperature: <span class="bu">float</span>, frequency: <span class="bu">float</span>) <span class="op">-&gt;</span> <span class="bu">float</span>:</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Determine average phonon population at `temperature`.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">    ----------</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">    temperature : float</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">        Temperature in Kelvin</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">    frequency : float</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">        Phonon frequency in Hertz</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    h, <span class="op">*</span>_ <span class="op">=</span> physical_constants[<span class="st">&quot;Planck constant over 2 pi in eV s&quot;</span>]</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    kb, <span class="op">*</span>_ <span class="op">=</span> physical_constants[<span class="st">&quot;Boltzmann constant in eV/K&quot;</span>]</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="fl">0.5</span> <span class="op">*</span> coth(h <span class="op">*</span> frequency <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> kb <span class="op">*</span> temperature)) <span class="op">-</span> <span class="fl">0.5</span></span></code></pre></div>
+<p>This isn’t a complex equation, but it showcases the problem perfectly. <code>temperature</code>, <code>frequency</code>, <code>h</code>, and <code>kb</code> are all floating-point numbers, with their units attached <em>as documentation</em>. This is not robust.</p>
+<p>These days, instead of meticulously going over the details of calculations ahead of time, I now defer to my computer to check the validity of my calculations <em>as much as possible</em>. That’s why computers exist: to free people from repetitive and error-prone work. In this post, I will describe a mechanism, typed dimensions, by which we can eliminate entire classes of bugs, and how the <a href="https://github.com/bjornbm/dimensional/"><code class="has-text-link">dimensional</code></a> Haskell package makes this easy.</p>
+<h2 class="title is-2" id="dimensions-units-and-quantities">Dimensions, units, and quantities</h2>
+<p>In the international system of units (also called SI units), there are 7 basic <em>dimensions</em> a physical value can have:</p>
+<ul>
+<li>time duration <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>;</li>
+<li>length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>;</li>
+<li>mass <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>;</li>
+<li>electric current <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math>;</li>
+<li>thermodynamic temperature <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>;</li>
+<li>amount of substance <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>;</li>
+<li>luminous intensity <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>J</mi><annotation encoding="application/x-tex">J</annotation></semantics></math>.</li>
+</ul>
+<p>Using the symbols associated with these base dimensions, we can express any dimension using exponents. For example, velocity (length over time duration) has dimensions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mi>/</mi><mi>T</mi><mo>=</mo><mi>L</mi><mo>⋅</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">L/T = L \cdot T^{-1}</annotation></semantics></math>, while force (mass-length over time squared) has dimensions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>M</mi><mo>⋅</mo><mi>L</mi><mo>⋅</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>2</mn></mrow></msup></mrow><annotation encoding="application/x-tex">M \cdot L \cdot T^{-2}</annotation></semantics></math>. Dimensionless quantities have all exponents being 0.</p>
+<p>Why are dimensions important? <a href="https://en.wikipedia.org/w/index.php?title=Dimensional_analysis&amp;oldid=1254137729#Mathematical_properties">There are mathematical rules associated with combining numbers with dimensions</a>:</p>
+<ul>
+<li><p>Two quantities with dimensions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mn>1</mn></msub><annotation encoding="application/x-tex">D_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mn>2</mn></msub><annotation encoding="application/x-tex">D_2</annotation></semantics></math> can only be added or subtracted if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mn>1</mn></msub><mo>≡</mo><msub><mi>D</mi><mn>2</mn></msub></mrow><annotation encoding="application/x-tex">D_1 \equiv D_2</annotation></semantics></math>. For example, it does not make sense to add a length to a mass<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>.</p></li>
+<li><p>Any two quantities with dimensions <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mn>1</mn></msub><annotation encoding="application/x-tex">D_1</annotation></semantics></math> and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>D</mi><mn>2</mn></msub><annotation encoding="application/x-tex">D_2</annotation></semantics></math> can be multiplied or divided, in which case the resulting dimension follows the usual rules of arithmetic. For example:</p></li>
+</ul>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mtable><mtr><mtd columnalign="right" style="text-align: right"><mrow><mo stretchy="true" form="prefix">(</mo><mi>L</mi><mo>⋅</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>L</mi><mo>⋅</mo><mi>Θ</mi><mo stretchy="true" form="postfix">)</mo></mrow></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>L</mi><mo>⋅</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow><mo>⋅</mo><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>L</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>⋅</mo><msup><mi>Θ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mi>L</mi><mrow><mn>1</mn><mo>−</mo><mn>1</mn></mrow></msup><mo>⋅</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>⋅</mo><msup><mi>Θ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mtd></mtr><mtr><mtd columnalign="right" style="text-align: right"></mtd><mtd columnalign="left" style="text-align: left"><mo>=</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup><mo>⋅</mo><msup><mi>Θ</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mtd></mtr></mtable><annotation encoding="application/x-tex">
+\begin{align}
+\left( L \cdot T^{-1} \right) / \left( L \cdot \Theta\right) 
+    &amp;= \left( L \cdot T^{-1} \right) \cdot \left( L^{-1} \cdot \Theta^{-1}\right) \\
+    &amp;= L^{1 - 1} \cdot T^{-1} \cdot \Theta^{-1} \\
+    &amp;= T^{-1} \cdot \Theta^{-1}
+\end{align}
+</annotation></semantics></math></p>
+<p>From these two facts, we can derive some surprising conclusions. For example, the argument to many functions (such as sine, cosine, exponential, etc.) must be dimensionless! Consider the Taylor series expansion of the sine function:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>sin</mo><mi>x</mi><mo>=</mo><mi>x</mi><mo>−</mo><mfrac><msup><mi>x</mi><mn>3</mn></msup><mrow><mn>3</mn><mi>!</mi></mrow></mfrac><mo>+</mo><mfrac><msup><mi>x</mi><mn>5</mn></msup><mrow><mn>5</mn><mi>!</mi></mrow></mfrac><mo>−</mo><mi>.</mi><mi>.</mi><mi>.</mi></mrow><annotation encoding="application/x-tex">
+    \sin{x} = x - \frac{x^3}{3!} + \frac{x^5}{5!} - ...
+</annotation></semantics></math></p>
+<p>The argument <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> must have the same dimensions as <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>x</mi><mn>3</mn></msup><annotation encoding="application/x-tex">x^3</annotation></semantics></math>, <em>which is only possible if and only if <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>x</mi><annotation encoding="application/x-tex">x</annotation></semantics></math> is a dimensionless quantity</em>.</p>
+<p>Units of measure are physical manifestations of dimensions. Dimensions are abstract, while units of measure are concrete. For example, the length dimension <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math> can be measured in units of meters. Each basic dimension has its own canonical unit of measure, the <em>base unit</em>:</p>
+<ul>
+<li>The second (s) for time duration <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>;</li>
+<li>The meter (m) for length <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>L</mi><annotation encoding="application/x-tex">L</annotation></semantics></math>;</li>
+<li>The kilogram (kg) for mass <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>M</mi><annotation encoding="application/x-tex">M</annotation></semantics></math>;</li>
+<li>The ampere (A) for electric current <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>I</mi><annotation encoding="application/x-tex">I</annotation></semantics></math>;</li>
+<li>The kelvin (K) for thermodynamic temperature <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>Θ</mi><annotation encoding="application/x-tex">\Theta</annotation></semantics></math>;</li>
+<li>The mole (mol) for amount of substance <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>N</mi><annotation encoding="application/x-tex">N</annotation></semantics></math>;</li>
+<li>The candela (cd) for luminous intensity <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>J</mi><annotation encoding="application/x-tex">J</annotation></semantics></math>.</li>
+</ul>
+<p>Units for non-basic dimensions, so-called <em>derived units</em>, are combinations of base units using the usual multiplication (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>⋅</mi><annotation encoding="application/x-tex">\cdot</annotation></semantics></math>) and division (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>/</mi><annotation encoding="application/x-tex">/</annotation></semantics></math>) operators. For example, velocity has dimensions of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>⋅</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">L \cdot T^{-1}</annotation></semantics></math>, and can be measured in units of meters per second (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mi>m</mi><mi>s</mi></mfrac><annotation encoding="application/x-tex">\frac{m}{s}</annotation></semantics></math>). Some derived units have names; for example, the Newton (N) is a derived unit corresponding to <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mfrac><mrow><mtext mathvariant="normal">kg</mtext><mo>⋅</mo><mtext mathvariant="normal">m</mtext></mrow><msup><mtext mathvariant="normal">s</mtext><mn>2</mn></msup></mfrac><annotation encoding="application/x-tex">\frac{\text{kg} \cdot \text{m}}{\text{s}^2}</annotation></semantics></math>.</p>
+<p>Based on their dimensions, units can only be combined in certain ways. You can only add/subtract units of the same dimensions, while the multiplication/division of units modifies the dimensions.</p>
+<p>Units can be converted to any other units of the same dimensions by conversion <em>base unit</em>. For example, converting from units of imperial feet (ft) to kilometers (km) involves conversion from imperial feet to the base unit of length, the meter, and then conversion from the meter to the kilometer.</p>
+<p>Finally, a <em>quantity</em> is a number attached to units. 3.15 meter/second is a quantity with magnitude 3.15, units of meters/second, and dimensions of length over time duration (or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>L</mi><mo>⋅</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>1</mn></mrow></msup></mrow><annotation encoding="application/x-tex">L \cdot T^{-1}</annotation></semantics></math>).</p>
+<p>Scientists take measurements of quantities, and run scientific computations to get answers in the form of other quantities. We can ensure correctness of these computations by realizing that <strong>dimensions are known ahead of time</strong>. This means that for statically- and strongly-typed languages (e.g. Haskell, Rust), we should enforce correctness using the type system.</p>
+<h2 class="title is-2" id="type-safe-dimensions">Type-safe dimensions</h2>
+<p>People’s first contact with computational unit systems may come from <a href="https://github.com/hgrecco/pint"><code class="has-text-link">pint</code></a>, a Python library to manipulate quantities. While <code>pint</code> is better than nothing, it does not guarantee correctness at runtime due to Python’s dynamic nature.</p>
+<p>Instead, I prefer the <a href="https://github.com/bjornbm/dimensional/"><code class="has-text-link">dimensional</code></a> package, a Haskell library created by <a href="https://github.com/bjornbm">Björn Buckwalter</a> that guarantees correctness by ensuring type-safe dimensions at compile-time. Other tools exist for other languages – for example, <a href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/units-of-measure">F# famously includes units of measure</a> as a first-party feature.</p>
+<p>We will work by example to compute the <a href="https://en.wikipedia.org/w/index.php?title=Maxwell%E2%80%93Boltzmann_distribution&amp;oldid=1255523817">Maxwell-Boltzmann distribution</a>. This is the distribution of velocities of identical particles of mass <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>m</mi><annotation encoding="application/x-tex">m</annotation></semantics></math>, given some thermodynamic temperature <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>T</mi><annotation encoding="application/x-tex">T</annotation></semantics></math>:</p>
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>f</mi><mrow><mo stretchy="true" form="prefix">(</mo><mi>v</mi><mo stretchy="true" form="postfix">)</mo></mrow><mo>=</mo><msup><mrow><mo stretchy="true" form="prefix">(</mo><mfrac><mi>m</mi><mrow><mn>2</mn><mi>π</mi><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mfrac><mn>3</mn><mn>2</mn></mfrac></msup><mo>exp</mo><mrow><mo stretchy="true" form="prefix">(</mo><mi>−</mi><mfrac><mrow><mi>m</mi><msup><mi>v</mi><mn>2</mn></msup></mrow><mrow><mn>2</mn><msub><mi>k</mi><mi>B</mi></msub><mi>T</mi></mrow></mfrac><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">
+    f(v) = \left( \frac{m}{2 \pi k_B T}\right)^{\frac{3}{2}} \exp{ \left( -\frac{m v^2 }{2 k_B T}\right) }
+</annotation></semantics></math></p>
+<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>v</mi><annotation encoding="application/x-tex">v</annotation></semantics></math> is the <em>magnitude</em> of particle velocity in a three-dimensional space, and <a href="https://learn.microsoft.com/en-us/dotnet/fsharp/language-reference/units-of-measure"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msub><mi>k</mi><mi>B</mi></msub><annotation encoding="application/x-tex">k_B</annotation></semantics></math> is the Boltzmann constant</a>.</p>
+<p>Without typed dimensions, the computation of this distribution can be done as follows:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Boltzmann constant in Joules/Kelvin</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ot">boltzmannConstant_JpK ::</span> <span class="dt">Double</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>boltzmannConstant_JpK <span class="ot">=</span> <span class="fl">1.380649e-23</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ot">untypedMaxwellBoltzmannDist ::</span> <span class="dt">Double</span> <span class="co">-- ^ Particle mass in kilogram</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                            <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="co">-- ^ Thermodynamic temperature in Kelvin</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                            <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="co">-- ^ Particle velocity in meters/second</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                            <span class="ot">-&gt;</span> <span class="dt">Double</span> <span class="co">-- ^ Probability density (dimensionless)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>untypedMaxwellBoltzmannDist mass_kg temp_K velocity_mps </span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> ( mass_kg <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> <span class="fu">pi</span> <span class="op">*</span> boltzmannConstant_JpK <span class="op">*</span> temp_K) ) <span class="op">**</span> (<span class="dv">3</span><span class="op">/</span><span class="dv">2</span>) </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span> <span class="fu">exp</span> ( <span class="op">-</span> (mass_kg <span class="op">*</span> velocity_mps <span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> <span class="fu">pi</span> <span class="op">*</span> boltzmannConstant_JpK <span class="op">*</span> temp_K) )</span></code></pre></div>
+<p>It’s not too hard to check units by hand – but it is tedious and error-prone.</p>
+<p>Now let’s do this again, using <a href="https://github.com/bjornbm/dimensional/"><code class="has-text-link">dimensional</code></a>.</p>
+<div class="notification is-warning" style="margin-bottom:3cm;margin-top:3cm">
+<p>
+Dear reader, be forewarned: <b>the rest of this post is not for the faint-of-heart</b>.
+</p>
+<p>
+Yes, this is overkill for simple calculations. And yet, the technique you are about to see has saved me numerous times. There’s quite a bit more ceremony; in exchange, you get a lot more certainty about correctness. Software design is about trade-off, and this level of safety is required for some real-world applications.
+</p>
+</div>
+<p>Setup: I am using the <a href="https://downloads.haskell.org/ghc/9.10.1/docs/users_guide/exts/control.html?highlight=language%20edition#extension-GHC2024">GHC2024 language edition</a>. We will also replace the (implicitly imported) <code>Prelude</code> module to use <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html"><code class="has-text-link">Numeric.Units.Dimensional.Prelude</code></a>, which replaces the usual arithmetic operators to use dimension-aware ones, as well as importing the <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#t:Unit"><code class="has-text-link">Unit</code></a>, <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#t:Dimension"><code class="has-text-link">Dimension</code></a>, and <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#t:Quantity"><code class="has-text-link">Quantity</code></a> types.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE NoImplicitPrelude #-}</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Numeric.Units.Dimensional.Prelude</span></span></code></pre></div>
+<p>To get acquainted, let’s convert the definition of the Boltzmann constant. The dimensions of the Boltzmann constant are called <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Quantities.html#t:DHeatCapacity"><code class="has-text-link">DHeatCapacity</code></a> in <code>dimensional</code>. Therefore, we can write:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ot">boltzmannConstant ::</span> <span class="dt">Quantity</span> <span class="dt">DHeatCapacity</span> <span class="dt">Double</span></span></code></pre></div>
+<p>which means that <code>boltzmannConstant</code> is a <code>Quantity</code> of dimension <code>DHeatCapacity</code>, whose magnitude is represented by a <code>Double</code>. We use the <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#v:-42--126-"><code class="has-text-link">(*~)</code></a> operator to combine a number (<code>1.380649e-23</code>) with a compound unit, <code>joule / kelvin</code>, to get:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ot">boltzmannConstant ::</span> <span class="dt">Quantity</span> <span class="dt">DHeatCapacity</span> <span class="dt">Double</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>boltzmannConstant <span class="ot">=</span> <span class="fl">1.380649e-23</span> <span class="op">*~</span> (joule <span class="op">/</span> kelvin)</span></code></pre></div>
+<p>We are not yet ready to implement the Maxwell-Boltzmann distribution function. One particular wrinkle is that exponents (such as the <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>3</mn><mi>/</mi><mn>2</mn></mrow><annotation encoding="application/x-tex">3/2</annotation></semantics></math> exponent of the first term) change the dimensions (i.e. the type) of the input. Therefore, some type arithmetic is required. To this end, <code>dimensional</code> provides <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#v:-94-"><code class="has-text-link">(^)</code></a> to raise to an integer power, and <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#v:sqrt"><code class="has-text-link">sqrt</code></a> to take the square root, while appropriately changing the dimensions at compile time. The type signatures are non-trivial to say the least, as it involves compile-time manipulation of types. The operation of “raising to the three-halfs power” becomes:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">raiseToThreeHalfsPower ::</span> <span class="dt">Floating</span> a </span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">=&gt;</span> <span class="dt">Quantity</span> d a </span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">-&gt;</span> <span class="dt">Quantity</span> (<span class="dt">NRoot</span> d <span class="dt">Pos2</span> <span class="op">^</span> <span class="dt">Pos3</span>) a</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>raiseToThreeHalfsPower x <span class="ot">=</span> (<span class="fu">sqrt</span> x) <span class="op">^</span> pos3</span></code></pre></div>
+<p>where <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#v:pos3"><code class="has-text-link">pos3</code></a> is a type-level integer. The dimension <code>(NRoot d Pos2 ^ Pos3)</code> will resolve to the appropriate dimension at compile-time via <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#t:NRoot">type families</a> once <code>d</code> is known.</p>
+<p>Finally, we can implement the (dimensionally-typed) Maxwell-Boltzmann function:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ot">maxwellBoltzmannDist ::</span> <span class="dt">Mass</span> <span class="dt">Double</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">-&gt;</span> <span class="dt">ThermodynamicTemperature</span> <span class="dt">Double</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">-&gt;</span> <span class="dt">Velocity</span> <span class="dt">Double</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">-&gt;</span> <span class="dt">Dimensionless</span> <span class="dt">Double</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>maxwellBoltzmannDist mass temp velocity </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> raiseToThreeHalfsPower ( mass <span class="op">/</span> (_2 <span class="op">*</span> <span class="fu">pi</span> <span class="op">*</span> boltzmannConstant <span class="op">*</span> temp) )</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span> <span class="fu">exp</span> ( <span class="fu">negate</span> (mass <span class="op">*</span> velocity <span class="op">^</span> pos2) <span class="op">/</span> (_2 <span class="op">*</span> <span class="fu">pi</span> <span class="op">*</span> boltzmannConstant <span class="op">*</span> temp) )</span></code></pre></div>
+<p>where <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#v:_2"><code class="has-text-link">_2</code></a> is the dimensionless integer <code>2</code>, and <code>(*)</code>, <code>(/)</code>, <code>exp</code>, <code>negate</code>, and <code>^</code> are all dimensionally-aware operators from <code>dimensional</code> (rather than the <code>Prelude</code> module).</p>
+<p>If you compile the program above, you’ll get an error message ಠ_ಠ:</p>
+<pre><code>Couldn't match type ‘Neg3’ with ‘Zero’
+  Expected: Dimensionless Double
+    Actual: Quantity 
+                (NRoot 
+                    (DMass 
+                        / ((Dim Zero Zero Zero Zero Zero Zero Zero * DHeatCapacity) * DThermodynamicTemperature)) 
+                    Pos2 ^ Pos3
+                ) 
+                Double
+(...snip...)</code></pre>
+<p>This is because I’m a sloppy physicist – sorry! The Maxwell-Boltzmann distribution <strong>is not a dimensionless quantity</strong>: it actually returns a velocity density with dimensions of <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mi>/</mi><mrow><mo stretchy="true" form="prefix">(</mo><msup><mi>L</mi><mn>3</mn></msup><mo>⋅</mo><msup><mi>T</mi><mrow><mi>−</mi><mn>3</mn></mrow></msup><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">1 / (L^3 \cdot T^{-3})</annotation></semantics></math>, or <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msup><mi>L</mi><mrow><mi>−</mi><mn>3</mn></mrow></msup><mo>⋅</mo><msup><mi>T</mi><mn>3</mn></msup></mrow><annotation encoding="application/x-tex">L^{-3} \cdot T^{3}</annotation></semantics></math>.</p>
+<p>Let’s fix this. There is no type synonym for velocity density in <code>dimensional</code>, but we can create one ourselves.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">DVelocityCube</span> <span class="ot">=</span> <span class="dt">DVelocity</span> <span class="op">^</span> <span class="dt">Pos3</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">DVelocityDensity</span> <span class="ot">=</span> <span class="dt">Recip</span> <span class="dt">DVelocityCube</span> <span class="co">-- dimension</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">VelocityDensity</span> <span class="ot">=</span> <span class="dt">Quantity</span> <span class="dt">DVelocityDensity</span> <span class="co">-- quantity</span></span></code></pre></div>
+<p>Our final version of <code>maxwellBoltzmannDist</code> becomes:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">maxwellBoltzmannDist ::</span> <span class="dt">Mass</span> <span class="dt">Double</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">-&gt;</span> <span class="dt">ThermodynamicTemperature</span> <span class="dt">Double</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">-&gt;</span> <span class="dt">Velocity</span> <span class="dt">Double</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">-&gt;</span> <span class="dt">VelocityDensity</span> <span class="dt">Double</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>maxwellBoltzmannDist mass temp velocity </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> raiseToThreeHalfsPower ( mass <span class="op">/</span> (_2 <span class="op">*</span> <span class="fu">pi</span> <span class="op">*</span> boltzmannConstant <span class="op">*</span> temp) )</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span> <span class="fu">exp</span> ( <span class="fu">negate</span> (mass <span class="op">*</span> velocity <span class="op">^</span> pos2) <span class="op">/</span> (_2 <span class="op">*</span> <span class="fu">pi</span> <span class="op">*</span> boltzmannConstant <span class="op">*</span> temp) )</span></code></pre></div>
+<p><a name="interactive-example"></a>
+We can compute the result of <code>maxwellBoltzmannDist</code> in any compatible unit. We will do this for a gas of diatomic nitrogen. In an interactive Haskell session:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">import</span> <span class="dt">Numeric.Units.Dimensional.NonSI</span> ( unifiedAtomicMassUnit ) <span class="co">-- unifiedAtomicMassUnit = amu</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">let</span> n2_mass          <span class="ot">=</span> <span class="dv">2</span>     <span class="op">*~</span> unifiedAtomicMassUnit</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">let</span> room_temperature <span class="ot">=</span> <span class="fl">300.0</span> <span class="op">*~</span> kelvin</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">let</span> velocity         <span class="ot">=</span> <span class="dv">400</span>   <span class="op">*~</span> (meter <span class="op">/</span> second)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> maxwellBoltzmannDist n2_mass room_temperature velocity </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="fl">4.466578950309018e-11</span> m<span class="op">^-</span><span class="dv">3</span> s<span class="op">^</span><span class="dv">3</span></span></code></pre></div>
+<p>We can easily request specific output units using the <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#v:-47--126-"><code class="has-text-link">(/~)</code></a> operator. In this case, we convert result to (hour / nautical mile)<sup>3</sup>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">import</span> <span class="dt">Numeric.Units.Dimensional.NonSI</span> ( nauticalMile, degreeRankine, knot )</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">let</span> n2_mass          <span class="ot">=</span> <span class="fl">2.6605E-27</span> <span class="op">*~</span> kilo gram</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">let</span> room_temperature <span class="ot">=</span> <span class="fl">491.0</span>      <span class="op">*~</span> degreeRankine</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="kw">let</span> velocity         <span class="ot">=</span> <span class="dv">777</span>        <span class="op">*~</span> knot</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> (maxwellBoltzmannDist n2_mass room_temperature velocity) <span class="op">/~</span> ((hour <span class="op">/</span> nauticalMile) <span class="op">^</span> pos3)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fl">5.041390507268275e-12</span></span></code></pre></div>
+<h2 class="title is-2" id="design-and-tradeoffs">Design and tradeoffs</h2>
+<p><em>This section was added on Nov. 24th, 2024 following discussions on <a href="https://news.ycombinator.com/item?id=42202834">Hacker News</a> and the <a href="https://discourse.haskell.org/t/blog-post-scientific-computing-with-confidence-using-typed-dimensions/10767?u=laurentrdc">Haskell Discourse</a></em></p>
+<p>There are many other software packages that support some level of type-safe computational unit systems such as <a href="https://github.com/mpusz/mp-units">mp-units for C++</a>, <a href="https://raku.land/zef:librasteve/Physics::Measure">Physics::Measure and Physics::Unit for Raku</a>, <a href="https://github.com/PainterQubits/Unitful.jl">Unitful for Julia</a>, <a href="https://github.com/hyperjeff/Physical">Physical for Swift</a>, and more. There’s even an entire programming language designed around it called <a href="https://github.com/sharkdp/numbat">Numbat</a>. So what can we learn from <code>dimensional</code>’s design, and importantly, its tradeoffs?</p>
+<h4 class="title is-4" id="beyond-checking-to-inference-of-dimensions">Beyond checking to inference of dimensions</h4>
+<p>One key feature of <code>dimensional</code> is that it does not only <em>check validity</em>, but also <strong>infers</strong> the dimensions of expressions at compile-time. Take for example, consider the question “What is the type (<code>:t</code>) of 1 meter divided by 1 second?”:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>ghci<span class="op">&gt;</span> <span class="op">:</span>t (<span class="dv">1</span> <span class="op">*~</span> meter) <span class="op">/</span> (<span class="dv">1</span> <span class="op">*~</span> second)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Quantity</span> (<span class="dt">Dim</span> <span class="dt">Pos1</span> <span class="dt">Zero</span> <span class="dt">Neg1</span> <span class="dt">Zero</span> <span class="dt">Zero</span> <span class="dt">Zero</span> <span class="dt">Zero</span>) <span class="dt">Double</span></span></code></pre></div>
+<p>If you read the documentation for <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#t:Dimension"><code class="has-text-link">Dimension</code></a>, you will notice that <code>(Dim Pos1 Zero Neg1 Zero Zero Zero Zero)</code> is the dimension of velocity (also known as <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Quantities.html#t:DVelocity"><code class="has-text-link">DVelocity</code></a>).</p>
+<p>This means that the compiler becomes a helpful assistant, rather than simply telling you when you are wrong.</p>
+<h4 class="title is-4" id="compile-time-dimensions-runtime-units">Compile-time dimensions, runtime units</h4>
+<p>Another key design of <code>dimensional</code> is that the dimensions are typed, but units are runtime values. This has important advantage, but also one major drawback.</p>
+<p>The important advantage is flexibility: programs written using <code>dimensional</code> accept a wide variety of inputs whose dimensions are equivalent. Since values’ dimensions are known at compile-time, we can be guaranteed that values will be convertible to base units at runtime. You can see this in <a href="#interactive-example">the usage of <code>maxwellBoltzmannDist</code> above</a>, where I varied the input units without issues, even mixing SI units like <code>kelvin</code> and non-SI units like <code>degreeRankine</code>.</p>
+<p>This flexibility comes with a performance cost: each quantity is now composed of two values, the magnitude and the unit, which means that that mathematical operations will be slower. For performance-sensitive code, I recommend validating inputs using <code>dimensional</code>, and converting to raw <code>Double</code> using <a href="https://hackage.haskell.org/package/dimensional-1.6.1/docs/Numeric-Units-Dimensional-Prelude.html#v:-47--126-"><code class="has-text-link">(/~)</code></a> before compute-heavy operations.</p>
+<h4 class="title is-4" id="non-extensibility">Non-extensibility</h4>
+<p><code>dimensional</code> is limited to the 7 physical dimensions by design. However, other libraries such as <a href="https://hackage.haskell.org/package/units">units</a>, allow the creation of extensible unit systems, not limited to physical dimensions.</p>
+<p>The lack of extensibility is not an inherent design choice, but rather an implementation choice. This may change in the future.</p>
+<h2 class="title is-2" id="conclusion">Conclusion</h2>
+<p>This was a whirlwind tour of <code>dimensional</code> with a practical example. If this was your first introduction to typed dimensions in Haskell, do not be alarmed – I bounced off of it the first time.</p>
+<p>As mentioned, software design is about trade-off. Using <code>dimensional</code> is complex, but it isn’t complicated<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>; it makes you address the complexity of dimensions and units up-front, rather than hoping for the best. Sometimes this doesn’t make sense, but for critical calculations, there is nothing like typed dimensions.</p>
+<p>I am now a <a href="https://github.com/bjornbm/dimensional/">maintainer of <code>dimensional</code> on GitHub</a>, and <strong>I want nothing more than to help people use typed dimensions</strong> (when it makes sense). If you have any feedback, for example missing features or lacking documentation, <a href="https://github.com/bjornbm/dimensional/issues">feel free to raise an issue</a>!</p>
+<p><em>Code available in <a href="../files/typed-dimensions/TypedDimensions/Typed.hs">Haskell module</a>.</em></p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p><a href="https://news.ycombinator.com/item?id=42202834#42213927">As pointed out on Hacker News</a>, this is necessary but not sufficient. For example, intensive dimensions (such as thermodynamic temperature) cannot be meaningfully added together.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p><a href="https://english.stackexchange.com/questions/10459/what-is-the-difference-between-complicated-and-complex">Complexity is inherent, complicatedness is extraneous</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2025-06-24. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>
