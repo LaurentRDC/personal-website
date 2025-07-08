@@ -29,7 +29,7 @@
 
   <url>
     <loc>https://laurentrdc.xyz//about.html</loc>
-    <lastmod>2025-02-07</lastmod>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -51,6 +51,13 @@
   <url>
     <loc>https://laurentrdc.xyz//publications.html</loc>
     <lastmod>2022-06-07</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://laurentrdc.xyz//posts/joined-hf-board.html</loc>
+    <lastmod>2025-07-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
@@ -197,6 +204,13 @@
 
   <url>
     <loc>https://laurentrdc.xyz//tags/finance.html</loc>
+    <lastmod></lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://laurentrdc.xyz//tags/haskell-foundation.html</loc>
     <lastmod></lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
