@@ -492,6 +492,5 @@ tagCloudField' key =
   makeLink tag url =
     renderHtml $
       H.a ! A.href (H.toValue url) $
-        H.div ! A.class_ "column" $
-          H.p ! A.class_ "has-text-centered has-text-weight-bold" $
-            mconcat [H.span ! A.class_ "icon has-text-link" $ H.i ! A.class_ "fas fa-tag" $ mempty, " ", H.toHtml tag]
+        H.p ! A.class_ "has-text-centered has-text-weight-bold" $
+          mconcat [H.span ! A.class_ "icon has-text-link" $ H.i ! A.class_ "fas fa-tag" $ mempty, " ", H.toHtml tag]

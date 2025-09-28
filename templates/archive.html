@@ -1,9 +1,17 @@
-<p>Below are some pages for posts under specific tags:</p>
-<div class="columns is-centered">
-    $tag-cloud$
+
+<div class="columns">
+    <!--
+    We place tags on the left because on mobile, this column
+    will be presented on top, which I think makes it easier to
+    explore posts (rather than scrolling to the bottom of the
+    page to find tags)-->
+    <div class="column is-3">
+        <p>Below are some pages for posts under specific tags:</p>
+        $tag-cloud$
+    </div>
+    <div class="column">
+        <p>Here you can find all my posts:</p>
+        <br>
+        $partial("templates/post-list.html")$
+    </div>
 </div>
-
-
-<p>Here you can find all my posts:</p>
-<br>
-$partial("templates/post-list.html")$
