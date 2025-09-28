@@ -11,15 +11,15 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
         <title>
-            About this site - Laurent P. René de Cotret
+            Servant by construction - a blog series - Laurent P. René de Cotret
         </title>
-        <link rel="icon" type="image/x-icon" href="./images/atom-solid.png">
-        <link rel="stylesheet" type="text/css" href="./css/syntax.css">
-        <link rel="stylesheet" type="text/css" href="./css/style.css">
+        <link rel="icon" type="image/x-icon" href="../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../css/style.css">
         <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
         <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
         <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
-        <script type="text/javascript" src="./js/navbar-onclick.js">
+        <script type="text/javascript" src="../js/navbar-onclick.js">
         </script>
     </head>
     <body>
@@ -28,7 +28,7 @@
                 <nav class="navbar is-transparent">
                     <div class="container">
                         <div class="navbar-brand">
-                            <a class="navbar-item has-text-light" href="./index.html">
+                            <a class="navbar-item has-text-light" href="../index.html">
                                 <strong>
                                     Laurent P. René de Cotret
                                 </strong>
@@ -44,19 +44,19 @@
                         </div>
                         <div class="navbar-menu" id="navbarMenu">
                             <div class="navbar-end">
-                                <a class="navbar-item" href="./index.html">
+                                <a class="navbar-item" href="../index.html">
                                     Home
                                 </a>
-                                <a class="navbar-item" href="./software.html">
+                                <a class="navbar-item" href="../software.html">
                                     Software
                                 </a>
-                                <a class="navbar-item" href="./publications.html">
+                                <a class="navbar-item" href="../publications.html">
                                     Publications
                                 </a>
-                                <a class="navbar-item" href="./about.html">
+                                <a class="navbar-item" href="../about.html">
                                     About me
                                 </a>
-                                <a class="navbar-item" href="./archive.html">
+                                <a class="navbar-item" href="../archive.html">
                                     All blog posts
                                 </a>
                             </div>
@@ -67,16 +67,28 @@
             <div class="hero-body">
                 <div class="container has-text-centered">
                     <h1 class="title has-text-light">
-                        About this site
+                        Servant by construction - a blog series
                     </h1>
                     <h3>
                         
+                        Posted on 2025-09-27. 
+                        
+                        
+                        
                         
                     </h3>
                     <h3>
                         
+                        Estimated reading time of 2 min.
+                        
                     </h3>
                     <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: <a title="All pages tagged 'haskell'." href="../tags/haskell.html" rel="tag">haskell</a>, <a title="All pages tagged 'servant by construction'." href="../tags/servant%20by%20construction.html" rel="tag">servant by construction</a>, <a title="All pages tagged 'software engineering'." href="../tags/software%20engineering.html" rel="tag">software engineering</a>, <a title="All pages tagged 'web'." href="../tags/web.html" rel="tag">web</a>
                         
                     </h3>
                 </div>
@@ -86,7 +98,7 @@
                     <div class="container">
                         <div class="navbar-menu">
                             <div class="navbar-start">
-                                <a class="navbar-item has-text-light" target="_blank" href="./email.html">
+                                <a class="navbar-item has-text-light" target="_blank" href="../email.html">
                                     <span class="icon is-medium">
                                         <i class="fas fa-envelope">
                                         </i>
@@ -137,20 +149,20 @@
         <div class="section">
             <div class="container">
                 <div class="content">
-                    <p>This site was built using open-source tools.</p>
+                    <p>A large fraction of software engineers work in web development.</p>
+<p>I also do some web development these days, exclusively on the backend. Backend software engineers, just like their frontend counterparts, have streamlined their work by packaging development utilities into <em>frameworks</em>. Even in the relatively small Haskell community, there are many web frameworks, ranging from quick-to-start (<a href="https://github.com/scotty-web/scotty">scotty</a>) to fully-featured-and-opinionated (<a href="https://www.yesodweb.com/">Yesod</a> and <a href="https://ihp.digitallyinduced.com/">IHP</a>).</p>
+<p>The Haskell community has historically been fertile ground for innovation; web development is no different. One framework in particular has pushed the boundary of what it means to write web applications: <a href="https://www.servant.dev/">Servant</a>.
+Don’t be fooled by the deceptively simplistic website: Servant is one of the crown jewels of the Haskell ecosystem. It combines the broad appeal of writing web applications, with the use of some of Haskell’s most advanced type system features to perform incredible feats of engineering.</p>
+<p>Servant is worth discussing and studying for two reasons.</p>
+<p>The first is to use Servant as a concrete application of type-level computation. In this respect, I hope readers can take some of the design ideas from Servant and bring it back to their community, just like <a href="https://hackage.haskell.org/package/QuickCheck">QuickCheck</a> pioneered property-based testing.
+The second is that while Servant is powerful, it remains a rather sophisticated piece of software that is hard to learn and understand. Even with some Haskell experience, Servant is not yet a pick-up-and-go tool; wandering off the beaten path (i.e. doing anything not covered in the <a href="https://docs.servant.dev/">documentation</a>) remains a daunting prospect for many, as it was for me. By studying the inner workings of Servant, we can learn about how to use it, and extend it, effectively.</p>
+<p>I want to celebrate the boldness of Servant, while teaching you about its ways. This is why I am starting a <em>blog series</em>, where I will cover the basics of Servant by <em>implementing</em> a simple version of Servant’s internals, as literate Haskell files. By <em>constructing</em> Servant, we will both learn various techniques involving Haskell’s advanced type system, but also demystify the real Servant library.</p>
+<p>This blog series will build in complexity. We will start by representing an API as a type. This type won’t be useful straight away, but subsequent blog posts will showcase one capability of Servant by using this type, starting with generating type-safe links to endpoints, and culminating somewhere I haven’t decided yet.</p>
+<p>Let’s go!</p>
+<h4 class="title is-4" id="blog-posts-in-this-series">Blog posts in this series</h4>
 <ul>
-<li>Site compiler built using <a href="https://jaspervdj.be/hakyll/">Hakyll</a> and <a href="https://github.com/LaurentRDC/hakyll-images">hakyll-images</a> libraries;</li>
-<li>Markdown-to-HTML conversion using <a href="https://pandoc.org">Pandoc</a> and <a href="https://github.com/LaurentRDC/pandoc-plot">pandoc-plot</a>;</li>
-<li>Cascading style sheet components from <a href="https://bulma.io">Bulma</a>;</li>
-<li>Icons provided by <a href="https://fontawesome.com/">Font Awesome</a>;</li>
-<li>Academic icons provided by <a href="http://jpswalsh.github.io/academicons/">Academicons</a>;</li>
-<li>Math display by <a href="https://www.mathjax.org/">MathJax</a>;</li>
+<li><a href="../posts/servant-by-construction/ApiAsType.html">An API as a type</a></li>
 </ul>
-<p>You can learn more in this post: <a href="./posts/making-this-website.html">How this website is generated</a>. The source code is available online on my <a href="https://github.com/LaurentRDC/personal-website">GitHub</a>.</p>
-<figure>
-<img src="https://github.com/LaurentRDC/personal-website/workflows/GH-Pages/badge.svg" class="image" alt="Build status" />
-<figcaption aria-hidden="true">Build status</figcaption>
-</figure>
                 </div>
             </div>
         </div>
@@ -161,7 +173,7 @@
                         <i class="fas fa-envelope">
                         </i>
                     </span>
-                    <a target="_blank" href="./email.html">
+                    <a target="_blank" href="../email.html">
                         e-mail
                     </a>
                      | 
@@ -210,7 +222,7 @@
                         <i class="fas fa-rss">
                         </i>
                     </span>
-                    <a target="_blank" href="./feed.xml">
+                    <a target="_blank" href="../feed.xml">
                         RSS feed
                     </a>
                      | 
@@ -218,7 +230,7 @@
                         <i class="fas fa-atom">
                         </i>
                     </span>
-                    <a target="_blank" href="./atom.xml">
+                    <a target="_blank" href="../atom.xml">
                         Atom feed
                     </a>
                 </p>
@@ -226,13 +238,13 @@
                     Page generated on 2025-09-28. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
-                    <a href="./about-site.html">
+                    <a href="../about-site.html">
                         here
                     </a>
                     .
                 </p>
                 <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
-                    <img alt="Creative Commons License" style="border-width:0" src="./images/cc-by-sa.svg">
+                    <img alt="Creative Commons License" style="border-width:0" src="../images/cc-by-sa.svg">
                 </a>
             </div>
         </footer>

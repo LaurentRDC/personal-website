@@ -1,0 +1,366 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z0NSFPKNBN">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Z0NSFPKNBN');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            An API as a type - Servant by construction part 1 - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        An API as a type - Servant by construction part 1
+                    </h1>
+                    <h3>
+                        
+                        Posted on 2025-09-26. 
+                        
+                        
+                        Last updated on 2025-09-27.
+                        
+                    </h3>
+                    <h3>
+                        
+                        Estimated reading time of 10 min.
+                        
+                    </h3>
+                    <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: <a title="All pages tagged 'haskell'." href="../../tags/haskell.html" rel="tag">haskell</a>, <a title="All pages tagged 'servant by construction'." href="../../tags/servant%20by%20construction.html" rel="tag">servant by construction</a>, <a title="All pages tagged 'software engineering'." href="../../tags/software%20engineering.html" rel="tag">software engineering</a>, <a title="All pages tagged 'web'." href="../../tags/web.html" rel="tag">web</a>
+                        
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>This module is a Literate Haskell file, so we have to get some ceremony out-of-the-way.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- We'll get back to DataKinds</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">ApiAsType</span> <span class="kw">where</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- we'll need these later on</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Text</span> (<span class="dt">Text</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Time</span> (<span class="dt">UTCTime</span>, <span class="dt">Day</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">GHC.TypeLits</span> (<span class="dt">Symbol</span>)</span></code></pre></div>
+<p>A web application programming interface (API) can be represent by a tree of endpoints<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. The foundational idea behind Servant is that this tree of endpoints can be represented as one type. This API type is constructed by using higher-order types to compose endpoints together.</p>
+<p>This foundational idea leads to most of Servant’s power. First, moving data into types helps tremendously with ensuring correctness, as we will soon see. Second, we can <em>derive</em> functionality on demand for our API type using typeclasses. This last sentence is wholly uninformative unless you already know Servant, so please bear with me here while we construct examples.</p>
+<p>For the remainder of this blog series, we will consider an example, concrete API. This isn’t a lesson in API design. For simplicity, we assume that all data to and from the server will be encoded in plain text (although we may extend this in later posts).</p>
+<p>The example API is a weather API which deals with measurements and forecasts of outdoor temperature. Here are the endpoints:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode txt"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>-- Returns the time at which forecasts we last updated.</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>GET /forecast/lastupdated</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>-- Returns the forecasted temperature on a (future) date for all known places.</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>-- The date is captured from the endpoint, e.g. &quot;/forecast/2025-06-01/temperature&quot;</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>-- should return the temperature forecasted for June 1st, 2025</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>GET /forecast/&lt;date&gt;/temperature</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>-- Returns the temperature on this current date. The city is expected to</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>-- be passed as a required query parameter, e.g. &quot;/weather/temperature&amp;city=Montreal&quot;</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>GET /weather/temperature&amp;city=&lt;city&gt;</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>-- Record a temperature measurement posted by someone for a given city</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>POST /weather/temperature/&lt;city&gt;</span></code></pre></div>
+<p>This example API has a good mixture of methods (GET and POST), query parameters, and path parameters. Let’s create some types to help us describe this API.</p>
+<p>First, we want to extend routes. For example, <code>/forecast/lastupdated</code> and <code>/forecast/&lt;date&gt;/temperature</code> share the root <code>forecast</code>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> a <span class="op">:&gt;</span> b</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">infixr</span> <span class="dv">4</span> <span class="op">:&gt;</span></span></code></pre></div>
+<p>Haskell is known for using all sorts of non-standard character sequences <em>as functions</em>, like <code>(&gt;&gt;=)</code>. Well, you can do the same for types! Example usage for <code>(:&gt;)</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Forecast</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">LastUpdated</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">LastUpdatedForecast</span> <span class="ot">=</span> <span class="dt">Forecast</span> <span class="op">:&gt;</span> <span class="dt">LastUpdated</span></span></code></pre></div>
+<p>Wait a second – aren’t path segments strings, like <code>"forecast"</code> and <code>"lastupdated"</code>? Why isn’t the definition <code>data String :&gt; String</code>? This is the power of Servant, but also the source of its complexity: APIs are meant to represented by <em>types</em>, that the compiler can check at compile-time. Instead of every piece of our API being a different string of the same type, they are all a different <em>type</em>. For now, trust me that this is worth doing.</p>
+<p>APIs defined in Servant use tons of bespoke types, like <code>Forecast</code> and <code>LastUpdated</code> above. To save on the boilerplate of defining a bunch of these types, people typically use the <a href="https://downloads.haskell.org/ghc/9.12.2/docs/users_guide/exts/data_kinds.html#extension-DataKinds"><code class="has-text-link">DataKinds</code></a> extension, which is enabled in this module. With it, instead of:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Root</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Branch</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Leaf</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Tree1</span> <span class="ot">=</span> <span class="dt">Root</span> <span class="op">:&gt;</span> <span class="dt">Branch</span> <span class="op">:&gt;</span> <span class="dt">Leaf</span></span></code></pre></div>
+<p>we can write:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Tree2</span> <span class="ot">=</span> <span class="st">&quot;root&quot;</span> <span class="op">:&gt;</span> <span class="st">&quot;branch&quot;</span> <span class="op">:&gt;</span> <span class="st">&quot;leaf&quot;</span></span></code></pre></div>
+<p><code>"root"</code>, <code>"branch"</code>, and <code>"leaf"</code> are type-level strings, which have kind <code>Symbol</code>, and you will see that they have advantages that we’ll see later on.</p>
+<p>Allright, now we can compose path segments into long path segments using <code>(:&gt;)</code>. What about describing the endpoint? For example, <code>GET /forecast/lastupdated</code> should return the time at which the forecast was last updated. We can define a type to specify this:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Get</span> a</span></code></pre></div>
+<p>where <code>a</code> is the return type of this endpoint. At last, we can express the full type of <em>one</em> of our endpoints:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GetForecastLastUpdated</span> <span class="ot">=</span> <span class="st">&quot;forecast&quot;</span> <span class="op">:&gt;</span> <span class="st">&quot;lastupdated&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">UTCTime</span></span></code></pre></div>
+<p>You might be wondering why our <code>Get</code> doesn’t have a constructor. Why not:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Get</span> a <span class="ot">=</span> <span class="dt">MkGet</span> {<span class="ot">unGet ::</span> a}</span></code></pre></div>
+<p>The reason is that our API will not exist in this form at runtime. As you will see later on, we will derive things from our API, and these derivations will be used at runtime, but not the API itself.</p>
+<p>Let’s tackle the second endpoint, <code>GET /forecast/&lt;date&gt;/temperature</code>. This endpoint is interesting because we want to <em>capture</em> some date, to be used when processing the request. To do this, we’ll create yet another type:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Capture</span> (<span class="ot">name ::</span> <span class="dt">Symbol</span>) a</span></code></pre></div>
+<p>where <code>name</code> will represent some parameter name, which will be useful later on, and <code>a</code> is the type being captured. Recall that in this case, <code>name</code> is a <code>Symbol</code>, or type-level string, and not a real <code>String</code>. Our <code>GET /forecast/&lt;date&gt;/temperature</code> can thus be represented by:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Type representing temperature in Celsius</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Temperature</span> <span class="ot">=</span> <span class="dt">MkTemperature</span> <span class="dt">Double</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GetForecastTemperature</span> <span class="ot">=</span> <span class="st">&quot;forecast&quot;</span> <span class="op">:&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;date&quot;</span> <span class="dt">Day</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span></code></pre></div>
+<p>The two API endpoints we’ve defined so far, have the same root (<code>forecast</code>). It’s often useful to define relate endpoints sharing the same root together – for example, to define authentication which should apply to all related endpoints. We will create a type to represent the branching of endpoints:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> a <span class="op">:&lt;|&gt;</span> b</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- We want :&lt;|&gt; to have a lower precedence than :&gt; so that we can</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- write API definitions without tons of parentheses</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">infixr</span> <span class="dv">3</span> <span class="op">:&lt;|&gt;</span></span></code></pre></div>
+<p>With <code>:&lt;|&gt;</code>, we can write our forecast endpoints as :</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">ForecastRoutes</span> <span class="ot">=</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;forecast&quot;</span> <span class="op">:&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>            ( <span class="st">&quot;lastupdated&quot;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                    <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">UTCTime</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&lt;|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                <span class="dt">Capture</span> <span class="st">&quot;date&quot;</span> <span class="dt">Day</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                    <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                        <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
+<p>which is formatted to look like a tree:</p>
+<pre><code>forecast
+ ├─lastupdated
+ │  └─GET UTCTime
+ └─&lt;date&gt;
+    └─temperature
+       └─GET Temperature</code></pre>
+<p>The next endpoint, <code>GET /weather/temperature&amp;city=&lt;city&gt;</code>, has a new wrinkle: an (optional) query parameter. This warrants a new type:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">QueryParam</span> (<span class="ot">name ::</span> <span class="dt">Symbol</span>) a</span></code></pre></div>
+<p>such that we can write:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">City</span> <span class="ot">=</span> <span class="dt">MkCity</span> <span class="dt">Text</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GetTemperature</span> <span class="ot">=</span> <span class="st">&quot;weather&quot;</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">QueryParam</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span></code></pre></div>
+<p>For the last endpoint, <code>POST /weather/temperature/&lt;city&gt;</code>, we need two last constructs. In a POST request, the <em>request body</em> will contain some data for the server to process (in the case of our endpoint, this data will be a temperature measurement in plaintext). Moreover, in our example, the POST request will return no data. For our API description to be adequate, we must describe the request body and the lack of data returned with – you guessed it – new types:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Post</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">ReqBody</span> a</span></code></pre></div>
+<p>The endpoint description becomes:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">PostTemperature</span> <span class="ot">=</span> <span class="st">&quot;weather&quot;</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">ReqBody</span> <span class="dt">Temperature</span> <span class="op">:&gt;</span> <span class="dt">Post</span></span></code></pre></div>
+<p>Let’s structure all of our endpoints into a single type:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">ForecastAPI</span> <span class="ot">=</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;forecast&quot;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&gt;</span> ( <span class="st">&quot;lastupdated&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">UTCTime</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&lt;|&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;date&quot;</span> <span class="dt">Day</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">WeatherAPI</span> <span class="ot">=</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;weather&quot;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&gt;</span> ( <span class="dt">QueryParam</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&lt;|&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">ReqBody</span> <span class="dt">Temperature</span> <span class="op">:&gt;</span> <span class="dt">Post</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">API</span> <span class="ot">=</span> <span class="dt">ForecastAPI</span> <span class="op">:&lt;|&gt;</span> <span class="dt">WeatherAPI</span></span></code></pre></div>
+<p>Enough new types; let’s recap what we have created so far:</p>
+<ul>
+<li>We created a type <code>:&gt;</code> to build endpoint paths from segments;</li>
+<li>We created a type <code>:&lt;|&gt;</code> to build branching paths;</li>
+<li>We created a type <code>Capture</code> to capture data in endpoint paths;</li>
+<li>We created a type <code>QueryParam</code> to specify the name and type of optional query parameters;</li>
+<li>We created a type <code>ReqBody</code> to specify the type of the body of a POST request;</li>
+<li>We created types <code>Get</code> and <code>Post</code> to represent the verb of a request;</li>
+<li>We created a type, <code>API</code>, built up from smaller types <code>ForecastAPI</code> and <code>WeatherAPI</code>, which can be used to describe all of our API.</li>
+</ul>
+<p>It bears repeating: none of the types defined above have constructors, which means that the type of our API, <code>API</code>, cannot even be instantiated at runtime! All functionality that will have to do with our API will come from deriving things from its definition <strong>at compile time</strong>.</p>
+<p>In the next post, we will start from the <code>API</code> type and its endpoints, and derive something from them. This derivation will introduce us to the machinery that power much of Servant’s functionality.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>Although endpoints are usually not <em>shown</em> as a tree (for example, in an OpenAPI specification, endpoints are listed), routing requests is obviously more efficient if routes are <em>stored</em> as a tree.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2025-09-28. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>
