@@ -246,7 +246,7 @@ main = do
           let feedCtx = postCtx tags <> bodyField "description"
           posts <-
             fmap (take 10) . recentFirst
-              =<< loadAllSnapshots "posts/*" "content"
+              =<< loadAllSnapshots postsPattern "content"
           renderFunc feedConfiguration feedCtx posts
 
     --------------------------------------------------------------------------------
@@ -254,7 +254,7 @@ main = do
     create ["archive.html"] $ do
       route idRoute
       compile $ do
-        posts <- recentFirst =<< loadAll "posts/*"
+        posts <- recentFirst =<< loadAll postsPattern
         let archiveCtx =
               mconcat
                 [ listField "posts" (postCtx tags) (return posts)
@@ -273,7 +273,7 @@ main = do
     match "static/index.html" $ do
       route staticRoute
       compile $ do
-        posts <- take 10 <$> (recentFirst =<< loadAll "posts/*")
+        posts <- take 10 <$> (recentFirst =<< loadAll postsPattern)
         let indexCtx =
               listField "posts" (postCtx tags) (return posts)
                 <> defaultContext
@@ -300,7 +300,7 @@ main = do
       route idRoute
       compile $ do
         -- Gather all posts
-        posts <- recentFirst =<< loadAll "posts/*"
+        posts <- recentFirst =<< loadAll postsPattern
         -- Gather all other pages
         pages <- loadAll (fromGlob "static/**")
         tagPages <- loadAll "tags/*"
