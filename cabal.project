@@ -4,3 +4,6 @@ packages:
 
 optimization: 0
 jobs: $ncpus
+
+-- Requires GHC 9.8+
+semaphore: true
