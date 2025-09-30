@@ -212,4 +212,4 @@ Enough new types; let's recap what we have created so far:
 
 It bears repeating: none of the types defined above have constructors, which means that the type of our API, `API`, cannot even be instantiated at runtime! All functionality that will have to do with our API will come from deriving things from its definition **at compile time**.
 
-In the next post, we will start from the `API` type and its endpoints, and derive something from them. This derivation will introduce us to the machinery that power much of Servant's functionality.
+In the next post, we will start from the `API` type and its endpoints, and derive something from them. This derivation will introduce us to the machinery that powers much of Servant's functionality.

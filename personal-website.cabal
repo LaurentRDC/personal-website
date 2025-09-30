@@ -98,4 +98,4 @@ library servant-by-construction
   ghc-options:         -Wno-missing-export-lists
   build-depends:       base, text, time
   hs-source-dirs:      posts/servant-by-construction/
-  exposed-modules:     ApiAsType
+  exposed-modules:     ApiAsType, TypeSafeLinks
