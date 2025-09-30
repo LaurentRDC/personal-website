@@ -153,7 +153,7 @@
 <p>In this post, I’ll show you how to <em>build</em> the minimal set of possible solutions to an optimization problem, instead of searching for solutions in a larger space. As we’ll see, only viable solutions are ever considered. This will be done by splitting the computations into multiple universes whenever a choice is presented to us, such that we traverse the multiverse of possibilities all at once.</p>
 <h3 class="title is-3" id="an-example-problem">An example problem</h3>
 <p>Let’s say we’ve got 8 friends going out for a drink, in two cars with four seats each. How many arrangements of people can we have? If we don’t care about where people sit in each car, the number of arrangements is the number of combinations of 4 people we can make from 8 people, since the remaining 4 people will go in the second car. For every configuration, there’s also a configuration which swaps the car. Therefore, there are:</p>
-<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mn>8</mn><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mn>2</mn><mo>=</mo><mfrac><mrow><mn>8</mn><mi>!</mi></mrow><mrow><mn>4</mn><mi>!</mi><mrow><mo stretchy="true" form="prefix">(</mo><mn>8</mn><mo>−</mo><mn>4</mn><mo stretchy="true" form="postfix">)</mo></mrow><mi>!</mi></mrow></mfrac><mo>×</mo><mn>2</mn><mo>=</mo><mn>140</mn></mrow><annotation encoding="application/x-tex">
+<p><math display="block" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mn>8</mn><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><mo>×</mo><mn>2</mn><mo>=</mo><mfrac><mrow><mn>8</mn><mi>!</mi></mrow><mrow><mn>4</mn><mi>!</mi><mo stretchy="false" form="prefix">(</mo><mn>8</mn><mo>−</mo><mn>4</mn><mo stretchy="false" form="postfix">)</mo><mi>!</mi></mrow></mfrac><mo>×</mo><mn>2</mn><mo>=</mo><mn>140</mn></mrow><annotation encoding="application/x-tex">
     \binom{8}{4} \times 2 = \frac{8!}{4!(8-4)!} \times 2 = 140
 </annotation></semantics></math></p>
 <p>possible combinations. If you’re not familiar with this notation, you can read <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="true" form="prefix">(</mo><mfrac linethickness="0"><mn>8</mn><mn>4</mn></mfrac><mo stretchy="true" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\binom{8}{4}</annotation></semantics></math> as <em>choose 4 people out of 8 people</em>, of which there are 70 possibilities (and then 70 other possibilities with the cars swapped). That means that if we wanted to optimize the distribution of people into the two cars – for example, if we wanted to group up the best friends together, or minimize the total weight of people in car1, or some other objective –, we would need to look at 140 solutions. This problem is purely combinatorial.</p>
@@ -344,7 +344,7 @@
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2025-09-28. 
+                    Page generated on 2025-09-30. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">
