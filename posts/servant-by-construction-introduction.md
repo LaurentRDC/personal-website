@@ -27,3 +27,4 @@ Let's go!
 
 
 * [An API as a type](/posts/servant-by-construction/ApiAsType.html)
+* [Type-safe links](/posts/servant-by-construction/TypeSafeLinks.html)
