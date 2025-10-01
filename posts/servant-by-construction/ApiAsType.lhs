@@ -5,7 +5,7 @@ summary: This is the first post in a series on Servant, a Haskell framework for 
 tags: haskell, web, software engineering, servant by construction
 ---
 
-This module is a Literate Haskell file, so we have to get some ceremony out-of-the-way.
+This file is a Literate Haskell module, so we have to get some ceremony out-of-the-way.
 
 \begin{code}
 -- We'll get back to DataKinds

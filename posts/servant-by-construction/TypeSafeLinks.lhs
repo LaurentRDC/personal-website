@@ -11,16 +11,15 @@ I know, this isn't mindblowing, but it will require the use of a basic technique
 
 <hr>
 
-This module is a Literate Haskell file, so we have to get some ceremony out-of-the-way.
+This file is a Literate Haskell module, so we have to get some ceremony out-of-the-way.
 
 \begin{code}
-{-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE DataKinds #-}
 module TypeSafeLinks where
 
 -- From the previous post in this series
 import ApiAsType
-    ( type (:>),
+    ( (:>),
       Capture,
       City,
       Get,
