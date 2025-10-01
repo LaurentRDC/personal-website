@@ -8,17 +8,17 @@
         <name>Laurent P. René de Cotret</name>
         
     </author>
-    <updated>2025-09-29</updated>
+    <updated>2025-09-30</updated>
     <entry>
     <title>Type-safe links - Servant by construction part 2</title>
     <link href="https://laurentrdc.xyz//posts/servant-by-construction/TypeSafeLinks.html" />
     <id>https://laurentrdc.xyz//posts/servant-by-construction/TypeSafeLinks.html</id>
     <published>2025-09-29T00:00:00Z</published>
-    <updated>2025-09-29</updated>
+    <updated>2025-09-30</updated>
     <summary type="html"><![CDATA[<p>Recall <a href="/posts/servant-by-construction/ApiAsType.html">the previous post in this series</a>: we created a bunch of types, such as <code>Get</code>, <code>Capture</code>, and <code>(:&gt;)</code>, to help us represent an API. So far, we can’t do squat with these types, but that changes today. By the end of this post, we’ll be able to do <em>one</em> thing: we’ll determine the string representation of an endpoint type.</p>
 <p>I know, this isn’t mindblowing, but it will require the use of a basic technique that most Servant functionality uses: the <code>Proxy</code> type. This tool (and others!) will be used again and again as we re-build more powerful components of Servant.</p>
 <hr>
-<p>This module is a Literate Haskell file, so we have to get some ceremony out-of-the-way.</p>
+<p>This file is a Literate Haskell module, so we have to get some ceremony out-of-the-way.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TypeFamilies #-}</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">TypeSafeLinks</span> <span class="kw">where</span></span>
@@ -188,8 +188,8 @@ _ = safeLink (Proxy :: Proxy ("weather" :> "temperature" :> Capture "city" City 
     <link href="https://laurentrdc.xyz//posts/servant-by-construction/ApiAsType.html" />
     <id>https://laurentrdc.xyz//posts/servant-by-construction/ApiAsType.html</id>
     <published>2025-09-27T00:00:00Z</published>
-    <updated>2025-09-29</updated>
-    <summary type="html"><![CDATA[<p>This module is a Literate Haskell file, so we have to get some ceremony out-of-the-way.</p>
+    <updated>2025-09-30</updated>
+    <summary type="html"><![CDATA[<p>This file is a Literate Haskell module, so we have to get some ceremony out-of-the-way.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- We&#39;ll get back to DataKinds</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">ApiAsType</span> <span class="kw">where</span></span>
