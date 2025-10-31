@@ -95,7 +95,13 @@ library hkt-generics
 
 library servant-by-construction
   import:              common
-  ghc-options:         -Wno-missing-export-lists
-  build-depends:       base, text, time
+  ghc-options:         -Wno-missing-export-lists -Wno-redundant-constraints
+  build-depends:       base
+                     , bytestring
+                     , http-types
+                     , text
+                     , time
+                     , wai
+                     , warp
   hs-source-dirs:      posts/servant-by-construction/
-  exposed-modules:     ApiAsType, TypeSafeLinks
+  exposed-modules:     ApiAsType, TypeSafeLinks, ServingAnApi

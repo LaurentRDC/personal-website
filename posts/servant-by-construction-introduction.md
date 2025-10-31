@@ -28,3 +28,5 @@ Let's go!
 
 * [An API as a type](/posts/servant-by-construction/ApiAsType.html)
 * [Type-safe links](/posts/servant-by-construction/TypeSafeLinks.html)
+* [Serving an API](/posts/servant-by-construction/ServingAnApi.html)
+* Automatic derivation of client functions (upcoming)

@@ -8,6 +8,7 @@ tags: haskell, web, software engineering, servant by construction
 This file is a Literate Haskell module, so we have to get some ceremony out-of-the-way.
 
 \begin{code}
+{-# LANGUAGE DerivingStrategies #-}
 -- We'll get back to DataKinds
 {-# LANGUAGE DataKinds #-}
 module ApiAsType where
@@ -115,6 +116,7 @@ where `name` will represent some parameter name, which will be useful later on, 
 \begin{code}
 -- Type representing temperature in Celsius
 newtype Temperature = MkTemperature Double
+    deriving newtype (Eq, Show, Read, Num)
 
 type GetForecastTemperature = "forecast" :> Capture "date" Day :> "temperature" :> Get Temperature
 \end{code}
@@ -122,7 +124,7 @@ type GetForecastTemperature = "forecast" :> Capture "date" Day :> "temperature" 
 The two API endpoints we've defined so far, have the same root (`forecast`). It's often useful to define relate endpoints sharing the same root together -- for example, to define authentication which should apply to all related endpoints. We will create a type to represent the branching of endpoints:
 
 \begin{code}
-data a :<|> b
+data a :<|> b = a :<|> b
 
 -- We want :<|> to have a lower precedence than :> so that we can
 -- write API definitions without tons of parentheses
@@ -164,6 +166,8 @@ such that we can write:
 
 \begin{code}
 newtype City = MkCity Text
+    deriving newtype (Show, Read)
+
 type GetTemperature = "weather" :> "temperature" :> QueryParam "city" City :> Get Temperature
 \end{code}
 
