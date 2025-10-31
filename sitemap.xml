@@ -56,6 +56,13 @@
   </url>
 
   <url>
+    <loc>https://laurentrdc.xyz//posts/servant-by-construction/ServingAnApi.html</loc>
+    <lastmod>2025-10-30</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
     <loc>https://laurentrdc.xyz//posts/servant-by-construction/TypeSafeLinks.html</loc>
     <lastmod>2025-09-30</lastmod>
     <changefreq>weekly</changefreq>
@@ -64,14 +71,14 @@
 
   <url>
     <loc>https://laurentrdc.xyz//posts/servant-by-construction/ApiAsType.html</loc>
-    <lastmod>2025-09-30</lastmod>
+    <lastmod>2025-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
   <url>
     <loc>https://laurentrdc.xyz//posts/servant-by-construction-introduction.html</loc>
-    <lastmod>2025-09-29</lastmod>
+    <lastmod>2025-10-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>

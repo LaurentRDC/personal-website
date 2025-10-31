@@ -74,7 +74,7 @@
                         Posted on 2025-09-27. 
                         
                         
-                        Last updated on 2025-09-30.
+                        Last updated on 2025-10-30.
                         
                     </h3>
                     <h3>
@@ -150,14 +150,15 @@
             <div class="container">
                 <div class="content">
                     <p>This file is a Literate Haskell module, so we have to get some ceremony out-of-the-way.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- We'll get back to DataKinds</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">ApiAsType</span> <span class="kw">where</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- we'll need these later on</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Text</span> (<span class="dt">Text</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Time</span> (<span class="dt">UTCTime</span>, <span class="dt">Day</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">GHC.TypeLits</span> (<span class="dt">Symbol</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DerivingStrategies #-}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- We'll get back to DataKinds</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">ApiAsType</span> <span class="kw">where</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">-- we'll need these later on</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Text</span> (<span class="dt">Text</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Time</span> (<span class="dt">UTCTime</span>, <span class="dt">Day</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">GHC.TypeLits</span> (<span class="dt">Symbol</span>)</span></code></pre></div>
 <p>A web application programming interface (API) can be represent by a tree of endpoints<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. The foundational idea behind Servant is that this tree of endpoints can be represented as one type. This API type is constructed by using higher-order types to compose endpoints together.</p>
 <p>This foundational idea leads to most of Servant’s power. First, moving data into types helps tremendously with ensuring correctness, as we will soon see. Second, we can <em>derive</em> functionality on demand for our API type using typeclasses. This last sentence is wholly uninformative unless you already know Servant, so please bear with me here while we construct examples.</p>
 <p>For the remainder of this blog series, we will consider an example, concrete API. This isn’t a lesson in API design. For simplicity, we assume that all data to and from the server will be encoded in plain text (although we may extend this in later posts).</p>
@@ -208,10 +209,11 @@
 <p>where <code>name</code> will represent some parameter name, which will be useful later on, and <code>a</code> is the type being captured. Recall that in this case, <code>name</code> is a <code>Symbol</code>, or type-level string, and not a real <code>String</code>. Our <code>GET /forecast/&lt;date&gt;/temperature</code> can thus be represented by:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Type representing temperature in Celsius</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Temperature</span> <span class="ot">=</span> <span class="dt">MkTemperature</span> <span class="dt">Double</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GetForecastTemperature</span> <span class="ot">=</span> <span class="st">&quot;forecast&quot;</span> <span class="op">:&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;date&quot;</span> <span class="dt">Day</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span></code></pre></div>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> <span class="kw">newtype</span> (<span class="dt">Eq</span>, <span class="dt">Show</span>, <span class="dt">Read</span>, <span class="dt">Num</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GetForecastTemperature</span> <span class="ot">=</span> <span class="st">&quot;forecast&quot;</span> <span class="op">:&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;date&quot;</span> <span class="dt">Day</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span></code></pre></div>
 <p>The two API endpoints we’ve defined so far, have the same root (<code>forecast</code>). It’s often useful to define relate endpoints sharing the same root together – for example, to define authentication which should apply to all related endpoints. We will create a type to represent the branching of endpoints:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> a <span class="op">:&lt;|&gt;</span> b</span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> a <span class="op">:&lt;|&gt;</span> b <span class="ot">=</span> a <span class="op">:&lt;|&gt;</span> b</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co">-- We want :&lt;|&gt; to have a lower precedence than :&gt; so that we can</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- write API definitions without tons of parentheses</span></span>
@@ -237,7 +239,9 @@
 <div class="sourceCode" id="cb15"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">QueryParam</span> (<span class="ot">name ::</span> <span class="dt">Symbol</span>) a</span></code></pre></div>
 <p>such that we can write:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">City</span> <span class="ot">=</span> <span class="dt">MkCity</span> <span class="dt">Text</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GetTemperature</span> <span class="ot">=</span> <span class="st">&quot;weather&quot;</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">QueryParam</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span></code></pre></div>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> <span class="kw">newtype</span> (<span class="dt">Show</span>, <span class="dt">Read</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">GetTemperature</span> <span class="ot">=</span> <span class="st">&quot;weather&quot;</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">QueryParam</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span></code></pre></div>
 <p>For the last endpoint, <code>POST /weather/temperature/&lt;city&gt;</code>, we need two last constructs. In a POST request, the <em>request body</em> will contain some data for the server to process (in the case of our endpoint, this data will be a temperature measurement in plaintext). Moreover, in our example, the POST request will return no data. For our API description to be adequate, we must describe the request body and the lack of data returned with – you guessed it – new types:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Post</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -349,7 +353,7 @@
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2025-10-30. 
+                    Page generated on 2025-10-31. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../../about-site.html">
