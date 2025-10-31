@@ -13,7 +13,7 @@
     <title>Serving an API - Servant by construction part 3</title>
     <link href="https://laurentrdc.xyz//posts/servant-by-construction/ServingAnApi.html" />
     <id>https://laurentrdc.xyz//posts/servant-by-construction/ServingAnApi.html</id>
-    <published>2025-09-30T00:00:00Z</published>
+    <published>2025-10-30T00:00:00Z</published>
     <updated>2025-10-30</updated>
     <summary type="html"><![CDATA[<p>In the <a href="/posts/servant-by-construction/TypeSafeLinks.html">previous post</a> in this <a href="/posts/servant-by-construction-introduction.html">series</a>, we derived type-safe links for API endpoints. While this wasn’t a revolutionary use of a computer, it set the stage for better, <em>bolder</em> things. We learned about extending Servant using typeclasses, and the central role of <a href="https://hackage.haskell.org/package/base-4.21.0.0/docs/Data-Proxy.html#t:Proxy"><code class="has-text-link">Proxy</code></a>.</p>
 <p>Today, we do some <em>real</em> web development stuff: <del>we’ll go too far building abstractions</del> we’ll serve an API.</p>

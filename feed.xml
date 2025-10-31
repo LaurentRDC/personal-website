@@ -262,7 +262,7 @@ We compose API components using <code>(:&gt;)</code> or <code>(:&lt;|&gt;)</code
 <li id="fn2"><p><a href="/posts/HKTGenerics.lhs">Modeling dataframes in Haskell using higher-kinded types</a><a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></description>
-    <pubDate>Tue, 30 Sep 2025 00:00:00 UT</pubDate>
+    <pubDate>Thu, 30 Oct 2025 00:00:00 UT</pubDate>
     <guid>https://laurentrdc.xyz//posts/servant-by-construction/ServingAnApi.html</guid>
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
