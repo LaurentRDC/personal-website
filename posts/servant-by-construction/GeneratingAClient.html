@@ -1,0 +1,457 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-Z0NSFPKNBN">
+        </script>
+        <script>
+            window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', 'G-Z0NSFPKNBN');
+        </script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta http-equiv="Permissions-Policy" content="interest-cohort=()">
+        <title>
+            Generating a client for an API - Servant by construction part 4 - Laurent P. René de Cotret
+        </title>
+        <link rel="icon" type="image/x-icon" href="../../images/atom-solid.png">
+        <link rel="stylesheet" type="text/css" href="../../css/syntax.css">
+        <link rel="stylesheet" type="text/css" href="../../css/style.css">
+        <link rel="stylesheet" type="text/css" href="https://use.fontawesome.com/releases/v5.15.1/css/all.css">
+        <link rel="stylesheet" type="text/css" href="https://cdn.rawgit.com/jpswalsh/academicons/master/css/academicons.min.css">
+        <link rel="stylesheet" type="font" href="https://fonts.googleapis.com/css?family=Titillium+Web">
+        <script type="text/javascript" src="../../js/navbar-onclick.js">
+        </script>
+    </head>
+    <body>
+        <section class="hero-with-background is-dark">
+            <div class="hero-head">
+                <nav class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-brand">
+                            <a class="navbar-item has-text-light" href="../../index.html">
+                                <strong>
+                                    Laurent P. René de Cotret
+                                </strong>
+                            </a>
+                            <span class="navbar-burger burger has-text-light" id="burger" onclick="toggleBurger()">
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                                <span>
+                                </span>
+                            </span>
+                        </div>
+                        <div class="navbar-menu" id="navbarMenu">
+                            <div class="navbar-end">
+                                <a class="navbar-item" href="../../index.html">
+                                    Home
+                                </a>
+                                <a class="navbar-item" href="../../software.html">
+                                    Software
+                                </a>
+                                <a class="navbar-item" href="../../publications.html">
+                                    Publications
+                                </a>
+                                <a class="navbar-item" href="../../about.html">
+                                    About me
+                                </a>
+                                <a class="navbar-item" href="../../archive.html">
+                                    All blog posts
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered">
+                    <h1 class="title has-text-light">
+                        Generating a client for an API - Servant by construction part 4
+                    </h1>
+                    <h3>
+                        
+                        Posted on 2025-11-06. 
+                        
+                        
+                        
+                        
+                    </h3>
+                    <h3>
+                        
+                        Estimated reading time of 16 min.
+                        
+                    </h3>
+                    <h3>
+                        
+                        <span class="icon has-text-link">
+                            <i class="fas fa-tag">
+                            </i>
+                        </span>
+                         Tags: <a title="All pages tagged 'haskell'." href="../../tags/haskell.html" rel="tag">haskell</a>, <a title="All pages tagged 'servant by construction'." href="../../tags/servant%20by%20construction.html" rel="tag">servant by construction</a>, <a title="All pages tagged 'software engineering'." href="../../tags/software%20engineering.html" rel="tag">software engineering</a>, <a title="All pages tagged 'web'." href="../../tags/web.html" rel="tag">web</a>
+                        
+                    </h3>
+                </div>
+            </div>
+            <div class="hero-foot">
+                <div class="navbar is-transparent">
+                    <div class="container">
+                        <div class="navbar-menu">
+                            <div class="navbar-start">
+                                <a class="navbar-item has-text-light" target="_blank" href="../../email.html">
+                                    <span class="icon is-medium">
+                                        <i class="fas fa-envelope">
+                                        </i>
+                                    </span>
+                                    e-mail
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://github.com/LaurentRDC">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-github">
+                                        </i>
+                                    </span>
+                                    GitHub
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                                    <span class="icon is-medium">
+                                        <i class="fab fa-linkedin">
+                                        </i>
+                                    </span>
+                                    LinkedIn
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-researchgate">
+                                        </i>
+                                    </span>
+                                    ResearchGate
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-orcid">
+                                        </i>
+                                    </span>
+                                    OrcID
+                                </a>
+                                <a class="navbar-item has-text-light" target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                                    <span class="icon is-medium">
+                                        <i class="ai ai-google-scholar">
+                                        </i>
+                                    </span>
+                                    Google Scholar
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <div class="section">
+            <div class="container">
+                <div class="content">
+                    <p>This file is a Literate Haskell module, so we must import things before we get going:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TypeFamilies #-}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Suppress some warnings which take away from the beauty</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- of the post</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -Wno-missing-signatures #-}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -Wno-missing-exported-signatures #-}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">GeneratingAClient</span> <span class="kw">where</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">ApiAsType</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ( (<span class="op">:&gt;</span>),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      (<span class="op">:&lt;|&gt;</span>)(<span class="op">..</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Capture</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Get</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Post</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">QueryParam</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">ReqBody</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Temperature</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.IO.Class</span> (liftIO)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.Trans.Reader</span> (<span class="dt">ReaderT</span> (runReaderT), ask)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">qualified</span> <span class="kw">as</span> <span class="dt">BS</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Data</span> (<span class="dt">Proxy</span> (<span class="dt">Proxy</span>))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Function</span> ((&amp;))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Functor</span> ((&lt;&amp;&gt;))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.List</span> (intercalate)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Time</span> (<span class="dt">Day</span>, fromGregorian)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">GHC.TypeLits</span> (symbolVal, <span class="dt">KnownSymbol</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Network.HTTP.Client</span> <span class="kw">qualified</span> <span class="kw">as</span> <span class="dt">HTTP</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">ServingAnApi</span> (<span class="dt">API</span>)</span></code></pre></div>
+<hr>
+<p>Here we are. This is the moment I have been writing for, the end-game. After the last post, where we learned how to <a href="../../posts/servant-by-construction/ServingAnApi.html">serve an API</a> while having the compiler enforce the specs of said API, we are ready to generate client functions to query that same API.</p>
+<p>The first time I saw this in action, I felt a combination of confusion and awe. In memory of this moment, I’ll just start by the end. Behold:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(forecastLastUpdated <span class="op">:&lt;|&gt;</span> forecastAtDate) <span class="op">:&lt;|&gt;</span> (getTemperature <span class="op">:&lt;|&gt;</span> postTemperature) <span class="ot">=</span> client (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> <span class="dt">API</span>)</span></code></pre></div>
+<p>where <code>forecastLastUpdated</code>, <code>forecastAtDate</code>, <code>getTemperature</code>, and <code>postTemperature</code> are normal Haskell functions that allow us to interact with any server serving the API whose specification respects <code>API</code>, which, as a reminder, is:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">ForecastAPI</span> <span class="ot">=</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;forecast&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&gt;</span> ( <span class="st">&quot;lastupdated&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">UTCTime</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&lt;|&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;date&quot;</span> <span class="dt">Day</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">WeatherAPI</span> <span class="ot">=</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;weather&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&gt;</span> ( <span class="dt">QueryParam</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&lt;|&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">ReqBody</span> <span class="dt">Temperature</span> <span class="op">:&gt;</span> <span class="dt">Post</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">API</span> <span class="ot">=</span> <span class="dt">ForecastAPI</span> <span class="op">:&lt;|&gt;</span> <span class="dt">WeatherAPI</span></span></code></pre></div>
+<ul>
+<li>“Big deal bud, ever heard of OpenAPI?”</li>
+</ul>
+<p>OpenAPI is <em>nice</em>, but, it’s also not enough. It’s hard to encode some invariants in an OpenAPI spec. In the set of languages that have <a href="https://openapi-generator.tech/docs/generators">an OpenAPI generator</a>, the level of type sophistication ranges from “huh, types?” to Haskell. OpenAPI sacrifices some of the possible nuances by being more broadly usable.</p>
+<p>So, how does this all work? Let’s find out.</p>
+<hr>
+<p>What does one need, in order to interact with an HTTP API? It needs to know:</p>
+<ul>
+<li>What’s the hostname, port number, and possibly path where the server can be accessed;</li>
+<li>What the endpoints are;</li>
+<li>What <em>shape</em> does the requests and responses have, for a given endpoint.</li>
+</ul>
+<p>We’ll tackle the first point first. When interacting with the API, some knowledge must come externally. We’ll store this information in its own environment type, <code>ClientEnv</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">ClientEnv</span> <span class="ot">=</span> <span class="dt">ClientEnv</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>               {<span class="ot"> hostName ::</span> <span class="dt">String</span>              <span class="co">-- ^ E.g. http://api.server.com</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>               ,<span class="ot"> portNumber ::</span> <span class="dt">Int</span>               <span class="co">-- ^ E.g. 80</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               ,<span class="ot"> basePath ::</span> <span class="dt">String</span>              <span class="co">-- ^ E.g. /v1</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               ,<span class="ot"> networkManager ::</span> <span class="dt">HTTP.Manager</span>  <span class="co">-- ^ To make network calls</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>               }</span></code></pre></div>
+<p>To promote re-use, we’ll package this data into a monad type that had <code>ClientEnv</code> as a static environment:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">ClientM</span> a <span class="ot">=</span> <span class="dt">ReaderT</span> <span class="dt">ClientEnv</span> <span class="dt">IO</span> a</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ot">runClientM ::</span> <span class="dt">ClientEnv</span> <span class="ot">-&gt;</span> <span class="dt">ClientM</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>runClientM <span class="ot">=</span> <span class="fu">flip</span> runReaderT</span></code></pre></div>
+<p>Now, if you recall the previous post in this series, we know what “shape” should the client functions be, and by shape, I mean the types. So, it’s going to be relatively straightward to say that, for example, the <code>forecastLastUpdated</code> client function should look like:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">forecastAtDate ::</span> <span class="dt">Day</span> <span class="ot">-&gt;</span> <span class="dt">ClientM</span> <span class="dt">Temperature</span></span></code></pre></div>
+<p>But, unlike serving the API, we’d like to also define the <em>logic</em> of the client function. Recall that a client function is basically assembles a request to be sent; we’ll chase that thought. Consider a very simple request type like so:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Req</span> <span class="ot">=</span> <span class="dt">Req</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>         {<span class="ot"> reqBody   ::</span> <span class="dt">Maybe</span> <span class="dt">String</span>       <span class="co">-- ^ Optional body of the request</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>         ,<span class="ot"> reqParams ::</span> [(<span class="dt">String</span>, <span class="dt">String</span>)] <span class="co">-- ^ Key-value pairs of query parameters</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>         ,<span class="ot"> reqVerb   ::</span> <span class="dt">ByteString</span>         <span class="co">-- ^ &quot;GET&quot; or &quot;POST&quot;. If unset, the request is not valid.</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>         ,<span class="ot"> reqPath   ::</span> [<span class="dt">String</span>]           <span class="co">-- ^ Path to the endpoint from the base path</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>				                                   <span class="co">--   of the API, e.g. `[&quot;forecast&quot;, &quot;2025-12-01&quot;, &quot;temperature&quot;]`</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         }</span></code></pre></div>
+<p>Note that I’m being quite sloppy here. For example, we should make <code>reqVerb</code> take a sum type rather than any <code>ByteString</code>, but I’m trying to keep things as simple as possible.</p>
+<p>We’ll walk through endpoints and construct client functions that, well, construct <code>Req</code>s. Then, we can combine a <code>Req</code> with the <code>ClientEnv</code> to send a HTTP request. Let’s go!</p>
+<hr>
+<p>As we have done three times already, we will express the functionality we want to add to the <code>API</code> type with a typeclass:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">HasClient</span> api <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> api</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ot">    clientWithRoute ::</span> <span class="dt">Proxy</span> api <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Client</span> api</span></code></pre></div>
+<p>Before we start writing instances, we’ll make some helper functions to make it easier to deal with <code>Req</code>. First, the empty request:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">emptyReq ::</span> <span class="dt">Req</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>emptyReq <span class="ot">=</span> <span class="dt">Req</span> {reqBody <span class="ot">=</span> <span class="dt">Nothing</span>, reqParams <span class="ot">=</span> [], reqVerb <span class="ot">=</span> <span class="fu">mempty</span>, reqPath <span class="ot">=</span> []}</span></code></pre></div>
+<p>We need a way to set the body of the request. Recall that for simplicity, we assume that requests are all plaintext encoded, and so we serialize Haskell datatypes over the wire using the <code>Show</code> typeclass:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">setBody ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>setBody body req <span class="ot">=</span> req{reqBody <span class="ot">=</span> <span class="dt">Just</span> (<span class="fu">show</span> body)}</span></code></pre></div>
+<p>We also need to be able to set the verb of the request – actually, requests are invalid without a verb! You’ll see later how we enforce that all <code>Req</code>s that get sent off have a valid verb later:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">setVerb ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>setVerb verb req <span class="ot">=</span> req{reqVerb <span class="ot">=</span> verb}</span></code></pre></div>
+<p>We also need to add query parameters:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">addQueryParam ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>addQueryParam key val req <span class="ot">=</span> req {reqParams <span class="ot">=</span> reqParams req <span class="op">&lt;&gt;</span> [(key, <span class="fu">show</span> val)]}</span></code></pre></div>
+<p>and we need to be able to extend the path of the endpoint to which the <code>Req</code> is sent:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">addToPath ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>addToPath segment req <span class="ot">=</span> req{reqPath <span class="ot">=</span> reqPath req <span class="op">&lt;&gt;</span> [segment]}</span></code></pre></div>
+<p>Finally, we also need a method for sending the request, and receiving the payload. We’ll re-use a low-level library for this, <code>http-client</code>:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ot">toRequest ::</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">ClientEnv</span> <span class="ot">-&gt;</span> <span class="dt">HTTP.Request</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>toRequest (<span class="dt">Req</span> body params verb path) (<span class="dt">ClientEnv</span> hostname portnumber basepath _)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> HTTP.defaultRequest { HTTP.method <span class="ot">=</span> verb</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                          , HTTP.host <span class="ot">=</span> BS.pack hostname</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                          , HTTP.port <span class="ot">=</span> portnumber</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                          , HTTP.path <span class="ot">=</span> BS.pack <span class="op">$</span> basepath <span class="op">&lt;&gt;</span> intercalate <span class="st">&quot;/&quot;</span> path</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                          , HTTP.queryString <span class="ot">=</span> BS.pack</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                                             <span class="op">$</span> intercalate <span class="st">&quot;&amp;&quot;</span> [ key <span class="op">&lt;&gt;</span> <span class="st">&quot;=&quot;</span> <span class="op">&lt;&gt;</span> val</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                                                               <span class="op">|</span> (key, val) <span class="ot">&lt;-</span> params</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                                                               ]</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                          , HTTP.requestBody <span class="ot">=</span> <span class="dt">HTTP.RequestBodyBS</span> (<span class="fu">maybe</span> <span class="fu">mempty</span> BS.pack body)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                          }</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="ot">runRequestNoBody ::</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">ClientM</span> ()</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>runRequestNoBody req <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    clientEnv<span class="op">@</span>(<span class="dt">ClientEnv</span> _ _ _ networkManager) <span class="ot">&lt;-</span> ask</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    liftIO (HTTP.httpNoBody (toRequest req clientEnv) networkManager) <span class="op">&lt;&amp;&gt;</span> HTTP.responseBody</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="ot">runRequest ::</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">ClientM</span> a</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>runRequest req <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    clientEnv<span class="op">@</span>(<span class="dt">ClientEnv</span> _ _ _ networkManager) <span class="ot">&lt;-</span> ask</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    liftIO (HTTP.httpLbs (toRequest req clientEnv) networkManager)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;&amp;&gt;</span> HTTP.responseBody</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;&amp;&gt;</span> BS.toStrict</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;&amp;&gt;</span> BS.unpack</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;&amp;&gt;</span> <span class="fu">read</span></span></code></pre></div>
+<p>With these helper functions out-of-the-way, we can proceed with the real meat of this post. We start with terminal verbs. Recall that, for simplicity, we assume that all POST responses do not carry a body; hence, the client function must return <code>()</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">HasClient</span> <span class="dt">Post</span> <span class="kw">where</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> <span class="dt">Post</span> <span class="ot">=</span> <span class="dt">ClientM</span> ()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req <span class="ot">=</span> runRequestNoBody (req <span class="op">&amp;</span> setVerb <span class="st">&quot;POST&quot;</span>)</span></code></pre></div>
+<p>Side note: I love <code>&amp;</code> and <code>&lt;&amp;&gt;</code> and I wish to see it more. Moving on to GET:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">Get</span> a) <span class="kw">where</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">Get</span> a) <span class="ot">=</span> <span class="dt">ClientM</span> a</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req <span class="ot">=</span> runRequest (req <span class="op">&amp;</span> setVerb <span class="st">&quot;GET&quot;</span>)</span></code></pre></div>
+<p><code>Get</code> is a little more interesting because we have to specify a return type. Given our API specification, the parsing of the response body should never fail due to an unexpected type.</p>
+<p>Let’s do <code>ReqBody</code> now. A client function for an endpoint using <code>ReqBody a</code> should <em>supply</em> the request with a body of type <code>a</code>; this means adding an argument to the client function, like we did for server handlers:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub) <span class="ot">=</span> a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<p>… wait, what should we write for <code>clientWithRoute</code>? Well, in this instance, <code>clientWithRoute :: Proxy ... -&gt; Req -&gt; Client (ReqBody a :&gt; sub)</code>, which is</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ot">clientWithRoute ::</span> <span class="dt">Proxy</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub)</span></code></pre></div>
+<p>Since <code>ReqBody</code> never appears at the end of an endpoint definition, we must recur with <code>clientWithRoute</code>. This also requires us to make sure that the sub-API, <code>sub</code>, is an instance of <code>HasClient</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> sub, <span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub) <span class="ot">=</span> a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req body <span class="ot">=</span> clientWithRoute (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> sub) (setBody body req)</span></code></pre></div>
+<p>Great! Let’s do <code>QueryParam</code>. Recall that in our implementation, a query parameter is always optional. Recall that in <code>QueryParam name a</code>, <code>name</code> is a type-level string which we can bring to the values world by using <code>symbolVal</code>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> sub, <span class="dt">KnownSymbol</span> name, <span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">QueryParam</span> name a <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">QueryParam</span> name a <span class="op">:&gt;</span> sub) <span class="ot">=</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req param <span class="ot">=</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        clientWithRoute</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> sub)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>            (addQueryParam</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                (symbolVal (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> name))</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                param</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                req</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
+<p>After this, a <code>Capture</code> is going to be easy:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> sub, <span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">Capture</span> name a <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">Capture</span> name a <span class="op">:&gt;</span> sub) <span class="ot">=</span> a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req capture <span class="ot">=</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>        clientWithRoute</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> sub)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>            (addToPath (<span class="fu">show</span> capture) req)</span></code></pre></div>
+<p>We’re almost done. Path segments only add the the path of the request, but otherwise do not add a parameter to our client function:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> sub, <span class="dt">KnownSymbol</span> segment) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (segment <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (segment <span class="op">:&gt;</span> sub) <span class="ot">=</span> <span class="dt">Client</span> sub</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> clientWithRoute</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> sub)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>            (addToPath (symbolVal (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> segment)) req)</span></code></pre></div>
+<p>Finally, the ever-interesting <code>(:&lt;|&gt;)</code> instance. In this case, no thought is required, since there’s only one thing that will type-check:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> left, <span class="dt">HasClient</span> right) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (left <span class="op">:&lt;|&gt;</span> right) <span class="kw">where</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (left <span class="op">:&lt;|&gt;</span> right) <span class="ot">=</span> <span class="dt">Client</span> left <span class="op">:&lt;|&gt;</span> <span class="dt">Client</span> right</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span>    clientWithRoute (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> left) req</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">:&lt;|&gt;</span> clientWithRoute (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> right) req</span></code></pre></div>
+<p>Not that much work! How do we connect <code>HasClient</code> with our first demonstration of the function <code>client</code>? Behold:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ot">client ::</span> <span class="dt">HasClient</span> api <span class="ot">=&gt;</span> <span class="dt">Proxy</span> api <span class="ot">-&gt;</span> <span class="dt">Client</span> api</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>client proxy <span class="ot">=</span> clientWithRoute proxy emptyReq</span></code></pre></div>
+<p>In action, here’s how we can fetch the forecasted temperature on Christmas:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ot">run ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>run <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    networkManager <span class="ot">&lt;-</span> HTTP.newManager HTTP.defaultManagerSettings</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> clientEnv <span class="ot">=</span> <span class="dt">ClientEnv</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                  { hostName <span class="ot">=</span> <span class="st">&quot;myserver.com&quot;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                  , portNumber <span class="ot">=</span> <span class="dv">80</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                  , basePath <span class="ot">=</span> <span class="st">&quot;/api&quot;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                  , networkManager <span class="ot">=</span> networkManager</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>                  }</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        christmasDay <span class="ot">=</span> fromGregorian <span class="dv">2025</span> <span class="dv">12</span> <span class="dv">25</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    runClientM clientEnv (forecastAtDate christmasDay) <span class="op">&gt;&gt;=</span> liftIO <span class="op">.</span> <span class="fu">print</span></span></code></pre></div>
+<p><code>forecastAtDate</code> is just a regular function, but there’s a lot going on under the hood!</p>
+<hr>
+<p>Automatically generating client functions for an API is beautiful. It looks like magic, but when we look under the hood, it’s “““just”“” type families, partially-applied functions, <code>Proxy</code>, and recursion.</p>
+<p>Unlike the previous posts, the code above is NOT a highly simplified version of what Servant provides for real clients via <a href="https://hackage.haskell.org/package/servant-client"><code class="has-text-link">servant-client</code></a>. The only thing we’re missing here is support for the real Servant combinators (powering authentication, streaming, HTTP headers, etc), and allowing for other base monads than <code>IO</code>. That’s not bad!</p>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="content has-text-centered">
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-envelope">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../email.html">
+                        e-mail
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-github">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://github.com/LaurentRDC">
+                        GitHub
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fab fa-linkedin">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.linkedin.com/in/laurentrdc">
+                        LinkedIn
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-researchgate">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://www.researchgate.net/profile/Laurent_Rene_De_Cotret">
+                        ResearchGate
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-orcid">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://orcid.org/0000-0002-1464-2739">
+                        OrcID
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="ai ai-google-scholar">
+                        </i>
+                    </span>
+                    <a target="_blank" href="https://scholar.google.ca/citations?user=pXFhwioAAAAJ&amp;hl=en">
+                        Google Scholar
+                    </a>
+                </p>
+                <p>
+                    <span class="icon">
+                        <i class="fas fa-rss">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../feed.xml">
+                        RSS feed
+                    </a>
+                     | 
+                    <span class="icon">
+                        <i class="fas fa-atom">
+                        </i>
+                    </span>
+                    <a target="_blank" href="../../atom.xml">
+                        Atom feed
+                    </a>
+                </p>
+                <p class="is-small">
+                    Page generated on 2025-11-07. 
+                    This website was created using free and open-source technologies. 
+                    You can learn more about how this website is generated 
+                    <a href="../../about-site.html">
+                        here
+                    </a>
+                    .
+                </p>
+                <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">
+                    <img alt="Creative Commons License" style="border-width:0" src="../../images/cc-by-sa.svg">
+                </a>
+            </div>
+        </footer>
+    </body>
+</html>

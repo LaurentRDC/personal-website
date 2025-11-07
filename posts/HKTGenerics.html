@@ -74,7 +74,7 @@
                         Posted on 2025-01-22. 
                         
                         
-                        Last updated on 2025-02-08.
+                        Last updated on 2025-11-06.
                         
                     </h3>
                     <h3>
@@ -161,7 +161,7 @@ implementation of a <a href="https://hackage.haskell.org/package/javelin-0.1.4.1
 While this was perfect for my use-case at the time (I wrote about it <a href="../posts/rolling-stats.html">here</a>
 and <a href="../posts/typesafe-tradingstrats.html">here</a>), the typical data scientist is used to columnar the data structure known as the
 <em>dataframe</em>.</p>
-<p>Recently, an effort to <a href="(https://discourse.haskell.org/t/design-dataframes-in-haskell/11108)">design a dataframe interface</a> in Haskell
+<p>Recently, an effort to <a href="https://discourse.haskell.org/t/design-dataframes-in-haskell/11108">design a dataframe interface</a> in Haskell
 has been spearheaded by Michael Chavinda, with a focus on exploratory data science. This effort trades type safety for easier
 interactivity, similar to <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">Python’s pandas DataFrames</a>.</p>
 <p>In this blog post, I want to explore a different design tradeoff: what if one were to instead focus on type-safe expressiveness, with
@@ -239,12 +239,12 @@ columns of dataframes easily, like so:</p>
 <p>With <code>longestFirstName</code>, we can glimpse the performance advantage of using dataframes: the <code>userFirstName</code> field is really
 an array, and so finding the longest first name is an operation on an array of string rather than an array of <code>User</code>.</p>
 <p>How can we build a dataframe? We can turn rows of, well, <code>Row User</code> into a single <code>Frame User</code> like so:
-<!-- 
+<!--
     Using the markdown syntax below will prevent the Haskell compiler
     from looking at the code
 --></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">buildUserFrame ::</span> <span class="dt">Vector</span> (<span class="dt">Row</span> <span class="dt">User</span>) <span class="ot">-&gt;</span> <span class="dt">Frame</span> <span class="dt">User</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>buildUserFrame vs </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>buildUserFrame vs</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkUser</span> { userFirstName <span class="ot">=</span> Data.Vector.map userFirstName vs</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>             , userLastName  <span class="ot">=</span> Data.Vector.map userLastName vs</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>             , userAge       <span class="ot">=</span> Data.Vector.map userAge vs</span>
@@ -279,7 +279,7 @@ typeclass on both concrete types at once.</p>
 <p>Enough word salad:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">GFromRows</span> r <span class="co">-- intended to be `Row`-like</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                f <span class="co">-- intended to be `Frame`-like</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span>  </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ot">    gfromRows ::</span> <span class="dt">Vector</span> (r a) <span class="ot">-&gt;</span> (f a)</span></code></pre></div>
 <p>We need to provide instances relating to some (<a href="https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-Generics.html#g:14">but not all</a>)
 generic constructs, including <code>M1</code> (which is always required), <code>K1</code>, and <code>(:*:)</code>.</p>
@@ -292,7 +292,7 @@ generic constructs, including <code>M1</code> (which is always required), <code>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>         , <span class="dt">GFromRows</span> r2 f2</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>         )</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>         <span class="ot">=&gt;</span> <span class="dt">GFromRows</span> (r1 <span class="op">:*:</span> r2) (f1 <span class="op">:*:</span> f2) <span class="kw">where</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    gfromRows vs <span class="ot">=</span> <span class="kw">let</span> (xs, ys) <span class="ot">=</span> Data.Vector.unzip </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    gfromRows vs <span class="ot">=</span> <span class="kw">let</span> (xs, ys) <span class="ot">=</span> Data.Vector.unzip</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                                <span class="op">$</span> Data.Vector.map (\(x <span class="op">:*:</span> y) <span class="ot">-&gt;</span> (x, y)) vs</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">in</span> gfromRows xs <span class="op">:*:</span> gfromRows ys</span></code></pre></div>
 <p>Finally, onto the representation of fields of constructors, <code>K1</code>:</p>
@@ -308,12 +308,12 @@ some sense, the instance involving the representation <code>K1</code> is the fou
 <p>We can now fill in the default implementation of <code>fromRows</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">FromRows</span> t <span class="kw">where</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ot">    fromRows ::</span> <span class="dt">Vector</span> (<span class="dt">Row</span> t) <span class="ot">-&gt;</span> <span class="dt">Frame</span> t</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    default<span class="ot"> fromRows ::</span> ( <span class="dt">Generic</span> (<span class="dt">Row</span> t)</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                        , <span class="dt">Generic</span> (<span class="dt">Frame</span> t)</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                        , <span class="dt">GFromRows</span> (<span class="dt">Rep</span> (<span class="dt">Row</span> t)) (<span class="dt">Rep</span> (<span class="dt">Frame</span> t))</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                        ) </span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">=&gt;</span> <span class="dt">Vector</span> (<span class="dt">Row</span> t) </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                        )</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">=&gt;</span> <span class="dt">Vector</span> (<span class="dt">Row</span> t)</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">-&gt;</span> <span class="dt">Frame</span> t</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    fromRows <span class="ot">=</span> to                   <span class="co">-- Turn `Rep (Frame t)` back into `Frame t`</span></span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>             <span class="op">.</span> gfromRows            <span class="co">-- Vector (Rep (Row t)) -&gt; Rep (Frame t)</span></span>
@@ -341,7 +341,7 @@ How about nesting dataframes types? Consider this:</p>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> (<span class="dt">Generic</span>)</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">FromRows</span> <span class="dt">Address</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Store</span> f</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStore</span> {<span class="ot"> storeName    ::</span> <span class="dt">Column</span> f <span class="dt">String</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>              ,<span class="ot"> storeAddress ::</span> <span class="dt">Address</span> f</span>
@@ -437,7 +437,7 @@ How about nesting dataframes types? Consider this:</p>
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2025-11-06. 
+                    Page generated on 2025-11-07. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">

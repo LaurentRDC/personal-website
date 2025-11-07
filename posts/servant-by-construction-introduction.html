@@ -74,7 +74,7 @@
                         Posted on 2025-09-26. 
                         
                         
-                        Last updated on 2025-10-30.
+                        Last updated on 2025-11-06.
                         
                     </h3>
                     <h3>
@@ -157,15 +157,16 @@ Don’t be fooled by the deceptively simplistic website: Servant is one of the c
 <p>The first is to use Servant as a concrete application of type-level computation. In this respect, I hope readers can take some of the design ideas from Servant and bring it back to their community, just like <a href="https://hackage.haskell.org/package/QuickCheck">QuickCheck</a> pioneered property-based testing.
 The second is that while Servant is powerful, it remains a rather sophisticated piece of software that is hard to learn and understand. Even with some Haskell experience, Servant is not yet a pick-up-and-go tool; wandering off the beaten path (i.e. doing anything not covered in the <a href="https://docs.servant.dev/">documentation</a>) remains a daunting prospect for many, as it was for me. By studying the inner workings of Servant, we can learn about how to use it, and extend it, effectively.</p>
 <p>I want to celebrate the boldness of Servant, while teaching you about its ways. This is why I am starting a <em>blog series</em>, where I will cover the basics of Servant by <em>implementing</em> a simple version of Servant’s internals, as literate Haskell files. By <em>constructing</em> Servant, we will both learn various techniques involving Haskell’s advanced type system, but also demystify the real Servant library.</p>
-<p>This blog series will build in complexity. We will start by representing an API as a type. This type won’t be useful straight away, but subsequent blog posts will showcase one capability of Servant by using this type, starting with generating type-safe links to endpoints, and culminating somewhere I haven’t decided yet.</p>
-<p>Let’s go!</p>
-<h4 class="title is-4" id="blog-posts-in-this-series">Blog posts in this series</h4>
+<p>This blog series will build in complexity. We will start by representing an API as a type. This type won’t be useful straight away, but subsequent blog posts will showcase one capability of Servant by using this type, starting with generating type-safe links to endpoints, and culminating with automatically generating clients of APIs.</p>
+<p><strong>Blog posts in this series</strong></p>
 <ul>
 <li><a href="../posts/servant-by-construction/ApiAsType.html">An API as a type</a></li>
 <li><a href="../posts/servant-by-construction/TypeSafeLinks.html">Type-safe links</a></li>
 <li><a href="../posts/servant-by-construction/ServingAnApi.html">Serving an API</a></li>
-<li>Automatic derivation of client functions (upcoming)</li>
+<li><a href="../posts/servant-by-construction/GeneratingAClient.html">Automatic derivation of client functions</a></li>
 </ul>
+<p><em>Update</em></p>
+<p>This is the end of the planned posts in the Servant by construction series. If there’s another Servant-related topic you’d like to learn more about, by having me build a simplified version, don’t hesitate to reach out!</p>
                 </div>
             </div>
         </div>
@@ -238,7 +239,7 @@ The second is that while Servant is powerful, it remains a rather sophisticated 
                     </a>
                 </p>
                 <p class="is-small">
-                    Page generated on 2025-11-06. 
+                    Page generated on 2025-11-07. 
                     This website was created using free and open-source technologies. 
                     You can learn more about how this website is generated 
                     <a href="../about-site.html">

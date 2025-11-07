@@ -8,8 +8,234 @@
         <name>Laurent P. René de Cotret</name>
         
     </author>
-    <updated>2025-10-30</updated>
+    <updated>2025-11-06</updated>
     <entry>
+    <title>Generating a client for an API - Servant by construction part 4</title>
+    <link href="https://laurentrdc.xyz//posts/servant-by-construction/GeneratingAClient.html" />
+    <id>https://laurentrdc.xyz//posts/servant-by-construction/GeneratingAClient.html</id>
+    <published>2025-11-06T00:00:00Z</published>
+    <updated>2025-11-06</updated>
+    <summary type="html"><![CDATA[<p>This file is a Literate Haskell module, so we must import things before we get going:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE DataKinds #-}</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE OverloadedStrings #-}</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# LANGUAGE TypeFamilies #-}</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Suppress some warnings which take away from the beauty</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">-- of the post</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -Wno-missing-signatures #-}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="ot">{-# OPTIONS_GHC -Wno-missing-exported-signatures #-}</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">GeneratingAClient</span> <span class="kw">where</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">ApiAsType</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ( (<span class="op">:&gt;</span>),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>      (<span class="op">:&lt;|&gt;</span>)(<span class="op">..</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Capture</span>,</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Get</span>,</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Post</span>,</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>      <span class="dt">QueryParam</span>,</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>      <span class="dt">ReqBody</span>,</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>      <span class="dt">Temperature</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.IO.Class</span> (liftIO)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Control.Monad.Trans.Reader</span> (<span class="dt">ReaderT</span> (runReaderT), ask)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.ByteString</span> (<span class="dt">ByteString</span>)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.ByteString.Char8</span> <span class="kw">qualified</span> <span class="kw">as</span> <span class="dt">BS</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Data</span> (<span class="dt">Proxy</span> (<span class="dt">Proxy</span>))</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Function</span> ((&amp;))</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Functor</span> ((&lt;&amp;&gt;))</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.List</span> (intercalate)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Time</span> (<span class="dt">Day</span>, fromGregorian)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">GHC.TypeLits</span> (symbolVal, <span class="dt">KnownSymbol</span>)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Network.HTTP.Client</span> <span class="kw">qualified</span> <span class="kw">as</span> <span class="dt">HTTP</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">ServingAnApi</span> (<span class="dt">API</span>)</span></code></pre></div>
+<hr>
+<p>Here we are. This is the moment I have been writing for, the end-game. After the last post, where we learned how to <a href="/posts/servant-by-construction/ServingAnApi.html">serve an API</a> while having the compiler enforce the specs of said API, we are ready to generate client functions to query that same API.</p>
+<p>The first time I saw this in action, I felt a combination of confusion and awe. In memory of this moment, I’ll just start by the end. Behold:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>(forecastLastUpdated <span class="op">:&lt;|&gt;</span> forecastAtDate) <span class="op">:&lt;|&gt;</span> (getTemperature <span class="op">:&lt;|&gt;</span> postTemperature) <span class="ot">=</span> client (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> <span class="dt">API</span>)</span></code></pre></div>
+<p>where <code>forecastLastUpdated</code>, <code>forecastAtDate</code>, <code>getTemperature</code>, and <code>postTemperature</code> are normal Haskell functions that allow us to interact with any server serving the API whose specification respects <code>API</code>, which, as a reminder, is:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">ForecastAPI</span> <span class="ot">=</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;forecast&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&gt;</span> ( <span class="st">&quot;lastupdated&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">UTCTime</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&lt;|&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;date&quot;</span> <span class="dt">Day</span> <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">WeatherAPI</span> <span class="ot">=</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;weather&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">:&gt;</span> <span class="st">&quot;temperature&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&gt;</span> ( <span class="dt">QueryParam</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">Get</span> <span class="dt">Temperature</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>            <span class="op">:&lt;|&gt;</span> <span class="dt">Capture</span> <span class="st">&quot;city&quot;</span> <span class="dt">City</span> <span class="op">:&gt;</span> <span class="dt">ReqBody</span> <span class="dt">Temperature</span> <span class="op">:&gt;</span> <span class="dt">Post</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>               )</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">API</span> <span class="ot">=</span> <span class="dt">ForecastAPI</span> <span class="op">:&lt;|&gt;</span> <span class="dt">WeatherAPI</span></span></code></pre></div>
+<ul>
+<li>“Big deal bud, ever heard of OpenAPI?”</li>
+</ul>
+<p>OpenAPI is <em>nice</em>, but, it’s also not enough. It’s hard to encode some invariants in an OpenAPI spec. In the set of languages that have <a href="https://openapi-generator.tech/docs/generators">an OpenAPI generator</a>, the level of type sophistication ranges from “huh, types?” to Haskell. OpenAPI sacrifices some of the possible nuances by being more broadly usable.</p>
+<p>So, how does this all work? Let’s find out.</p>
+<hr>
+<p>What does one need, in order to interact with an HTTP API? It needs to know:</p>
+<ul>
+<li>What’s the hostname, port number, and possibly path where the server can be accessed;</li>
+<li>What the endpoints are;</li>
+<li>What <em>shape</em> does the requests and responses have, for a given endpoint.</li>
+</ul>
+<p>We’ll tackle the first point first. When interacting with the API, some knowledge must come externally. We’ll store this information in its own environment type, <code>ClientEnv</code>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">ClientEnv</span> <span class="ot">=</span> <span class="dt">ClientEnv</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>               {<span class="ot"> hostName ::</span> <span class="dt">String</span>              <span class="co">-- ^ E.g. http://api.server.com</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>               ,<span class="ot"> portNumber ::</span> <span class="dt">Int</span>               <span class="co">-- ^ E.g. 80</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>               ,<span class="ot"> basePath ::</span> <span class="dt">String</span>              <span class="co">-- ^ E.g. /v1</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>               ,<span class="ot"> networkManager ::</span> <span class="dt">HTTP.Manager</span>  <span class="co">-- ^ To make network calls</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>               }</span></code></pre></div>
+<p>To promote re-use, we’ll package this data into a monad type that had <code>ClientEnv</code> as a static environment:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">ClientM</span> a <span class="ot">=</span> <span class="dt">ReaderT</span> <span class="dt">ClientEnv</span> <span class="dt">IO</span> a</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ot">runClientM ::</span> <span class="dt">ClientEnv</span> <span class="ot">-&gt;</span> <span class="dt">ClientM</span> a <span class="ot">-&gt;</span> <span class="dt">IO</span> a</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>runClientM <span class="ot">=</span> <span class="fu">flip</span> runReaderT</span></code></pre></div>
+<p>Now, if you recall the previous post in this series, we know what “shape” should the client functions be, and by shape, I mean the types. So, it’s going to be relatively straightward to say that, for example, the <code>forecastLastUpdated</code> client function should look like:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">forecastAtDate ::</span> <span class="dt">Day</span> <span class="ot">-&gt;</span> <span class="dt">ClientM</span> <span class="dt">Temperature</span></span></code></pre></div>
+<p>But, unlike serving the API, we’d like to also define the <em>logic</em> of the client function. Recall that a client function is basically assembles a request to be sent; we’ll chase that thought. Consider a very simple request type like so:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Req</span> <span class="ot">=</span> <span class="dt">Req</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>         {<span class="ot"> reqBody   ::</span> <span class="dt">Maybe</span> <span class="dt">String</span>       <span class="co">-- ^ Optional body of the request</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>         ,<span class="ot"> reqParams ::</span> [(<span class="dt">String</span>, <span class="dt">String</span>)] <span class="co">-- ^ Key-value pairs of query parameters</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>         ,<span class="ot"> reqVerb   ::</span> <span class="dt">ByteString</span>         <span class="co">-- ^ &quot;GET&quot; or &quot;POST&quot;. If unset, the request is not valid.</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>         ,<span class="ot"> reqPath   ::</span> [<span class="dt">String</span>]           <span class="co">-- ^ Path to the endpoint from the base path</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>				                                   <span class="co">--   of the API, e.g. `[&quot;forecast&quot;, &quot;2025-12-01&quot;, &quot;temperature&quot;]`</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         }</span></code></pre></div>
+<p>Note that I’m being quite sloppy here. For example, we should make <code>reqVerb</code> take a sum type rather than any <code>ByteString</code>, but I’m trying to keep things as simple as possible.</p>
+<p>We’ll walk through endpoints and construct client functions that, well, construct <code>Req</code>s. Then, we can combine a <code>Req</code> with the <code>ClientEnv</code> to send a HTTP request. Let’s go!</p>
+<hr>
+<p>As we have done three times already, we will express the functionality we want to add to the <code>API</code> type with a typeclass:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">HasClient</span> api <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> api</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ot">    clientWithRoute ::</span> <span class="dt">Proxy</span> api <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Client</span> api</span></code></pre></div>
+<p>Before we start writing instances, we’ll make some helper functions to make it easier to deal with <code>Req</code>. First, the empty request:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">emptyReq ::</span> <span class="dt">Req</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>emptyReq <span class="ot">=</span> <span class="dt">Req</span> {reqBody <span class="ot">=</span> <span class="dt">Nothing</span>, reqParams <span class="ot">=</span> [], reqVerb <span class="ot">=</span> <span class="fu">mempty</span>, reqPath <span class="ot">=</span> []}</span></code></pre></div>
+<p>We need a way to set the body of the request. Recall that for simplicity, we assume that requests are all plaintext encoded, and so we serialize Haskell datatypes over the wire using the <code>Show</code> typeclass:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ot">setBody ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>setBody body req <span class="ot">=</span> req{reqBody <span class="ot">=</span> <span class="dt">Just</span> (<span class="fu">show</span> body)}</span></code></pre></div>
+<p>We also need to be able to set the verb of the request – actually, requests are invalid without a verb! You’ll see later how we enforce that all <code>Req</code>s that get sent off have a valid verb later:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">setVerb ::</span> <span class="dt">ByteString</span> <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>setVerb verb req <span class="ot">=</span> req{reqVerb <span class="ot">=</span> verb}</span></code></pre></div>
+<p>We also need to add query parameters:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">addQueryParam ::</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> a <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>addQueryParam key val req <span class="ot">=</span> req {reqParams <span class="ot">=</span> reqParams req <span class="op">&lt;&gt;</span> [(key, <span class="fu">show</span> val)]}</span></code></pre></div>
+<p>and we need to be able to extend the path of the endpoint to which the <code>Req</code> is sent:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">addToPath ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>addToPath segment req <span class="ot">=</span> req{reqPath <span class="ot">=</span> reqPath req <span class="op">&lt;&gt;</span> [segment]}</span></code></pre></div>
+<p>Finally, we also need a method for sending the request, and receiving the payload. We’ll re-use a low-level library for this, <code>http-client</code>:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ot">toRequest ::</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">ClientEnv</span> <span class="ot">-&gt;</span> <span class="dt">HTTP.Request</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>toRequest (<span class="dt">Req</span> body params verb path) (<span class="dt">ClientEnv</span> hostname portnumber basepath _)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> HTTP.defaultRequest { HTTP.method <span class="ot">=</span> verb</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                          , HTTP.host <span class="ot">=</span> BS.pack hostname</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                          , HTTP.port <span class="ot">=</span> portnumber</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                          , HTTP.path <span class="ot">=</span> BS.pack <span class="op">$</span> basepath <span class="op">&lt;&gt;</span> intercalate <span class="st">&quot;/&quot;</span> path</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                          , HTTP.queryString <span class="ot">=</span> BS.pack</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>                                             <span class="op">$</span> intercalate <span class="st">&quot;&amp;&quot;</span> [ key <span class="op">&lt;&gt;</span> <span class="st">&quot;=&quot;</span> <span class="op">&lt;&gt;</span> val</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>                                                               <span class="op">|</span> (key, val) <span class="ot">&lt;-</span> params</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>                                                               ]</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>                          , HTTP.requestBody <span class="ot">=</span> <span class="dt">HTTP.RequestBodyBS</span> (<span class="fu">maybe</span> <span class="fu">mempty</span> BS.pack body)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>                          }</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="ot">runRequestNoBody ::</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">ClientM</span> ()</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>runRequestNoBody req <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>    clientEnv<span class="op">@</span>(<span class="dt">ClientEnv</span> _ _ _ networkManager) <span class="ot">&lt;-</span> ask</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    liftIO (HTTP.httpNoBody (toRequest req clientEnv) networkManager) <span class="op">&lt;&amp;&gt;</span> HTTP.responseBody</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="ot">runRequest ::</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">Req</span> <span class="ot">-&gt;</span> <span class="dt">ClientM</span> a</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>runRequest req <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    clientEnv<span class="op">@</span>(<span class="dt">ClientEnv</span> _ _ _ networkManager) <span class="ot">&lt;-</span> ask</span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    liftIO (HTTP.httpLbs (toRequest req clientEnv) networkManager)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;&amp;&gt;</span> HTTP.responseBody</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;&amp;&gt;</span> BS.toStrict</span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;&amp;&gt;</span> BS.unpack</span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>        <span class="op">&lt;&amp;&gt;</span> <span class="fu">read</span></span></code></pre></div>
+<p>With these helper functions out-of-the-way, we can proceed with the real meat of this post. We start with terminal verbs. Recall that, for simplicity, we assume that all POST responses do not carry a body; hence, the client function must return <code>()</code>:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">HasClient</span> <span class="dt">Post</span> <span class="kw">where</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> <span class="dt">Post</span> <span class="ot">=</span> <span class="dt">ClientM</span> ()</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req <span class="ot">=</span> runRequestNoBody (req <span class="op">&amp;</span> setVerb <span class="st">&quot;POST&quot;</span>)</span></code></pre></div>
+<p>Side note: I love <code>&amp;</code> and <code>&lt;&amp;&gt;</code> and I wish to see it more. Moving on to GET:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Read</span> a <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">Get</span> a) <span class="kw">where</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">Get</span> a) <span class="ot">=</span> <span class="dt">ClientM</span> a</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req <span class="ot">=</span> runRequest (req <span class="op">&amp;</span> setVerb <span class="st">&quot;GET&quot;</span>)</span></code></pre></div>
+<p><code>Get</code> is a little more interesting because we have to specify a return type. Given our API specification, the parsing of the response body should never fail due to an unexpected type.</p>
+<p>Let’s do <code>ReqBody</code> now. A client function for an endpoint using <code>ReqBody a</code> should <em>supply</em> the request with a body of type <code>a</code>; this means adding an argument to the client function, like we did for server handlers:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Show</span> a <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub) <span class="ot">=</span> a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req <span class="ot">=</span> <span class="op">...</span></span></code></pre></div>
+<p>… wait, what should we write for <code>clientWithRoute</code>? Well, in this instance, <code>clientWithRoute :: Proxy ... -&gt; Req -&gt; Client (ReqBody a :&gt; sub)</code>, which is</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ot">clientWithRoute ::</span> <span class="dt">Proxy</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                <span class="ot">-&gt;</span> <span class="dt">Req</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                <span class="ot">-&gt;</span> (a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub)</span></code></pre></div>
+<p>Since <code>ReqBody</code> never appears at the end of an endpoint definition, we must recur with <code>clientWithRoute</code>. This also requires us to make sure that the sub-API, <code>sub</code>, is an instance of <code>HasClient</code>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> sub, <span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">ReqBody</span> a <span class="op">:&gt;</span> sub) <span class="ot">=</span> a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req body <span class="ot">=</span> clientWithRoute (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> sub) (setBody body req)</span></code></pre></div>
+<p>Great! Let’s do <code>QueryParam</code>. Recall that in our implementation, a query parameter is always optional. Recall that in <code>QueryParam name a</code>, <code>name</code> is a type-level string which we can bring to the values world by using <code>symbolVal</code>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> sub, <span class="dt">KnownSymbol</span> name, <span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">QueryParam</span> name a <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">QueryParam</span> name a <span class="op">:&gt;</span> sub) <span class="ot">=</span> <span class="dt">Maybe</span> a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req param <span class="ot">=</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>        clientWithRoute</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> sub)</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>            (addQueryParam</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>                (symbolVal (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> name))</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                param</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>                req</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>            )</span></code></pre></div>
+<p>After this, a <code>Capture</code> is going to be easy:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> sub, <span class="dt">Show</span> a) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (<span class="dt">Capture</span> name a <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (<span class="dt">Capture</span> name a <span class="op">:&gt;</span> sub) <span class="ot">=</span> a <span class="ot">-&gt;</span> <span class="dt">Client</span> sub</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req capture <span class="ot">=</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>        clientWithRoute</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> sub)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>            (addToPath (<span class="fu">show</span> capture) req)</span></code></pre></div>
+<p>We’re almost done. Path segments only add the the path of the request, but otherwise do not add a parameter to our client function:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> sub, <span class="dt">KnownSymbol</span> segment) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (segment <span class="op">:&gt;</span> sub) <span class="kw">where</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (segment <span class="op">:&gt;</span> sub) <span class="ot">=</span> <span class="dt">Client</span> sub</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> clientWithRoute</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>            (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> sub)</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>            (addToPath (symbolVal (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> segment)) req)</span></code></pre></div>
+<p>Finally, the ever-interesting <code>(:&lt;|&gt;)</code> instance. In this case, no thought is required, since there’s only one thing that will type-check:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">HasClient</span> left, <span class="dt">HasClient</span> right) <span class="ot">=&gt;</span> <span class="dt">HasClient</span> (left <span class="op">:&lt;|&gt;</span> right) <span class="kw">where</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Client</span> (left <span class="op">:&lt;|&gt;</span> right) <span class="ot">=</span> <span class="dt">Client</span> left <span class="op">:&lt;|&gt;</span> <span class="dt">Client</span> right</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    clientWithRoute _ req</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span>    clientWithRoute (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> left) req</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">:&lt;|&gt;</span> clientWithRoute (<span class="dt">Proxy</span><span class="ot"> ::</span> <span class="dt">Proxy</span> right) req</span></code></pre></div>
+<p>Not that much work! How do we connect <code>HasClient</code> with our first demonstration of the function <code>client</code>? Behold:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="ot">client ::</span> <span class="dt">HasClient</span> api <span class="ot">=&gt;</span> <span class="dt">Proxy</span> api <span class="ot">-&gt;</span> <span class="dt">Client</span> api</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>client proxy <span class="ot">=</span> clientWithRoute proxy emptyReq</span></code></pre></div>
+<p>In action, here’s how we can fetch the forecasted temperature on Christmas:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ot">run ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>run <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    networkManager <span class="ot">&lt;-</span> HTTP.newManager HTTP.defaultManagerSettings</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> clientEnv <span class="ot">=</span> <span class="dt">ClientEnv</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                  { hostName <span class="ot">=</span> <span class="st">&quot;myserver.com&quot;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                  , portNumber <span class="ot">=</span> <span class="dv">80</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                  , basePath <span class="ot">=</span> <span class="st">&quot;/api&quot;</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                  , networkManager <span class="ot">=</span> networkManager</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>                  }</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>        christmasDay <span class="ot">=</span> fromGregorian <span class="dv">2025</span> <span class="dv">12</span> <span class="dv">25</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    runClientM clientEnv (forecastAtDate christmasDay) <span class="op">&gt;&gt;=</span> liftIO <span class="op">.</span> <span class="fu">print</span></span></code></pre></div>
+<p><code>forecastAtDate</code> is just a regular function, but there’s a lot going on under the hood!</p>
+<hr>
+<p>Automatically generating client functions for an API is beautiful. It looks like magic, but when we look under the hood, it’s “““just”“” type families, partially-applied functions, <code>Proxy</code>, and recursion.</p>
+<p>Unlike the previous posts, the code above is NOT a highly simplified version of what Servant provides for real clients via <a href="https://hackage.haskell.org/package/servant-client"><code class="has-text-link">servant-client</code></a>. The only thing we’re missing here is support for the real Servant combinators (powering authentication, streaming, HTTP headers, etc), and allowing for other base monads than <code>IO</code>. That’s not bad!</p>]]></summary>
+</entry>
+<entry>
     <title>Serving an API - Servant by construction part 3</title>
     <link href="https://laurentrdc.xyz//posts/servant-by-construction/ServingAnApi.html" />
     <id>https://laurentrdc.xyz//posts/servant-by-construction/ServingAnApi.html</id>
@@ -584,7 +810,7 @@ _ = safeLink (Proxy :: Proxy ("weather" :> "temperature" :> Capture "city" City 
     <link href="https://laurentrdc.xyz//posts/servant-by-construction-introduction.html" />
     <id>https://laurentrdc.xyz//posts/servant-by-construction-introduction.html</id>
     <published>2025-09-26T00:00:00Z</published>
-    <updated>2025-10-30</updated>
+    <updated>2025-11-06</updated>
     <summary type="html"><![CDATA[<p>A large fraction of software engineers work in web development.</p>
 <p>I also do some web development these days, exclusively on the backend. Backend software engineers, just like their frontend counterparts, have streamlined their work by packaging development utilities into <em>frameworks</em>. Even in the relatively small Haskell community, there are many web frameworks, ranging from quick-to-start (<a href="https://github.com/scotty-web/scotty">scotty</a>) to fully-featured-and-opinionated (<a href="https://www.yesodweb.com/">Yesod</a> and <a href="https://ihp.digitallyinduced.com/">IHP</a>).</p>
 <p>The Haskell community has historically been fertile ground for innovation; web development is no different. One framework in particular has pushed the boundary of what it means to write web applications: <a href="https://www.servant.dev/">Servant</a>.
@@ -593,15 +819,16 @@ Don’t be fooled by the deceptively simplistic website: Servant is one of the c
 <p>The first is to use Servant as a concrete application of type-level computation. In this respect, I hope readers can take some of the design ideas from Servant and bring it back to their community, just like <a href="https://hackage.haskell.org/package/QuickCheck">QuickCheck</a> pioneered property-based testing.
 The second is that while Servant is powerful, it remains a rather sophisticated piece of software that is hard to learn and understand. Even with some Haskell experience, Servant is not yet a pick-up-and-go tool; wandering off the beaten path (i.e. doing anything not covered in the <a href="https://docs.servant.dev/">documentation</a>) remains a daunting prospect for many, as it was for me. By studying the inner workings of Servant, we can learn about how to use it, and extend it, effectively.</p>
 <p>I want to celebrate the boldness of Servant, while teaching you about its ways. This is why I am starting a <em>blog series</em>, where I will cover the basics of Servant by <em>implementing</em> a simple version of Servant’s internals, as literate Haskell files. By <em>constructing</em> Servant, we will both learn various techniques involving Haskell’s advanced type system, but also demystify the real Servant library.</p>
-<p>This blog series will build in complexity. We will start by representing an API as a type. This type won’t be useful straight away, but subsequent blog posts will showcase one capability of Servant by using this type, starting with generating type-safe links to endpoints, and culminating somewhere I haven’t decided yet.</p>
-<p>Let’s go!</p>
-<h4 class="title is-4" id="blog-posts-in-this-series">Blog posts in this series</h4>
+<p>This blog series will build in complexity. We will start by representing an API as a type. This type won’t be useful straight away, but subsequent blog posts will showcase one capability of Servant by using this type, starting with generating type-safe links to endpoints, and culminating with automatically generating clients of APIs.</p>
+<p><strong>Blog posts in this series</strong></p>
 <ul>
 <li><a href="/posts/servant-by-construction/ApiAsType.html">An API as a type</a></li>
 <li><a href="/posts/servant-by-construction/TypeSafeLinks.html">Type-safe links</a></li>
 <li><a href="/posts/servant-by-construction/ServingAnApi.html">Serving an API</a></li>
-<li>Automatic derivation of client functions (upcoming)</li>
-</ul>]]></summary>
+<li><a href="/posts/servant-by-construction/GeneratingAClient.html">Automatic derivation of client functions</a></li>
+</ul>
+<p><em>Update</em></p>
+<p>This is the end of the planned posts in the Servant by construction series. If there’s another Servant-related topic you’d like to learn more about, by having me build a simplified version, don’t hesitate to reach out!</p>]]></summary>
 </entry>
 <entry>
     <title>I joined the Haskell Foundation's board of directors</title>
@@ -620,7 +847,7 @@ The second is that while Servant is powerful, it remains a rather sophisticated 
     <link href="https://laurentrdc.xyz//posts/HKTGenerics.html" />
     <id>https://laurentrdc.xyz//posts/HKTGenerics.html</id>
     <published>2025-01-22T00:00:00Z</published>
-    <updated>2025-02-08</updated>
+    <updated>2025-11-06</updated>
     <summary type="html"><![CDATA[<p><em>Featured in <a href="https://haskellweekly.news/issue/456.html">Haskell Weekly issue 456</a></em></p>
 <p>I am a firm believer in the purely functional programming approach, embodied by the Haskell programming language. While the Haskell
 community is not huge, it is large enough that I can work on most domains.</p>
@@ -633,7 +860,7 @@ implementation of a <a href="https://hackage.haskell.org/package/javelin-0.1.4.1
 While this was perfect for my use-case at the time (I wrote about it <a href="/posts/rolling-stats.html">here</a>
 and <a href="/posts/typesafe-tradingstrats.html">here</a>), the typical data scientist is used to columnar the data structure known as the
 <em>dataframe</em>.</p>
-<p>Recently, an effort to <a href="(https://discourse.haskell.org/t/design-dataframes-in-haskell/11108)">design a dataframe interface</a> in Haskell
+<p>Recently, an effort to <a href="https://discourse.haskell.org/t/design-dataframes-in-haskell/11108">design a dataframe interface</a> in Haskell
 has been spearheaded by Michael Chavinda, with a focus on exploratory data science. This effort trades type safety for easier
 interactivity, similar to <a href="https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html">Python’s pandas DataFrames</a>.</p>
 <p>In this blog post, I want to explore a different design tradeoff: what if one were to instead focus on type-safe expressiveness, with
@@ -711,12 +938,12 @@ columns of dataframes easily, like so:</p>
 <p>With <code>longestFirstName</code>, we can glimpse the performance advantage of using dataframes: the <code>userFirstName</code> field is really
 an array, and so finding the longest first name is an operation on an array of string rather than an array of <code>User</code>.</p>
 <p>How can we build a dataframe? We can turn rows of, well, <code>Row User</code> into a single <code>Frame User</code> like so:
-<!-- 
+<!--
     Using the markdown syntax below will prevent the Haskell compiler
     from looking at the code
 --></p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ot">buildUserFrame ::</span> <span class="dt">Vector</span> (<span class="dt">Row</span> <span class="dt">User</span>) <span class="ot">-&gt;</span> <span class="dt">Frame</span> <span class="dt">User</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>buildUserFrame vs </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>buildUserFrame vs</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkUser</span> { userFirstName <span class="ot">=</span> Data.Vector.map userFirstName vs</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>             , userLastName  <span class="ot">=</span> Data.Vector.map userLastName vs</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>             , userAge       <span class="ot">=</span> Data.Vector.map userAge vs</span>
@@ -751,7 +978,7 @@ typeclass on both concrete types at once.</p>
 <p>Enough word salad:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">GFromRows</span> r <span class="co">-- intended to be `Row`-like</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                f <span class="co">-- intended to be `Frame`-like</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span>  </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">where</span></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ot">    gfromRows ::</span> <span class="dt">Vector</span> (r a) <span class="ot">-&gt;</span> (f a)</span></code></pre></div>
 <p>We need to provide instances relating to some (<a href="https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-Generics.html#g:14">but not all</a>)
 generic constructs, including <code>M1</code> (which is always required), <code>K1</code>, and <code>(:*:)</code>.</p>
@@ -764,7 +991,7 @@ generic constructs, including <code>M1</code> (which is always required), <code>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>         , <span class="dt">GFromRows</span> r2 f2</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>         )</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>         <span class="ot">=&gt;</span> <span class="dt">GFromRows</span> (r1 <span class="op">:*:</span> r2) (f1 <span class="op">:*:</span> f2) <span class="kw">where</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    gfromRows vs <span class="ot">=</span> <span class="kw">let</span> (xs, ys) <span class="ot">=</span> Data.Vector.unzip </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    gfromRows vs <span class="ot">=</span> <span class="kw">let</span> (xs, ys) <span class="ot">=</span> Data.Vector.unzip</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                                <span class="op">$</span> Data.Vector.map (\(x <span class="op">:*:</span> y) <span class="ot">-&gt;</span> (x, y)) vs</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">in</span> gfromRows xs <span class="op">:*:</span> gfromRows ys</span></code></pre></div>
 <p>Finally, onto the representation of fields of constructors, <code>K1</code>:</p>
@@ -780,12 +1007,12 @@ some sense, the instance involving the representation <code>K1</code> is the fou
 <p>We can now fill in the default implementation of <code>fromRows</code>:</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode haskell literate"><code class="sourceCode haskell"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> <span class="dt">FromRows</span> t <span class="kw">where</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ot">    fromRows ::</span> <span class="dt">Vector</span> (<span class="dt">Row</span> t) <span class="ot">-&gt;</span> <span class="dt">Frame</span> t</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    default<span class="ot"> fromRows ::</span> ( <span class="dt">Generic</span> (<span class="dt">Row</span> t)</span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                        , <span class="dt">Generic</span> (<span class="dt">Frame</span> t)</span>
 <span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                        , <span class="dt">GFromRows</span> (<span class="dt">Rep</span> (<span class="dt">Row</span> t)) (<span class="dt">Rep</span> (<span class="dt">Frame</span> t))</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                        ) </span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">=&gt;</span> <span class="dt">Vector</span> (<span class="dt">Row</span> t) </span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                        )</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">=&gt;</span> <span class="dt">Vector</span> (<span class="dt">Row</span> t)</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                     <span class="ot">-&gt;</span> <span class="dt">Frame</span> t</span>
 <span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    fromRows <span class="ot">=</span> to                   <span class="co">-- Turn `Rep (Frame t)` back into `Frame t`</span></span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>             <span class="op">.</span> gfromRows            <span class="co">-- Vector (Rep (Row t)) -&gt; Rep (Frame t)</span></span>
@@ -813,7 +1040,7 @@ How about nesting dataframes types? Consider this:</p>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">deriving</span> (<span class="dt">Generic</span>)</span>
 <span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">FromRows</span> <span class="dt">Address</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Store</span> f</span>
 <span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStore</span> {<span class="ot"> storeName    ::</span> <span class="dt">Column</span> f <span class="dt">String</span></span>
 <span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>              ,<span class="ot"> storeAddress ::</span> <span class="dt">Address</span> f</span>
@@ -1098,7 +1325,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
     <link href="https://laurentrdc.xyz//posts/typesafe-tradingstrats.html" />
     <id>https://laurentrdc.xyz//posts/typesafe-tradingstrats.html</id>
     <published>2024-02-04T00:00:00Z</published>
-    <updated>2025-02-08</updated>
+    <updated>2025-11-06</updated>
     <summary type="html"><![CDATA[<p>I work in the business of algorithmic power trading, which is the automated trading of various power-related products in regulated <a href="https://en.wikipedia.org/wiki/Electricity_market">electricity markets</a>. Products include short-term inter-jurisdiction arbitrage, financial transmission rights, and more.</p>
 <p>This year, my employer is expanding its trading operations to a new class of products. Since there is no overlap between this new work and our current operations, I got to design a technology stack most suited for the task. This technology stack includes Haskell, most importantly because wrong or unexpected trading decisions can (and have) cost us dearly.</p>
 <p>In this blog post, I want to show you the basics of how we designed the framework in which to express trading strategies.</p>
@@ -1112,8 +1339,8 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <p>In this case, the result of this strategy is some signal to buy or sell AAPL stock. We can run our strategy in a loop:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Control.Monad</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Action</span> <span class="ot">=</span> <span class="dt">Buy</span> <span class="dt">Int</span> </span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Sell</span> </span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Action</span> <span class="ot">=</span> <span class="dt">Buy</span> <span class="dt">Int</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Sell</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span> <span class="dt">Hold</span></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Price</span> <span class="ot">=</span> <span class="dt">Double</span></span>
@@ -1158,14 +1385,14 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Pipes.Prelude</span> <span class="kw">as</span> <span class="dt">Pipes</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- | From a stream of input features, produce a stream</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- of output &#39;Market&#39; actions </span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestStrategy ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- of output &#39;Market&#39; actions</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestStrategy ::</span> <span class="dt">Monad</span> m</span>
 <span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">=&gt;</span> <span class="dt">Strategy</span> r</span>
 <span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m () <span class="co">-- ^ stream of timestamped AAPL prices</span></span>
 <span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>backtestStrategy strat prices </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span>   prices </span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, f) <span class="ot">-&gt;</span> (k, runStrategy strat f)) </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>backtestStrategy strat prices</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span>   prices</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, f) <span class="ot">-&gt;</span> (k, runStrategy strat f))</span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> simulateMarketActions</span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">-- The following is out-of-scope</span></span>
@@ -1177,7 +1404,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <h2 class="title is-2" id="more-expressive-strategies">More expressive strategies</h2>
 <p>I have a problem with the above definition of <code>Strategy</code>: I’m limited to strategies based on the single, most recent <code>Price</code>. What if I had a good idea for a strategy which involves the last 10 price values? Our <code>Strategy</code> type is not expressive enough: it only takes one type of <em>feature</em>, while we want to support a wide range of features.</p>
 <p>I will define a <code>Strategy</code> type which removes restrictions on the input feature:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Strategy</span> r </span>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">Strategy</span> r</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> {<span class="ot"> runStrategy ::</span> r <span class="ot">-&gt;</span> <span class="dt">Action</span> }</span></code></pre></div>
 <p>with the understanding that the data of type <code>r</code> is somehow <em>derived</em> from prices.</p>
 <p>What are some features derived from prices, that we might be interested in?</p>
@@ -1192,15 +1419,15 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Series</span> ( <span class="dt">Series</span> )</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">-- Feature I may want to use in a strategy</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">-- Parameters that may affect the featyre `PriceHistory`</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">NumTicks</span> </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">NumTicks</span></span>
 <span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkNumTicks</span> {<span class="ot"> numTicks ::</span> <span class="dt">Int</span> }</span></code></pre></div>
 <h2 class="title is-2" id="typed-features-and-their-parametrization">Typed features and their parametrization</h2>
 <p>We could list all possible features in a big sum type:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Feature</span> </span>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Feature</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">FPrice</span> <span class="dt">Price</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">FPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">|</span> <span class="dt">FAveragePrice</span> <span class="dt">Price</span></span>
@@ -1213,19 +1440,19 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- needs to specify. See examples below.</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> r</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m</span>
 <span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">Parameters</span> r</span>
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, r) m ()</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestStrategy ::</span> (<span class="dt">Feature</span> r, <span class="dt">Monad</span> m) </span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestStrategy ::</span> (<span class="dt">Feature</span> r, <span class="dt">Monad</span> m)</span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">=&gt;</span> <span class="dt">Strategy</span> r</span>
 <span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Parameters</span> r</span>
 <span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m ()</span>
 <span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>                 <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>backtestStrategy strat params prices </span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span>   deriveFeature params prices </span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, feature) <span class="ot">-&gt;</span> (k, runStrategy strat feature)) </span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>backtestStrategy strat params prices</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span>   deriveFeature params prices</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> Pipes.map (\(k, feature) <span class="ot">-&gt;</span> (k, runStrategy strat feature))</span>
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">&gt;-&gt;</span> simulateMarketActions</span></code></pre></div>
 <p>Let’s look at two example instances of <code>Feature</code>. The simplest is the basic feature or <code>Price</code>:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">NoParameters</span> <span class="ot">=</span> ()</span>
@@ -1234,64 +1461,64 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- The `Price` feature has no free parameters</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> <span class="dt">Price</span> <span class="ot">=</span> <span class="dt">NoParameters</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m</span>
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">NoParameters</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    deriveFeatures _ prices <span class="ot">=</span> prices</span></code></pre></div>
 <p>This is easy because there are no parameters. What about looking at the price history?</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span> </span>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">PriceHistory</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkPriceHistory</span> (<span class="dt">Series</span> <span class="dt">UTCTime</span> <span class="dt">Price</span>)</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">NumTicks</span> </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">newtype</span> <span class="dt">NumTicks</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkNumTicks</span> {<span class="ot"> numTicks ::</span> <span class="dt">Int</span> }</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> <span class="dt">Feature</span> <span class="dt">PriceHistory</span> <span class="kw">where</span></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> <span class="dt">PriceHistory</span> <span class="ot">=</span> <span class="dt">NumTicks</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m</span>
 <span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">NumTicks</span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">PriceHistory</span>) m ()</span>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>    deriveFeature (<span class="dt">MkPriceHistoryParameters</span> numTicks) prices</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> prices <span class="op">&gt;-&gt;</span> accumulate numTicks </span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> prices <span class="op">&gt;-&gt;</span> accumulate numTicks</span>
 <span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                 <span class="op">&gt;-&gt;</span> Pipes.map (\xs <span class="ot">-&gt;</span> (<span class="fu">maximum</span> <span class="op">$</span> Series.index xs, <span class="dt">MkPriceHistory</span> xs))</span>
 <span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">where</span></span>
 <span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>            <span class="co">-- out of scope, see end of blog post for link to source</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="ot">            accumulate ::</span> <span class="dt">Functor</span> m </span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="ot">            accumulate ::</span> <span class="dt">Functor</span> m</span>
 <span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">=&gt;</span> <span class="dt">Int</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">-&gt;</span> <span class="dt">Pipe</span> (<span class="dt">UTCTime</span>, a) (<span class="dt">Series</span> <span class="dt">UTCTime</span> a) m () </span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            accumulate <span class="ot">=</span> (<span class="op">...</span>) </span></code></pre></div>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                       <span class="ot">-&gt;</span> <span class="dt">Pipe</span> (<span class="dt">UTCTime</span>, a) (<span class="dt">Series</span> <span class="dt">UTCTime</span> a) m ()</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            accumulate <span class="ot">=</span> (<span class="op">...</span>)</span></code></pre></div>
 <p>Finally, as an example of the power of this approach, we’ll create a strategy which combines two features.</p>
 <p>First, we’ll extend the <code>Feature</code> class to combine two features <code>a</code> and <code>b</code> into one <code>(a, b)</code> feature:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">instance</span> (<span class="dt">Feature</span> a, <span class="dt">Feature</span> b) <span class="ot">=&gt;</span> <span class="dt">Feature</span> (a, b) <span class="kw">where</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">type</span> <span class="dt">Parameters</span> (a, b) <span class="ot">=</span> (<span class="dt">Parameters</span> a, <span class="dt">Parameters</span> b)</span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ot">    deriveFeature ::</span> <span class="dt">Monad</span> m</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">=&gt;</span> <span class="dt">Parameters</span> (a, b)</span>
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>)  m ()</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>                  <span class="ot">-&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, (a, b)) m ()</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    deriveFeature (paramsA, paramsB) prices </span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> Pipes.zipWith (\(k,a) (_, b) <span class="ot">-&gt;</span> (k, (a, b))) </span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                        (deriveFeature paramsA prices) </span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    deriveFeature (paramsA, paramsB) prices</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="ot">=</span> Pipes.zipWith (\(k,a) (_, b) <span class="ot">-&gt;</span> (k, (a, b)))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                        (deriveFeature paramsA prices)</span>
 <span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>                        (deriveFeature paramsB prices)</span></code></pre></div>
 <p>Second, we’ll define a simple strategy that compares the most recent price against the average price of the last 10 ticks:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="dt">Data.Series</span> ( fold, mean )</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ot">finalStrategy ::</span> <span class="dt">Strategy</span> (<span class="dt">PriceHistory</span>, <span class="dt">Price</span>)</span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>finalStrategy </span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> <span class="op">$</span> \(<span class="dt">MkPriceHistory</span> history, price) </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>finalStrategy</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="ot">=</span> <span class="dt">MkStrategy</span> <span class="op">$</span> \(<span class="dt">MkPriceHistory</span> history, price)</span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="ot">-&gt;</span> <span class="kw">let</span> avgPrice <span class="ot">=</span> fold mean history</span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>            <span class="kw">in</span> <span class="kw">case</span> price <span class="ot">`compare`</span> avgPrice <span class="kw">of</span></span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                <span class="dt">GT</span> <span class="ot">-&gt;</span> <span class="dt">Sell</span></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>                <span class="dt">LT</span> <span class="ot">-&gt;</span> <span class="dt">Buy</span> <span class="dv">10</span></span>
 <span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>                <span class="dt">EQ</span> <span class="ot">-&gt;</span> <span class="dt">Hold</span></span></code></pre></div>
 <p>It is trivial to backtest this strategy like so:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestFinalStrategy ::</span> <span class="dt">Monad</span> m </span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                      <span class="ot">=&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m () </span>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">backtestFinalStrategy ::</span> <span class="dt">Monad</span> m</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                      <span class="ot">=&gt;</span> <span class="dt">Producer</span> (<span class="dt">UTCTime</span>, <span class="dt">Price</span>) m ()</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                      <span class="ot">-&gt;</span> m <span class="dt">BacktestResults</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>backtestFinalStrategy <span class="ot">=</span> backtestStrategy finalStrategy ( <span class="dt">MkNumTicks</span> <span class="dv">10</span>, () ) </span></code></pre></div>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>backtestFinalStrategy <span class="ot">=</span> backtestStrategy finalStrategy ( <span class="dt">MkNumTicks</span> <span class="dv">10</span>, () )</span></code></pre></div>
 <p>and voilà!</p>
 <h2 class="title is-2" id="conclusion">Conclusion</h2>
 <p>In this post, I have shown you how to define trading strategies with typed feature parametrization, which is a neat use of type families. It takes advantage of the Haskell type system for type safety AND extensibility to easily create new features.</p>
@@ -1300,368 +1527,7 @@ In order to get both startup and industry experience, I joined SocïVolta, a tec
 <hr />
 <ol>
 <li id="fn1"><p>If you are unfamiliar with <code>pipes</code>, you should check out its <a href="https://hackage.haskell.org/package/pipes-4.3.16/docs/Pipes-Tutorial.html">tutorial</a>.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>We are storing the price history in a <code>Series</code>, which comes from the <a href="hackage.haskell.org/package/javelin"><code>javelin</code> package</a> that I created specifically for this work.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol>
-</section>]]></summary>
-</entry>
-<entry>
-    <title>The algebraic structure of a trading stop-loss system</title>
-    <link href="https://laurentrdc.xyz//posts/algebra-stoploss.html" />
-    <id>https://laurentrdc.xyz//posts/algebra-stoploss.html</id>
-    <published>2023-05-07T00:00:00Z</published>
-    <updated>2025-02-08</updated>
-    <summary type="html"><![CDATA[<p>I was once an undergraduate student in a joint Mathematics &amp; Physics program. Some of the math courses, namely group theory and algebra, remained very abstract to me throughout my education. There is some group theory in the description of symmetries of physical systems; but being an experimentalist, I didn’t use more than 5% of what I learned in my undergrad during my PhD.</p>
-<p>However, in the course of my work now in finance, I had the pleasure of discovering that I was actually working with an algebraic structure. This post describes how that happened.</p>
-<hr />
-<p>The small trading firm for which I work is focusing a bit more on automated performance monitoring these days. With detailed trading performance data streaming in, it is now a good time to implement a <em>stop-loss system</em>.</p>
-<p>A stop-loss system is a system which receives trading performance data, and emits three categories of signal:</p>
-<ul>
-<li>an all-clear signal, meaning that nothing in recent trading performance indicates a problem;</li>
-<li>a warning signal, meaning that recent trading performance is degraded – but not yet concerning – and a human should take a look under the hood;</li>
-<li>a halt signal, meaning that there is most probably something wrong, trading should be halted at once.</li>
-</ul>
-<p>Of course, we’re trading different products in different markets and even jurisdictions, and therefore the trading performance of every product is monitored independently. Moreover, our risk tolerance or expectations may be different for every product, and so a stop-loss system is really a framework in which to express multiple stop-loss rules, with different products being supervised by completely different stop-loss rules.</p>
-<p>Let us consider examples: assume that we’re trading a particular stock like AAPL<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a>. Sensible stop-loss rules might be:</p>
-<ul>
-<li>If our current position has lost &gt;10% in value over the last month, emit a warning; if the position has lost &gt;25% over the last month, emit a halt signal.</li>
-<li>If we’re expecting market volatility in the next hour to be high (for example, due to expected high-impact news), emit a halt signal.</li>
-<li>If our forecast of the ticker price is <strong>way off</strong> – perhaps due to a problem in the forecasting model –, emit a halt signal.</li>
-</ul>
-<p>Here is what a rule framework might looks like<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> enum <span class="im">import</span> Enum, auto, unique</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Callable</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="at">@unique</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Signal(Enum):</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    AllClear <span class="op">=</span> auto()</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    Warn     <span class="op">=</span> auto()</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    Halt     <span class="op">=</span> auto()</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Context:</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>Rule <span class="op">=</span> Callable[[Context], Signal]</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Example rule</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>    ...</span></code></pre></div>
-<p>A <code>Rule</code> is a function from some <code>Context</code> object to a <code>Signal</code>. We’re packing all information required to make decisions in a single data structure for reasons which will become obvious shortly. In this framework, we may express one of the stop loss rule examples as:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    recent_loss <span class="op">=</span> loss_percent( context.recent_performance(period<span class="op">=</span><span class="st">&quot;30d&quot;</span>) )</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> recent_loss <span class="op">&gt;</span> <span class="fl">0.25</span>:</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Halt</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> recent_loss <span class="op">&gt;</span> <span class="fl">0.10</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Warn</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.AllClear</span></code></pre></div>
-<p>For the remainder of this post, I don’t care anymore about the domain-specific content of a rule.</p>
-<p>My colleagues and I are expecting that, in practice, we will have pretty complex rules. In order to build complex rules from smaller, simpler rules, I wanted to be able to compose <code>Rule</code>s together. This is straightforward because all rules have the same input and output types. Consider two rules, <code>rule1</code> and <code>rule2</code>. If I want a new rule to halt if both <code>rule1</code> and <code>rule2</code> emit <code>Signal.Halt</code>, I could write it like this:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule1(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule2(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule_lax(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    sig1 <span class="op">=</span> rule1(context)</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    sig2 <span class="op">=</span> rule2(context)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> sig1 <span class="op">==</span> sig2 <span class="op">==</span> Signal.Halt:</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Halt</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> sig1 <span class="op">==</span> sig2 <span class="op">==</span> Signal.Warn:</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Warn</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.AllClear</span></code></pre></div>
-<p>That is an acceptable definition of rule composition. Since <code>rule_lax</code> will emit a <code>Halt</code> signal if both sub-rules emit a <code>Halt</code> signal, we’ll call this type of composition <em>conjunction</em>. In order to make it more ergonomic to write, let us wrap all rules in an object and re-use the <code>&amp;</code> (overloaded and) operator:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dataclasses <span class="im">import</span> dataclass</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> enum <span class="im">import</span> Enum</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> operator <span class="im">import</span> attrgetter</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Signal(Enum):</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Signals can be composed using (&amp;):</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.AllClear &amp; Signal.AllClear</span></span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.AllClear: 1 &gt; </span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.Warn &amp; Signal.Halt</span></span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.Warn: 2 &gt; </span></span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.Halt &amp; Signal.Halt</span></span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.Halt: 3 &gt;</span></span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    AllClear <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    Warn     <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    Halt     <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__and__</span>(<span class="va">self</span>, other: <span class="st">&quot;Signal&quot;</span>) <span class="op">-&gt;</span> <span class="st">&quot;Signal&quot;</span>:</span>
-<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">min</span>(<span class="va">self</span>, other, key<span class="op">=</span>attrgetter(<span class="st">&#39;value&#39;</span>))</span>
-<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
-<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> rule(Callable):</span>
-<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    _inner: Callable[[Context], Signal]</span>
-<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._inner.<span class="fu">__call__</span>(context<span class="op">=</span>context)</span>
-<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__and__</span>(<span class="va">self</span>, other: <span class="st">&quot;rule&quot;</span>):</span>
-<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> newinner(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> rule1(context) <span class="op">&amp;</span> rule2(context)</span>
-<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.<span class="va">__class__</span>(newinner)</span></code></pre></div>
-<p>and now we can re-write <code>rule_lax</code> like so:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The @rule decorator is required in order to lift rule1 from a regular function</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to the `rule` object</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="at">@rule</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule1(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="at">@rule</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule2(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>rule_lax <span class="op">=</span> rule1 <span class="op">&amp;</span> rule2</span></code></pre></div>
-<p>Now, <code>rule_lax</code> is defined such that it’ll emit <code>Signal.Halt</code> if both <code>rule1</code> and <code>rule2</code> emit <code>Signal.Halt</code>. The same is true of warnings; if both rules emit a warning, then <code>rule_lax</code> will emit <code>Signal.Warning</code>. Here is a table which summarizes this composition:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math></th>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math></th>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mspace width="0.222em"></mspace><mi>&amp;</mi><mspace width="0.222em"></mspace><mi>B</mi></mrow><annotation encoding="application/x-tex">A ~ \&amp; ~ B</annotation></semantics></math></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-</tr>
-</tbody>
-</table>
-<p>where <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math> is <code>Signal.AllClear</code>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math> is <code>Signal.Warning</code>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math> is <code>Signal.Halt</code>. Therefore, <code>&amp;</code> is a binary function from <code>Rule</code>s to <code>Rule</code>.</p>
-<p>This is not the <em>only</em> natural way to compose rules. What about this?</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule_strict(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    sig1 <span class="op">=</span> rule1(context)</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    sig2 <span class="op">=</span> rule2(context)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (sig1 <span class="op">==</span> Signal.Halt) <span class="kw">or</span> (sig2 <span class="op">==</span> Signal.Halt):</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.Halt</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> (sig1 <span class="op">==</span> Signal.<span class="pp">Warning</span>) <span class="kw">or</span> (sig2 <span class="op">==</span> Signal.<span class="pp">Warning</span>):</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.<span class="pp">Warning</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> Signal.AllClear</span></code></pre></div>
-<p>In this case, <code>rule_strict</code> is more, uh, strict than <code>rule_lax</code>; it emits <code>Signal.Halt</code> if <strong>either</strong> <code>rule1</code> or <code>rule2</code> emits a stop signal. We’ll call this composition <em>disjunction</em> and re-use the <code>|</code> (overloaded or) operator to make it more ergonomic to write:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Signal(Enum):</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Signals can be composed using (&amp;) and (|):</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.AllClear &amp; Signal.AllClear</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.AllClear: 1 &gt; </span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.Warn &amp; Signal.Halt</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.Warn: 2 &gt; </span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">    &gt;&gt;&gt; Signal.Warn | Signal.Halt</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">    &lt; Signal.Halt: 3 &gt;</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    AllClear <span class="op">=</span> <span class="dv">1</span></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    Warn     <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    Halt     <span class="op">=</span> <span class="dv">3</span></span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__and__</span>(<span class="va">self</span>, other: <span class="st">&quot;Signal&quot;</span>) <span class="op">-&gt;</span> <span class="st">&quot;Signal&quot;</span>:</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">min</span>(<span class="va">self</span>, other, key<span class="op">=</span>attrgetter(<span class="st">&#39;value&#39;</span>))</span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__or__</span>(<span class="va">self</span>, other: <span class="st">&quot;Signal&quot;</span>) <span class="op">-&gt;</span> <span class="st">&quot;Signal&quot;</span>:</span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="bu">max</span>(<span class="va">self</span>, other, key<span class="op">=</span>attrgetter(<span class="st">&#39;value&#39;</span>))</span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> rule(Callable):</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    _inner: Callable[[Context], Signal]</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._inner.<span class="fu">__call__</span>(context<span class="op">=</span>context)</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    </span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__and__</span>(<span class="va">self</span>, other: <span class="st">&quot;rule&quot;</span>):</span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> newinner(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> rule1(context) <span class="op">&amp;</span> rule2(context)</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.<span class="va">__class__</span>(newinner)</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__or__</span>(<span class="va">self</span>, other: <span class="st">&quot;rule&quot;</span>):</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> newinner(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> rule1(context) <span class="op">|</span> rule2(context)</span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.<span class="va">__class__</span>(newinner)</span></code></pre></div>
-<p>With this implementation, we can express <code>rule_lax</code> and <code>rule_strict</code> as:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The @rule decorator is required in order to lift rule1 from a regular function</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># to the `rule` object</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="at">@rule</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule1(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="at">@rule</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> rule2(context: Context) <span class="op">-&gt;</span> Signal:</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    ...</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>rule_lax    <span class="op">=</span> rule1 <span class="op">&amp;</span> rule2</span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>rule_strict <span class="op">=</span> rule1 <span class="op">|</span> rule2</span></code></pre></div>
-<p>We can update the table for the definition of <code>&amp;</code> and <code>|</code>:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>A</mi><annotation encoding="application/x-tex">A</annotation></semantics></math></th>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>B</mi><annotation encoding="application/x-tex">B</annotation></semantics></math></th>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mspace width="0.222em"></mspace><mi>&amp;</mi><mspace width="0.222em"></mspace><mi>B</mi></mrow><annotation encoding="application/x-tex">A ~ \&amp; ~ B</annotation></semantics></math></th>
-<th style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>A</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">|</mo><mspace width="0.222em"></mspace><mi>B</mi></mrow><annotation encoding="application/x-tex">A ~ | ~ B</annotation></semantics></math></th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>C</mi><annotation encoding="application/x-tex">C</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>W</mi><annotation encoding="application/x-tex">W</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-</tr>
-<tr>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-<td style="text-align: center;"><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>H</mi><annotation encoding="application/x-tex">H</annotation></semantics></math></td>
-</tr>
-</tbody>
-</table>
-<p>So for a given a given <code>Context</code>, which is fixed when the trading stop-loss system is running, we have:</p>
-<ul>
-<li>A set of rule outcomes of type <code>Signal</code>;</li>
-<li>A binary operation called <em>conjunction</em> (the <code>&amp;</code> operator);
-<ul>
-<li><code>&amp;</code> is associative;</li>
-<li><code>&amp;</code> is commutative;</li>
-<li><code>&amp;</code> has an identity, <code>Signal.Halt</code>;</li>
-<li><code>&amp;</code> does NOT have an inverse element.</li>
-</ul></li>
-<li>A binary operation called <em>disjunction</em> (the <code>|</code> operator).
-<ul>
-<li><code>|</code> is associative;</li>
-<li><code>|</code> is commutative;</li>
-<li><code>|</code> has an identity, <code>Signal.AllClear</code>;</li>
-<li><code>|</code> does NOT have an inverse element.</li>
-</ul></li>
-</ul>
-<p>That looks like a commutative semiring to me! Just a few more things to check:</p>
-<ul>
-<li><code>|</code> distributes from both sides over <code>&amp;</code>:
-<ul>
-<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>a</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">|</mo><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mspace width="0.222em"></mspace><mi>&amp;</mi><mspace width="0.222em"></mspace><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">|</mo><mspace width="0.222em"></mspace><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.222em"></mspace><mi>&amp;</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mspace width="0.222em"></mspace><mi>&amp;</mi><mspace width="0.222em"></mspace><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">a ~|~ (b ~\&amp;~ c)=(a ~|~ b) ~\&amp;~ (a ~\&amp;~ c)</annotation></semantics></math> for all <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>;</li>
-<li><math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mspace width="0.222em"></mspace><mi>&amp;</mi><mspace width="0.222em"></mspace><mi>b</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">|</mo><mspace width="0.222em"></mspace><mi>c</mi><mo>=</mo><mo stretchy="false" form="prefix">(</mo><mi>a</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">|</mo><mspace width="0.222em"></mspace><mi>c</mi><mo stretchy="false" form="postfix">)</mo><mspace width="0.222em"></mspace><mi>&amp;</mi><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">(</mo><mi>b</mi><mspace width="0.222em"></mspace><mi>&amp;</mi><mspace width="0.222em"></mspace><mi>c</mi><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">(a ~ \&amp; ~ b) ~|~ c = (a ~|~ c) ~\&amp;~ (b ~\&amp;~ c)</annotation></semantics></math> for all <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>, <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>b</mi><annotation encoding="application/x-tex">b</annotation></semantics></math>, and <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>c</mi><annotation encoding="application/x-tex">c</annotation></semantics></math>.</li>
-</ul></li>
-<li>The identity element of <code>&amp;</code> (called <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mn>0</mn><annotation encoding="application/x-tex">0</annotation></semantics></math>, in this case <code>Signal.Halt</code>) annihilates the <code>|</code> operation, i.e. <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mspace width="0.222em"></mspace><mo stretchy="false" form="prefix">|</mo><mspace width="0.222em"></mspace><mi>a</mi><mo>=</mo><mn>0</mn></mrow><annotation encoding="application/x-tex">0 ~ | ~ a = 0</annotation></semantics></math> for all <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>a</mi><annotation encoding="application/x-tex">a</annotation></semantics></math>.</li>
-</ul>
-<p>Don’t take my word for it, we can check exhaustively:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itertools <span class="im">import</span> product</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>zero <span class="op">=</span> Signal.Halt</span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>one  <span class="op">=</span> Signal.AllClear</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert &amp; is associative</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (a <span class="op">&amp;</span> b) <span class="op">&amp;</span> c <span class="op">==</span> a <span class="op">&amp;</span> (b <span class="op">&amp;</span> c) <span class="cf">for</span> (a, b, c) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">3</span>)  )</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert &amp; is commutative</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( a <span class="op">&amp;</span> b <span class="op">==</span> b <span class="op">&amp;</span> a <span class="cf">for</span> (a, b) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">2</span>)  )</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert &amp; has an identity</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( a <span class="op">&amp;</span> zero <span class="op">==</span> a <span class="cf">for</span> a <span class="kw">in</span> Signal )</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert | is associative</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (a <span class="op">|</span> b) <span class="op">|</span> c <span class="op">==</span> a <span class="op">|</span> (b <span class="op">|</span> c) <span class="cf">for</span> (a, b, c) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">3</span>)  )</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert | has an identity</span></span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( a <span class="op">|</span> one <span class="op">==</span> a <span class="cf">for</span> a <span class="kw">in</span> Signal )</span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert | distributes over &amp; on both sides</span></span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( a <span class="op">|</span> (b <span class="op">&amp;</span> c) <span class="op">==</span> (a <span class="op">|</span> b) <span class="op">&amp;</span> (a <span class="op">|</span> c) <span class="cf">for</span> (a, b, c) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">3</span>)  )</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (a <span class="op">&amp;</span> b) <span class="op">|</span> c <span class="op">==</span> (a <span class="op">|</span> c) <span class="op">&amp;</span> (b <span class="op">|</span> c) <span class="cf">for</span> (a, b, c) <span class="kw">in</span> product(Signal, repeat<span class="op">=</span><span class="dv">3</span>)  )</span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Assert identity of &amp; annihilates with respect to |</span></span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> <span class="bu">all</span>( (zero <span class="op">|</span> a) <span class="op">==</span> zero <span class="cf">for</span> a <span class="kw">in</span> Signal)</span></code></pre></div>
-<p>and there we have it! This design of a trading stop-loss system is an example of commutative semirings. This fact does absolutely nothing in the practical sense; I’m just happy to have spotted this structure more than 10 years after seeing it in undergrad.</p>
-<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
-<hr />
-<ol>
-<li id="fn1"><p>I’m actually not involved in trading securities at all, but I think intuition about stock markets is more common<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-<li id="fn2"><p>I’ll be using Python in this post because it was a requirement of the implementation, but know that I’m doing this under protest.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>We are storing the price history in a <code>Series</code>, which comes from the <a href="https://hackage.haskell.org/package/javelin"><code>javelin</code> package</a> that I created specifically for this work.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 </ol>
 </section>]]></summary>
 </entry>
