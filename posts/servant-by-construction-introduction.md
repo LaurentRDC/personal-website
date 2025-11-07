@@ -1,7 +1,7 @@
 ---
-title: "Servant by construction - a blog series"
+title: "Servant by construction - a blog series on Haskell's web stack gem"
 date: 2025-09-26
-summary: I introduce a new blog series where we will learn about Servant, a Haskell web framework powered by cutting-edge type features, by building simple versions of its important features.
+summary: I introduce a new blog series where we will learn about Servant, a Haskell web framework powered by cutting-edge type-level computation, by building simple versions of its important features.
 tags: haskell, web, software engineering, servant by construction
 ---
 
