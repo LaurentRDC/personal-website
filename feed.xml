@@ -805,7 +805,7 @@ _ = safeLink (Proxy :: Proxy ("weather" :> "temperature" :> Capture "city" City 
     <dc:creator>Laurent P. René de Cotret</dc:creator>
 </item>
 <item>
-    <title>Servant by construction - a blog series</title>
+    <title>Servant by construction - a blog series on Haskell's web stack gem</title>
     <link>https://laurentrdc.xyz//posts/servant-by-construction-introduction.html</link>
     <description><![CDATA[<p>A large fraction of software engineers work in web development.</p>
 <p>I also do some web development these days, exclusively on the backend. Backend software engineers, just like their frontend counterparts, have streamlined their work by packaging development utilities into <em>frameworks</em>. Even in the relatively small Haskell community, there are many web frameworks, ranging from quick-to-start (<a href="https://github.com/scotty-web/scotty">scotty</a>) to fully-featured-and-opinionated (<a href="https://www.yesodweb.com/">Yesod</a> and <a href="https://ihp.digitallyinduced.com/">IHP</a>).</p>
