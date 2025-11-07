@@ -19,14 +19,15 @@ The second is that while Servant is powerful, it remains a rather sophisticated 
 
 I want to celebrate the boldness of Servant, while teaching you about its ways. This is why I am starting a *blog series*, where I will cover the basics of Servant by *implementing* a simple version of Servant's internals, as literate Haskell files. By *constructing* Servant, we will both learn various techniques involving Haskell's advanced type system, but also demystify the real Servant library.
 
-This blog series will build in complexity. We will start by representing an API as a type. This type won't be useful straight away, but subsequent blog posts will showcase one capability of Servant by using this type, starting with generating type-safe links to endpoints, and culminating somewhere I haven't decided yet.
+This blog series will build in complexity. We will start by representing an API as a type. This type won't be useful straight away, but subsequent blog posts will showcase one capability of Servant by using this type, starting with generating type-safe links to endpoints, and culminating with automatically generating clients of APIs.
 
-Let's go!
-
-#### Blog posts in this series
-
+**Blog posts in this series**
 
 * [An API as a type](/posts/servant-by-construction/ApiAsType.html)
 * [Type-safe links](/posts/servant-by-construction/TypeSafeLinks.html)
 * [Serving an API](/posts/servant-by-construction/ServingAnApi.html)
-* Automatic derivation of client functions (upcoming)
+* [Automatic derivation of client functions](/posts/servant-by-construction/GeneratingAClient.html)
+
+*Update*
+
+This is the end of the planned posts in the Servant by construction series. If there's another Servant-related topic you'd like to learn more about, by having me build a simplified version, don't hesitate to reach out!

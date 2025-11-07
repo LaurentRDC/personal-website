@@ -98,10 +98,12 @@ library servant-by-construction
   ghc-options:         -Wno-missing-export-lists -Wno-redundant-constraints
   build-depends:       base
                      , bytestring
+                     , http-client
                      , http-types
                      , text
                      , time
+                     , transformers
                      , wai
                      , warp
   hs-source-dirs:      posts/servant-by-construction/
-  exposed-modules:     ApiAsType, TypeSafeLinks, ServingAnApi
+  exposed-modules:     ApiAsType, TypeSafeLinks, ServingAnApi, GeneratingAClient
