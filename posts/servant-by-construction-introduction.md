@@ -5,6 +5,8 @@ summary: I introduce a new blog series where we will learn about Servant, a Hask
 tags: haskell, web, software engineering, servant by construction
 ---
 
+*Featured in [Haskell Weekly issue 498](https://haskellweekly.news/issue/498.html)*
+
 A large fraction of software engineers work in web development.
 
 I also do some web development these days, exclusively on the backend. Backend software engineers, just like their frontend counterparts, have streamlined their work by packaging development utilities into *frameworks*. Even in the relatively small Haskell community, there are many web frameworks, ranging from quick-to-start ([scotty](https://github.com/scotty-web/scotty)) to fully-featured-and-opinionated ([Yesod](https://www.yesodweb.com/) and [IHP](https://ihp.digitallyinduced.com/)).
