@@ -64,6 +64,10 @@ title: About me
 
 ## Volunteering
 
+* December 2025 - | [__Haskell Foundation__](https://haskell.foundation/) | Vice-chair
+
+    <p></p>
+
 * April 2025 - | [__Haskell Foundation__](https://haskell.foundation/) | Board member
 
     The Haskell Foundation's board of directors is responsible for steering the foundation's executive team. In particular, the board influences how the Foundation's resources are spent.
