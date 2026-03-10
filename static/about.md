@@ -64,6 +64,18 @@ title: About me
 
 ## Volunteering
 
+* March 2026 - August 2026 | [__ICFP FUNARCH 2026__](https://icfp26.sigplan.org/home/funarch-2026) | Program committee
+
+    The International Conference on Functional Programming's FUNARCH workshop is dedicated to functional software architecture.
+
+    The goals for the workshop are:
+
+     * To assemble a community interested in software architecture techniques and technologies specific to functional programming;
+     * To identify, categorize, and document topics relevant to the field of functional software architecture;
+     * To connect the functional programming community to the software architecture community to cross-pollinate between the two.
+
+    <p></p>
+
 * December 2025 - | [__Haskell Foundation__](https://haskell.foundation/) | Vice-chair
 
     <p></p>
