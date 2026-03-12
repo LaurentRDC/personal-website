@@ -76,7 +76,11 @@ title: About me
 
     <p></p>
 
-* December 2025 - | [__Haskell Foundation__](https://haskell.foundation/) | Vice-chair
+* March 2026 - | [__Haskell Foundation__](https://haskell.foundation/) | Chair
+
+    <p></p>
+
+* December 2025 - March 2026 | [__Haskell Foundation__](https://haskell.foundation/) | Vice-chair
 
     <p></p>
 
