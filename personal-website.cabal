@@ -107,3 +107,11 @@ library servant-by-construction
                      , warp
   hs-source-dirs:      posts/servant-by-construction/
   exposed-modules:     ApiAsType, TypeSafeLinks, ServingAnApi, GeneratingAClient
+
+library fdtd
+  import:              common
+  ghc-options:         -Wno-missing-export-lists -Wno-redundant-constraints
+  build-depends:       base
+                     , repa
+  hs-source-dirs:      posts/drafts/
+  exposed-modules:     FDTDHaskell

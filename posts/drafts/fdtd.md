@@ -211,3 +211,4 @@ E_z[i,j,k,n+\delta n]
 \end{align}
 $$
 
+Python repo: https://github.com/flaport/fdtd/blob/master/fdtd/grid.py#L275
