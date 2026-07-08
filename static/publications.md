@@ -51,6 +51,8 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 ## Talks
 
+* 2026-06-05 | __Haskell Ecosystem Workshop 2026__ | Invited talk titled _Servant at Bitnomial: expanding type-safety from applications to systems_ [(Link to video <i class="fab fa-youtube"></i> )](https://youtu.be/r6CdAlqdlwc)
+
 * 2021-03-01 | __Séminaire pour le regroupement québécois stratégique sur les matériaux de pointe (RQMP)__ | Contributed talk titled _Outrunning temperature to find the origins of high thermoelectric performance in SnSe_ [(Link to video <i class="fab fa-youtube"></i> )](https://youtu.be/eEH7_7DG3ng)
 
 * 2019-02-11 | __6<sup>th</sup> Banff Meeting on Ultrafast Structural Dynamics__ Contributed talk titled _Ultrafast electron diffuse scattering as a window into e-ph and ph-ph dynamics of two-dimensional materials​_ [(Link to program)](https://www.banffdynamics.com/program/).
