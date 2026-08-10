@@ -4,11 +4,12 @@ title: About me
 
 ## Employment
 
-* February 2025 - | [__Bitnomial__](https://bitnomial.com/) | Senior Software Engineer
+* February 2025 - | [__Payward__ / __Bitnomial__](https://bitnomial.com/) | Senior Software Engineer
 
     Bitnomial operates a commodity derivatives exchange, headquartered in Chicago, and regulated by the [Commodity Futures Trading Commission](https://www.cftc.gov/).
     Bitnomial also operates a clearing firm for customers to easily access the Bitnomial Exchange, and a clearinghouse for clearing firms active on its exchange.
 
+    [Payward acquired Bitnomial](https://bitnomial.com/news/2026-04-17/payward-to-acquire-bitnomial/) on May 1^st^, 2026. 
     <p></p>
 
 * August 2021 - January 2025 | [__SocïVolta__](http://socivolta.com/) | Quantitative Research

@@ -49,6 +49,10 @@ Open-access publications are highlighted with a <i class="ai ai-open-access"></i
 
 * February 2016 | __Gordon Research Conference on Ultrafast Cooperative Systems__ _Photoinduced phase transitions in VO$_2$: visualizing the time-dependent crystal potential using ultrafast electron diffraction data_ [(PDF)](/files/grc2016poster.pdf)
 
+## Interviews
+
+* 2026-08-10 | [__From Scientific Computing to Type-safe Finance__](https://serokell.io/blog/from-scientific-computing-to-type-safe-finance-bitnomial), an interview by [Serokell](https://serokell.io).
+
 ## Talks
 
 * 2026-06-05 | __Haskell Ecosystem Workshop 2026__ | Invited talk titled _Servant at Bitnomial: expanding type-safety from applications to systems_ [(Link to video <i class="fab fa-youtube"></i> )](https://youtu.be/r6CdAlqdlwc)
