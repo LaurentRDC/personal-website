@@ -1,5 +1,7 @@
 ---
 name: hakyll-images
+owner: LaurentRDC
+repo_name: hakyll-images
 location: LaurentRDC/hakyll-images
 description: Hakyll utilities to deal with images
 repository: https://github.com/LaurentRDC/hakyll-images

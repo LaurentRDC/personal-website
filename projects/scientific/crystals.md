@@ -1,13 +1,14 @@
 ---
 name: crystals
-location: LaurentRDC/crystals
+owner: LaurentRDC
+repo_name: crystals
 description: Data structures for crystallography
 repository: https://github.com/LaurentRDC/crystals
 ---
 
 <a href="https://pypi.org/pypi/crystals" target="_blank">
     <img src="https://img.shields.io/pypi/v/crystals.svg">
-</a> 
+</a>
 <a href="https://anaconda.org/conda-forge/crystals" target="_blank">
     <img src="https://img.shields.io/conda/vn/conda-forge/crystals.svg">
 </a>
@@ -43,12 +44,12 @@ Source:
     (...omitted...)\crystals\cifs\vo2-m1.cif >
 >>>
 >>> print(vo2.symmetry())
-{'international_symbol': 'P2_1/c', 
-'hall_symbol': '-P 2ybc', 
+{'international_symbol': 'P2_1/c',
+'hall_symbol': '-P 2ybc',
 'hm_symbol': 'P121/c1',
-'international_number': 14, 
-'hall_number': 81, 
-'international_full': 'P 1 2_1/c 1', 
+'international_number': 14,
+'hall_number': 81,
+'international_full': 'P 1 2_1/c 1',
 'pointgroup': 'C2h'}
 ```
 

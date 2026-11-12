@@ -1,13 +1,14 @@
 ---
 name: scikit-ued
-location: LaurentRDC/scikit-ued
+owner: LaurentRDC
+repo_name: scikit-ued
 description: Algorithms and data structures related to ultrafast electron scattering
 repository: https://github.com/LaurentRDC/scikit-ued
 ---
 
 <a href="https://pypi.org/pypi/scikit-ued" target="_blank">
     <img src="https://img.shields.io/pypi/v/scikit-ued.svg">
-</a> 
+</a>
 <a href="https://anaconda.org/conda-forge/scikit-ued" target="_blank">
     <img src="https://img.shields.io/conda/vn/conda-forge/scikit-ued.svg">
 </a>

@@ -1,6 +1,7 @@
 ---
 name: Beam framework
-location: haskell-beam/beam
+owner: haskell-beam
+repo_name: beam
 description: A type-safe SQL library for Haskell
 repository: https://github.com/haskell-beam/beam
 ---

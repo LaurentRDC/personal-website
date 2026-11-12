@@ -1,6 +1,7 @@
 ---
 name: repa
-location: haskell-repa/repa
+owner: haskell-repa
+repo_name: repa
 description: Regular parallel arrays in Haskell
 repository: https://github.com/haskell-repa/repa
 ---

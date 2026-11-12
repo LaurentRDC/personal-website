@@ -1,13 +1,14 @@
 ---
 name: npstreams
-location: LaurentRDC/npstreams
+owner: LaurentRDC
+repo_name: npstreams
 description: Streaming operations on NumPy arrays
 repository: https://github.com/LaurentRDC/npstreams
 ---
 
 <a href="https://pypi.org/pypi/npstreams" target="_blank">
     <img src="https://img.shields.io/pypi/v/npstreams.svg">
-</a> 
+</a>
 <a href="https://anaconda.org/conda-forge/npstreams" target="_blank">
     <img src="https://img.shields.io/conda/vn/conda-forge/npstreams.svg">
 </a>

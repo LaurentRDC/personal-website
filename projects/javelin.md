@@ -1,6 +1,7 @@
 ---
 name: javelin
-location: LaurentRDC/javelin
+owner: LaurentRDC
+repo_name: javelin
 description: A Haskell implementation of series, or one-dimensional labeled arrays
 repository: https://github.com/LaurentRDC/javelin
 ---

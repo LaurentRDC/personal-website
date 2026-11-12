@@ -1,7 +1,8 @@
 ---
 name: hakyll
-location: jaspervdj/hakyll
-description: Hakyll - a static site generator 
+owner: jaspervdj
+repo_name: hakyll
+description: Hakyll - a static site generator
 repository: https://github.com/jaspervdj/hakyll
 ---
 

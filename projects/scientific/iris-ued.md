@@ -1,13 +1,14 @@
 ---
 name: iris-ued
-location: LaurentRDC/iris-ued
+owner: LaurentRDC
+repo_name: iris-ued
 description: Interactive exploration of ultrafast electron scattering data
 repository: https://github.com/LaurentRDC/iris-ued
 ---
 
 <a href="https://pypi.org/pypi/iris-ued" target="_blank">
     <img src="https://img.shields.io/pypi/v/iris-ued.svg">
-</a> 
+</a>
 <a href="https://anaconda.org/conda-forge/iris-ued" target="_blank">
     <img src="https://img.shields.io/conda/vn/conda-forge/iris-ued.svg">
 </a>

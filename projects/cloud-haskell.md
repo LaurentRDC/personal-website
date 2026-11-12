@@ -1,7 +1,8 @@
 ---
 user: haskell-distributed
 name: Cloud Haskell
-location: haskell-distributed/distributed-process
+owner: haskell-distributed
+repo_name: distributed-process
 description: A Haskell framework for distributed computing
 repository: https://github.com/haskell-distributed/distributed-process
 ---

@@ -1,6 +1,7 @@
 ---
 name: tree-sitter-haskell-literate
-location: LaurentRDC/tree-sitter-haskell-literate
+owner: LaurentRDC
+repo_name: tree-sitter-haskell-literate
 description: A Tree-sitter grammar for Literate Haskell
 repository: https://github.com/LaurentRDC/tree-sitter-haskell-literate
 ---
